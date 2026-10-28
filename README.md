@@ -453,8 +453,6 @@ FloatAsk-v0.1.0-win32-x64.zip
 - 新增服务商时优先复用 OpenAI 兼容路径；
 - 对 OCR/截图/搜索的改动附上复现步骤和截图（注意脱敏）。
 
-> 要发布到 GitHub？仓库 About、Topics、首条上传命令、Release 模板和社交预览图都在 [docs/GITHUB.md](docs/GITHUB.md)。
-
 ## License
 
 [MIT](LICENSE) © 2026 FloatAsk
