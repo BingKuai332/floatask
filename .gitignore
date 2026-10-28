@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.userdata/
+.electron-cache/
+.npm-cache/
+shots/
+*.log
+mock-last-request.json
+.tmp-*/

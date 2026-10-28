@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="result.css">
+  <title>浮问</title>
+</head>
+<body>
+  <div class="shell">
+    <div class="card">
+      <header class="titlebar drag">
+        <div class="brand">
+          <img class="brand-logo" src="../../resources/icon.png" alt="">
+          <div class="brand-text">
+            <div class="brand-line">
+              <span class="brand-name">浮问</span>
+              <span class="brand-en">FLOATASK</span>
+            </div>
+            <div id="statusPill" class="status-pill idle">
+              <span class="status-dot"></span>
+              <span id="statusText">待命</span>
+            </div>
+          </div>
+        </div>
+        <div class="actions no-drag">
+          <button id="newSelectBtn" class="icon-btn" title="重新框选">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+              <path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/>
+              <path d="M12 8v8M8 12h8" opacity=".55"/>
+            </svg>
+          </button>
+          <button id="pinBtn" class="icon-btn active" title="取消置顶">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 4h6l-1 5 3 3v2H7v-2l3-3-1-5Z"/>
+              <path d="M12 14v6"/>
+            </svg>
+          </button>
+          <button id="settingsBtn" class="icon-btn" title="设置">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+              <circle cx="12" cy="12" r="3.2"/>
+              <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.36a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.64 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.64 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.64a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.36 9v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/>
+            </svg>
+          </button>
+          <button id="closeBtn" class="icon-btn close" title="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="m6 6 12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="context-strip">
+        <button id="contextToggle" class="context-toggle no-drag" title="展开框选内容">
+          <span class="source-glyph">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+              <path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/>
+            </svg>
+          </span>
+          <span id="contextTitle" class="context-title">正在读取屏幕…</span>
+          <span id="contextMeta" class="context-meta"></span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="m8 10 4 4 4-4"/>
+          </svg>
+        </button>
+        <span id="modelChip" class="model-chip no-drag" title="当前模型">DeepSeek</span>
+      </div>
+
+      <section id="contextPanel" class="context-panel">
+        <div class="context-body">
+          <div class="preview-wrap" id="previewWrap">
+            <img id="previewImg" class="preview-img" alt="框选截图">
+            <span class="preview-hint">点击放大</span>
+          </div>
+          <div class="ocr-wrap">
+            <div class="ocr-head">
+              <span>识别文字</span>
+              <button id="copyOcrBtn" class="mini-btn">复制</button>
+            </div>
+            <pre id="ocrText" class="ocr-text"></pre>
+          </div>
+        </div>
+        <div id="windowInfo" class="window-info"></div>
+      </section>
+
+      <main id="messages" class="messages">
+        <div id="loadingCard" class="loading-card">
+          <div class="scan-line"></div>
+          <div class="loading-head">
+            <span class="spinner"></span>
+            <span id="loadingText">正在读取屏幕…</span>
+          </div>
+          <div class="skeleton">
+            <div class="skeleton-line w82"></div>
+            <div class="skeleton-line w96"></div>
+            <div class="skeleton-line w64"></div>
+          </div>
+        </div>
+      </main>
+
+      <section id="manualPanel" class="manual-panel" hidden>
+        <div class="manual-head">
+          <span class="manual-icon">⌁</span>
+          <span>没有识别到文字</span>
+        </div>
+        <p class="manual-desc">可以把要解释的内容粘贴到这里，或者重新框选一块更清晰的区域。</p>
+        <textarea id="manualInput" class="manual-input" placeholder="粘贴要解释的文字…" spellcheck="false"></textarea>
+        <div class="manual-actions">
+          <button id="manualPasteBtn" class="btn ghost">从剪贴板粘贴</button>
+          <button id="manualSubmitBtn" class="btn primary">用这段内容解释</button>
+        </div>
+      </section>
+
+      <footer class="composer">
+        <div id="quickRow" class="quick-row no-drag">
+          <button class="quick-chip" data-question="用更通俗的话解释，最好打个比方。">更通俗</button>
+          <button class="quick-chip" data-question="举一个具体、贴近实际的例子帮助理解。">举个例子</button>
+          <button class="quick-chip" data-question="再深入一点，讲讲它的原理或关键细节。">深入一点</button>
+          <button class="quick-chip" data-question="帮我联网核查一下这个内容，并给出来源。" data-web="1">联网核查</button>
+        </div>
+        <div class="input-shell no-drag">
+          <button id="webToggle" class="web-toggle on" title="联网检索">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+              <circle cx="12" cy="12" r="8.5"/>
+              <path d="M3.5 12h17M12 3.5c2.4 2.4 3.6 5.3 3.6 8.5S14.4 18.1 12 20.5C9.6 18.1 8.4 15.2 8.4 12S9.6 5.9 12 3.5Z"/>
+            </svg>
+            <span>联网</span>
+          </button>
+          <textarea id="questionInput" rows="1" placeholder="继续追问，或让我查一下…" spellcheck="false"></textarea>
+          <button id="sendBtn" class="send-btn" title="发送">
+            <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/>
+            </svg>
+            <svg class="stop-icon" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="7" y="7" width="10" height="10" rx="2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="composer-hint">
+          <span><b>Enter</b> 发送 · <b>Shift+Enter</b> 换行</span>
+          <span id="visionHint" class="vision-hint"></span>
+        </div>
+      </footer>
+
+      <div id="toast" class="toast"></div>
+      <div id="lightbox" class="lightbox">
+        <img id="lightboxImg" alt="框选截图">
+      </div>
+    </div>
+  </div>
+  <script src="font-utils.js"></script>
+  <script src="markdown.js"></script>
+  <script src="result.js"></script>
+</body>
+</html>

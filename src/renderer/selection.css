@@ -1,0 +1,188 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(125, 211, 252, 0.05), transparent 46%),
+    rgba(3, 7, 12, 0.36);
+  transition: background 120ms ease;
+}
+
+#stage.dragging { background: transparent; }
+
+.hint {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  padding: 0 13px 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 178, 208, 0.18);
+  background: rgba(9, 14, 21, 0.82);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(14px);
+  color: #c7d7e7;
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hint-mark {
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1.5px solid rgba(125, 211, 252, 0.9);
+  box-shadow: inset 0 0 0 2px rgba(9, 14, 21, 0.9), 0 0 14px rgba(125, 211, 252, 0.25);
+  position: relative;
+}
+.hint-mark::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 1.5px;
+  background: #5eead4;
+}
+
+.hint .kbd {
+  margin-left: 2px;
+  background: rgba(148, 178, 208, 0.08);
+  border-color: rgba(148, 178, 208, 0.2);
+  font-size: 10px;
+}
+
+.crosshair {
+  position: fixed;
+  background: rgba(125, 211, 252, 0.26);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 100ms ease;
+  z-index: 2;
+}
+.crosshair.x { left: 0; right: 0; height: 1px; }
+.crosshair.y { top: 0; bottom: 0; width: 1px; }
+#stage.hovering .crosshair { opacity: 1; }
+#stage.dragging .crosshair { opacity: 0; }
+
+.box {
+  position: absolute;
+  display: none;
+  border: 1.5px solid rgba(125, 211, 252, 0.95);
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 9999px rgba(3, 7, 12, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 0 24px rgba(125, 211, 252, 0.18);
+  background: rgba(125, 211, 252, 0.015);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.box.visible { display: block; }
+
+.corner {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border: 0 solid #eafcff;
+}
+.corner.tl { top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px; }
+.corner.tr { top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px; }
+.corner.bl { bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px; }
+.corner.br { bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px; }
+
+.size {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgba(5, 10, 16, 0.82);
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  color: #bfe9ff;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.tip {
+  position: fixed;
+  display: none;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: rgba(8, 13, 20, 0.88);
+  border: 1px solid rgba(148, 178, 208, 0.18);
+  color: #9fb3c8;
+  font-size: 11px;
+  pointer-events: none;
+  z-index: 4;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+}
+#stage.hovering .tip { display: block; }
+#stage.dragging .tip { color: #d8f5ff; border-color: rgba(125, 211, 252, 0.35); }
+
+.flash {
+  position: fixed;
+  inset: 0;
+  background: rgba(125, 211, 252, 0.09);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 40ms ease;
+}
+.flash.on { opacity: 1; }
+/* TACTICAL TERMINAL — selection */
+.hint {
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  border-color: rgba(229, 180, 90, 0.32);
+  background: rgba(7, 10, 13, 0.92);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 3px 0 0 var(--accent);
+  color: #ded6c6;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+.hint-mark {
+  border-radius: 0;
+  border-color: var(--accent);
+  box-shadow: none;
+}
+.hint-mark::after { background: var(--accent); }
+.hint .kbd { border-radius: 0; background: rgba(229, 180, 90, 0.06); border-color: rgba(229, 180, 90, 0.25); color: var(--accent-3); }
+.crosshair { background: rgba(229, 180, 90, 0.26); }
+.box {
+  border-radius: 0;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 9999px rgba(3, 6, 9, 0.55), 0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 26px rgba(229, 180, 90, 0.2);
+}
+.corner { border-color: #fff3d6; }
+.size {
+  border-radius: 0;
+  border-color: rgba(229, 180, 90, 0.35);
+  background: rgba(5, 8, 11, 0.9);
+  color: var(--accent-3);
+  font-family: var(--mono);
+}
+.tip {
+  border-radius: 0;
+  border-color: rgba(229, 180, 90, 0.28);
+  background: rgba(7, 10, 13, 0.92);
+  color: #c8c0b0;
+  font-family: var(--mono);
+}
+#stage.dragging .tip { color: var(--accent-3); border-color: rgba(229, 180, 90, 0.5); }
+.flash { background: rgba(229, 180, 90, 0.12); }

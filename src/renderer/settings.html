@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="settings.css">
+  <title>浮问设置</title>
+</head>
+<body>
+  <div class="shell">
+    <div class="card">
+      <header class="titlebar drag">
+        <div class="brand">
+          <img class="brand-logo" src="../../resources/icon.png" alt="">
+          <div>
+            <div class="brand-title">浮问设置</div>
+            <div class="brand-sub">FLOATASK · 屏幕理解助手</div>
+          </div>
+        </div>
+        <button id="closeBtn" class="icon-btn no-drag" title="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="m6 6 12 12M18 6 6 18"/>
+          </svg>
+        </button>
+      </header>
+
+      <div class="scroll-body">
+        <section id="welcome" class="welcome" hidden>
+          <div class="welcome-kicker">欢迎使用</div>
+          <h1>框一下，就懂了。</h1>
+          <p>选中任何软件或网页上的一段内容，浮问会结合上下文，用几句话说清它是什么、有什么用。之后还可以在这个小窗口里继续追问、联网核查。</p>
+          <ol class="steps">
+            <li><span>1</span>填一个模型服务的 API Key</li>
+            <li><span>2</span>按 <b id="welcomeHotkey">Alt+Q</b> 框选屏幕</li>
+            <li><span>3</span>在浮窗里继续追问</li>
+          </ol>
+          <div class="welcome-actions">
+            <a id="getKeyLink" class="link" href="#">获取 DeepSeek Key ↗</a>
+            <span class="welcome-note">也可以使用本地 Ollama，数据不出本机。</span>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <h2>模型服务</h2>
+              <p>任何 OpenAI 兼容接口都可以接入。解释质量主要取决于这里的模型。</p>
+            </div>
+            <span id="providerBadge" class="section-badge">DeepSeek</span>
+          </div>
+
+          <div id="providerGrid" class="provider-grid"></div>
+
+          <div class="form-grid">
+            <label class="field span-2">
+              <span class="field-label">Base URL</span>
+              <input id="baseUrl" type="text" spellcheck="false" placeholder="https://api.deepseek.com/v1">
+              <span class="field-help">通常以 <code>/v1</code> 结尾；自定义服务也可直接填完整的 <code>/chat/completions</code> 地址。</span>
+            </label>
+
+            <label class="field">
+              <span class="field-label">模型名称</span>
+              <input id="model" type="text" spellcheck="false" placeholder="deepseek-chat">
+            </label>
+
+            <label class="field">
+              <span class="field-label">API Key</span>
+              <div class="secret-wrap">
+                <input id="apiKey" type="password" spellcheck="false" autocomplete="off" placeholder="sk-…">
+                <button id="toggleKeyBtn" class="secret-btn" type="button" title="显示/隐藏">显示</button>
+              </div>
+              <span id="keyHelp" class="field-help">保存在本机，使用系统加密。</span>
+            </label>
+          </div>
+
+          <div class="inline-row">
+            <label class="switch-row">
+              <span class="switch">
+                <input id="vision" type="checkbox">
+                <i></i>
+              </span>
+              <span>
+                <b>截图理解</b>
+                <small>把框选画面一并发给模型，适合图表、界面和无法 OCR 的内容。需要模型支持视觉。</small>
+              </span>
+            </label>
+            <button id="clearKeyBtn" class="link-btn danger" type="button">清除已保存的 Key</button>
+          </div>
+
+          <div class="test-row">
+            <button id="testBtn" class="btn" type="button">
+              <span class="test-dot"></span>
+              测试连接
+            </button>
+            <span id="testResult" class="test-result"></span>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <h2>联网检索</h2>
+              <p>解释时先搜索网页，再让模型结合资料回答，并列出出处。</p>
+            </div>
+          </div>
+
+          <div class="inline-row">
+            <label class="switch-row">
+              <span class="switch">
+                <input id="webEnabled" type="checkbox">
+                <i></i>
+              </span>
+              <span>
+                <b>默认开启联网</b>
+                <small>每次框选和追问都会先检索。也可以在浮窗里随时关闭。</small>
+              </span>
+            </label>
+          </div>
+
+          <div class="form-grid compact">
+            <label class="field">
+              <span class="field-label">检索服务</span>
+              <select id="searchProvider">
+                <option value="bing">必应 Bing（免 Key）</option>
+                <option value="searxng">SearXNG（自建实例）</option>
+                <option value="off">关闭检索</option>
+              </select>
+            </label>
+            <label class="field" id="searxngField">
+              <span class="field-label">SearXNG 地址</span>
+              <input id="searxngUrl" type="text" spellcheck="false" placeholder="https://search.example.com">
+              <span class="field-help">需要实例开启 JSON 输出（<code>format=json</code>）。</span>
+            </label>
+          </div>
+
+          <p class="note">联网时会把你框选的文字片段作为搜索词发送给搜索引擎。若内容涉密，请关闭联网。</p>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <h2>使用方式</h2>
+              <p>快捷键在全局生效；悬浮球可以拖动到顺手的位置。</p>
+            </div>
+          </div>
+
+          <div class="form-grid compact">
+            <label class="field">
+              <span class="field-label">框选快捷键</span>
+              <select id="hotkey">
+                <option value="Alt+Q">Alt + Q</option>
+                <option value="Ctrl+Alt+Q">Ctrl + Alt + Q</option>
+                <option value="Ctrl+Shift+Space">Ctrl + Shift + Space</option>
+                <option value="Alt+`">Alt + `</option>
+              </select>
+              <span id="hotkeyHelp" class="field-help">如果被其他软件占用，会自动换一个可用组合。</span>
+            </label>
+            <div class="field">
+              <span class="field-label">悬浮球</span>
+              <label class="switch-row tight">
+                <span class="switch">
+                  <input id="showBubble" type="checkbox">
+                  <i></i>
+                </span>
+                <span><b>显示悬浮球</b><small>始终浮在其他窗口上方，点击即可框选。</small></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="inline-row">
+            <label class="switch-row">
+              <span class="switch">
+                <input id="autoLaunch" type="checkbox">
+                <i></i>
+              </span>
+              <span>
+                <b>开机自动启动</b>
+                <small id="autoLaunchHelp">登录 Windows 后自动在托盘运行。</small>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <h2>字体与阅读</h2>
+              <p>选择字体、字号和行高；可以只改解释内容，也可以应用到整个界面。</p>
+            </div>
+          </div>
+
+          <div class="font-setting-row">
+            <div class="font-current">
+              <span class="font-current-label">当前阅读字体</span>
+              <b id="currentFontLabel">系统默认</b>
+              <small id="currentFontMeta">12.8px · 行高 1.72</small>
+            </div>
+            <button id="openFontBtn" class="btn" type="button">打开字体设置…</button>
+          </div>
+          <p class="note">字体列表来自 Windows 已安装字体；安装新字体后重新打开字体窗口即可看到。</p>
+        </section>
+
+        <section class="section privacy">
+          <div class="section-head">
+            <div>
+              <h2>隐私说明</h2>
+              <p>哪些数据留在本机，哪些会发出去。</p>
+            </div>
+          </div>
+          <ul class="privacy-list">
+            <li><b>截图</b>只用于本机 OCR；只有开启“截图理解”时，压缩后的截图才会发送给你配置的模型服务。</li>
+            <li><b>识别文字</b>会发送给模型服务；开启联网时，搜索词片段会发送给搜索引擎。</li>
+            <li><b>API Key</b>只保存在本机，使用 Windows 系统加密（DPAPI），不会发送给除模型服务之外的任何地方。</li>
+            <li>浮问没有自建服务器，也不收集使用数据。</li>
+          </ul>
+        </section>
+
+        <div class="version-line">
+          <span>浮问 FloatAsk <span id="version">0.1.0</span></span>
+          <span>Windows · Electron</span>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div id="saveHint" class="save-hint"></div>
+        <div class="footer-actions">
+          <button id="cancelBtn" class="btn ghost" type="button">取消</button>
+          <button id="saveBtn" class="btn primary" type="button">保存并开始使用</button>
+        </div>
+      </footer>
+
+      <div id="toast" class="toast"></div>
+    </div>
+  </div>
+  <script src="font-utils.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>

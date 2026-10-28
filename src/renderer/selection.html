@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="selection.css">
+  <title>框选</title>
+</head>
+<body>
+  <div id="stage">
+    <div id="hint" class="hint">
+      <span class="hint-mark"></span>
+      <span id="hintText">拖拽框选要解释的内容</span>
+      <span class="kbd">Esc 取消</span>
+    </div>
+
+    <div id="crosshairX" class="crosshair x"></div>
+    <div id="crosshairY" class="crosshair y"></div>
+
+    <div id="box" class="box">
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+      <span id="size" class="size">0 × 0</span>
+    </div>
+
+    <div id="tip" class="tip">按住左键拖拽</div>
+    <div id="flash" class="flash"></div>
+  </div>
+  <script src="font-utils.js"></script>
+  <script src="selection.js"></script>
+</body>
+</html>
