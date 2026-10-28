@@ -14,6 +14,8 @@
 
 > 框选屏幕上任何看不懂的内容，浮问会结合窗口、上下文和联网资料，用几句话说清它是什么、有什么用、和当前场景有什么关系。然后可以在浮窗里继续追问、举例、深入，或联网核查并给出来源。
 
+> **Windows 便携版下载**：[Releases](https://github.com/BingKuai332/floatask/releases/latest)
+
 <p align="center">
   <img src="docs/result.png" width="330" alt="浮问解释窗口">
   <img src="docs/settings.png" width="440" alt="浮问设置界面">
@@ -120,7 +122,7 @@ flowchart LR
 ### 从源码运行
 
 ```powershell
-git clone https://github.com/<your-name>/floatask.git
+git clone https://github.com/BingKuai332/floatask.git
 cd floatask
 npm install
 npm start

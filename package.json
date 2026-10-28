@@ -7,6 +7,14 @@
   "author": "FloatAsk",
   "license": "MIT",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BingKuai332/floatask.git"
+  },
+  "homepage": "https://github.com/BingKuai332/floatask#readme",
+  "bugs": {
+    "url": "https://github.com/BingKuai332/floatask/issues"
+  },
   "keywords": [
     "electron",
     "windows",

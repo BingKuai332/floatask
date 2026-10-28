@@ -101,7 +101,7 @@ git init
 git add .
 git commit -m "feat: initial FloatAsk release"
 git branch -M main
-git remote add origin https://github.com/<your-name>/floatask.git
+git remote add origin https://github.com/BingKuai332/floatask.git
 git push -u origin main
 ```
 
