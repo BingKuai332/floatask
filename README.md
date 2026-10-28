@@ -377,15 +377,6 @@ npm run pack
 FloatAsk-v0.1.0-win32-x64.zip
 ```
 
-建议在 Release 说明里写清：
-
-- 适用平台：Windows 10/11 x64
-- 是否需要安装：免安装，解压后运行
-- 首次使用需要配置 API Key
-- 如果双击 exe 无反应，使用 `Start-FloatAsk.cmd`
-- 更新内容 / 已知问题 / SHA256
-
-> 仓库本身不建议提交 `dist/`（约 250MB+）。把构建产物放到 Releases 更合适。
 
 ## 已知限制
 
@@ -443,15 +434,6 @@ FloatAsk-v0.1.0-win32-x64.zip
 
 必应网页搜索不需要额外 Key；模型调用和搜索服务本身的费用/额度取决于你的服务商。
 
-## Contributing
-
-欢迎 Issue 和 PR。提交前请：
-
-- 在 Windows 10/11 上实际运行 `npm start`；
-- 不提交 API Key、`.userdata/`、`dist/` 或日志；
-- 保持主进程/预加载/渲染层的安全边界，不要把 Node API 暴露给渲染层；
-- 新增服务商时优先复用 OpenAI 兼容路径；
-- 对 OCR/截图/搜索的改动附上复现步骤和截图（注意脱敏）。
 
 ## License
 
