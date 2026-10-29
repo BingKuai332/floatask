@@ -1,28 +1,27 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
+<!DOCTYPE html><html lang="zh-CN"><head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="bubble.css">
-  <title>浮问</title>
+  <title data-i18n="common.appName">浮问</title>
 </head>
 <body>
-  <div class="bubble" id="bubble" title="拖动调整位置">
+  <div class="bubble" id="bubble" title="拖动调整位置" data-i18n-title="font.drag">
     <div class="grip drag" id="grip">
       <img src="../../resources/icon.png" alt="" class="logo">
       <span class="grip-dots"><i></i><i></i><i></i></span>
     </div>
     <button id="askBtn" class="ask no-drag" title="框选屏幕内容">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
-        <path d="M5 9V6.5A1.5 1.5 0 0 1 6.5 5H9M15 5h2.5A1.5 1.5 0 0 1 19 6.5V9M19 15v2.5a1.5 1.5 0 0 1-1.5 1.5H15M9 19H6.5A1.5 1.5 0 0 1 5 17.5V15"/>
-        <path d="M12 8.5v7M8.5 12h7" opacity=".6"/>
+        <path d="M5 9V6.5A1.5 1.5 0 0 1 6.5 5H9M15 5h2.5A1.5 1.5 0 0 1 19 6.5V9M19 15v2.5a1.5 1.5 0 0 1-1.5 1.5H15M9 19H6.5A1.5 1.5 0 0 1 5 17.5V15"></path>
+        <path d="M12 8.5v7M8.5 12h7" opacity=".6"></path>
       </svg>
-      <span>框选</span>
+      <span data-i18n="selection.title">框选</span>
     </button>
   </div>
-  <script src="font-utils.js"></script>
+  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script>
   <script src="bubble.js"></script>
-</body>
-</html>
+
+
+</body></html>

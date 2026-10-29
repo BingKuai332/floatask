@@ -27,9 +27,12 @@ const els = {
   searxngUrl: document.getElementById('searxngUrl'),
   hotkey: document.getElementById('hotkey'),
   hotkeyHelp: document.getElementById('hotkeyHelp'),
+  language: document.getElementById('language'),
   showBubble: document.getElementById('showBubble'),
   autoLaunch: document.getElementById('autoLaunch'),
   autoLaunchHelp: document.getElementById('autoLaunchHelp'),
+  saveHistory: document.getElementById('saveHistory'),
+  openHistoryBtn: document.getElementById('openHistoryBtn'),
   currentFontLabel: document.getElementById('currentFontLabel'),
   currentFontMeta: document.getElementById('currentFontMeta'),
   openFontBtn: document.getElementById('openFontBtn'),
@@ -56,12 +59,14 @@ function findPreset(id) {
   return (settings?.presets || []).find((item) => item.id === id) || null;
 }
 
+const tt = (key, params) => window.FloatAskI18n.t(key, params);
+
 function isLocalUrl(url) {
   return /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(\/|$)/i.test(String(url || ''));
 }
 
 function hostOf(url) {
-  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return '自定义接口'; }
+  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return tt('settings.customHost'); }
 }
 
 function showToast(message, bad = false) {
@@ -80,24 +85,27 @@ function updateKeyUi() {
   els.clearKeyBtn.hidden = !savedHasKey && !pendingClearKey;
   if (pendingClearKey) {
     els.apiKey.value = '';
-    els.apiKey.placeholder = '保存后将清除';
-    els.keyHelp.textContent = '保存后会删除本机保存的 Key。';
-    els.clearKeyBtn.textContent = '撤销清除';
+    els.apiKey.placeholder = tt('settings.keyPlaceholderClearing');
+    els.keyHelp.textContent = tt('settings.keyHelpClearing');
+    els.clearKeyBtn.textContent = tt('settings.undoClear');
   } else if (savedHasKey) {
     els.apiKey.value = '';
-    els.apiKey.placeholder = '已保存（留空表示不修改）';
-    els.keyHelp.textContent = '已保存在本机，使用 Windows 系统加密。';
-    els.clearKeyBtn.textContent = '清除已保存的 Key';
+    els.apiKey.placeholder = tt('settings.keyPlaceholderSaved');
+    els.keyHelp.textContent = tt('settings.keyHelpSaved');
+    els.clearKeyBtn.textContent = tt('settings.clearKey');
   } else {
     els.apiKey.placeholder = 'sk-…';
-    els.keyHelp.textContent = '只保存在本机，使用 Windows 系统加密。';
-    els.clearKeyBtn.textContent = '清除已保存的 Key';
+    els.keyHelp.textContent = tt('settings.keyHelpDefault');
+    els.clearKeyBtn.textContent = tt('settings.clearKey');
   }
 }
 
+function providerLabel(preset) {
+  return preset?.id === 'custom' ? tt('settings.customHost') : preset?.id === 'ollama' ? 'Ollama' : preset?.label || tt('settings.customHost');
+}
 function updateProviderUi(applyPreset = false) {
   const preset = findPreset(currentProvider) || findPreset('custom');
-  els.providerBadge.textContent = preset?.label || '自定义';
+  els.providerBadge.textContent = providerLabel(preset);
   for (const card of els.providerGrid.querySelectorAll('.provider-card')) {
     card.classList.toggle('active', card.dataset.id === currentProvider);
   }
@@ -107,8 +115,10 @@ function updateProviderUi(applyPreset = false) {
       els.model.value = preset.model;
       els.vision.checked = Boolean(preset.vision);
     }
-    const keyUrl = preset.keyUrl || 'https://platform.deepseek.com/api_keys';
-    els.getKeyLink.textContent = `获取 ${preset.label} Key ↗`;
+  }
+  {
+    const keyUrl = preset?.keyUrl || 'https://platform.deepseek.com/api_keys';
+    els.getKeyLink.textContent = tt('settings.getKey', { name: providerLabel(preset) });
     els.getKeyLink.dataset.url = keyUrl;
   }
   els.searchProvider.dispatchEvent(new Event('change'));
@@ -124,10 +134,10 @@ function renderProviders() {
     button.innerHTML = `
       <span class="provider-name">
         <span class="provider-mark">${MARKS[preset.id] || '·'}</span>
-        ${preset.label}
+        ${preset.id === 'custom' ? tt('settings.customHost') : preset.id === 'ollama' ? 'Ollama' : preset.label}
       </span>
       <span class="provider-sub">${hostOf(preset.baseUrl)}</span>
-      ${preset.vision ? '<span class="provider-vision">视觉</span>' : ''}`;
+      ${preset.vision ? `<span class="provider-vision">${tt('settings.providerVision')}</span>` : ''}`;
     button.addEventListener('click', () => {
       currentProvider = preset.id;
       updateProviderUi(true);
@@ -141,13 +151,13 @@ function renderProviders() {
 
 function updateHotkeyHelp() {
   if (!settings.hotkeyOk) {
-    els.hotkeyHelp.textContent = '当前快捷键没有注册成功，可能被占用；可以换一个试试。';
+    els.hotkeyHelp.textContent = tt('settings.hotkeyHelpTaken');
     els.hotkeyHelp.classList.add('warn');
   } else if (settings.actualHotkey && settings.actualHotkey !== els.hotkey.value) {
-    els.hotkeyHelp.textContent = `当前实际使用 ${settings.actualHotkey}（首选组合被占用）。`;
+    els.hotkeyHelp.textContent = tt('settings.hotkeyHelpAdjusted', { hotkey: settings.actualHotkey });
     els.hotkeyHelp.classList.add('warn');
   } else {
-    els.hotkeyHelp.textContent = '如果被其他软件占用，会自动换一个可用组合。';
+    els.hotkeyHelp.textContent = tt('settings.hotkeyHelpDefault');
     els.hotkeyHelp.classList.remove('warn');
   }
 }
@@ -158,15 +168,15 @@ function applyUiFont(font) {
 
 function updateFontDisplay(font) {
   const family = !font?.family || font.family === 'system'
-    ? '系统默认'
+    ? tt('settings.fontSystem')
     : font.family === 'custom'
-      ? `${font.customName || '我的字体'}（导入）`
+      ? `${font.customName || tt('settings.fontMy')}${tt('settings.fontImportedSuffix')}`
       : font.family;
   const size = Number(font?.size) || 12.8;
   const line = Number(font?.lineHeight) || 1.72;
-  const scope = font?.scope === 'reading' ? '仅解释内容' : '整个界面';
+  const scope = font?.scope === 'reading' ? tt('settings.fontScopeReading') : tt('settings.fontScopeAll');
   els.currentFontLabel.textContent = family;
-  els.currentFontMeta.textContent = `${size}px · 行高 ${line.toFixed(2)} · ${scope}`;
+  els.currentFontMeta.textContent = tt('settings.fontMeta', { size, line: line.toFixed(2), scope });
   applyUiFont(font);
 }
 
@@ -181,15 +191,17 @@ function populate() {
   els.searxngUrl.value = settings.searxngUrl || '';
   els.hotkey.value = settings.hotkey || 'Alt+Q';
   els.showBubble.checked = settings.showBubble !== false;
+  els.saveHistory.checked = settings.saveHistory !== false;
+  els.language.value = settings.language || 'zh-CN';
   els.autoLaunch.checked = Boolean(settings.autoLaunch);
   els.version.textContent = settings.appVersion || '0.1.0';
   els.welcomeHotkey.textContent = settings.actualHotkey || settings.hotkey || 'Alt+Q';
   els.welcome.hidden = !settings.firstRun;
-  els.saveBtn.textContent = settings.firstRun ? '保存并开始使用' : '保存';
+  els.saveBtn.textContent = settings.firstRun ? tt('settings.saveBtnStart') : tt('settings.saveBtn');
   els.autoLaunch.disabled = !settings.isPackaged;
   els.autoLaunchHelp.textContent = settings.isPackaged
-    ? '登录 Windows 后自动在托盘运行。'
-    : '开发模式下不可用，打包后会生效。';
+    ? tt('settings.autoLaunchHelpOn')
+    : tt('settings.autoLaunchHelpOff');
   updateFontDisplay({
     family: settings.fontFamily,
     size: settings.fontSize,
@@ -199,6 +211,7 @@ function populate() {
     customName: settings.customFontName
   });
 
+  window.FloatAskAdvanced.populate(settings, collectDraft);
   renderProviders();
   updateProviderUi(false);
   updateKeyUi();
@@ -220,6 +233,7 @@ function populate() {
 
 function collectDraft() {
   return {
+    ...window.FloatAskAdvanced.collect(),
     provider: currentProvider,
     baseUrl: els.baseUrl.value.trim(),
     model: els.model.value.trim(),
@@ -231,23 +245,27 @@ function collectDraft() {
     hotkey: els.hotkey.value,
     showBubble: els.showBubble.checked,
     autoLaunch: els.autoLaunch.checked,
+    language: els.language.value,
+    saveHistory: els.saveHistory.checked,
     clearApiKey: pendingClearKey
   };
 }
 
 function validate(draft) {
+  const advancedError = window.FloatAskAdvanced.validate(draft);
+  if (advancedError) return advancedError;
   if (!/^https?:\/\//i.test(draft.baseUrl)) {
-    return { message: 'Base URL 需要以 http:// 或 https:// 开头', focus: els.baseUrl };
+    return { message: tt('settings.validateBaseUrl'), focus: els.baseUrl };
   }
   if (!draft.model) {
-    return { message: '请填写模型名称', focus: els.model };
+    return { message: tt('settings.validateModel'), focus: els.model };
   }
   const willHaveKey = Boolean(draft.apiKey) || (savedHasKey && !pendingClearKey);
-  if (!willHaveKey && !isLocalUrl(draft.baseUrl)) {
-    return { message: '请填写 API Key（本地 Ollama 可以留空）', focus: els.apiKey };
+  if (!willHaveKey && !draft.clearApiKey && !isLocalUrl(draft.baseUrl)) {
+    return { message: tt('settings.validateKey'), focus: els.apiKey };
   }
   if (draft.searchProvider === 'searxng' && !/^https?:\/\//i.test(draft.searxngUrl)) {
-    return { message: '请填写 SearXNG 实例地址', focus: els.searxngUrl };
+    return { message: tt('settings.validateSearxng'), focus: els.searxngUrl };
   }
   return null;
 }
@@ -259,41 +277,41 @@ els.searchProvider.addEventListener('change', () => {
 els.toggleKeyBtn.addEventListener('click', () => {
   const hidden = els.apiKey.type === 'password';
   els.apiKey.type = hidden ? 'text' : 'password';
-  els.toggleKeyBtn.textContent = hidden ? '隐藏' : '显示';
+  els.toggleKeyBtn.textContent = hidden ? tt('settings.hide') : tt('settings.show');
 });
 
 els.clearKeyBtn.addEventListener('click', () => {
   if (!savedHasKey && !pendingClearKey) {
-    showToast('还没有保存的 Key', true);
+    showToast(tt('settings.noKeyYet'), true);
     return;
   }
   pendingClearKey = !pendingClearKey;
   updateKeyUi();
-  setHint(pendingClearKey ? '保存后将清除本机 Key。' : '');
+  setHint(pendingClearKey ? tt('settings.clearHint') : '');
 });
 
 els.testBtn.addEventListener('click', async () => {
   const draft = collectDraft();
   const willHaveKey = Boolean(draft.apiKey) || (savedHasKey && !pendingClearKey);
   if (!willHaveKey && !isLocalUrl(draft.baseUrl)) {
-    els.testResult.textContent = '请先填写 API Key';
+    els.testResult.textContent = tt('settings.testNeedKey');
     els.testResult.className = 'test-result bad';
     return;
   }
   els.testBtn.disabled = true;
-  els.testResult.textContent = '正在连接…';
+  els.testResult.textContent = tt('settings.testConnecting');
   els.testResult.className = 'test-result busy';
   try {
     const result = await api.testConnection(draft);
     if (result.ok) {
-      els.testResult.textContent = `连接成功 · ${result.latencyMs}ms${result.model ? ' · ' + result.model : ''}`;
+      els.testResult.textContent = tt('settings.testOk', { ms: result.latencyMs, model: result.model ? ' · ' + result.model : '' });
       els.testResult.className = 'test-result ok';
     } else {
       els.testResult.textContent = [result.message, result.hint].filter(Boolean).join(' · ');
       els.testResult.className = 'test-result bad';
     }
   } catch (err) {
-    els.testResult.textContent = err.message || '测试失败';
+    els.testResult.textContent = err.message || tt('settings.saveFailed');
     els.testResult.className = 'test-result bad';
   } finally {
     els.testBtn.disabled = false;
@@ -315,39 +333,56 @@ els.saveBtn.addEventListener('click', async () => {
     return;
   }
   els.saveBtn.disabled = true;
-  setHint('正在保存…');
+  setHint(tt('settings.saving'));
   try {
     const result = await api.saveSettings(draft);
     if (!result?.ok) {
-      setHint(result?.message || '保存失败', 'bad');
+      setHint(result?.message || tt('settings.saveFailed'), 'bad');
       return;
     }
     savedHasKey = Boolean(result.settings?.hasApiKey);
     pendingClearKey = false;
     settings.hotkeyOk = result.settings?.hotkeyOk;
     settings.actualHotkey = result.settings?.actualHotkey;
-    setHint('已保存，正在应用…', 'ok');
-    showToast('设置已保存');
+    setHint(tt('settings.saved'), 'ok');
+    showToast(tt('settings.savedToast'));
     setTimeout(() => api.closeSettings(), 420);
   } catch (err) {
-    setHint(err.message || '保存失败', 'bad');
+    setHint(err.message || tt('settings.saveFailed'), 'bad');
   } finally {
     els.saveBtn.disabled = false;
   }
 });
 
 els.openFontBtn.addEventListener('click', () => api.openFontWindow());
+els.openHistoryBtn.addEventListener('click', () => api.openHistory());
 els.cancelBtn.addEventListener('click', () => api.closeSettings());
 els.closeBtn.addEventListener('click', () => api.closeSettings());
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') api.closeSettings();
+  if (event.key === 'Escape' && !window.FloatAskAdvanced.recording) api.closeSettings();
 });
 
 api.onFontUpdated((font) => updateFontDisplay(font));
 
 (async () => {
+  await window.FloatAskI18nReady;
   settings = await api.getSettings();
   populate();
 })().catch((err) => {
-  setHint(`读取设置失败：${err.message}`, 'bad');
+  setHint(tt('settings.readFailed', { err: err.message }), 'bad');
+});
+
+els.language.addEventListener('change', async () => {
+  const previous = settings.language;
+  const result = await api.setLanguage(els.language.value);
+  if (!result.ok) { els.language.value = previous; showToast(result.message, true); return; }
+  settings.language = els.language.value;
+  window.FloatAskI18n.setLanguage(settings.language);
+  const keyDraft = els.apiKey.value;
+  renderProviders(); updateProviderUi(false); updateKeyUi(); updateHotkeyHelp();
+  els.apiKey.value = keyDraft;
+  els.toggleKeyBtn.textContent = tt(els.apiKey.type === 'password' ? 'settings.show' : 'settings.hide');
+  const font = await api.getFont(); updateFontDisplay(font);
+  els.saveBtn.textContent = tt(settings.firstRun ? 'settings.saveBtnStart' : 'settings.saveBtn');
+  els.autoLaunchHelp.textContent = tt(settings.isPackaged ? 'settings.autoLaunchHelpOn' : 'settings.autoLaunchHelpOff');
 });

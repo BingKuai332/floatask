@@ -1,6 +1,7 @@
 'use strict';
 
 const api = window.floatask;
+const tt = (key, params) => window.FloatAskI18n.t(key, params);
 const FONT = window.FloatAskFont;
 const DEFAULT_STACK = FONT.DEFAULT_STACK;
 
@@ -40,8 +41,8 @@ function cssFamily(family) {
 }
 
 function selectedLabel() {
-  if (state.selected === 'system') return '系统默认';
-  if (state.selected === 'custom') return `${state.custom?.name || '我的字体'}（导入）`;
+  if (state.selected === 'system') return tt('settings.fontSystem');
+  if (state.selected === 'custom') return `${state.custom?.name || tt('settings.fontMy')}${tt('settings.fontImportedSuffix')}`;
   return state.selected;
 }
 
@@ -105,35 +106,35 @@ function renderList() {
   if (state.loading) {
     const loading = document.createElement('div');
     loading.className = 'list-loading';
-    loading.innerHTML = '<span class="spinner"></span>正在读取系统字体…';
+    loading.innerHTML = `<span class="spinner"></span>${tt('font.loading')}`;
     els.fontList.appendChild(loading);
     return;
   }
 
   let visible = 0;
-  if (!query || '系统默认 system'.includes(query)) {
-    els.fontList.appendChild(makeFontItem('system', '系统默认', '永字八法 Aa 123'));
+  if (!query || (tt('font.systemDefault') + ' system').toLowerCase().includes(query)) {
+    els.fontList.appendChild(makeFontItem('system', tt('settings.fontSystem'), tt('font.sample')));
     visible++;
   }
 
   if (state.custom?.file) {
-    const customText = `${state.custom.name || '我的字体'} 导入`.toLowerCase();
+    const customText = `${state.custom.name || tt('settings.fontMy')} ${tt('font.customSuffix')}`.toLowerCase();
     if (!query || customText.includes(query)) {
-      els.fontList.appendChild(makeFontItem('custom', `${state.custom.name || '我的字体'} · 导入`, '导入字体 · 永字八法 Aa 123'));
+      els.fontList.appendChild(makeFontItem('custom', `${state.custom.name || tt('settings.fontMy')} ${tt('font.customSuffix')}`, tt('font.sample')));
       visible++;
     }
   }
 
   for (const family of state.fonts) {
     if (query && !family.toLowerCase().includes(query)) continue;
-    els.fontList.appendChild(makeFontItem(family, family, '永字八法 Aa 123'));
+    els.fontList.appendChild(makeFontItem(family, family, tt('font.sample')));
     visible++;
   }
 
   if (!visible && query) {
     const empty = document.createElement('div');
     empty.className = 'list-loading';
-    empty.textContent = '没有匹配的字体';
+    empty.textContent = tt('font.noMatch');
     els.fontList.appendChild(empty);
   }
   els.fontCount.textContent = String(state.fonts.length);
@@ -146,7 +147,7 @@ async function load() {
     state.loading = false;
     const current = result?.current || {};
     state.custom = current.customFile
-      ? { file: current.customFile, name: current.customName || '我的字体' }
+      ? { file: current.customFile, name: current.customName || tt('settings.fontMy') }
       : null;
     const family = current.family || 'system';
     state.selected = family === 'system' || family === 'custom' || state.fonts.includes(family)
@@ -159,7 +160,7 @@ async function load() {
     els.lineRange.value = String(state.lineHeight);
     renderList();
     updatePreview();
-    if (result?.fallback) showToast('未能读取系统字体，已显示备用字体列表', true);
+    if (result?.fallback) showToast(tt('font.fallbackToast'), true);
   } catch (err) {
     state.loading = false;
     state.fonts = [
@@ -168,7 +169,7 @@ async function load() {
     ];
     renderList();
     updatePreview();
-    showToast(`读取字体失败：${err.message}`, true);
+    showToast(tt('font.readFailed', { err: err.message }), true);
   }
 }
 
@@ -177,23 +178,23 @@ els.searchInput.addEventListener('input', renderList);
 els.importBtn.addEventListener('click', async () => {
   els.importBtn.disabled = true;
   const oldText = els.importBtn.textContent;
-  els.importBtn.textContent = '正在导入…';
+  els.importBtn.textContent = tt('font.importing');
   try {
     const result = await api.importFont();
     if (!result?.ok) {
-      if (!result?.canceled) showToast(result?.message || '导入失败', true);
+      if (!result?.canceled) showToast(result?.message || tt('font.importFailed'), true);
       return;
     }
     state.custom = {
       file: result.font?.customFile || '',
-      name: result.font?.customName || result.name || '我的字体'
+      name: result.font?.customName || result.name || tt('settings.fontMy')
     };
     state.selected = 'custom';
     renderList();
     updatePreview();
-    showToast(`已导入「${state.custom.name}」`);
+    showToast(tt('font.importedToast', { name: state.custom.name }));
   } catch (err) {
-    showToast(err.message || '导入失败', true);
+    showToast(err.message || tt('font.importFailed'), true);
   } finally {
     els.importBtn.disabled = false;
     els.importBtn.textContent = oldText;
@@ -225,12 +226,12 @@ els.resetBtn.addEventListener('click', () => {
   els.lineRange.value = '1.72';
   renderList();
   updatePreview();
-  showToast('已恢复默认值，点“应用字体”生效');
+  showToast(tt('font.resetToast'));
 });
 
 els.applyBtn.addEventListener('click', async () => {
   els.applyBtn.disabled = true;
-  els.applyBtn.textContent = '应用…';
+  els.applyBtn.textContent = tt('font.applying');
   try {
     const result = await api.applyFont({
       family: state.selected,
@@ -239,16 +240,16 @@ els.applyBtn.addEventListener('click', async () => {
       scope: state.scope
     });
     if (!result?.ok) {
-      showToast(result?.message || '应用失败', true);
+      showToast(result?.message || tt('font.applyFailed'), true);
       return;
     }
-    showToast('字体已应用');
+    showToast(tt('font.appliedToast'));
     setTimeout(() => api.closeFontWindow(), 220);
   } catch (err) {
-    showToast(err.message || '应用失败', true);
+    showToast(err.message || tt('font.applyFailed'), true);
   } finally {
     els.applyBtn.disabled = false;
-    els.applyBtn.textContent = '应用字体';
+    els.applyBtn.textContent = tt('font.apply');
   }
 });
 
@@ -258,4 +259,9 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') api.closeFontWindow();
 });
 
-load();
+function updateLabels() {
+  if (!els.importBtn.disabled) els.importBtn.textContent = tt('font.import');
+  if (!els.applyBtn.disabled) els.applyBtn.textContent = tt('font.apply');
+}
+window.FloatAskI18nReady.then(() => { updateLabels(); return load(); });
+document.addEventListener('floatask:language', () => { renderList(); updatePreview(); updateLabels(); });

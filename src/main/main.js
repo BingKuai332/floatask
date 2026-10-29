@@ -9,6 +9,15 @@ const fs = require('fs');
 
 const store = require('./store');
 const { PRESETS } = require('../shared/presets');
+const { t } = require('./i18n');
+const { normalizeLocale } = require('../shared/i18n');
+const history = require('./history');
+const { resolveModel, TASKS } = require('./model-config');
+const { normalizeHotkey } = require('../shared/hotkeys');
+const { createUpdater } = require('./updater');
+let updater = null;
+let recordingTimer = null;
+let lastNotifiedUpdate = '';
 const { captureRegion, cleanupCapture } = require('./capture');
 const { recognizeImage, getForegroundInfo, listSystemFonts } = require('./powershell');
 const { searchWeb } = require('./search');
@@ -32,6 +41,7 @@ let overlayDisplay = null;
 let resultWin = null;
 let settingsWin = null;
 let fontWin = null;
+let historyWin = null;
 let isQuitting = false;
 let pinned = true;
 let session = null;
@@ -141,28 +151,32 @@ function buildTrayMenu() {
   const config = store.getConfig();
   return Menu.buildFromTemplate([
     {
-      label: '框选解释',
+      label: t('tray.select'),
       accelerator: hotkey,
       click: () => startSelection()
     },
     {
-      label: '解释剪贴板文字',
+      label: t('tray.clipboard'),
       click: () => askClipboard()
     },
     { type: 'separator' },
     {
-      label: '显示悬浮球',
+      label: t('tray.history'),
+      click: () => openHistory()
+    },
+    {
+      label: t('tray.showBubble'),
       type: 'checkbox',
       checked: config.showBubble,
       click: (item) => toggleBubble(item.checked)
     },
     {
-      label: '设置…',
+      label: t('tray.settings'),
       click: () => openSettings(false)
     },
     { type: 'separator' },
     {
-      label: '退出浮问',
+      label: t('tray.quit'),
       click: () => { isQuitting = true; app.quit(); }
     }
   ]);
@@ -181,7 +195,7 @@ function createTray() {
   icon = icon.resize({ width: 16, height: 16 });
   try {
     tray = new Tray(icon);
-    tray.setToolTip(`浮问 · ${hotkey} 框选解释`);
+    tray.setToolTip(t('tray.tooltip', { hotkey }));
     tray.setContextMenu(buildTrayMenu());
     tray.on('double-click', () => startSelection());
   } catch (err) {
@@ -192,7 +206,7 @@ function createTray() {
 
 function refreshTray() {
   if (!tray) return;
-  tray.setToolTip(`浮问 · ${hotkey} 框选解释`);
+  tray.setToolTip(t('tray.tooltip', { hotkey }));
   tray.setContextMenu(buildTrayMenu());
 }
 
@@ -239,7 +253,7 @@ async function ensureBubble() {
     alwaysOnTop: true,
     hasShadow: false,
     show: false,
-    title: '浮问',
+    title: t('common.appName'),
     webPreferences: {
       preload: PRELOAD,
       contextIsolation: true,
@@ -352,7 +366,7 @@ async function startSelection() {
     hasShadow: false,
     focusable: true,
     show: false,
-    title: '框选',
+    title: t('selection.title'),
     webPreferences: {
       preload: PRELOAD,
       contextIsolation: true,
@@ -428,7 +442,7 @@ function handleSelectionRect(rawRect) {
   };
   if (clamped.width < 8 || clamped.height < 8) {
     cancelSelection();
-    notify('选区太小', '拖拽一个更大的区域再松开。');
+    notify(t('notify.regionSmall.title'), t('notify.regionSmall.body'));
     return;
   }
   closeOverlay();
@@ -436,6 +450,7 @@ function handleSelectionRect(rawRect) {
 }
 
 async function handleSelection(display, rect) {
+  const id = ++sessionCounter;
   if (session?.abort) session.abort.abort();
   session = null;
   resultState = null;
@@ -444,8 +459,14 @@ async function handleSelection(display, rect) {
   if (resultWin && !resultWin.isDestroyed()) resultWin.hide();
 
   await delay(140);
+  if (sessionCounter !== id) return;
 
-  const contextPromise = getForegroundInfo(process.pid);
+  // Attach the rejection handler immediately: capture may fail or be superseded
+  // before the OCR phase has an opportunity to await this promise.
+  const contextPromise = getForegroundInfo(process.pid).catch((err) => {
+    log('foreground info failed', err.message);
+    return {};
+  });
   let capture = null;
   let captureError = null;
   try {
@@ -453,6 +474,10 @@ async function handleSelection(display, rect) {
   } catch (err) {
     captureError = err;
     log('capture failed', err.message);
+  }
+  if (sessionCounter !== id) {
+    if (capture) cleanupCapture(capture.pngPath);
+    return;
   }
 
   const screenRect = {
@@ -463,14 +488,13 @@ async function handleSelection(display, rect) {
   };
 
   const config = store.getConfig();
-  const id = ++sessionCounter;
   session = {
     id,
     selectionText: '',
     windowInfo: {},
     imageDataUrl: capture?.visionDataUrl || null,
     previewDataUrl: capture?.previewDataUrl || '',
-    vision: Boolean(config.vision && capture),
+    vision: resolveModel(config, 'initial', Boolean(capture)).vision,
     webEnabled: Boolean(config.webEnabled),
     sources: [],
     pendingSources: [],
@@ -501,22 +525,26 @@ async function handleSelection(display, rect) {
     font: fontPayload(),
     status: captureError ? 'error' : 'ocr',
     error: captureError ? {
-      message: '读取屏幕失败',
+      message: t('main.captureFailed'),
       hint: captureError.message
     } : null
   };
 
   await showResult(initPayload, screenRect, display);
+  if (!session || session.id !== id) {
+    if (capture) cleanupCapture(capture.pngPath);
+    return;
+  }
 
   if (captureError) {
     sendResult({
       type: 'error',
       code: 'capture',
-      message: '读取屏幕失败',
+      message: t('main.captureFailed'),
       hint: captureError.message,
       retryable: false
     });
-    sendResult({ type: 'needs-input', message: '读取屏幕失败。可以把要解释的内容粘贴到下面。' });
+    sendResult({ type: 'needs-input', message: t('main.captureFailedPaste') });
     return;
   }
 
@@ -525,7 +553,9 @@ async function handleSelection(display, rect) {
     if (!session || session.id !== id) return;
     session.windowInfo = info;
     sendResult({ type: 'context', windowInfo: info });
-  }).catch(() => {});
+  }).catch((err) => {
+    log('foreground info failed', err.message);
+  });
 
   let ocr = { text: '', error: '' };
   try {
@@ -549,18 +579,18 @@ async function handleSelection(display, rect) {
     empty: !ocr.text
   });
 
-  const info = await contextPromise;
+  const windowInfo = await contextPromise;
   if (!session || session.id !== id) return;
-  session.windowInfo = info;
-  sendResult({ type: 'context', windowInfo: info });
+  session.windowInfo = windowInfo;
+  sendResult({ type: 'context', windowInfo: session.windowInfo });
 
-  const hasModelAccess = Boolean(store.getConfig().apiKey) || isLocalBaseUrl(store.getConfig().baseUrl);
+  const hasModelAccess = hasModelConfig(resolveModel(store.getConfig(), 'initial', Boolean(session.imageDataUrl)));
   if (!hasModelAccess) {
     sendResult({
       type: 'error',
       code: 'config',
-      message: '还没有配置模型服务',
-      hint: '打开设置，填入 API Key；或改用本地 Ollama。',
+      message: t('main.noModel'),
+      hint: t('main.noModelHint'),
       retryable: false
     });
     return;
@@ -569,13 +599,13 @@ async function handleSelection(display, rect) {
   if (!ocr.text && !session.vision) {
     sendResult({
       type: 'needs-input',
-      message: '没有识别到文字。可以把内容粘贴到下面，或打开“截图理解”后重新框选。'
+      message: t('main.needPaste')
     });
     return;
   }
 
   if (!ocr.text && session.vision) {
-    sendResult({ type: 'notice', message: '没有识别到文字，已把截图交给视觉模型。' });
+    sendResult({ type: 'notice', message: t('main.noOcrVision') });
   }
 
   startInitial();
@@ -605,7 +635,7 @@ async function ensureResultWindow() {
     alwaysOnTop: true,
     hasShadow: false,
     show: false,
-    title: '浮问',
+    title: t('common.appName'),
     webPreferences: {
       preload: PRELOAD,
       contextIsolation: true,
@@ -649,9 +679,10 @@ function positionResult(screenRect, display) {
   };
 }
 
-async function showResult(payload, screenRect, display) {
+async function showResult(payload, screenRect, display, sessionId = session?.id) {
+  if (!session || session.id !== sessionId) return;
   const win = await ensureResultWindow();
-  if (!win || win.isDestroyed()) return;
+  if (!win || win.isDestroyed() || !session || session.id !== sessionId) return;
   const bounds = positionResult(screenRect, display);
   win.setBounds(bounds, false);
   resultState = payload;
@@ -663,6 +694,7 @@ async function showResult(payload, screenRect, display) {
 }
 
 function hideResult() {
+  ++sessionCounter;
   if (resultWin && !resultWin.isDestroyed()) resultWin.hide();
   if (session?.abort) session.abort.abort();
   session = null;
@@ -680,6 +712,23 @@ function sendResult(payload) {
 /* Conversation                                                        */
 /* ------------------------------------------------------------------ */
 
+function broadcastHistory() {
+  if (historyWin && !historyWin.isDestroyed()) historyWin.webContents.send('history:update');
+}
+
+function saveHistoryIfNeeded() {
+  if (!session || !session.history?.length) return;
+  if (!store.getConfig().saveHistory || session.historyDeleted) return;
+  try {
+    const config = store.getConfig();
+    history.record(session, { model: session.lastModel?.model || config.model, provider: session.lastModel?.provider || config.provider });
+    broadcastHistory();
+  } catch (err) {
+    log('history record failed', err.message);
+    sendResult({ type: 'notice', message: t('history.writeFailed') });
+  }
+}
+
 function isLocalBaseUrl(url) {
   return /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(\/|$)/i.test(String(url || ''));
 }
@@ -689,10 +738,10 @@ function hasModelConfig(config) {
 }
 
 function configError(config) {
-  if (!config.baseUrl) return { code: 'config', message: '还没有填写 API 地址', hint: '打开设置，选择服务商或填写 Base URL。' };
-  if (!config.model) return { code: 'config', message: '还没有填写模型名称', hint: '打开设置填写模型名，例如 deepseek-chat。' };
+  if (!config.baseUrl) return { code: 'config', message: t('main.noBaseUrl'), hint: t('main.noBaseUrlHint') };
+  if (!config.model) return { code: 'config', message: t('main.noModelName'), hint: t('main.noModelNameHint') };
   if (!config.apiKey && !isLocalBaseUrl(config.baseUrl)) {
-    return { code: 'config', message: '还没有填写 API Key', hint: '打开设置填入 Key；本地 Ollama 可以留空。' };
+    return { code: 'config', message: t('main.noApiKey'), hint: t('main.noApiKeyHint') };
   }
   return null;
 }
@@ -700,7 +749,7 @@ function configError(config) {
 function searchQueryForInitial() {
   if (!session?.selectionText) return '';
   const text = session.selectionText.replace(/\s+/g, ' ').trim();
-  if (text.length <= 60) return `${text} 是什么 作用`;
+  if (text.length <= 60) return `${text}${t('main.searchSuffix')}`;
   return text.slice(0, 150);
 }
 
@@ -734,7 +783,8 @@ async function performSearch(query, config) {
 async function startInitial() {
   if (!session) return;
   const id = session.id;
-  const config = store.getConfig();
+  const config = resolveModel(store.getConfig(), 'initial', Boolean(session.imageDataUrl));
+  session.vision = config.vision;
   const error = configError(config);
   if (error) {
     sendResult({ type: 'error', ...error, retryable: false });
@@ -743,7 +793,9 @@ async function startInitial() {
 
   session.history = [];
   session.lastAnswerComplete = false;
-  session.busy = false;
+  session.busy = true;
+  const requestController = new AbortController();
+  session.abort = requestController;
   session.sources = [];
   session.pendingSources = [];
 
@@ -751,24 +803,25 @@ async function startInitial() {
   let webNote = '';
   const skipInitialSearch = !session.selectionText || looksLikeUiOrCode(session.selectionText);
   if (skipInitialSearch && session.selectionText && session.webEnabled && config.searchProvider !== 'off') {
-    sendResult({ type: 'notice', message: '这段内容看起来是界面或代码，已跳过自动联网；仍可在追问时检索。' });
+    sendResult({ type: 'notice', message: t('main.skipSearchNotice') });
   }
   if (session.webEnabled && session.selectionText && config.searchProvider !== 'off' && !skipInitialSearch) {
-    sendResult({ type: 'phase', phase: 'searching', message: '正在联网检索…' });
+    sendResult({ type: 'phase', phase: 'searching', code: 'searching', message: t('main.phaseSearching') });
     try {
       const result = await performSearch(searchQueryForInitial(), config);
       sources = result.results;
-      if (!session || session.id !== id) return;
+      if (!session || session.id !== id || requestController.signal.aborted) return;
       session.sources = sources;
       session.pendingSources = sources;
       if (sources.length) sendResult({ type: 'sources', sources, mode: 'initial' });
     } catch (err) {
+      if (!session || session.id !== id || requestController.signal.aborted) return;
       webNote = err.message;
-      sendResult({ type: 'notice', message: `联网检索失败，改为直接回答：${err.message}` });
+      sendResult({ type: 'notice', message: t('main.searchFailedInitial', { err: err.message }) });
     }
   }
 
-  if (!session || session.id !== id) return;
+  if (!session || session.id !== id || requestController.signal.aborted) return;
 
   session.systemContext = buildSystemContext({
     selection: session.selectionText,
@@ -785,8 +838,8 @@ async function startInitial() {
     manual: session.manual
   });
 
-  sendResult({ type: 'phase', phase: 'thinking', message: '正在组织解释…' });
-  await runStream({ messages, mode: 'initial', question: '', webNote });
+  sendResult({ type: 'phase', phase: 'thinking', code: 'thinking-initial', message: t('main.phaseThinking') });
+  await runStream({ messages, mode: 'initial', question: '', webNote, controller: requestController, requestConfig: config });
 }
 
 async function handleAsk(rawQuestion) {
@@ -795,13 +848,17 @@ async function handleAsk(rawQuestion) {
   if (!question) return;
   if (session.busy) return;
 
-  const config = store.getConfig();
+  const config = resolveModel(store.getConfig(), 'followup', Boolean(session.imageDataUrl));
+  session.vision = config.vision;
   const error = configError(config);
   if (error) {
     sendResult({ type: 'error', ...error, retryable: false });
     return;
   }
 
+  session.busy = true;
+  const requestController = new AbortController();
+  session.abort = requestController;
   session.lastQuestion = question;
   session.lastAnswerComplete = false;
   const id = session.id;
@@ -809,19 +866,20 @@ async function handleAsk(rawQuestion) {
   let webNote = '';
 
   if (session.webEnabled && config.searchProvider !== 'off') {
-    sendResult({ type: 'phase', phase: 'searching', message: '正在检索相关资料…' });
+    sendResult({ type: 'phase', phase: 'searching', code: 'searching', message: t('main.phaseSearchingFollow') });
     try {
       const result = await performSearch(searchQueryForQuestion(question), config);
       sources = result.results;
-      if (!session || session.id !== id) return;
+      if (!session || session.id !== id || requestController.signal.aborted) return;
       if (sources.length) sendResult({ type: 'sources', sources, mode: 'followup' });
     } catch (err) {
+      if (!session || session.id !== id || requestController.signal.aborted) return;
       webNote = err.message;
-      sendResult({ type: 'notice', message: `检索失败，改为直接回答：${err.message}` });
+      sendResult({ type: 'notice', message: t('main.searchFailedFollow', { err: err.message }) });
     }
   }
 
-  if (!session || session.id !== id) return;
+  if (!session || session.id !== id || requestController.signal.aborted) return;
 
   session.pendingSources = sources;
   session.systemContext = session.systemContext || buildSystemContext({
@@ -840,15 +898,17 @@ async function handleAsk(rawQuestion) {
     vision: session.vision
   });
 
-  sendResult({ type: 'phase', phase: 'thinking', message: '正在回答…' });
-  await runStream({ messages, mode: 'followup', question, webNote });
+  sendResult({ type: 'phase', phase: 'thinking', code: 'thinking-followup', message: t('main.phaseAnswering') });
+  await runStream({ messages, mode: 'followup', question, webNote, controller: requestController, requestConfig: config });
 }
 
-async function runStream({ messages, mode, question, webNote, retriedWithoutImage = false }) {
+async function runStream({ messages, mode, question, webNote, retriedWithoutImage = false, controller = new AbortController(), requestConfig }) {
   if (!session) return;
   const id = session.id;
-  const config = store.getConfig();
-  const controller = new AbortController();
+  const config = requestConfig || resolveModel(store.getConfig(), mode === 'initial' ? 'initial' : 'followup', Boolean(session.imageDataUrl));
+  session.lastModel = config;
+  session.vision = config.vision;
+  sendResult({ type: 'model', model: config.model, providerLabel: PRESETS[config.provider]?.label || config.provider, vision: config.vision });
   session.abort = controller;
   session.busy = true;
 
@@ -861,15 +921,15 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
       signal: controller.signal,
       onDelta: (delta) => {
         full += delta;
-        if (session && session.id === id) sendResult({ type: 'delta', text: delta });
+        if (session && session.id === id && session.abort === controller) sendResult({ type: 'delta', text: delta });
       }
     });
 
-    if (!session || session.id !== id) return;
+    if (!session || session.id !== id || session.abort !== controller) return;
     full = result.text || full;
     if (mode === 'initial') {
       session.history = [
-        { role: 'user', content: '请解释这块被框选的内容。' },
+        { role: 'user', content: t('prompt.initialUser') },
         { role: 'assistant', content: full }
       ];
     } else if (question) {
@@ -877,6 +937,7 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
       session.history.push({ role: 'assistant', content: full });
     }
     session.lastAnswerComplete = true;
+    saveHistoryIfNeeded();
     sendResult({
       type: 'done',
       text: full,
@@ -885,13 +946,13 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
       webNote
     });
   } catch (err) {
-    if (!session || session.id !== id) return;
+    if (!session || session.id !== id || session.abort !== controller) return;
 
     if (err.code === 'aborted') {
       if (full.trim().length > 12) {
         if (mode === 'initial') {
           session.history = [
-            { role: 'user', content: '请解释这块被框选的内容。' },
+            { role: 'user', content: t('prompt.initialUser') },
             { role: 'assistant', content: full }
           ];
         } else if (question) {
@@ -899,35 +960,37 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
           session.history.push({ role: 'assistant', content: full });
         }
         session.lastAnswerComplete = true;
+        saveHistoryIfNeeded();
       }
       sendResult({ type: 'stopped', text: full });
       return;
     }
 
     const canRetryWithoutImage = !retriedWithoutImage &&
-      mode === 'initial' &&
-      Boolean(session.imageDataUrl) &&
+      config.vision && Boolean(session.imageDataUrl) &&
       (err.status === 400 || /image|vision|multimodal|content.*type/i.test(`${err.message} ${err.detail}`));
 
     if (canRetryWithoutImage) {
       session.busy = false;
       session.abort = null;
       session.vision = false;
-      sendResult({ type: 'notice', message: '当前模型不支持截图，已自动改用识别文字回答。' });
-      const fallbackMessages = buildInitialMessages({
+      sendResult({ type: 'notice', code: 'vision-fallback', message: t('main.visionFallback') });
+      const fallbackMessages = mode === 'initial' ? buildInitialMessages({
         selection: session.selectionText,
         windowInfo: session.windowInfo,
         sources: session.pendingSources || [],
         image: null,
         vision: false,
         manual: session.manual
-      });
+      }) : buildFollowupMessages({ systemContext: session.systemContext, history: session.history, question,
+        sources: session.pendingSources || [], webNote, image: null, vision: false });
       await runStream({
         messages: fallbackMessages,
-        mode: 'initial',
-        question: '',
+        mode,
+        question,
         webNote,
-        retriedWithoutImage: true
+        retriedWithoutImage: true,
+        requestConfig: resolveModel(store.getConfig(), mode === 'initial' ? 'initial' : 'followup', false)
       });
       return;
     }
@@ -935,7 +998,7 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
     sendResult({
       type: 'error',
       code: err.code || 'ai_error',
-      message: err.message || '模型请求失败',
+      message: err.message || t('ai.fallback'),
       hint: err.hint || '',
       detail: String(err.detail || '').slice(0, 900),
       status: err.status || 0,
@@ -953,7 +1016,7 @@ async function askClipboard() {
   let text = '';
   try { text = clipboard.readText().trim(); } catch { /* ignore */ }
   if (!text) {
-    notify('剪贴板是空的', '先复制一段文字，再从托盘选择“解释剪贴板文字”。');
+    notify(t('notify.clipboardEmpty.title'), t('notify.clipboardEmpty.body'));
     return;
   }
   if (text.length > 6000) text = text.slice(0, 6000);
@@ -974,7 +1037,7 @@ async function askClipboard() {
   session = {
     id,
     selectionText: text,
-    windowInfo: { title: '剪贴板', process: 'clipboard' },
+    windowInfo: { title: t('main.clipboardTitle'), process: 'clipboard' },
     imageDataUrl: null,
     previewDataUrl: '',
     vision: false,
@@ -1009,6 +1072,7 @@ async function askClipboard() {
     status: 'ready',
     error: null
   }, screenRect, display);
+  if (!session || session.id !== id) return;
   sendResult({ type: 'context', windowInfo: session.windowInfo });
   startInitial();
 }
@@ -1114,6 +1178,23 @@ function broadcastFont() {
   if (resultWin && !resultWin.isDestroyed()) resultWin.webContents.send('font:update', payload);
   if (settingsWin && !settingsWin.isDestroyed()) settingsWin.webContents.send('font:update', payload);
   if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.webContents.send('font:update', payload);
+  if (historyWin && !historyWin.isDestroyed()) historyWin.webContents.send('font:update', payload);
+}
+
+/** Push the current locale to every live renderer and refresh native chrome. */
+function broadcastLanguage() {
+  const langCode = store.getConfig().language;
+  const payload = { language: langCode };
+  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin]) {
+    if (win && !win.isDestroyed()) win.webContents.send('language:update', payload);
+  }
+  refreshTray();
+  try {
+    if (resultWin && !resultWin.isDestroyed()) resultWin.setTitle('FloatAsk');
+    if (settingsWin && !settingsWin.isDestroyed()) settingsWin.setTitle(t('settings.title'));
+    if (fontWin && !fontWin.isDestroyed()) fontWin.setTitle(t('font.title'));
+    if (historyWin && !historyWin.isDestroyed()) historyWin.setTitle(t('history.title'));
+  } catch { /* titles are cosmetic */ }
 }
 
 async function openFontWindow() {
@@ -1146,7 +1227,7 @@ async function openFontWindow() {
     fullscreenable: false,
     skipTaskbar: false,
     show: false,
-    title: '字体与阅读',
+    title: t('font.title'),
     parent: settingsWin && !settingsWin.isDestroyed() && settingsWin.isVisible() ? settingsWin : undefined,
     webPreferences: {
       preload: PRELOAD,
@@ -1167,6 +1248,71 @@ async function openFontWindow() {
   await fontWin.loadFile(path.join(RENDERER, 'font.html'));
   fontWin.show();
   fontWin.focus();
+}
+
+async function openHistory(recordId = '') {
+  if (historyWin && !historyWin.isDestroyed()) {
+    if (!historyWin.isVisible()) {
+      try {
+        await historyWin.loadFile(path.join(RENDERER, 'history.html'));
+      } catch (err) {
+        log('history reload failed', err.message);
+      }
+    }
+    historyWin.show();
+    historyWin.focus();
+    if (recordId) historyWin.webContents.send('history:show-record', { id: recordId });
+    return;
+  }
+
+  const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  const area = display.workArea;
+  const width = Math.min(940, area.width - 24);
+  const height = Math.min(680, area.height - 24);
+  historyWin = new BrowserWindow({
+    width,
+    height,
+    x: area.x + Math.round((area.width - width) / 2),
+    y: area.y + Math.round((area.height - height) / 2),
+    minWidth: Math.min(760, area.width - 24),
+    minHeight: Math.min(540, area.height - 24),
+    frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
+    resizable: true,
+    minimizable: true,
+    maximizable: true,
+    fullscreenable: false,
+    skipTaskbar: false,
+    show: false,
+    title: t('history.title'),
+    parent: settingsWin && !settingsWin.isDestroyed() && settingsWin.isVisible() ? settingsWin : undefined,
+    webPreferences: {
+      preload: PRELOAD,
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true
+    }
+  });
+  historyWin.setMenuBarVisibility(false);
+  secureWindow(historyWin);
+  historyWin.on('close', (event) => {
+    if (isQuitting) return;
+    event.preventDefault();
+    historyWin.hide();
+  });
+  historyWin.on('closed', () => { historyWin = null; });
+
+  await historyWin.loadFile(path.join(RENDERER, 'history.html'));
+  historyWin.show();
+  historyWin.focus();
+  if (recordId) {
+    setTimeout(() => {
+      if (historyWin && !historyWin.isDestroyed()) {
+        historyWin.webContents.send('history:show-record', { id: recordId });
+      }
+    }, 350);
+  }
 }
 
 async function openSettings(firstRun = false) {
@@ -1204,7 +1350,7 @@ async function openSettings(firstRun = false) {
     fullscreenable: false,
     skipTaskbar: false,
     show: false,
-    title: '浮问设置',
+    title: t('settings.title'),
     webPreferences: {
       preload: PRELOAD,
       contextIsolation: true,
@@ -1219,7 +1365,8 @@ async function openSettings(firstRun = false) {
     event.preventDefault();
     settingsWin.hide();
   });
-  settingsWin.on('closed', () => { settingsWin = null; });
+  settingsWin.on('hide', stopHotkeyRecording);
+  settingsWin.on('closed', () => { stopHotkeyRecording(); settingsWin = null; });
 
   await settingsWin.loadFile(path.join(RENDERER, 'settings.html'));
   settingsWin.show();
@@ -1245,6 +1392,11 @@ function applyLoginItem(config) {
   }
 }
 
+function stopHotkeyRecording() {
+  if (!recordingTimer) return;
+  clearTimeout(recordingTimer); recordingTimer = null;
+  registerHotkey(store.getConfig().hotkey);
+}
 function registerHotkey(accel) {
   globalShortcut.unregisterAll();
   hotkeyOk = false;
@@ -1263,9 +1415,9 @@ function registerHotkey(accel) {
   refreshTray();
   if (!hotkeyOk) {
     log('no global hotkey available');
-    notify('快捷键被占用', '可以在设置里换一个快捷键，或点击悬浮球框选。');
+    notify(t('notify.hotkeyTaken.title'), t('notify.hotkeyTaken.body'));
   } else if (hotkey !== accel) {
-    notify('快捷键已调整', `${accel} 被占用，已改用 ${hotkey}。`);
+    notify(t('notify.hotkeyAdjusted.title'), t('notify.hotkeyAdjusted.body', { wanted: accel, actual: hotkey }));
   }
   refreshBubble();
 }
@@ -1335,6 +1487,13 @@ ipcMain.handle('app:info', () => ({
   onboarded: store.getConfig().onboarded
 }));
 ipcMain.handle('app:open-external', (_event, url) => openExternal(url));
+ipcMain.handle('app:language', () => store.getConfig().language);
+ipcMain.handle('app:set-language', (_event, language) => {
+  try {
+    store.save({ language: normalizeLocale(language) }); broadcastLanguage();
+    return { ok: true };
+  } catch (err) { return { ok: false, message: err.message }; }
+});
 ipcMain.handle('app:copy', (_event, text) => {
   try { clipboard.writeText(String(text || '').slice(0, 100000)); return true; } catch { return false; }
 });
@@ -1351,7 +1510,7 @@ ipcMain.on('result:pin', (_event, value) => {
   if (resultWin && !resultWin.isDestroyed()) resultWin.setAlwaysOnTop(pinned, 'screen-saver');
 });
 ipcMain.handle('session:state', () => ({
-  init: resultState,
+  init: resultState ? { ...resultState, selectionText: session?.selectionText || resultState.selectionText, messages: session?.history || [], sources: session?.pendingSources || [] } : null,
   busy: Boolean(session?.busy),
   pinned,
   webEnabled: Boolean(session?.webEnabled)
@@ -1359,7 +1518,11 @@ ipcMain.handle('session:state', () => ({
 
 ipcMain.on('session:ask', (_event, question) => { handleAsk(question); });
 ipcMain.on('session:stop', () => {
-  if (session?.abort) session.abort.abort();
+  if (session?.abort) {
+    session.abort.abort();
+    session.busy = false;
+    sendResult({ type: 'stopped' });
+  }
 });
 ipcMain.on('session:retry', () => { retryLast(); });
 ipcMain.on('session:regenerate', () => { retryLast(); });
@@ -1370,6 +1533,13 @@ ipcMain.on('session:manual', async (_event, text) => {
   const value = String(text || '').trim().slice(0, 6000);
   if (!value || !session) return;
   if (session.abort) session.abort.abort();
+  // Replacing the captured content starts a new conversation. Invalidate any
+  // old OCR, search or stream callback before changing the shared session.
+  const id = ++sessionCounter;
+  session.id = id;
+  session.historyId = null;
+  session.historyDeleted = false;
+  session.abort = null;
   session.busy = false;
   session.selectionText = value;
   session.manual = true;
@@ -1381,6 +1551,7 @@ ipcMain.on('session:manual', async (_event, text) => {
   session.systemContext = buildSystemContext({ selection: value, windowInfo: session.windowInfo, sources: [] });
   sendResult({ type: 'manual-ack', text: value });
   await delay(60);
+  if (!session || session.id !== id) return;
   startInitial();
 });
 
@@ -1392,9 +1563,9 @@ ipcMain.handle('font:get', () => fontPayload());
 ipcMain.handle('font:import', async () => {
   try {
     const options = {
-      title: '导入字体文件',
+      title: t('font.fileTitle'),
       properties: ['openFile'],
-      filters: [{ name: '字体文件', extensions: ['ttf', 'otf', 'ttc', 'woff', 'woff2'] }]
+      filters: [{ name: t('font.fileFilter'), extensions: ['ttf', 'otf', 'ttc', 'woff', 'woff2'] }]
     };
     const result = fontWin
       ? await dialog.showOpenDialog(fontWin, options)
@@ -1404,11 +1575,11 @@ ipcMain.handle('font:import', async () => {
     const source = result.filePaths[0];
     const ext = path.extname(source).toLowerCase();
     if (!FONT_EXTENSIONS.has(ext)) {
-      return { ok: false, message: '只支持 .ttf / .otf / .ttc / .woff / .woff2 字体文件' };
+      return { ok: false, message: t('font.fileTypeError') };
     }
     const stat = fs.statSync(source);
     if (stat.size > 40 * 1024 * 1024) {
-      return { ok: false, message: '字体文件不能超过 40MB' };
+      return { ok: false, message: t('font.fileSizeError') };
     }
 
     const oldFile = store.getConfig().customFontFile;
@@ -1428,7 +1599,7 @@ ipcMain.handle('font:import', async () => {
     broadcastFont();
     return { ok: true, font: fontPayload(), name: displayName };
   } catch (err) {
-    return { ok: false, message: err.message || '导入字体失败' };
+    return { ok: false, message: err.message || t('font.importFailed') };
   }
 });
 ipcMain.handle('font:apply', (_event, patch) => {
@@ -1450,13 +1621,64 @@ ipcMain.on('font:close', () => {
   if (fontWin && !fontWin.isDestroyed()) fontWin.hide();
 });
 
+ipcMain.handle('hotkey:recording', (_event, enabled) => {
+  if (enabled) {
+    clearTimeout(recordingTimer); globalShortcut.unregisterAll();
+    recordingTimer = setTimeout(stopHotkeyRecording, 30000);
+  } else stopHotkeyRecording();
+  return true;
+});
+ipcMain.handle('updates:state', () => updater?.getState());
+ipcMain.handle('updates:check', () => updater?.check());
+ipcMain.handle('updates:download', () => updater?.download());
+ipcMain.handle('updates:install', async () => {
+  const result = await updater?.install();
+  if (result?.ok) { isQuitting = true; setTimeout(() => app.quit(), 350); }
+  return result;
+});
+ipcMain.handle('settings:test-profile', async (_event, { task, patch } = {}) => {
+  if (!TASKS.includes(task)) return { ok: false, message: t('models.invalid') };
+  const base = draftConfig(patch || {});
+  const p = patch?.modelProfiles?.[task] || {};
+  const old = store.getConfig().modelProfiles[task];
+  base.modelProfiles = { [task]: { ...old, ...p, enabled: true, apiKey: p.clearApiKey ? '' : p.apiKey || old.apiKey } };
+  const config = resolveModel(base, task, false);
+  // A connection test validates the chosen endpoint and model; no screenshots are sent.
+  try { const error = configError(config); if (error) return { ok: false, ...error }; return { ok: true, ...await testConnection(config) }; }
+  catch (error) { return { ok: false, message: error.message, hint: error.hint }; }
+});
 ipcMain.handle('settings:get', () => settingsPayload());
 ipcMain.handle('settings:save', (_event, patch) => {
   try {
+    stopHotkeyRecording();
+    if (typeof patch?.hotkey === 'string') {
+      const candidate = normalizeHotkey(patch.hotkey);
+      if (!candidate) throw new Error(t('hotkey.invalid'));
+      if (!globalShortcut.isRegistered(candidate)) {
+        if (!globalShortcut.register(candidate, () => startSelection())) throw new Error(t('hotkey.taken'));
+        globalShortcut.unregister(candidate);
+      }
+    }
+    const nextDraft = draftConfig(patch || {});
+    for (const task of TASKS) {
+      const p = patch?.modelProfiles?.[task];
+      if (!p?.enabled) continue;
+      const old = store.getConfig().modelProfiles[task];
+      const config = { ...nextDraft, model: p.model || nextDraft.model };
+      if (p.customService) Object.assign(config, { baseUrl: p.baseUrl, apiKey: p.clearApiKey ? '' : p.apiKey || old.apiKey });
+      if (!/^https?:\/\//i.test(config.baseUrl || '')) throw new Error(t('settings.validateBaseUrl'));
+      const deletingKey = p.customService ? p.clearApiKey === true : patch.clearApiKey === true;
+      const error = configError(config);
+      // Clearing credentials is a valid saved state even if it temporarily
+      // makes an enabled task unavailable. Requests still validate before use.
+      if (error && !(deletingKey && config.baseUrl && config.model && !config.apiKey)) throw new Error(error.message);
+    }
+    const prevLanguage = store.getConfig().language;
     const saved = store.save(patch && typeof patch === 'object' ? patch : {});
     store.markOnboarded();
     settingsFirstRun = false;
     applySettings();
+    if (store.getConfig().language !== prevLanguage) broadcastLanguage();
     return { ok: true, settings: { ...saved, hotkeyOk, actualHotkey: hotkey } };
   } catch (err) {
     return { ok: false, message: err.message };
@@ -1465,7 +1687,7 @@ ipcMain.handle('settings:save', (_event, patch) => {
 ipcMain.handle('settings:test', async (_event, patch) => {
   const draft = draftConfig(patch && typeof patch === 'object' ? patch : {});
   if (!draft.apiKey && !isLocalBaseUrl(draft.baseUrl)) {
-    return { ok: false, message: '请先填写 API Key', hint: '本地 Ollama 不需要 Key。' };
+    return { ok: false, message: t('settings.testNeedKey'), hint: t('settings.welcomeNote') };
   }
   try {
     const result = await testConnection(draft);
@@ -1480,12 +1702,71 @@ ipcMain.handle('settings:test', async (_event, patch) => {
         status: err.status
       };
     }
-    return { ok: false, message: err.message || '连接失败' };
+    return { ok: false, message: err.message || t('ai.network') };
   }
 });
 ipcMain.on('settings:close', () => {
   if (settingsWin && !settingsWin.isDestroyed()) settingsWin.hide();
   refreshBubble();
+});
+
+/* ------------------------------------------------------------------ */
+/* History                                                             */
+/* ------------------------------------------------------------------ */
+
+ipcMain.handle('history:resume', async (_event, id) => {
+  try {
+    const record = history.get(String(id || ''));
+    if (!record || !record.messages?.length) return { ok: false, message: t('history.resumeFailed') };
+    if (session?.abort) session.abort.abort();
+    const config = store.getConfig();
+    const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+    const area = display.workArea;
+    const screenRect = { x: area.x + Math.round(area.width / 2), y: area.y + 50, width: 0, height: 0 };
+    session = {
+      id: ++sessionCounter, historyId: record.id,
+      selectionText: record.selectionText || '', windowInfo: { title: record.windowTitle || '', process: record.process || '' },
+      imageDataUrl: null, previewDataUrl: '', vision: false,
+      webEnabled: Boolean(config.webEnabled), sources: record.sources || [], pendingSources: record.sources || [],
+      history: record.messages, lastQuestion: '', lastAnswerComplete: true,
+      manual: record.source === 'manual', busy: false, abort: null, display, screenRect,
+      createdAt: record.createdAt
+    };
+    session.systemContext = buildSystemContext({ selection: session.selectionText, windowInfo: session.windowInfo, sources: session.sources });
+    await showResult({ selectionText: session.selectionText, windowInfo: session.windowInfo, preview: '', vision: false,
+      webEnabled: session.webEnabled, provider: config.provider, providerLabel: PRESETS[config.provider]?.label || config.provider,
+      model: config.model, hasApiKey: Boolean(config.apiKey) || isLocalBaseUrl(config.baseUrl), hotkey, pinned,
+      font: fontPayload(), status: 'history', messages: record.messages, sources: record.sources || [] }, screenRect, display);
+    if (historyWin && !historyWin.isDestroyed()) historyWin.hide();
+    return { ok: true };
+  } catch (err) { return { ok: false, message: err.message }; }
+});
+ipcMain.handle('history:list', () => {
+  try { return { ok: true, records: history.list() }; }
+  catch (err) { return { ok: false, message: err.message }; }
+});
+ipcMain.handle('history:get', (_event, id) => {
+  try { return { ok: true, record: history.get(String(id || '')) }; }
+  catch (err) { return { ok: false, message: err.message }; }
+});
+ipcMain.handle('history:favorite', (_event, { id, favorite }) => {
+  try { const ok = history.setFavorite(String(id || ''), Boolean(favorite)); broadcastHistory(); return { ok }; }
+  catch (err) { return { ok: false, message: err.message }; }
+});
+ipcMain.handle('history:delete', (_event, id) => {
+  try { const key = String(id || ''); const ok = history.remove(key); if (session?.historyId === key) session.historyDeleted = true; broadcastHistory(); return { ok }; }
+  catch (err) { return { ok: false, message: err.message }; }
+});
+ipcMain.handle('history:clear', (_event, keepFavorites) => {
+  try { const removed = history.clear(keepFavorites !== false); if (session?.historyId && !history.get(session.historyId)) session.historyDeleted = true; broadcastHistory(); return { ok: true, removed }; }
+  catch (err) { return { ok: false, message: err.message }; }
+});
+ipcMain.on('history:open', () => { openHistory(); });
+ipcMain.on('history:close', () => {
+  if (historyWin && !historyWin.isDestroyed()) historyWin.hide();
+});
+ipcMain.on('history:copy', (_event, text) => {
+  try { clipboard.writeText(String(text || '').slice(0, 200000)); } catch { /* ignore */ }
 });
 
 /* ------------------------------------------------------------------ */
@@ -1510,6 +1791,19 @@ if (!gotLock) {
     app.setAppUserModelId('com.floatask.app');
     store.load();
     protocol.handle('floatask-font', handleFontProtocol);
+    history.load();
+    updater = createUpdater({ app, onState: state => {
+      if (settingsWin && !settingsWin.isDestroyed()) settingsWin.webContents.send('updates:state', state);
+      if (state.phase === 'available' && state.available.version !== lastNotifiedUpdate) {
+        lastNotifiedUpdate = state.available.version;
+        notify(t('update.title'), t('update.available', { version: state.available.version }));
+      }
+    } });
+    if (app.isPackaged) {
+      const autoCheck = () => { if (store.getConfig().autoCheckUpdates) updater.check(); };
+      setTimeout(autoCheck, 10000).unref();
+      setInterval(autoCheck, 6 * 60 * 60 * 1000).unref();
+    }
     cleanupCustomFonts();
     try {
       const tmp = path.join(app.getPath('userData'), 'tmp');

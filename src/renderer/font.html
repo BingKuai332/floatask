@@ -1,12 +1,10 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
+<!DOCTYPE html><html lang="zh-CN"><head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="font.css">
-  <title>字体与阅读</title>
+  <title data-i18n="settings.fontTitle">字体与阅读</title>
 </head>
 <body>
   <div class="shell">
@@ -15,13 +13,13 @@
         <div class="brand">
           <img class="brand-logo" src="../../resources/icon.png" alt="">
           <div>
-            <div class="brand-title">字体与阅读</div>
-            <div class="brand-sub">解释内容 / 整个界面，可分别选择</div>
+            <div class="brand-title" data-i18n="settings.fontTitle">字体与阅读</div>
+            <div class="brand-sub" data-i18n="font.sub">解释内容 / 整个界面，可分别选择</div>
           </div>
         </div>
-        <button id="closeBtn" class="icon-btn no-drag" title="关闭">
+        <button id="closeBtn" class="icon-btn no-drag" title="关闭" data-i18n-title="common.close">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="m6 6 12 12M18 6 6 18"/>
+            <path d="m6 6 12 12M18 6 6 18"></path>
           </svg>
         </button>
       </header>
@@ -30,64 +28,62 @@
         <aside class="font-pane">
           <div class="search-wrap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-              <circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/>
+              <circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4 4"></path>
             </svg>
-            <input id="searchInput" type="text" placeholder="搜索字体…" spellcheck="false">
+            <input id="searchInput" type="text" placeholder="搜索字体…" spellcheck="false" data-i18n-ph="font.searchPlaceholder">
           </div>
           <button id="importBtn" class="import-btn" type="button">＋ 导入字体文件…</button>
           <div id="fontList" class="font-list">
-            <div class="list-loading"><span class="spinner"></span>正在读取系统字体…</div>
+            <div class="list-loading"><span class="spinner"></span><span data-i18n="font.loading">正在读取系统字体…</span></div>
           </div>
-          <div class="list-foot">来自 Windows 已安装字体 · 共 <span id="fontCount">—</span> 款</div>
+          <div class="list-foot"><span data-i18n="font.fromPrefix">来自 Windows 已安装字体 · 共</span><span id="fontCount">—</span><span data-i18n="font.fromSuffix">款</span></div>
         </aside>
 
         <main class="preview-pane">
           <div class="preview-head">
-            <span>实时预览</span>
+            <span data-i18n="font.preview">实时预览</span>
             <span id="currentFontName" class="current-font-name">系统默认</span>
           </div>
 
           <div id="previewCard" class="preview-card">
-            <div class="preview-kicker">FLOATASK · 解释预览</div>
-            <h2>Transformer 是什么？</h2>
-            <p>Transformer 是一种基于自注意力机制的神经网络架构，用来处理文本、代码等序列数据。</p>
+            <div class="preview-kicker" data-i18n="font.previewKicker">FLOATASK · 解释预览</div>
+            <h2 data-i18n="font.previewTitle">Transformer 是什么？</h2>
+            <p data-i18n="font.previewBody">Transformer 是一种基于自注意力机制的神经网络架构，用来处理文本、代码等序列数据。</p>
             <ul>
-              <li>它能同时关注一句话里不同位置的信息，不必像 RNN 那样逐步传递。</li>
-              <li>训练可以高度并行，因此能利用大规模语料做出通用语言模型。</li>
+              <li data-i18n="font.previewLi1">它能同时关注一句话里不同位置的信息，不必像 RNN 那样逐步传递。</li>
+              <li data-i18n="font.previewLi2">训练可以高度并行，因此能利用大规模语料做出通用语言模型。</li>
             </ul>
-            <div class="preview-code">const answer = "框一下，就懂了。";</div>
+            <div class="preview-code" data-i18n="font.previewCode">const answer = "框一下，就懂了。";</div>
           </div>
 
           <div class="scope-row">
-            <span class="scope-label">应用范围</span>
-            <div class="scope-seg" role="group" aria-label="字体应用范围">
-              <button type="button" data-scope="reading">仅解释内容</button>
-              <button type="button" data-scope="all" class="active">整个界面</button>
+            <span class="scope-label" data-i18n="font.scopeLabel">应用范围</span>
+            <div class="scope-seg" role="group" aria-label="字体应用范围" data-i18n-aria="font.scopeAria">
+              <button type="button" data-scope="reading" data-i18n="settings.fontScopeReading">仅解释内容</button>
+              <button type="button" data-scope="all" class="active" data-i18n="settings.fontScopeAll">整个界面</button>
             </div>
           </div>
 
           <div class="controls">
             <label class="control-row">
-              <span class="control-label">字号 <output id="sizeValue">12.8</output> px</span>
+              <span class="control-label"><span data-i18n="font.sizeLabel">字号</span><output id="sizeValue">12.8</output> px</span>
               <input id="sizeRange" type="range" min="10" max="24" step="0.2" value="12.8">
             </label>
             <label class="control-row">
-              <span class="control-label">行高 <output id="lineValue">1.72</output></span>
+              <span class="control-label"><span data-i18n="font.lineLabel">行高</span><output id="lineValue">1.72</output></span>
               <input id="lineRange" type="range" min="1.2" max="2.4" step="0.05" value="1.72">
             </label>
           </div>
 
           <div class="font-note">
-            <span class="note-dot"></span>
-            字号和行高只作用于解释内容；“整个界面”会让字体家族同时用于按钮和菜单。字体列表来自系统，安装新字体后重新打开本窗口即可。
-          </div>
+            <span class="note-dot"></span><span data-i18n="font.note">字号和行高只作用于解释内容；“整个界面”会让字体家族同时用于按钮和菜单。字体列表来自系统，安装新字体后重新打开本窗口即可。</span></div>
         </main>
       </div>
 
       <footer class="footer">
-        <button id="resetBtn" class="btn ghost" type="button">恢复默认</button>
+        <button id="resetBtn" class="btn ghost" type="button" data-i18n="font.reset">恢复默认</button>
         <div class="footer-actions">
-          <button id="cancelBtn" class="btn" type="button">取消</button>
+          <button id="cancelBtn" class="btn" type="button" data-i18n="common.cancel">取消</button>
           <button id="applyBtn" class="btn primary" type="button">应用字体</button>
         </div>
       </footer>
@@ -95,7 +91,8 @@
       <div id="toast" class="toast"></div>
     </div>
   </div>
-  <script src="font-utils.js"></script>
+  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script>
   <script src="font.js"></script>
-</body>
-</html>
+
+
+</body></html>

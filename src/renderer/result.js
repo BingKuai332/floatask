@@ -1,6 +1,7 @@
 'use strict';
 
 const api = window.floatask;
+const tt = (key, params) => window.FloatAskI18n.t(key, params);
 
 const els = {
   messages: document.getElementById('messages'),
@@ -83,6 +84,8 @@ function truncate(text, length = 56) {
 function setStatus(kind, text) {
   els.statusPill.className = `status-pill ${kind}`;
   els.statusText.textContent = text;
+  state.statusKind = kind;
+  state.statusKey = Object.entries(window.FloatAskI18N.LOCALES[window.FloatAskI18n.language]).find(([key,value]) => key.startsWith('result.') && value === text)?.[0];
 }
 
 function toast(message, error = false) {
@@ -109,7 +112,7 @@ function autoResize() {
 function setBusyUI(busy) {
   state.busy = Boolean(busy);
   els.sendBtn.classList.toggle('streaming', state.busy);
-  els.sendBtn.title = state.busy ? '停止生成' : '发送';
+  els.sendBtn.title = state.busy ? tt('result.stopGeneration') : tt('result.send');
   for (const chip of els.quickRow.querySelectorAll('button')) {
     chip.disabled = state.busy;
   }
@@ -118,15 +121,15 @@ function setBusyUI(busy) {
 function updateWebToggle() {
   els.webToggle.classList.toggle('on', state.webEnabled);
   els.webToggle.setAttribute('aria-pressed', state.webEnabled ? 'true' : 'false');
-  els.webToggle.title = state.webEnabled ? '联网检索：开' : '联网检索：关';
+  els.webToggle.title = state.webEnabled ? tt('result.webOn') : tt('result.webOff');
 }
 
 function updateVisionHint() {
   if (state.vision) {
-    els.visionHint.textContent = '已附带截图';
+    els.visionHint.textContent = tt('result.visionAttached');
     els.visionHint.classList.add('active');
   } else if (!state.hasApiKey) {
-    els.visionHint.textContent = '未配置模型';
+    els.visionHint.textContent = tt('result.noModel');
     els.visionHint.classList.remove('active');
   } else {
     els.visionHint.textContent = '';
@@ -136,13 +139,13 @@ function updateVisionHint() {
 
 function updateContext() {
   const title = state.windowInfo?.title || state.windowInfo?.process ||
-    (state.selectionText ? '屏幕框选' : '屏幕框选');
+    (state.selectionText ? tt('result.screenSelection') : tt('result.screenSelection'));
   els.contextTitle.textContent = truncate(title, 58);
   els.contextTitle.title = title;
 
   if (state.selectionText) {
     const chars = state.selectionText.replace(/\s+/g, '').length;
-    els.contextMeta.textContent = `${chars} 字`;
+    els.contextMeta.textContent = tt('result.charCount', { n: chars });
   } else {
     els.contextMeta.textContent = '';
   }
@@ -151,9 +154,9 @@ function updateContext() {
   if (state.windowInfo?.title) parts.push(state.windowInfo.title);
   if (state.windowInfo?.process) parts.push(state.windowInfo.process);
   if (parts.length) {
-    els.windowInfo.innerHTML = `来源：<b>${escapeHtml(parts.join(' · '))}</b>`;
+    els.windowInfo.innerHTML = escapeHtml(tt('result.sourceFrom', { text: parts.join(' · ') }));
   } else {
-    els.windowInfo.textContent = '来源：屏幕框选';
+    els.windowInfo.textContent = tt('result.sourceScreen');
   }
 }
 
@@ -174,17 +177,17 @@ function setOcr(text, error) {
     els.ocrText.textContent = text;
     els.ocrText.dataset.empty = '0';
   } else if (error) {
-    els.ocrText.textContent = `识别失败：${error}`;
+    els.ocrText.textContent = tt('result.ocrFailed', { err: error });
     els.ocrText.dataset.empty = '1';
   } else {
-    els.ocrText.textContent = '没有识别到文字';
+    els.ocrText.textContent = tt('result.manualTitleNone');
     els.ocrText.dataset.empty = '1';
   }
   updateContext();
 }
 
 function setModelChip() {
-  const text = state.model || state.providerLabel || '模型';
+  const text = state.model || state.providerLabel || tt('common.model');
   els.modelChip.textContent = truncate(text, 20);
   els.modelChip.title = [state.providerLabel, state.model].filter(Boolean).join(' · ');
 }
@@ -194,7 +197,7 @@ function hideLoading() {
 }
 
 function showLoading(text) {
-  els.loadingText.textContent = text || '正在读取屏幕…';
+  els.loadingText.textContent = text || tt('result.readingScreen');
   if (!els.loadingCard.parentNode) {
     els.messages.appendChild(els.loadingCard);
   }
@@ -242,7 +245,7 @@ function createAssistant() {
   message.innerHTML = `
     <div class="avatar">✦</div>
     <div class="assistant-body">
-      <div class="assistant-name">浮问 <span class="time">正在回答</span></div>
+      <div class="assistant-name">${escapeHtml(tt('common.appName'))} <span class="time" data-i18n="result.answering">${tt('result.answering')}</span></div>
       <div class="md-body streaming"></div>
       <div class="sources" hidden></div>
       <div class="msg-actions"></div>
@@ -295,7 +298,7 @@ function addSourceCards(container, sources) {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
       <circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.4 3.6 5.3 3.6 8.5S14.4 18.1 12 20.5C9.6 18.1 8.4 15.2 8.4 12S9.6 5.9 12 3.5Z"/>
     </svg>
-    <span>参考来源 · ${sources.length}</span>`;
+    <span>${tt('result.sourcesHead', { n: sources.length })}</span>`;
   container.appendChild(head);
 
   sources.slice(0, 6).forEach((item, index) => {
@@ -321,10 +324,10 @@ function addActions(container, text) {
 
   const copyBtn = document.createElement('button');
   copyBtn.className = 'msg-action';
-  copyBtn.textContent = '复制';
+  copyBtn.textContent = tt('common.copy');
   copyBtn.addEventListener('click', async () => {
     await api.copyText(text);
-    toast('已复制回答');
+    toast(tt('result.copiedAnswer'));
   });
 
   container.appendChild(copyBtn);
@@ -338,7 +341,7 @@ function showError(payload) {
   hideLoading();
   hidePhase();
   setBusyUI(false);
-  setStatus('error', '出错了');
+  setStatus('error', tt('result.error'));
   if (state.current) {
     state.current.content.classList.remove('streaming');
     state.current.message.classList.remove('streaming');
@@ -347,7 +350,7 @@ function showError(payload) {
 
   const card = document.createElement('div');
   card.className = 'error-card';
-  const message = payload.message || '请求失败';
+  const message = payload.message || tt('result.requestFailed');
   const hint = payload.hint || '';
   const detail = payload.detail || '';
   card.innerHTML = `
@@ -360,13 +363,13 @@ function showError(payload) {
   if (payload.retryable !== false) {
     const retry = document.createElement('button');
     retry.className = 'btn primary';
-    retry.textContent = '重试';
+    retry.textContent = tt('common.retry');
     retry.addEventListener('click', () => {
       card.remove();
       state.errorEl = null;
       setBusyUI(true);
-      setStatus('working', '重试中');
-      if (!state.selectionText && !state.lastUserQuestion) showLoading('正在重新读取…');
+      setStatus('working', tt('result.retrying'));
+      if (!state.selectionText && !state.lastUserQuestion) showLoading(tt('result.rereading'));
       api.retry();
     });
     actions.appendChild(retry);
@@ -374,18 +377,18 @@ function showError(payload) {
 
   const settings = document.createElement('button');
   settings.className = payload.retryable === false ? 'btn primary' : 'btn ghost';
-  settings.textContent = '打开设置';
+  settings.textContent = tt('common.openSettings');
   settings.addEventListener('click', () => api.openSettings());
   actions.appendChild(settings);
 
   if (detail) {
     const more = document.createElement('button');
     more.className = 'btn ghost';
-    more.textContent = '详情';
+    more.textContent = tt('common.details');
     more.addEventListener('click', () => {
       const box = card.querySelector('.error-detail');
       box.hidden = !box.hidden;
-      more.textContent = box.hidden ? '详情' : '收起';
+      more.textContent = box.hidden ? tt('common.details') : tt('common.collapse');
     });
     actions.appendChild(more);
   }
@@ -399,11 +402,11 @@ function showManual(message) {
   hideLoading();
   hidePhase();
   setBusyUI(false);
-  setStatus('idle', '等待补充');
+  setStatus('idle', tt('result.waitingInput'));
   els.manualPanel.hidden = false;
-  const captureFailed = /读取屏幕失败/.test(message || '');
+  const captureFailed = /读取屏幕失败|Could not read the screen/.test(message || '');
   const title = els.manualPanel.querySelector('.manual-head span:last-child');
-  if (title) title.textContent = captureFailed ? '读取屏幕失败' : '没有识别到文字';
+  if (title) title.textContent = captureFailed ? tt('result.manualTitleCapture') : tt('result.manualTitleNone');
   if (message) els.manualInput.placeholder = message;
   state.selectionText = '';
   updateContext();
@@ -436,12 +439,12 @@ function reset(payload) {
   els.questionInput.value = '';
   autoResize();
   els.previewWrap.hidden = true;
-  els.ocrText.textContent = '正在识别…';
+  els.ocrText.textContent = tt('result.ocrRunning');
   els.ocrText.dataset.empty = '0';
   els.contextPanel.classList.remove('open');
   els.contextStrip.classList.remove('open');
   els.pinBtn.classList.toggle('active', state.pinned);
-  els.pinBtn.title = state.pinned ? '取消置顶' : '置顶窗口';
+  els.pinBtn.title = state.pinned ? tt('result.unpin') : tt('result.pin');
   clearError();
 
   applyReadingFont(payload?.font || {});
@@ -457,13 +460,13 @@ function reset(payload) {
   updateContext();
 
   if (payload?.selectionText) {
-    els.contextTitle.textContent = truncate(payload.windowInfo?.title || '屏幕框选', 58);
+    els.contextTitle.textContent = truncate(payload.windowInfo?.title || tt('result.screenSelection'), 58);
   } else {
-    els.contextTitle.textContent = '正在读取屏幕…';
+    els.contextTitle.textContent = tt('result.readingScreen');
   }
 
-  setStatus(payload?.status === 'error' ? 'error' : 'working', payload?.status === 'error' ? '读取失败' : '识别中');
-  showLoading(payload?.status === 'error' ? '准备中…' : '正在识别屏幕文字…');
+  setStatus(payload?.status === 'error' ? 'error' : 'working', payload?.status === 'error' ? tt('result.readFailed') : tt('result.recognizing'));
+  showLoading(payload?.status === 'error' ? tt('result.preparing') : tt('result.ocrRunningFull'));
 
   if (payload?.status === 'error' && payload.error) {
     showError({
@@ -474,9 +477,21 @@ function reset(payload) {
     els.manualPanel.hidden = false;
     els.manualInput.focus();
   } else if (payload?.status === 'ready') {
-    els.loadingText.textContent = '准备解释…';
+    els.loadingText.textContent = tt('result.readyToExplain');
   }
 
+  if (payload?.messages?.length) {
+    hideLoading();
+    for (const message of payload.messages) {
+      if (message.role === 'user') addUserMessage(message.content);
+      else if (message.role === 'assistant') {
+        state.current = null;
+        handleDone({ text: message.content, sources: payload.sources || [] });
+      }
+    }
+    setStatus('done', tt('result.done'));
+    setBusyUI(false);
+  }
   scrollToBottom(true);
   setTimeout(() => {
     if (!state.selectionText && payload?.status !== 'error') return;
@@ -488,7 +503,7 @@ function handleStart(mode) {
   hideLoading();
   hidePhase();
   clearError();
-  setStatus('working', mode === 'initial' ? '正在解释' : '正在回答');
+  setStatus('working', mode === 'initial' ? tt('result.explaining') : tt('result.answering'));
   setBusyUI(true);
 
   if (state.current && state.streaming) {
@@ -505,7 +520,7 @@ function handleStart(mode) {
   const current = createAssistant();
   current.content.classList.add('streaming');
   current.message.classList.add('streaming');
-  current.time.textContent = '正在回答';
+  current.time.textContent = tt('result.answering');
   state.streaming = true;
   scrollToBottom(true);
 }
@@ -522,7 +537,7 @@ function handleDone(payload) {
   setBusyUI(false);
   hidePhase();
   hideLoading();
-  setStatus('done', '已完成');
+  setStatus('done', tt('result.done'));
 
   const text = payload?.text || state.currentAnswer;
   state.currentAnswer = text;
@@ -534,7 +549,8 @@ function handleDone(payload) {
   }
   state.current.content.classList.remove('streaming');
   state.current.message.classList.remove('streaming');
-  state.current.time.textContent = '刚刚';
+  state.current.time.textContent = tt('result.justNow');
+  state.current.time.dataset.i18n = 'result.justNow';
   addSourceCards(state.current.sources, payload?.sources || state.pendingSources || []);
   addActions(state.current.actions, text);
   scrollToBottom(true);
@@ -547,16 +563,17 @@ function handleStopped(payload) {
   state.streaming = false;
   setBusyUI(false);
   hidePhase();
-  setStatus('stopped', '已停止');
+  setStatus('stopped', tt('result.stopped'));
   if (state.current) {
     state.current.content.innerHTML = md.render(payload?.text || state.currentAnswer || '');
     state.current.content.classList.remove('streaming');
     state.current.message.classList.remove('streaming');
-    state.current.time.textContent = '已停止';
+    state.current.time.textContent = tt('result.stopped');
+    state.current.time.dataset.i18n = 'result.stopped';
     addActions(state.current.actions, payload?.text || state.currentAnswer || '');
     const note = document.createElement('div');
     note.className = 'phase-line';
-    note.textContent = '已停止生成';
+    note.textContent = tt('result.stoppedGenerating');
     els.messages.appendChild(note);
     scrollToBottom(true);
   }
@@ -567,7 +584,7 @@ function handleSources(payload) {
   state.pendingSources = payload?.sources || [];
   state.currentHasSources = state.pendingSources.length > 0;
   if (payload?.mode === 'initial' && state.pendingSources.length) {
-    if (state.phaseEl) state.phaseEl.querySelector('.phase-text').textContent = `找到 ${state.pendingSources.length} 条资料，正在整理…`;
+    if (state.phaseEl) state.phaseEl.querySelector('.phase-text').textContent = tt('result.foundSources', { n: state.pendingSources.length });
   }
 }
 
@@ -585,7 +602,7 @@ function sendQuestion(question) {
   state.pendingSources = [];
   state.currentHasSources = false;
   setBusyUI(true);
-  setStatus('working', '思考中');
+  setStatus('working', tt('result.thinking'));
   api.ask(question);
 }
 
@@ -628,14 +645,14 @@ els.webToggle.addEventListener('click', () => {
   state.webEnabled = !state.webEnabled;
   updateWebToggle();
   api.setWebEnabled(state.webEnabled);
-  toast(state.webEnabled ? '已开启联网检索' : '已关闭联网检索');
+  toast(state.webEnabled ? tt('result.webOnToast') : tt('result.webOffToast'));
 });
 
 for (const chip of els.quickRow.querySelectorAll('.quick-chip')) {
   chip.addEventListener('click', () => {
     if (state.busy) return;
     if (chip.dataset.web === '1') enableWeb();
-    sendQuestion(chip.dataset.question);
+    sendQuestion(tt(chip.dataset.questionKey));
   });
 }
 
@@ -643,7 +660,7 @@ els.contextToggle.addEventListener('click', () => {
   const open = !els.contextPanel.classList.contains('open');
   els.contextPanel.classList.toggle('open', open);
   els.contextStrip.classList.toggle('open', open);
-  els.contextToggle.title = open ? '收起框选内容' : '展开框选内容';
+  els.contextToggle.title = open ? tt('result.contextCollapse') : tt('result.contextExpand');
 });
 
 els.previewWrap.addEventListener('click', () => {
@@ -659,19 +676,21 @@ els.lightbox.addEventListener('click', () => {
 els.pinBtn.addEventListener('click', () => {
   state.pinned = !state.pinned;
   els.pinBtn.classList.toggle('active', state.pinned);
-  els.pinBtn.title = state.pinned ? '取消置顶' : '置顶窗口';
+  els.pinBtn.title = state.pinned ? tt('result.unpin') : tt('result.pin');
   api.setPinned(state.pinned);
-  toast(state.pinned ? '窗口已置顶' : '已取消置顶');
+  toast(state.pinned ? tt('result.pinnedToast') : tt('result.unpinnedToast'));
 });
 
 els.closeBtn.addEventListener('click', () => api.closeResult());
 els.newSelectBtn.addEventListener('click', () => api.startSelection());
+document.getElementById('historyBtn').addEventListener('click', () => api.openHistory());
+
 els.settingsBtn.addEventListener('click', () => api.openSettings());
 els.modelChip.addEventListener('click', () => api.openSettings());
 els.copyOcrBtn.addEventListener('click', async () => {
   if (!state.selectionText) return;
   await api.copyText(state.selectionText);
-  toast('已复制识别文字');
+  toast(tt('result.copiedText'));
 });
 
 els.manualSubmitBtn.addEventListener('click', () => {
@@ -684,8 +703,8 @@ els.manualSubmitBtn.addEventListener('click', () => {
   setOcr(value, '');
   state.vision = false;
   updateVisionHint();
-  showLoading('正在组织解释…');
-  setStatus('working', '正在解释');
+  showLoading(tt('result.organizing'));
+  setStatus('working', tt('result.explaining'));
   setBusyUI(true);
   state.current = null;
   state.currentAnswer = '';
@@ -698,7 +717,7 @@ els.manualPasteBtn.addEventListener('click', async () => {
     els.manualInput.value = text;
     els.manualInput.focus();
   } else {
-    toast('剪贴板是空的', true);
+    toast(tt('notify.clipboardEmpty.title'), true);
   }
 });
 
@@ -730,10 +749,14 @@ api.onResultInit((payload) => reset(payload));
 api.onResultEvent((payload) => {
   if (!payload || !payload.type) return;
   switch (payload.type) {
+    case 'model':
+      state.model = payload.model; state.providerLabel = payload.providerLabel;
+      state.vision = payload.vision; setModelChip(); updateVisionHint();
+      break;
     case 'ocr':
       setOcr(payload.text, payload.error);
       if (payload.empty) {
-        els.contextMeta.textContent = '未识别到文字';
+        els.contextMeta.textContent = tt('result.ocrEmptyShort');
         els.contextPanel.classList.add('open');
         els.contextStrip.classList.add('open');
       }
@@ -745,11 +768,11 @@ api.onResultEvent((payload) => {
     case 'phase':
       if (payload.message) {
         showPhase(payload.message);
-        if (payload.message.includes('检索')) {
-          setStatus('working', '联网检索中');
+        if (payload.phase === 'searching') {
+          setStatus('working', tt('result.searching'));
           hideLoading();
-        } else if (payload.message.includes('解释') || payload.message.includes('回答')) {
-          setStatus('working', '思考中');
+        } else if (payload.phase === 'thinking') {
+          setStatus('working', tt('result.thinking'));
           hideLoading();
         }
       }
@@ -759,7 +782,7 @@ api.onResultEvent((payload) => {
       break;
     case 'notice':
       handleNotice(payload);
-      if (/不支持截图/.test(payload.message || '')) {
+      if (payload.code === 'vision-fallback') {
         state.vision = false;
         updateVisionHint();
       }
@@ -793,9 +816,9 @@ api.onResultEvent((payload) => {
       state.streaming = false;
       clearError();
       setOcr(payload.text || '', '');
-      state.windowInfo = { title: '手动输入', process: '' };
+      state.windowInfo = { title: tt('result.manualInputTitle'), process: '' };
       updateContext();
-      showLoading('正在组织解释…');
+      showLoading(tt('result.organizing'));
       break;
     default:
       break;
@@ -810,8 +833,15 @@ api.onResultEvent((payload) => {
       reset(saved.init);
       if (saved.busy) {
         setBusyUI(true);
-        setStatus('working', '处理中');
+        setStatus('working', tt('result.processing'));
       }
     }
   } catch { /* initial payload will arrive normally */ }
 })();
+
+document.addEventListener('floatask:language', () => {
+  updateWebToggle(); updateVisionHint(); updateContext(); setBusyUI(state.busy);
+  if (state.statusKey) setStatus(state.statusKind, tt(state.statusKey));
+  els.contextToggle.title = tt(els.contextPanel.classList.contains('open') ? 'result.contextCollapse' : 'result.contextExpand');
+  els.pinBtn.title = tt(state.pinned ? 'result.unpin' : 'result.pin');
+});

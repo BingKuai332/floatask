@@ -1,4 +1,6 @@
-'use strict';
+﻿'use strict';
+
+const { t } = require('./i18n');
 
 class AIError extends Error {
   constructor(message, options = {}) {
@@ -13,7 +15,7 @@ class AIError extends Error {
 
 function endpoint(baseUrl) {
   let base = String(baseUrl || '').trim().replace(/\/+$/, '');
-  if (!base) throw new AIError('还没有填写 API 地址', { code: 'config', hint: '打开设置填写接口地址' });
+  if (!base) throw new AIError(t('ai.noBaseUrl'), { code: 'config', hint: t('ai.noBaseUrlHint') });
   if (!/\/chat\/completions$/i.test(base)) base += '/chat/completions';
   return base;
 }
@@ -39,28 +41,28 @@ function normalizeError(status, raw) {
     if (typeof detail !== 'string') detail = JSON.stringify(detail);
   } catch { /* plain-text error */ }
 
-  let message = '模型请求失败';
+  let message = t('ai.fallback');
   let hint = '';
   let code = 'http';
   if (status === 401 || status === 403) {
-    message = 'API Key 无效或没有权限';
-    hint = '到设置里检查 Key，注意不要多复制空格。';
+    message = t('ai.auth');
+    hint = t('ai.authHint');
     code = 'auth';
   } else if (status === 404) {
-    message = '接口地址或模型名不存在';
-    hint = '检查 Base URL 是否以 /v1 结尾，以及模型名称是否正确。';
+    message = t('ai.notFound');
+    hint = t('ai.notFoundHint');
     code = 'not_found';
   } else if (status === 429) {
-    message = '请求太频繁，或账户额度不足';
-    hint = '稍等几秒重试，或到服务商控制台检查余额。';
+    message = t('ai.rateLimit');
+    hint = t('ai.rateLimitHint');
     code = 'rate_limit';
   } else if (status === 400) {
-    message = '请求参数不被模型接受';
-    hint = '可能是模型不支持图片或参数；已尝试自动降级。';
+    message = t('ai.badRequest');
+    hint = t('ai.badRequestHint');
     code = 'bad_request';
   } else if (status >= 500) {
-    message = '模型服务暂时不可用';
-    hint = '稍后重试，或换一个模型服务。';
+    message = t('ai.server');
+    hint = t('ai.serverHint');
     code = 'server';
   }
   return new AIError(message, { code, status, detail: detail || raw, hint });
@@ -68,11 +70,11 @@ function normalizeError(status, raw) {
 
 function toApiMessages(messages) {
   return messages.map((m) => {
-    if (m.image && m.role === 'user') {
+        if (m.image && m.role === 'user') {
       return {
         role: 'user',
         content: [
-          { type: 'text', text: m.content || '请理解这张截图。' },
+          { type: 'text', text: m.content || t('ai.imageFallbackText') },
           { type: 'image_url', image_url: { url: m.image, detail: 'low' } }
         ]
       };
@@ -83,7 +85,8 @@ function toApiMessages(messages) {
 
 async function readError(res) {
   const text = await res.text().catch(() => '');
-  return normalizeError(res.status, text);
+  const err = normalizeError(res.status, text);
+  return err;
 }
 
 /**
@@ -118,18 +121,22 @@ async function streamChat({ config, messages, signal, onDelta, onReasoning }) {
     });
   } catch (err) {
     clearTimeout(timeout);
-    if (signal?.aborted) throw new AIError('已停止', { code: 'aborted' });
-    if (err.name === 'AbortError') throw new AIError('请求超时', { code: 'timeout', hint: '网络较慢或服务无响应，稍后重试。' });
-    throw new AIError('无法连接模型服务', {
+    signal?.removeEventListener('abort', forwardAbort);
+    if (signal?.aborted) throw new AIError(t('ai.aborted'), { code: 'aborted' });
+    if (err.name === 'AbortError') throw new AIError(t('ai.timeout'), { code: 'timeout', hint: t('ai.timeoutHint') });
+    throw new AIError(t('ai.network'), {
       code: 'network',
       detail: err.cause?.code || err.message,
-      hint: '检查网络、Base URL，或代理/防火墙设置。'
+      hint: t('ai.networkHint')
     });
   }
 
   if (!res.ok) {
-    clearTimeout(timeout);
-    throw await readError(res);
+    try { throw await readError(res); }
+    finally {
+      clearTimeout(timeout);
+      signal?.removeEventListener('abort', forwardAbort);
+    }
   }
 
   const contentType = res.headers.get('content-type') || '';
@@ -143,35 +150,46 @@ async function streamChat({ config, messages, signal, onDelta, onReasoning }) {
       let buffer = '';
       let finished = false;
 
-      while (!finished) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        let newline;
-        while ((newline = buffer.indexOf('\n')) >= 0) {
-          const line = buffer.slice(0, newline).replace(/\r$/, '').trim();
-          buffer = buffer.slice(newline + 1);
-          if (!line || line.startsWith(':') || !line.startsWith('data:')) continue;
-          const data = line.slice(5).trim();
-          if (data === '[DONE]') {
-            finished = true;
+      function consumeLine(rawLine) {
+        const line = rawLine.replace(/\r$/, '').trim();
+        if (!line || line.startsWith(':') || !line.startsWith('data:')) return;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') {
+          finished = true;
+          return;
+        }
+        let json;
+        try { json = JSON.parse(data); }
+        catch { return; } // Ignore keep-alive or malformed chunks.
+        if (json.usage) usage = json.usage;
+        const choice = json.choices?.[0];
+        const delta = choice?.delta?.content ?? choice?.text ?? '';
+        if (typeof delta === 'string' && delta) {
+          full += delta;
+          onDelta?.(delta);
+        }
+        const reasoning = choice?.delta?.reasoning_content;
+        if (typeof reasoning === 'string' && reasoning && onReasoning) onReasoning(reasoning);
+      }
+      try {
+        while (!finished) {
+          const { value, done } = await reader.read();
+          if (done) {
+            buffer += decoder.decode();
+            if (buffer.trim()) consumeLine(buffer);
             break;
           }
-          try {
-            const json = JSON.parse(data);
-            if (json.usage) usage = json.usage;
-            const choice = json.choices?.[0];
-            const delta = choice?.delta?.content ?? choice?.text ?? '';
-            if (typeof delta === 'string' && delta) {
-              full += delta;
-              onDelta?.(delta);
-            }
-            const reasoning = choice?.delta?.reasoning_content;
-            if (typeof reasoning === 'string' && reasoning && onReasoning) onReasoning(reasoning);
-          } catch {
-            // Ignore keep-alive or malformed chunks.
+          buffer += decoder.decode(value, { stream: true });
+          let newline;
+          while (!finished && (newline = buffer.indexOf('\n')) >= 0) {
+            const line = buffer.slice(0, newline);
+            buffer = buffer.slice(newline + 1);
+            consumeLine(line);
           }
         }
+      } finally {
+        await reader.cancel().catch(() => {});
+        reader.releaseLock();
       }
     } else {
       const json = await res.json();
@@ -182,12 +200,12 @@ async function streamChat({ config, messages, signal, onDelta, onReasoning }) {
       usage = json.usage || null;
     }
   } catch (err) {
-    if (signal?.aborted) throw new AIError('已停止', { code: 'aborted' });
-    if (err.name === 'AbortError') throw new AIError('请求超时', { code: 'timeout' });
-    throw new AIError('读取模型响应失败', {
+    if (signal?.aborted) throw new AIError(t('ai.aborted'), { code: 'aborted' });
+    if (err.name === 'AbortError') throw new AIError(t('ai.timeout'), { code: 'timeout' });
+    throw new AIError(t('ai.stream'), {
       code: 'stream',
       detail: err.message,
-      hint: '连接可能中断了，请重试。'
+      hint: t('ai.streamHint')
     });
   } finally {
     clearTimeout(timeout);
@@ -195,9 +213,9 @@ async function streamChat({ config, messages, signal, onDelta, onReasoning }) {
   }
 
   if (!full.trim()) {
-    throw new AIError('模型没有返回内容', {
+    throw new AIError(t('ai.empty'), {
       code: 'empty',
-      hint: '可能是模型名不对，或服务商返回了空响应。'
+      hint: t('ai.emptyHint')
     });
   }
   return { text: full, usage };
@@ -212,7 +230,7 @@ async function testConnection(config) {
       headers: headers(config),
       body: JSON.stringify({
         model: config.model,
-        messages: [{ role: 'user', content: '只回复：OK' }],
+        messages: [{ role: 'user', content: t('ai.testMessage') }],
         stream: false,
         max_tokens: 8,
         temperature: 0
@@ -221,12 +239,12 @@ async function testConnection(config) {
     });
   } catch (err) {
     if (err.name === 'TimeoutError' || err.name === 'AbortError') {
-      throw new AIError('连接超时', { code: 'timeout', hint: '30 秒内没有响应，检查网络或 Base URL。' });
+      throw new AIError(t('ai.testTimeout'), { code: 'timeout', hint: t('ai.testTimeoutHint') });
     }
-    throw new AIError('无法连接模型服务', {
+    throw new AIError(t('ai.network'), {
       code: 'network',
       detail: err.cause?.code || err.message,
-      hint: '检查 Base URL、网络和代理设置。'
+      hint: t('ai.networkHint')
     });
   }
   if (!res.ok) throw await readError(res);
@@ -234,9 +252,9 @@ async function testConnection(config) {
   try {
     json = await res.json();
   } catch {
-    throw new AIError('接口返回的不是标准 JSON', {
+    throw new AIError(t('ai.badJson'), {
       code: 'format',
-      hint: '确认该地址是 OpenAI 兼容接口（/v1/chat/completions）。'
+      hint: t('ai.badJsonHint')
     });
   }
   const reply = json.choices?.[0]?.message?.content ?? '';
