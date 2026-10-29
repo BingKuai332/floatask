@@ -48,6 +48,25 @@ contextBridge.exposeInMainWorld('floatask', {
   applyFont: (font) => ipcRenderer.invoke('font:apply', font),
   onFontUpdated: (cb) => subscribe('font:update', cb),
 
+  // History
+  openHistory: () => ipcRenderer.send('history:open'),
+  closeHistory: () => ipcRenderer.send('history:close'),
+  listHistory: () => ipcRenderer.invoke('history:list'),
+  getHistoryRecord: (id) => ipcRenderer.invoke('history:get', id),
+  setHistoryFavorite: (id, favorite) => ipcRenderer.invoke('history:favorite', { id, favorite }),
+  deleteHistoryRecord: (id) => ipcRenderer.invoke('history:delete', id),
+  clearHistory: (keepFavorites) => ipcRenderer.invoke('history:clear', keepFavorites),
+  copyHistoryText: (text) => ipcRenderer.send('history:copy', text),
+  onHistoryShowRecord: (cb) => subscribe('history:show-record', cb),
+
+  resumeHistory: (id) => ipcRenderer.invoke('history:resume', id),
+  onHistoryUpdated: (cb) => subscribe('history:update', cb),
+
+  // Language
+  setLanguage: (language) => ipcRenderer.invoke('app:set-language', language),
+  getLanguage: () => ipcRenderer.invoke('app:language'),
+  onLanguageUpdated: (cb) => subscribe('language:update', cb),
+
   // Small utilities
   openExternal: (url) => ipcRenderer.invoke('app:open-external', url),
   copyText: (text) => ipcRenderer.invoke('app:copy', text),

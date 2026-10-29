@@ -5,8 +5,20 @@ const fs = require('fs');
 const path = require('path');
 const { PRESETS } = require('../shared/presets');
 
+const { normalizeLocale } = require('../shared/i18n');
+
+function defaultLanguage() {
+  try {
+    return normalizeLocale(app.getLocale());
+  } catch {
+    return 'zh-CN';
+  }
+}
+
 const DEFAULTS = {
   schemaVersion: 1,
+  language: defaultLanguage(),
+  saveHistory: true,
   provider: 'deepseek',
   baseUrl: PRESETS.deepseek.baseUrl,
   model: PRESETS.deepseek.model,
@@ -75,6 +87,9 @@ function sanitize(patch, current) {
   for (const field of stringFields) {
     if (typeof patch[field] === 'string') next[field] = patch[field].trim();
   }
+  if (typeof patch.language === 'string') {
+    next.language = normalizeLocale(patch.language);
+  }
   if (!next.fontFamily || /[\u0000-\u001f]/.test(next.fontFamily)) next.fontFamily = 'system';
   next.fontFamily = next.fontFamily.slice(0, 120);
   if (typeof patch.fontSize !== 'undefined') {
@@ -94,7 +109,7 @@ function sanitize(patch, current) {
   if (typeof patch.maxTokens !== 'undefined') {
     next.maxTokens = Math.round(clampNumber(patch.maxTokens, current.maxTokens, 128, 8000));
   }
-  for (const field of ['vision', 'webEnabled', 'showBubble', 'autoLaunch', 'onboarded']) {
+  for (const field of ['vision', 'webEnabled', 'showBubble', 'autoLaunch', 'onboarded', 'saveHistory']) {
     if (typeof patch[field] === 'boolean') next[field] = patch[field];
   }
   if (patch.bubblePosition === null) {
@@ -154,6 +169,8 @@ function getConfig() {
 function publicSettings() {
   const c = load();
   return {
+    language: c.language,
+    saveHistory: c.saveHistory,
     provider: c.provider,
     baseUrl: c.baseUrl,
     model: c.model,

@@ -9,6 +9,7 @@ const crosshairX = document.getElementById('crosshairX');
 const crosshairY = document.getElementById('crosshairY');
 const flash = document.getElementById('flash');
 const api = window.floatask;
+const tt = (key, params) => window.FloatAskI18n.t(key, params);
 
 function applyUiFont(font) {
   window.FloatAskFont.apply(font, { ui: true });
@@ -70,7 +71,7 @@ stage.addEventListener('pointermove', (event) => {
   if (!dragging || !start) return;
   rect = normalize(start.x, start.y, x, y);
   setBox(rect);
-  tip.textContent = '松开鼠标开始解释';
+  tip.textContent = tt('selection.release');
 });
 
 stage.addEventListener('pointerdown', (event) => {
@@ -99,10 +100,10 @@ window.addEventListener('pointerup', (event) => {
   if (rect.width < 8 || rect.height < 8) {
     setBox(null);
     tip.style.display = '';
-    hintText.textContent = '选区太小，再拖一次';
+    hintText.textContent = tt('selection.tooSmall');
     stage.classList.add('hovering');
     placeTip(x, y);
-    setTimeout(() => { hintText.textContent = '拖拽框选要解释的内容'; }, 1400);
+    setTimeout(() => { hintText.textContent = tt('selection.hint'); }, 1400);
     start = null;
     rect = null;
     return;

@@ -1,5 +1,12 @@
 'use strict';
 
+const { t, lang } = require('./i18n');
+const { BASE_RULES_EN } = require('../shared/i18n');
+
+function rules() {
+  return lang() === 'en' ? BASE_RULES_EN : BASE_RULES;
+}
+
 const BASE_RULES = `你是「浮问」，一个随叫随到的屏幕理解助手。用户刚刚在电脑屏幕上框选了一块内容，你需要帮他快速看懂。
 
 判断与回答原则：
@@ -27,10 +34,10 @@ function escapeTag(text) {
 }
 
 function formatWindow(windowInfo) {
-  if (!windowInfo || (!windowInfo.title && !windowInfo.process)) return '未知（可能来自桌面或全屏应用）';
+  if (!windowInfo || (!windowInfo.title && !windowInfo.process)) return t('prompt.unknownWindow');
   const parts = [];
-  if (windowInfo.title) parts.push(`窗口标题：${windowInfo.title}`);
-  if (windowInfo.process) parts.push(`程序：${windowInfo.process}`);
+  if (windowInfo.title) parts.push(t('prompt.winTitleLabel', { title: windowInfo.title }));
+  if (windowInfo.process) parts.push(t('prompt.procLabel', { process: windowInfo.process }));
   return parts.join('；');
 }
 
@@ -44,9 +51,9 @@ function formatSources(sources) {
     const slice = body.slice(0, Math.min(1400, budget));
     budget -= slice.length;
     parts.push([
-      `[${index + 1}] ${escapeTag(item.title || '未命名来源')}`,
+      `[${index + 1}] ${escapeTag(item.title || t('prompt.sourceFallback'))}`,
       `URL: ${item.url}`,
-      `内容：${escapeTag(slice) || '（只有标题）'}`
+      `${t('prompt.sourceBody', { text: escapeTag(slice) || t('prompt.sourceTitleOnly') })}`
     ].join('\n'));
   });
   return `<web_results>\n${parts.join('\n\n')}\n</web_results>`;
@@ -60,27 +67,27 @@ function buildInitialMessages({ selection, windowInfo, sources, image, vision, m
   if (text) {
     contextParts.push(`<selected_text>\n${escapeTag(text).slice(0, 5000)}\n</selected_text>`);
   } else {
-    contextParts.push('<selected_text>（OCR 没有识别到文字，请依据截图理解）</selected_text>');
+    contextParts.push(`<selected_text>${t('prompt.noOcrNote')}</selected_text>`);
   }
   if (sources && sources.length) contextParts.push(formatSources(sources));
 
-  const system = `${BASE_RULES}
+  const system = `${rules()}
 
-本次框选信息：
+${t('prompt.selectionInfo')}
 ${contextParts.join('\n\n')}
 
-${image && vision ? '本轮附带了框选截图。OCR 文字可能有错，请优先依据截图；文字用于辅助定位。' : '本轮没有截图，只有 OCR 文字。'}
-${manual ? '这段文字是用户手动补充的，可信度高于 OCR。' : ''}`;
+${image && vision ? t('prompt.withImage') : t('prompt.noImage')}
+${manual ? t('prompt.manualNote') : ''}`;
 
   return [
     { role: 'system', content: system },
-    { role: 'user', content: '请解释这块被框选的内容。', image: image && vision ? image : undefined }
+    { role: 'user', content: t('prompt.initialUser'), image: image && vision ? image : undefined }
   ];
 }
 
 function buildFollowupMessages({ systemContext, history, question, sources, webNote, image, vision }) {
   const messages = [
-    { role: 'system', content: `${BASE_RULES}\n\n本次框选信息：\n${systemContext}` }
+    { role: 'system', content: `${rules()}\n\n${t('prompt.selectionInfo')}\n${systemContext}` }
   ];
   for (const item of history || []) {
     if (!item || !item.content) continue;
@@ -90,9 +97,9 @@ function buildFollowupMessages({ systemContext, history, question, sources, webN
   }
   let userContent = String(question || '').trim();
   if (sources && sources.length) {
-    userContent += `\n\n以下是刚刚联网检索到的资料，仅作参考：\n${formatSources(sources)}`;
+    userContent += `\n\n${t('prompt.followupSources')}\n${formatSources(sources)}`;
   } else if (webNote) {
-    userContent += `\n\n（联网检索提示：${escapeTag(webNote)}）`;
+    userContent += `\n\n${t('prompt.webNoteIntro', { note: escapeTag(webNote) })}`;
   }
   messages.push({
     role: 'user',

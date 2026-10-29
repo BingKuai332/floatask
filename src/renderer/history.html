@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="result.css"><link rel="stylesheet" href="history.css">
+<title data-i18n="history.title">历史记录</title></head><body>
+<div class="history-shell">
+ <header class="history-header drag"><div><h1 data-i18n="history.title">历史记录</h1><small data-i18n="history.subtitle">FLOATASK · SESSIONS & FAVORITES</small></div><button id="closeBtn" class="icon-btn no-drag" data-i18n-title="common.close">×</button></header>
+ <div class="history-toolbar"><input id="searchInput" data-i18n-ph="history.searchPlaceholder" type="search"><button id="allBtn" class="btn active" data-i18n="history.filterAll">全部</button><button id="favBtn" class="btn" data-i18n="history.filterFav">收藏</button><button id="clearBtn" class="btn" data-i18n="history.clearBtn">清空</button></div>
+ <div class="history-content"><nav id="recordList" aria-label="Conversations"></nav><main id="detail"><p class="empty" data-i18n="history.pick">选择一条记录查看内容</p></main></div>
+ <div id="toast" role="status"></div>
+</div>
+<script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="markdown.js"></script><script src="history.js"></script>
+</body></html>

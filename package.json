@@ -1,7 +1,7 @@
 {
   "name": "floatask",
   "productName": "浮问 FloatAsk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "悬浮在任意窗口上的屏幕理解与追问助手",
   "main": "src/main/main.js",
   "author": "FloatAsk",
@@ -37,7 +37,8 @@
     "predev": "node scripts/ensure-electron.js",
     "dev": "node scripts/launch.js --dev",
     "mock": "node scripts/mock-ai.js",
-    "pack": "node scripts/ensure-electron.js && electron-packager . FloatAsk --platform=win32 --arch=x64 --out=dist --overwrite --asar --icon=resources/icon.ico --ignore=\"^/(dist|scripts|shots|docs|\\.npm-cache|\\.electron-cache|\\.userdata|\\.tmp-.*|mock-last-request\\.json|.*\\.log)$\" && node scripts/write-launchers.js"
+    "pack": "node scripts/ensure-electron.js && electron-packager . FloatAsk --platform=win32 --arch=x64 --out=dist --overwrite --asar --icon=resources/icon.ico --ignore=\"^/(dist|scripts|tests|shots|docs|\\.npm-cache|\\.electron-cache|\\.userdata|\\.tmp-.*|mock-last-request\\.json|.*\\.log)$\" && node scripts/write-launchers.js",
+    "test": "node scripts/test.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0"
