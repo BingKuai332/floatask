@@ -211,6 +211,7 @@ function populate() {
     customName: settings.customFontName
   });
 
+  window.FloatAskAdvanced.populate(settings, collectDraft);
   renderProviders();
   updateProviderUi(false);
   updateKeyUi();
@@ -232,6 +233,7 @@ function populate() {
 
 function collectDraft() {
   return {
+    ...window.FloatAskAdvanced.collect(),
     provider: currentProvider,
     baseUrl: els.baseUrl.value.trim(),
     model: els.model.value.trim(),
@@ -250,6 +252,8 @@ function collectDraft() {
 }
 
 function validate(draft) {
+  const advancedError = window.FloatAskAdvanced.validate(draft);
+  if (advancedError) return advancedError;
   if (!/^https?:\/\//i.test(draft.baseUrl)) {
     return { message: tt('settings.validateBaseUrl'), focus: els.baseUrl };
   }
@@ -355,7 +359,7 @@ els.openHistoryBtn.addEventListener('click', () => api.openHistory());
 els.cancelBtn.addEventListener('click', () => api.closeSettings());
 els.closeBtn.addEventListener('click', () => api.closeSettings());
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') api.closeSettings();
+  if (event.key === 'Escape' && !window.FloatAskAdvanced.recording) api.closeSettings();
 });
 
 api.onFontUpdated((font) => updateFontDisplay(font));

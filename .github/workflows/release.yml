@@ -1,0 +1,31 @@
+name: Windows portable release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Validate release tag
+        shell: pwsh
+        run: |
+          $version = node -p "require('./package.json').version"
+          if ($env:GITHUB_REF_NAME -ne "v$version") { throw 'Tag and package version differ' }
+      - run: npm test
+      - run: npm run pack
+      - run: npm run release:assets
+      - name: Publish ZIP and SHA-256
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = node -p "require('./package.json').version"
+          gh release create "v$version" "dist/FloatAsk-v$version-win32-x64.zip" "dist/FloatAsk-v$version-win32-x64.zip.sha256" --title "FloatAsk v$version" --generate-notes

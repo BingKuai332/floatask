@@ -32,6 +32,14 @@ contextBridge.exposeInMainWorld('floatask', {
   closeResult: () => ipcRenderer.send('result:close'),
   setPinned: (pinned) => ipcRenderer.send('result:pin', Boolean(pinned)),
 
+  setHotkeyRecording: (enabled) => ipcRenderer.invoke('hotkey:recording', Boolean(enabled)),
+  testModelProfile: (task, patch) => ipcRenderer.invoke('settings:test-profile', { task, patch }),
+  getUpdateState: () => ipcRenderer.invoke('updates:state'),
+  checkUpdates: () => ipcRenderer.invoke('updates:check'),
+  downloadUpdate: () => ipcRenderer.invoke('updates:download'),
+  installUpdate: () => ipcRenderer.invoke('updates:install'),
+  onUpdateState: (cb) => subscribe('updates:state', cb),
+
   // Settings
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (patch) => ipcRenderer.invoke('settings:save', patch),

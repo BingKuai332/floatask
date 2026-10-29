@@ -749,6 +749,10 @@ api.onResultInit((payload) => reset(payload));
 api.onResultEvent((payload) => {
   if (!payload || !payload.type) return;
   switch (payload.type) {
+    case 'model':
+      state.model = payload.model; state.providerLabel = payload.providerLabel;
+      state.vision = payload.vision; setModelChip(); updateVisionHint();
+      break;
     case 'ocr':
       setOcr(payload.text, payload.error);
       if (payload.empty) {

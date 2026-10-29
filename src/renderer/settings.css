@@ -491,3 +491,12 @@ html, body {
   font-size: 9px;
 }
 .toast.bad { border-color: rgba(215, 107, 95, 0.35); border-left-color: var(--danger); color: #f1c9c2; }
+
+.inline-actions { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
+.model-profile { border:1px solid var(--line); padding:12px; margin:10px 0; }
+.model-profile h3 { margin:0 0 8px; font-size:12px; color:var(--accent); }
+.model-profile .form-grid { margin-top:10px; }
+.model-profile label.check-line { display:flex; gap:8px; align-items:center; margin:8px 0; font-size:11px; }
+.model-profile input[type=checkbox] { accent-color:var(--accent); }
+.model-profile .profile-result { font-size:11px; color:var(--accent); }
+#hotkey.recording { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }

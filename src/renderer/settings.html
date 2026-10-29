@@ -94,7 +94,7 @@
             </button>
             <span id="testResult" class="test-result"></span>
           </div>
-        </section>
+        </section><section class="section" id="taskModelsSection"><div class="section-head"><div><h2 data-i18n="models.title"></h2><p data-i18n="models.desc"></p></div></div><div id="modelProfiles"></div></section><section class="section" id="updatesSection"><div class="section-head"><div><h2 data-i18n="update.title"></h2><p data-i18n="update.desc"></p></div></div><label class="switch-row"><span class="switch"><input id="autoCheckUpdates" type="checkbox"><i></i></span><span><b data-i18n="update.auto"></b><small data-i18n="update.autoNote"></small></span></label><div class="inline-actions"><button id="checkUpdatesBtn" class="btn" type="button" data-i18n="update.check"></button><button id="downloadUpdateBtn" class="btn" type="button" data-i18n="update.download" hidden=""></button><button id="installUpdateBtn" class="btn primary" type="button" data-i18n="update.install" hidden=""></button></div><p id="updateStatus" role="status" class="note"></p><p id="updateDevNote" class="note" data-i18n="update.devNote" hidden=""></p></section>
 
         <section class="section">
           <div class="section-head">
@@ -147,13 +147,8 @@
           <div class="form-grid compact">
             <label class="field">
               <span class="field-label" data-i18n="settings.hotkeyLabel">框选快捷键</span>
-              <select id="hotkey">
-                <option value="Alt+Q">Alt + Q</option>
-                <option value="Ctrl+Alt+Q">Ctrl + Alt + Q</option>
-                <option value="Ctrl+Shift+Space">Ctrl + Shift + Space</option>
-                <option value="Alt+`">Alt + `</option>
-              </select>
-              <span id="hotkeyHelp" class="field-help">如果被其他软件占用，会自动换一个可用组合。</span>
+              <input id="hotkey" type="text" readonly="" aria-label="Capture shortcut"><div class="inline-actions"><button id="recordHotkeyBtn" class="btn" type="button" data-i18n="hotkey.record">录制快捷键</button><button id="resetHotkeyBtn" class="btn ghost" type="button" data-i18n="hotkey.reset">恢复 Alt+Q</button></div>
+              <span id="hotkeyHelp" class="field-help">如果被其他软件占用，会自动换一个可用组合。</span><span class="field-help" data-i18n="hotkey.hint"></span>
             </label>
             <div class="field">
               <span class="field-label" data-i18n="settings.bubbleLabel">悬浮球</span>
@@ -270,7 +265,7 @@
 
   <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script>
 
-  <script src="settings.js"></script>
+  <script src="../shared/hotkeys.js"></script><script src="settings-advanced.js"></script><script src="settings.js"></script>
 
 
 </body></html>

@@ -6,6 +6,8 @@ const path = require('path');
 const { PRESETS } = require('../shared/presets');
 
 const { normalizeLocale } = require('../shared/i18n');
+const { normalizeHotkey } = require('../shared/hotkeys');
+const { TASKS } = require('./model-config');
 
 function defaultLanguage() {
   try {
@@ -19,6 +21,8 @@ const DEFAULTS = {
   schemaVersion: 1,
   language: defaultLanguage(),
   saveHistory: true,
+  autoCheckUpdates: true,
+  modelProfiles: {},
   provider: 'deepseek',
   baseUrl: PRESETS.deepseek.baseUrl,
   model: PRESETS.deepseek.model,
@@ -109,7 +113,7 @@ function sanitize(patch, current) {
   if (typeof patch.maxTokens !== 'undefined') {
     next.maxTokens = Math.round(clampNumber(patch.maxTokens, current.maxTokens, 128, 8000));
   }
-  for (const field of ['vision', 'webEnabled', 'showBubble', 'autoLaunch', 'onboarded', 'saveHistory']) {
+  for (const field of ['vision', 'webEnabled', 'showBubble', 'autoLaunch', 'onboarded', 'saveHistory', 'autoCheckUpdates']) {
     if (typeof patch[field] === 'boolean') next[field] = patch[field];
   }
   if (patch.bubblePosition === null) {
@@ -129,8 +133,17 @@ function sanitize(patch, current) {
   if (next.searchProvider === 'searxng' && !/^https?:\/\//i.test(next.searxngUrl)) {
     next.searchProvider = 'bing';
   }
-  if (!['Alt+Q', 'Ctrl+Alt+Q', 'Ctrl+Shift+Space', 'Alt+`'].includes(next.hotkey)) {
-    next.hotkey = 'Alt+Q';
+  next.hotkey = normalizeHotkey(next.hotkey) || 'Alt+Q';
+  next.modelProfiles = {};
+  for (const task of TASKS) {
+    const prior = current.modelProfiles?.[task] || {};
+    const p = patch.modelProfiles?.[task] || {};
+    const profile = { ...prior };
+    for (const key of ['enabled', 'customService', 'vision']) profile[key] = typeof p[key] === 'boolean' ? p[key] : Boolean(prior[key] ?? (key === 'vision'));
+    for (const key of ['provider', 'baseUrl', 'model']) profile[key] = typeof p[key] === 'string' ? p[key].trim().slice(0, 2000) : prior[key] || '';
+    profile.temperature = clampNumber(p.temperature ?? prior.temperature, 0.4, 0, 2);
+    profile.maxTokens = Math.round(clampNumber(p.maxTokens ?? prior.maxTokens, 1200, 64, 32768));
+    next.modelProfiles[task] = profile;
   }
   return next;
 }
@@ -147,6 +160,11 @@ function load() {
   config = sanitize({ ...DEFAULTS, ...stored }, { ...DEFAULTS, apiKeyEnc: stored.apiKeyEnc || '' });
   config.apiKeyEnc = stored.apiKeyEnc || '';
   config.apiKey = decryptKey(config.apiKeyEnc);
+  for (const task of TASKS) {
+    const p = config.modelProfiles[task];
+    p.apiKeyEnc = stored.modelProfiles?.[task]?.apiKeyEnc || '';
+    p.apiKey = decryptKey(p.apiKeyEnc);
+  }
   return config;
 }
 
@@ -155,6 +173,10 @@ function persist() {
   fs.mkdirSync(dir, { recursive: true });
   const data = { ...config };
   delete data.apiKey;
+  data.modelProfiles = Object.fromEntries(TASKS.map(task => {
+    const { apiKey, ...profile } = config.modelProfiles[task];
+    return [task, profile];
+  }));
   // Never write plaintext keys, ever.
   if (!data.apiKeyEnc) delete data.apiKeyEnc;
   const tmp = getConfigPath() + '.tmp';
@@ -171,6 +193,11 @@ function publicSettings() {
   return {
     language: c.language,
     saveHistory: c.saveHistory,
+    autoCheckUpdates: c.autoCheckUpdates,
+    modelProfiles: Object.fromEntries(TASKS.map(task => {
+      const { apiKey, apiKeyEnc, ...profile } = c.modelProfiles[task];
+      return [task, { ...profile, hasApiKey: Boolean(apiKey) }];
+    })),
     provider: c.provider,
     baseUrl: c.baseUrl,
     model: c.model,
@@ -212,8 +239,16 @@ function save(patch) {
     next.apiKeyEnc = c.apiKeyEnc;
   }
 
+  for (const task of TASKS) {
+    const p = patch.modelProfiles?.[task];
+    const target = next.modelProfiles[task];
+    if (p?.clearApiKey === true) { target.apiKey = ''; target.apiKeyEnc = ''; }
+    else if (typeof p?.apiKey === 'string' && p.apiKey.trim()) {
+      target.apiKey = p.apiKey.trim(); target.apiKeyEnc = encryptKey(target.apiKey);
+    }
+  }
   config = next;
-  persist();
+  try { persist(); } catch (error) { config = c; throw error; }
   return publicSettings();
 }
 

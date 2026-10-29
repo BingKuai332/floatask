@@ -12,6 +12,12 @@ const { PRESETS } = require('../shared/presets');
 const { t } = require('./i18n');
 const { normalizeLocale } = require('../shared/i18n');
 const history = require('./history');
+const { resolveModel, TASKS } = require('./model-config');
+const { normalizeHotkey } = require('../shared/hotkeys');
+const { createUpdater } = require('./updater');
+let updater = null;
+let recordingTimer = null;
+let lastNotifiedUpdate = '';
 const { captureRegion, cleanupCapture } = require('./capture');
 const { recognizeImage, getForegroundInfo, listSystemFonts } = require('./powershell');
 const { searchWeb } = require('./search');
@@ -478,7 +484,7 @@ async function handleSelection(display, rect) {
     windowInfo: {},
     imageDataUrl: capture?.visionDataUrl || null,
     previewDataUrl: capture?.previewDataUrl || '',
-    vision: Boolean(config.vision && capture),
+    vision: resolveModel(config, 'initial', Boolean(capture)).vision,
     webEnabled: Boolean(config.webEnabled),
     sources: [],
     pendingSources: [],
@@ -568,7 +574,7 @@ async function handleSelection(display, rect) {
   if (!session || session.id !== id) return;
   sendResult({ type: 'context', windowInfo: session.windowInfo });
 
-  const hasModelAccess = Boolean(store.getConfig().apiKey) || isLocalBaseUrl(store.getConfig().baseUrl);
+  const hasModelAccess = hasModelConfig(resolveModel(store.getConfig(), 'initial', Boolean(session.imageDataUrl)));
   if (!hasModelAccess) {
     sendResult({
       type: 'error',
@@ -703,7 +709,7 @@ function saveHistoryIfNeeded() {
   if (!store.getConfig().saveHistory || session.historyDeleted) return;
   try {
     const config = store.getConfig();
-    history.record(session, { model: config.model, provider: config.provider });
+    history.record(session, { model: session.lastModel?.model || config.model, provider: session.lastModel?.provider || config.provider });
     broadcastHistory();
   } catch (err) {
     log('history record failed', err.message);
@@ -765,7 +771,8 @@ async function performSearch(query, config) {
 async function startInitial() {
   if (!session) return;
   const id = session.id;
-  const config = store.getConfig();
+  const config = resolveModel(store.getConfig(), 'initial', Boolean(session.imageDataUrl));
+  session.vision = config.vision;
   const error = configError(config);
   if (error) {
     sendResult({ type: 'error', ...error, retryable: false });
@@ -820,7 +827,7 @@ async function startInitial() {
   });
 
   sendResult({ type: 'phase', phase: 'thinking', code: 'thinking-initial', message: t('main.phaseThinking') });
-  await runStream({ messages, mode: 'initial', question: '', webNote, controller: requestController });
+  await runStream({ messages, mode: 'initial', question: '', webNote, controller: requestController, requestConfig: config });
 }
 
 async function handleAsk(rawQuestion) {
@@ -829,7 +836,8 @@ async function handleAsk(rawQuestion) {
   if (!question) return;
   if (session.busy) return;
 
-  const config = store.getConfig();
+  const config = resolveModel(store.getConfig(), 'followup', Boolean(session.imageDataUrl));
+  session.vision = config.vision;
   const error = configError(config);
   if (error) {
     sendResult({ type: 'error', ...error, retryable: false });
@@ -879,13 +887,16 @@ async function handleAsk(rawQuestion) {
   });
 
   sendResult({ type: 'phase', phase: 'thinking', code: 'thinking-followup', message: t('main.phaseAnswering') });
-  await runStream({ messages, mode: 'followup', question, webNote, controller: requestController });
+  await runStream({ messages, mode: 'followup', question, webNote, controller: requestController, requestConfig: config });
 }
 
-async function runStream({ messages, mode, question, webNote, retriedWithoutImage = false, controller = new AbortController() }) {
+async function runStream({ messages, mode, question, webNote, retriedWithoutImage = false, controller = new AbortController(), requestConfig }) {
   if (!session) return;
   const id = session.id;
-  const config = store.getConfig();
+  const config = requestConfig || resolveModel(store.getConfig(), mode === 'initial' ? 'initial' : 'followup', Boolean(session.imageDataUrl));
+  session.lastModel = config;
+  session.vision = config.vision;
+  sendResult({ type: 'model', model: config.model, providerLabel: PRESETS[config.provider]?.label || config.provider, vision: config.vision });
   session.abort = controller;
   session.busy = true;
 
@@ -944,8 +955,7 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
     }
 
     const canRetryWithoutImage = !retriedWithoutImage &&
-      mode === 'initial' &&
-      Boolean(session.imageDataUrl) &&
+      config.vision && Boolean(session.imageDataUrl) &&
       (err.status === 400 || /image|vision|multimodal|content.*type/i.test(`${err.message} ${err.detail}`));
 
     if (canRetryWithoutImage) {
@@ -953,20 +963,22 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
       session.abort = null;
       session.vision = false;
       sendResult({ type: 'notice', code: 'vision-fallback', message: t('main.visionFallback') });
-      const fallbackMessages = buildInitialMessages({
+      const fallbackMessages = mode === 'initial' ? buildInitialMessages({
         selection: session.selectionText,
         windowInfo: session.windowInfo,
         sources: session.pendingSources || [],
         image: null,
         vision: false,
         manual: session.manual
-      });
+      }) : buildFollowupMessages({ systemContext: session.systemContext, history: session.history, question,
+        sources: session.pendingSources || [], webNote, image: null, vision: false });
       await runStream({
         messages: fallbackMessages,
-        mode: 'initial',
-        question: '',
+        mode,
+        question,
         webNote,
-        retriedWithoutImage: true
+        retriedWithoutImage: true,
+        requestConfig: resolveModel(store.getConfig(), mode === 'initial' ? 'initial' : 'followup', false)
       });
       return;
     }
@@ -1340,7 +1352,8 @@ async function openSettings(firstRun = false) {
     event.preventDefault();
     settingsWin.hide();
   });
-  settingsWin.on('closed', () => { settingsWin = null; });
+  settingsWin.on('hide', stopHotkeyRecording);
+  settingsWin.on('closed', () => { stopHotkeyRecording(); settingsWin = null; });
 
   await settingsWin.loadFile(path.join(RENDERER, 'settings.html'));
   settingsWin.show();
@@ -1366,6 +1379,11 @@ function applyLoginItem(config) {
   }
 }
 
+function stopHotkeyRecording() {
+  if (!recordingTimer) return;
+  clearTimeout(recordingTimer); recordingTimer = null;
+  registerHotkey(store.getConfig().hotkey);
+}
 function registerHotkey(accel) {
   globalShortcut.unregisterAll();
   hotkeyOk = false;
@@ -1590,9 +1608,55 @@ ipcMain.on('font:close', () => {
   if (fontWin && !fontWin.isDestroyed()) fontWin.hide();
 });
 
+ipcMain.handle('hotkey:recording', (_event, enabled) => {
+  if (enabled) {
+    clearTimeout(recordingTimer); globalShortcut.unregisterAll();
+    recordingTimer = setTimeout(stopHotkeyRecording, 30000);
+  } else stopHotkeyRecording();
+  return true;
+});
+ipcMain.handle('updates:state', () => updater?.getState());
+ipcMain.handle('updates:check', () => updater?.check());
+ipcMain.handle('updates:download', () => updater?.download());
+ipcMain.handle('updates:install', async () => {
+  const result = await updater?.install();
+  if (result?.ok) { isQuitting = true; setTimeout(() => app.quit(), 350); }
+  return result;
+});
+ipcMain.handle('settings:test-profile', async (_event, { task, patch } = {}) => {
+  if (!TASKS.includes(task)) return { ok: false, message: t('models.invalid') };
+  const base = draftConfig(patch || {});
+  const p = patch?.modelProfiles?.[task] || {};
+  const old = store.getConfig().modelProfiles[task];
+  base.modelProfiles = { [task]: { ...old, ...p, enabled: true, apiKey: p.clearApiKey ? '' : p.apiKey || old.apiKey } };
+  const config = resolveModel(base, task, task === 'vision');
+  // A connection test validates the chosen endpoint and model; no screenshots are sent.
+  if (task === 'vision') Object.assign(config, p.customService ? { provider: p.provider || 'custom', baseUrl: p.baseUrl, apiKey: p.clearApiKey ? '' : p.apiKey || old.apiKey } : {}, { model: p.model || base.model });
+  try { const error = configError(config); if (error) return { ok: false, ...error }; return { ok: true, ...await testConnection(config) }; }
+  catch (error) { return { ok: false, message: error.message, hint: error.hint }; }
+});
 ipcMain.handle('settings:get', () => settingsPayload());
 ipcMain.handle('settings:save', (_event, patch) => {
   try {
+    stopHotkeyRecording();
+    if (typeof patch?.hotkey === 'string') {
+      const candidate = normalizeHotkey(patch.hotkey);
+      if (!candidate) throw new Error(t('hotkey.invalid'));
+      if (!globalShortcut.isRegistered(candidate)) {
+        if (!globalShortcut.register(candidate, () => startSelection())) throw new Error(t('hotkey.taken'));
+        globalShortcut.unregister(candidate);
+      }
+    }
+    const nextDraft = draftConfig(patch || {});
+    for (const task of TASKS) {
+      const p = patch?.modelProfiles?.[task];
+      if (!p?.enabled) continue;
+      const old = store.getConfig().modelProfiles[task];
+      const config = { ...nextDraft, model: p.model || nextDraft.model };
+      if (p.customService) Object.assign(config, { baseUrl: p.baseUrl, apiKey: p.clearApiKey ? '' : p.apiKey || old.apiKey });
+      if (!/^https?:\/\//i.test(config.baseUrl || '')) throw new Error(t('settings.validateBaseUrl'));
+      const error = configError(config); if (error) throw new Error(error.message);
+    }
     const prevLanguage = store.getConfig().language;
     const saved = store.save(patch && typeof patch === 'object' ? patch : {});
     store.markOnboarded();
@@ -1712,6 +1776,18 @@ if (!gotLock) {
     store.load();
     protocol.handle('floatask-font', handleFontProtocol);
     history.load();
+    updater = createUpdater({ app, onState: state => {
+      if (settingsWin && !settingsWin.isDestroyed()) settingsWin.webContents.send('updates:state', state);
+      if (state.phase === 'available' && state.available.version !== lastNotifiedUpdate) {
+        lastNotifiedUpdate = state.available.version;
+        notify(t('update.title'), t('update.available', { version: state.available.version }));
+      }
+    } });
+    if (app.isPackaged) {
+      const autoCheck = () => { if (store.getConfig().autoCheckUpdates) updater.check(); };
+      setTimeout(autoCheck, 10000).unref();
+      setInterval(autoCheck, 6 * 60 * 60 * 1000).unref();
+    }
     cleanupCustomFonts();
     try {
       const tmp = path.join(app.getPath('userData'), 'tmp');

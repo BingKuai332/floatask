@@ -1,0 +1,20 @@
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const { spawnSync } = require('child_process');
+const root = path.join(__dirname, '..');
+const version = require('../package.json').version;
+const folder = path.join(root,'dist');
+const name = `FloatAsk-v${version}-win32-x64.zip`;
+const archive = path.join(folder,name);
+const source = path.join(folder,'FloatAsk-win32-x64');
+if (!fs.existsSync(path.join(source,'FloatAsk.exe'))) throw new Error('Run npm run pack first');
+// Paths are passed as arguments to a fixed script, never interpolated as code.
+const script = path.join(__dirname,'release.ps1');
+const result = spawnSync('powershell.exe',['-NoProfile','-NonInteractive','-File',script,'-Source',source,'-Destination',archive],{stdio:'inherit',windowsHide:true});
+if (result.status !== 0) process.exit(result.status ?? 1);
+const hash = crypto.createHash('sha256');
+const stream = fs.createReadStream(archive);
+stream.on('data',chunk=>hash.update(chunk));
+stream.on('end',()=>{fs.writeFileSync(archive+'.sha256',`${hash.digest('hex')}  ${name}\n`);console.log('Release assets: '+archive+' and .sha256');});
