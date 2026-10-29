@@ -6,8 +6,10 @@ $workDir = [IO.Path]::GetDirectoryName($taskPath)
 $report = Join-Path $workDir 'update-result.json'
 $changed = [Collections.Generic.List[object]]::new()
 $success = $false
+$parentExited = $false
 try {
-    $task = Get-Content -LiteralPath $taskPath -Raw | ConvertFrom-Json
+    # Node writes UTF-8 without a BOM; Windows PowerShell otherwise assumes ANSI.
+    $task = Get-Content -LiteralPath $taskPath -Raw -Encoding UTF8 | ConvertFrom-Json
     $destination = [IO.Path]::GetFullPath($task.destination).TrimEnd('\')
     $archive = [IO.Path]::GetFullPath($task.archive)
     $exe = [IO.Path]::GetFullPath($task.executable)
@@ -19,9 +21,15 @@ try {
     try { $actualHash = [BitConverter]::ToString($hashAlgorithm.ComputeHash($archiveStream)).Replace('-', '').ToLowerInvariant() }
     finally { $archiveStream.Dispose(); $hashAlgorithm.Dispose() }
     if ($actualHash -ne $task.sha256) { throw 'Checksum mismatch' }
+    if ($task.readyFile) {
+        $readyFile = [IO.Path]::GetFullPath($task.readyFile)
+        if ([IO.Path]::GetDirectoryName($readyFile) -ne $workDir -or [IO.Path]::GetFileName($readyFile) -notmatch '^update-ready-[a-f0-9]+\.json$') { throw 'Invalid readiness file' }
+        @{ready=$true} | ConvertTo-Json | Set-Content -LiteralPath $readyFile -Encoding UTF8
+    }
     if ($task.parentPid -gt 0 -and (Get-Process -Id $task.parentPid -ErrorAction SilentlyContinue)) {
         Wait-Process -Id $task.parentPid -Timeout 120 -ErrorAction Stop
     }
+    $parentExited = $true
     $stage = Join-Path $workDir ('stage-' + [Guid]::NewGuid().ToString('N'))
     $backup = Join-Path $workDir ('backup-' + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $stage,$backup | Out-Null
@@ -79,7 +87,7 @@ try {
             if ($resolvedCleanup.StartsWith($workDir + '\', [StringComparison]::OrdinalIgnoreCase) -and (Test-Path -LiteralPath $resolvedCleanup)) { Remove-Item -LiteralPath $resolvedCleanup -Recurse -Force -ErrorAction SilentlyContinue }
         }
     }
-    if (-not $NoRestart -and $exe -and (Test-Path -LiteralPath $exe)) {
+    if (-not $NoRestart -and $parentExited -and $exe -and (Test-Path -LiteralPath $exe)) {
         $env:FLOATASK_USER_DATA = $task.userData
         Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue
         if ($task.launchArgs -and $task.launchArgs.Count -gt 0) { Start-Process -FilePath $exe -ArgumentList @($task.launchArgs) -WorkingDirectory $destination -WindowStyle Hidden }

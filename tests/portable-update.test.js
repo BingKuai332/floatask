@@ -21,13 +21,14 @@ test('portable installer preserves user data, rejects unsafe archives and rolls 
    const archive=path.join(work,'update.zip');
    const result=malicious ? powershell(path.join(__dirname,'unsafe-archive.ps1'),['-Archive',archive]) : powershell(path.resolve(__dirname,'../scripts/release.ps1'),['-Source',fixture,'-Destination',archive]);
    assert.equal(result.status,0,result.stderr);
-   const task=path.join(work,'task.json');fs.writeFileSync(task,JSON.stringify({parentPid:0,destination,executable:path.join(destination,'FloatAsk.exe'),archive,sha256:crypto.createHash('sha256').update(fs.readFileSync(archive)).digest('hex'),userData:path.join(destination,'userdata')}));
+   const task=path.join(work,'task.json');fs.writeFileSync(task,JSON.stringify({parentPid:0,destination,executable:path.join(destination,'FloatAsk.exe'),archive,sha256:crypto.createHash('sha256').update(fs.readFileSync(archive)).digest('hex'),userData:path.join(destination,'userdata'),readyFile:path.join(work,'update-ready-aabb.json')}));
    return {destination,work,task};
   }
-  const normal=prepare('normal');
+  const normal=prepare('中文路径 with spaces');
   let result=powershell(helper,['-TaskFile',normal.task,'-NoRestart']);assert.equal(result.status,0,result.stderr+result.stdout+fs.readFileSync(path.join(normal.work,'update-result.json'),'utf8'));
   assert.equal(fs.readFileSync(path.join(normal.destination,'FloatAsk.exe'),'utf8'),'new executable');
   assert.equal(fs.readFileSync(path.join(normal.destination,'userdata','history.json'),'utf8'),'private-history');
+  assert.equal(fs.existsSync(path.join(normal.work,'update-ready-aabb.json')),true,'helper acknowledges successful startup');
   const failed=prepare('rollback');fs.writeFileSync(path.join(failed.destination,'resources'),'blocks resource directory');
   result=powershell(helper,['-TaskFile',failed.task,'-NoRestart']);assert.equal(result.status,1);
   assert.equal(fs.readFileSync(path.join(failed.destination,'FloatAsk.exe'),'utf8'),'old executable');

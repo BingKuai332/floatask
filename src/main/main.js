@@ -450,6 +450,7 @@ function handleSelectionRect(rawRect) {
 }
 
 async function handleSelection(display, rect) {
+  const id = ++sessionCounter;
   if (session?.abort) session.abort.abort();
   session = null;
   resultState = null;
@@ -458,8 +459,14 @@ async function handleSelection(display, rect) {
   if (resultWin && !resultWin.isDestroyed()) resultWin.hide();
 
   await delay(140);
+  if (sessionCounter !== id) return;
 
-  const contextPromise = getForegroundInfo(process.pid);
+  // Attach the rejection handler immediately: capture may fail or be superseded
+  // before the OCR phase has an opportunity to await this promise.
+  const contextPromise = getForegroundInfo(process.pid).catch((err) => {
+    log('foreground info failed', err.message);
+    return {};
+  });
   let capture = null;
   let captureError = null;
   try {
@@ -467,6 +474,10 @@ async function handleSelection(display, rect) {
   } catch (err) {
     captureError = err;
     log('capture failed', err.message);
+  }
+  if (sessionCounter !== id) {
+    if (capture) cleanupCapture(capture.pngPath);
+    return;
   }
 
   const screenRect = {
@@ -477,7 +488,6 @@ async function handleSelection(display, rect) {
   };
 
   const config = store.getConfig();
-  const id = ++sessionCounter;
   session = {
     id,
     selectionText: '',
@@ -521,6 +531,10 @@ async function handleSelection(display, rect) {
   };
 
   await showResult(initPayload, screenRect, display);
+  if (!session || session.id !== id) {
+    if (capture) cleanupCapture(capture.pngPath);
+    return;
+  }
 
   if (captureError) {
     sendResult({
@@ -565,13 +579,9 @@ async function handleSelection(display, rect) {
     empty: !ocr.text
   });
 
-  try {
-    session.windowInfo = await contextPromise;
-  } catch (err) {
-    log('foreground info failed', err.message);
-    session.windowInfo = {};
-  }
+  const windowInfo = await contextPromise;
   if (!session || session.id !== id) return;
+  session.windowInfo = windowInfo;
   sendResult({ type: 'context', windowInfo: session.windowInfo });
 
   const hasModelAccess = hasModelConfig(resolveModel(store.getConfig(), 'initial', Boolean(session.imageDataUrl)));
@@ -669,9 +679,10 @@ function positionResult(screenRect, display) {
   };
 }
 
-async function showResult(payload, screenRect, display) {
+async function showResult(payload, screenRect, display, sessionId = session?.id) {
+  if (!session || session.id !== sessionId) return;
   const win = await ensureResultWindow();
-  if (!win || win.isDestroyed()) return;
+  if (!win || win.isDestroyed() || !session || session.id !== sessionId) return;
   const bounds = positionResult(screenRect, display);
   win.setBounds(bounds, false);
   resultState = payload;
@@ -683,6 +694,7 @@ async function showResult(payload, screenRect, display) {
 }
 
 function hideResult() {
+  ++sessionCounter;
   if (resultWin && !resultWin.isDestroyed()) resultWin.hide();
   if (session?.abort) session.abort.abort();
   session = null;
@@ -1060,6 +1072,7 @@ async function askClipboard() {
     status: 'ready',
     error: null
   }, screenRect, display);
+  if (!session || session.id !== id) return;
   sendResult({ type: 'context', windowInfo: session.windowInfo });
   startInitial();
 }
@@ -1629,9 +1642,8 @@ ipcMain.handle('settings:test-profile', async (_event, { task, patch } = {}) => 
   const p = patch?.modelProfiles?.[task] || {};
   const old = store.getConfig().modelProfiles[task];
   base.modelProfiles = { [task]: { ...old, ...p, enabled: true, apiKey: p.clearApiKey ? '' : p.apiKey || old.apiKey } };
-  const config = resolveModel(base, task, task === 'vision');
+  const config = resolveModel(base, task, false);
   // A connection test validates the chosen endpoint and model; no screenshots are sent.
-  if (task === 'vision') Object.assign(config, p.customService ? { provider: p.provider || 'custom', baseUrl: p.baseUrl, apiKey: p.clearApiKey ? '' : p.apiKey || old.apiKey } : {}, { model: p.model || base.model });
   try { const error = configError(config); if (error) return { ok: false, ...error }; return { ok: true, ...await testConnection(config) }; }
   catch (error) { return { ok: false, message: error.message, hint: error.hint }; }
 });
@@ -1655,7 +1667,11 @@ ipcMain.handle('settings:save', (_event, patch) => {
       const config = { ...nextDraft, model: p.model || nextDraft.model };
       if (p.customService) Object.assign(config, { baseUrl: p.baseUrl, apiKey: p.clearApiKey ? '' : p.apiKey || old.apiKey });
       if (!/^https?:\/\//i.test(config.baseUrl || '')) throw new Error(t('settings.validateBaseUrl'));
-      const error = configError(config); if (error) throw new Error(error.message);
+      const deletingKey = p.customService ? p.clearApiKey === true : patch.clearApiKey === true;
+      const error = configError(config);
+      // Clearing credentials is a valid saved state even if it temporarily
+      // makes an enabled task unavailable. Requests still validate before use.
+      if (error && !(deletingKey && config.baseUrl && config.model && !config.apiKey)) throw new Error(error.message);
     }
     const prevLanguage = store.getConfig().language;
     const saved = store.save(patch && typeof patch === 'object' ? patch : {});

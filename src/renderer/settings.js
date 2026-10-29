@@ -261,7 +261,7 @@ function validate(draft) {
     return { message: tt('settings.validateModel'), focus: els.model };
   }
   const willHaveKey = Boolean(draft.apiKey) || (savedHasKey && !pendingClearKey);
-  if (!willHaveKey && !isLocalUrl(draft.baseUrl)) {
+  if (!willHaveKey && !draft.clearApiKey && !isLocalUrl(draft.baseUrl)) {
     return { message: tt('settings.validateKey'), focus: els.apiKey };
   }
   if (draft.searchProvider === 'searxng' && !/^https?:\/\//i.test(draft.searxngUrl)) {

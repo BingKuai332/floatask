@@ -121,6 +121,7 @@ async function streamChat({ config, messages, signal, onDelta, onReasoning }) {
     });
   } catch (err) {
     clearTimeout(timeout);
+    signal?.removeEventListener('abort', forwardAbort);
     if (signal?.aborted) throw new AIError(t('ai.aborted'), { code: 'aborted' });
     if (err.name === 'AbortError') throw new AIError(t('ai.timeout'), { code: 'timeout', hint: t('ai.timeoutHint') });
     throw new AIError(t('ai.network'), {
@@ -131,8 +132,11 @@ async function streamChat({ config, messages, signal, onDelta, onReasoning }) {
   }
 
   if (!res.ok) {
-    clearTimeout(timeout);
-    throw await readError(res);
+    try { throw await readError(res); }
+    finally {
+      clearTimeout(timeout);
+      signal?.removeEventListener('abort', forwardAbort);
+    }
   }
 
   const contentType = res.headers.get('content-type') || '';
@@ -146,35 +150,46 @@ async function streamChat({ config, messages, signal, onDelta, onReasoning }) {
       let buffer = '';
       let finished = false;
 
-      while (!finished) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        let newline;
-        while ((newline = buffer.indexOf('\n')) >= 0) {
-          const line = buffer.slice(0, newline).replace(/\r$/, '').trim();
-          buffer = buffer.slice(newline + 1);
-          if (!line || line.startsWith(':') || !line.startsWith('data:')) continue;
-          const data = line.slice(5).trim();
-          if (data === '[DONE]') {
-            finished = true;
+      function consumeLine(rawLine) {
+        const line = rawLine.replace(/\r$/, '').trim();
+        if (!line || line.startsWith(':') || !line.startsWith('data:')) return;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') {
+          finished = true;
+          return;
+        }
+        let json;
+        try { json = JSON.parse(data); }
+        catch { return; } // Ignore keep-alive or malformed chunks.
+        if (json.usage) usage = json.usage;
+        const choice = json.choices?.[0];
+        const delta = choice?.delta?.content ?? choice?.text ?? '';
+        if (typeof delta === 'string' && delta) {
+          full += delta;
+          onDelta?.(delta);
+        }
+        const reasoning = choice?.delta?.reasoning_content;
+        if (typeof reasoning === 'string' && reasoning && onReasoning) onReasoning(reasoning);
+      }
+      try {
+        while (!finished) {
+          const { value, done } = await reader.read();
+          if (done) {
+            buffer += decoder.decode();
+            if (buffer.trim()) consumeLine(buffer);
             break;
           }
-          try {
-            const json = JSON.parse(data);
-            if (json.usage) usage = json.usage;
-            const choice = json.choices?.[0];
-            const delta = choice?.delta?.content ?? choice?.text ?? '';
-            if (typeof delta === 'string' && delta) {
-              full += delta;
-              onDelta?.(delta);
-            }
-            const reasoning = choice?.delta?.reasoning_content;
-            if (typeof reasoning === 'string' && reasoning && onReasoning) onReasoning(reasoning);
-          } catch {
-            // Ignore keep-alive or malformed chunks.
+          buffer += decoder.decode(value, { stream: true });
+          let newline;
+          while (!finished && (newline = buffer.indexOf('\n')) >= 0) {
+            const line = buffer.slice(0, newline);
+            buffer = buffer.slice(newline + 1);
+            consumeLine(line);
           }
         }
+      } finally {
+        await reader.cancel().catch(() => {});
+        reader.releaseLock();
       }
     } else {
       const json = await res.json();

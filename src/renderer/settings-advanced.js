@@ -6,7 +6,7 @@
   const container = document.getElementById('modelProfiles');
   const hotkey = document.getElementById('hotkey');
   const record = document.getElementById('recordHotkeyBtn');
-  let settings, getDraft, recording = false, previous = '', timer, updateState;
+  let settings, getDraft, recording = false, recordingPending = false, recordingRequest = 0, previous = '', timer, updateState;
   const field = (task, name) => document.getElementById(`profile-${task}-${name}`);
   function renderProfiles() {
     for (const task of tasks) {
@@ -89,27 +89,42 @@
       if (p.customService) {
         if (!/^https?:\/\//i.test(p.baseUrl)) return {message:t('settings.validateBaseUrl'),focus:field(task,'baseUrl')};
         const local=/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(\/|$)/i.test(p.baseUrl);
-        if (!local && !p.apiKey && !(settings.modelProfiles?.[task]?.hasApiKey && !p.clearApiKey)) return {message:t('settings.validateKey'),focus:field(task,'apiKey')};
+        if (!local && !p.apiKey && !p.clearApiKey && !settings.modelProfiles?.[task]?.hasApiKey) return {message:t('settings.validateKey'),focus:field(task,'apiKey')};
       }
     }
     return null;
   }
   async function finishRecording(cancel) {
-    if (!recording) return;
-    recording = false; clearTimeout(timer); if (cancel) hotkey.value = previous;
+    if (!recording && !recordingPending) return;
+    // An IPC acknowledgement may arrive after blur, cancellation or another
+    // click. Invalidate it before awaiting the request that restores shortcuts.
+    recordingRequest++;
+    recordingPending = false; recording = false; clearTimeout(timer); if (cancel) hotkey.value = previous;
     hotkey.classList.remove('recording'); record.textContent = t('hotkey.record');
-    await api.setHotkeyRecording(false);
+    try { await api.setHotkeyRecording(false); }
+    catch (error) { document.getElementById('hotkeyHelp').textContent = error.message || t('settings.saveFailed'); }
   }
   record.addEventListener('click', async () => {
-    if (recording) return finishRecording(true);
-    await api.setHotkeyRecording(true); previous = hotkey.value; recording = true;
-    hotkey.classList.add('recording'); record.textContent = t('hotkey.listening'); hotkey.focus();
-    timer = setTimeout(() => finishRecording(true),30000);
+    if (recording || recordingPending) return finishRecording(true);
+    const request = ++recordingRequest;
+    previous = hotkey.value; recordingPending = true;
+    try {
+      await api.setHotkeyRecording(true);
+      if (request !== recordingRequest) return;
+      recordingPending = false; recording = true;
+      hotkey.classList.add('recording'); record.textContent = t('hotkey.listening'); hotkey.focus();
+      timer = setTimeout(() => finishRecording(true),30000);
+    } catch (error) {
+      if (request !== recordingRequest) return;
+      await finishRecording(true);
+      document.getElementById('hotkeyHelp').textContent = error.message || t('settings.saveFailed');
+    }
   });
   document.addEventListener('keydown', event => {
-    if (!recording) return;
+    if (!recording && !recordingPending) return;
     event.preventDefault(); event.stopImmediatePropagation();
     if (event.key === 'Escape') { finishRecording(true); return; }
+    if (recordingPending) return;
     const value = window.FloatAskHotkeys.fromKeyboard(event);
     if (value) { hotkey.value = value; finishRecording(false); }
   },true);
@@ -138,7 +153,7 @@
     if (recording) record.textContent = t('hotkey.listening');
     if (settings) for (const task of tasks) field(task,'apiKey').placeholder = settings.modelProfiles?.[task]?.hasApiKey ? t('settings.keyPlaceholderSaved') : 'sk-…';
   });
-  window.FloatAskAdvanced = { collect, validate, get recording() { return recording; },
+  window.FloatAskAdvanced = { collect, validate, get recording() { return recording || recordingPending; },
     populate(value,draft) {
       settings = value; getDraft = draft; container.replaceChildren(); renderProfiles();
       document.getElementById('autoCheckUpdates').checked = settings.autoCheckUpdates !== false;

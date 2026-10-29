@@ -9,7 +9,7 @@ const assert = require('assert/strict');
 const root = path.join(__dirname, '..');
 const data = process.env.FLOATASK_USER_DATA || fs.mkdtempSync(path.join(os.tmpdir(), 'floatask-smoke-'));
 process.env.FLOATASK_USER_DATA = data;
-let calls = [], errors = [], slowSearch = false, rejectImages = false;
+let calls = [], requestPaths = [], errors = [], slowSearch = false, rejectImages = false, captureDelay = 0, captureTag = "fixture";
 const updaterModule = require('../src/main/updater');
 const realCreateUpdater = updaterModule.createUpdater;
 updaterModule.createUpdater = options => realCreateUpdater({ ...options, request: async () => Response.json({
@@ -23,13 +23,17 @@ search.searchWeb = async () => {
 };
 const capture = require('../src/main/capture');
 const powershell = require('../src/main/powershell');
-capture.captureRegion = async () => ({ pngPath: path.join(data,'mock.png'), previewDataUrl: '', visionDataUrl: 'data:image/png;base64,iVBORw0KGgo=' });
+capture.captureRegion = async () => {
+ const tag = captureTag, milliseconds = captureDelay;
+ if (milliseconds) await new Promise(resolve => setTimeout(resolve,milliseconds));
+ return { pngPath: path.join(data,tag+'.png'), previewDataUrl: '', visionDataUrl: 'data:image/png;base64,iVBORw0KGgo=' };
+};
 capture.cleanupCapture = () => {};
-powershell.recognizeImage = async () => ({text:'An isolated screenshot fixture'});
+powershell.recognizeImage = async filename => ({text:'An isolated screenshot '+path.basename(filename,'.png')});
 powershell.getForegroundInfo = async () => ({title:'Mock screenshot',process:'fixture'});
 const server = http.createServer((req,res) => {
  let body='';req.on('data',chunk=>body+=chunk);req.on('end',()=>{
-  const payload=JSON.parse(body); calls.push(payload);
+  const payload=JSON.parse(body); calls.push(payload); requestPaths.push(req.url);
   if (rejectImages && payload.messages.some(message => Array.isArray(message.content))) { res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:{message:'images not supported'}}));return; }
   if (!payload.stream) { res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify({model:payload.model,choices:[{message:{content:'OK'}}]})); return; }
   res.writeHead(200, {'Content-Type':'text/event-stream'});
@@ -71,11 +75,17 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(settings,'window.FloatAskAdvanced.recording'),'recorder starts');
    await js(settings,"document.dispatchEvent(new KeyboardEvent('keydown',{key:'k',code:'KeyK',ctrlKey:true,altKey:true,shiftKey:true,bubbles:true}))");
    await waitFor(()=>js(settings,"document.getElementById('hotkey').value==='Ctrl+Alt+Shift+K' && !window.FloatAskAdvanced.recording"),'shortcut recorded');
-   await js(settings,"(async()=>{const base=await window.floatask.getSettings(); for(const [task,model] of [['initial','initial-fast'],['followup','followup-reasoning'],['vision','vision-model']]){document.getElementById('profile-'+task+'-enabled').checked=true;document.getElementById('profile-'+task+'-enabled').dispatchEvent(new Event('change'));document.getElementById('profile-'+task+'-model').value=model;}document.getElementById('profile-initial-customService').checked=true;document.getElementById('profile-initial-customService').dispatchEvent(new Event('change'));document.getElementById('profile-initial-baseUrl').value=base.baseUrl;document.getElementById('profile-initial-test').click();})()");
+   await js(settings,"(async()=>{const base=await window.floatask.getSettings(); for(const [task,model] of [['initial','initial-fast'],['followup','followup-reasoning'],['vision','vision-model']]){document.getElementById('profile-'+task+'-enabled').checked=true;document.getElementById('profile-'+task+'-enabled').dispatchEvent(new Event('change'));document.getElementById('profile-'+task+'-model').value=model;}document.getElementById('profile-initial-customService').checked=true;document.getElementById('profile-initial-customService').dispatchEvent(new Event('change'));document.getElementById('profile-initial-baseUrl').value=base.baseUrl.replace('/v1','/initial-service/v1');document.getElementById('profile-initial-test').click();})()");
    await waitFor(()=>js(settings,"document.getElementById('profile-initial-result').textContent.includes('Connected')"),'profile connection test');
    const advancedSaved=await js(settings,"window.floatask.saveSettings({...window.FloatAskAdvanced.collect(),hotkey:document.getElementById('hotkey').value})");
    assert.equal(advancedSaved.ok,true,advancedSaved.message);
    assert.equal(advancedSaved.settings.hotkey,'Ctrl+Alt+Shift+K');
+   const priorBase = advancedSaved.settings.baseUrl;
+   await js(settings,"window.floatask.saveSettings({baseUrl:'https://example.invalid/v1',apiKey:'deletion-fixture-key'})");
+   const cleared = await js(settings,"window.floatask.saveSettings({clearApiKey:true,modelProfiles:{followup:{enabled:true,customService:false,model:'followup-reasoning'},vision:{enabled:true,customService:false,model:'vision-model'}}})");
+   assert.equal(cleared.ok,true,'explicit credential deletion must be saved even for enabled inherited profiles');
+   assert.equal(cleared.settings.hasApiKey,false);
+   await js(settings,'window.floatask.saveSettings({baseUrl:'+JSON.stringify(priorBase)+'})');
    const register=globalShortcut.register.bind(globalShortcut);
    globalShortcut.register=(key,fn)=>key==='Ctrl+Alt+F11'?false:register(key,fn);
    const conflict=await js(settings,"window.floatask.saveSettings({hotkey:'Ctrl+Alt+F11'})");
@@ -141,6 +151,7 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(history.list().length,0,'deleted active history does not reappear');
    await js(result,"window.floatask.setManualText('Initial model routing test')");
    await waitFor(()=>calls.at(-1)?.model==='initial-fast','initial task model');
+   assert.equal(requestPaths.at(-1),'/initial-service/v1/chat/completions','initial override uses its endpoint');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'initial model done');
    await js(settings,"window.floatask.saveSettings({vision:true})");
    await js(result,'window.floatask.startSelection()');
@@ -148,6 +159,7 @@ server.listen(0,'127.0.0.1',()=>{
    await js(screenshotSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='vision-model','vision task model');
    assert(Array.isArray(calls.at(-1).messages.at(-1).content),'screenshot attached to vision model');
+   assert.equal(requestPaths.at(-1),'/v1/chat/completions','vision inheritance uses default endpoint, not the initial override');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'vision model done');
    rejectImages = true;
    await js(result,"document.getElementById('questionInput').value='Followup with unsupported image';document.getElementById('sendBtn').click()");
@@ -159,6 +171,22 @@ server.listen(0,'127.0.0.1',()=>{
    await js(fallbackSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='initial-fast','initial image fallback');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'initial fallback completed');
+   await js(settings,"window.floatask.saveSettings({vision:false})");
+   captureDelay = 1000; captureTag = 'old-capture';
+   const beforeCaptureRace = calls.length;
+   await js(result,'window.floatask.startSelection()');
+   const oldSelection = await waitFor(()=>page('selection'),'old race selection');
+   await js(oldSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
+   await pause(250);
+   captureDelay = 0; captureTag = 'new-capture';
+   await js(settings,'window.floatask.startSelection()');
+   const newSelection = await waitFor(()=>page('selection'),'new race selection');
+   await js(newSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
+   await waitFor(()=>calls.length>beforeCaptureRace && calls.at(-1).messages[0].content.includes('new-capture'),'new capture answer');
+   await pause(1100);
+   const racedState = await js(result,'window.floatask.getResultState()');
+   assert(racedState.init.selectionText.includes('new-capture'),'slow earlier capture must not replace the newer session');
+   assert(!calls.slice(beforeCaptureRace).some(call=>call.messages[0].content.includes('old-capture')),'stale capture must not start an AI request');
    await js(settings,"window.floatask.setLanguage('en')");
    await waitFor(()=>js(font,"document.getElementById('importBtn').textContent==='＋ Import font file…'"),'font translated');
    await js(result,'window.floatask.closeResult()');

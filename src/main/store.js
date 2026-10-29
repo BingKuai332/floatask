@@ -102,6 +102,7 @@ function sanitize(patch, current) {
   if (typeof patch.lineHeight !== 'undefined') {
     next.lineHeight = Math.round(clampNumber(patch.lineHeight, current.lineHeight, 1.2, 2.4) * 100) / 100;
   }
+  if (patch.fontScope === 'all' || patch.fontScope === 'reading') next.fontScope = patch.fontScope;
   if (!['all', 'reading'].includes(next.fontScope)) next.fontScope = 'all';
   if (typeof patch.customFontFile === 'string') next.customFontFile = patch.customFontFile.trim().slice(0, 160);
   if (typeof patch.customFontName === 'string') next.customFontName = patch.customFontName.trim().slice(0, 120);
@@ -153,7 +154,8 @@ function load() {
   let stored = {};
   try {
     const raw = fs.readFileSync(getConfigPath(), 'utf8');
-    stored = JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    stored = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
   } catch (err) {
     if (err.code !== 'ENOENT') console.warn('[store] could not read config:', err.message);
   }
@@ -253,16 +255,13 @@ function save(patch) {
 }
 
 function setBubblePosition(x, y) {
-  const c = load();
-  c.bubblePosition = { x: Math.round(x), y: Math.round(y) };
-  persist();
+  save({ bubblePosition: { x: Math.round(x), y: Math.round(y) } });
 }
 
 function markOnboarded() {
   const c = load();
   if (!c.onboarded) {
-    c.onboarded = true;
-    persist();
+    save({ onboarded: true });
   }
 }
 

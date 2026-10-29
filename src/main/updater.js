@@ -93,7 +93,14 @@ function createUpdater({ app, onState = () => {}, request = (...args) => fetch(.
       downloaded = { filename, sha256: expected };
       return emit({ phase: 'ready', progress: 100 });
     } catch (error) { return fail(error); }
-    finally { if (file) await file.close(); await fs.promises.rm(partial, { force: true }); busy = false; }
+    finally {
+      // A failed close/delete must not leave the updater permanently busy.
+      try { if (file) await file.close(); }
+      catch (error) { console.warn('[updater] partial file close failed:', error.code); }
+      try { await fs.promises.rm(partial, { force: true }); }
+      catch (error) { console.warn('[updater] partial file cleanup failed:', error.code); }
+      busy = false;
+    }
   }
   async function install() {
     if (busy || !downloaded || state.phase !== 'ready' || !capable) return { ok: false };
@@ -106,14 +113,35 @@ function createUpdater({ app, onState = () => {}, request = (...args) => fetch(.
       const helper = path.join(folder, 'apply-update.ps1');
       fs.copyFileSync(path.join(__dirname, '../../resources/update.ps1'), helper);
       const task = path.join(folder, 'update-task.json');
+      const readyFile = path.join(folder, `update-ready-${crypto.randomBytes(8).toString('hex')}.json`);
+      const report = path.join(folder, 'update-result.json');
+      fs.rmSync(report, { force: true });
       fs.writeFileSync(task, JSON.stringify({ parentPid: process.pid, destination, executable: path.resolve(executable),
         archive: downloaded.filename, sha256: downloaded.sha256, userData: app.getPath('userData'),
+        readyFile,
         launchArgs: process.argv.slice(1).filter(arg => ['--no-sandbox','--disable-gpu','--disable-crash-reporter'].includes(arg)) }));
       const child = launch('powershell.exe', ['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-WindowStyle','Hidden','-File',helper,'-TaskFile',task], {
         detached: true, windowsHide: true, stdio: 'ignore'
       });
       await new Promise((resolve, reject) => { child.once('spawn', resolve); child.once('error', reject); });
-      child.unref(); emit({ phase: 'installing' });
+      child.unref();
+      // Process creation alone does not prove that PowerShell loaded the helper.
+      // Keep the application alive until the script has validated the task and checksum.
+      try {
+        const deadline = Date.now() + 30000;
+        while (!fs.existsSync(readyFile)) {
+          if (typeof child.exitCode === 'number' || fs.existsSync(report) || Date.now() >= deadline) throw new Error('update.installFailed');
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      } catch (error) {
+        // A helper that never became ready must not linger and race a later retry.
+        try { child.kill(); } catch { /* it may already have exited */ }
+        throw error;
+      } finally {
+        try { fs.rmSync(readyFile, { force: true }); }
+        catch (error) { console.warn('[updater] readiness file cleanup failed:', error.code); }
+      }
+      emit({ phase: 'installing' });
       return { ok: true };
     } catch (error) { fail(error); busy = false; return { ok: false }; }
   }
