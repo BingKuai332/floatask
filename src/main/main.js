@@ -42,6 +42,9 @@ let resultWin = null;
 let settingsWin = null;
 let fontWin = null;
 let historyWin = null;
+let translateWin = null;
+let translationState = null;
+let overlayMode = 'single';
 let isQuitting = false;
 let pinned = true;
 let session = null;
@@ -156,6 +159,16 @@ function buildTrayMenu() {
       click: () => startSelection()
     },
     {
+      label: t('tray.multiSelect'),
+      accelerator: 'Alt+Shift+Q',
+      click: () => startMultiSelection()
+    },
+    {
+      label: t('tray.translate'),
+      accelerator: 'Alt+T',
+      click: () => startTranslationSelection()
+    },
+    {
       label: t('tray.clipboard'),
       click: () => askClipboard()
     },
@@ -218,7 +231,7 @@ function defaultBubblePosition() {
   const display = screen.getPrimaryDisplay();
   const area = display.workArea;
   return {
-    x: area.x + area.width - 148,
+    x: area.x + area.width - 238 - 16,
     y: area.y + Math.round(area.height * 0.52)
   };
 }
@@ -228,8 +241,8 @@ function clampBubblePosition(x, y) {
   const display = screen.getDisplayNearestPoint({ x, y }) || displays[0];
   const area = display.workArea;
   return {
-    x: Math.round(Math.min(Math.max(x, area.x + 4), area.x + area.width - 136)),
-    y: Math.round(Math.min(Math.max(y, area.y + 4), area.y + area.height - 52))
+    x: Math.round(Math.min(Math.max(x, area.x + 4), area.x + area.width - 238 - 4)),
+    y: Math.round(Math.min(Math.max(y, area.y + 4), area.y + area.height - 68 - 4))
   };
 }
 
@@ -239,8 +252,8 @@ async function ensureBubble() {
 
   bubbleCreating = (async () => {
   bubbleWin = new BrowserWindow({
-    width: 132,
-    height: 48,
+    width: 238,
+    height: 68,
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
@@ -336,13 +349,15 @@ function closeOverlay() {
   }
 }
 
-async function startSelection() {
+async function startSelection(mode = 'single') {
   if (isQuitting) return;
   if (overlayWin && !overlayWin.isDestroyed()) {
     overlayWin.focus();
     return;
   }
-  if (resultWin && !resultWin.isDestroyed() && resultWin.isVisible()) hideResult();
+  overlayMode = mode;
+  if (mode === 'single' && resultWin && !resultWin.isDestroyed() && resultWin.isVisible()) hideResult();
+  if (mode === 'translate' && translateWin && !translateWin.isDestroyed()) translateWin.hide();
 
   const cursor = screen.getCursorScreenPoint();
   const display = screen.getDisplayNearestPoint(cursor);
@@ -425,6 +440,14 @@ function cancelSelection() {
   refreshBubble();
 }
 
+function startMultiSelection() {
+  return startSelection('multi');
+}
+
+function startTranslationSelection() {
+  return startSelection('translate');
+}
+
 function handleSelectionRect(rawRect) {
   if (!session && !overlayDisplay) return;
   const display = overlayDisplay || screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
@@ -445,7 +468,17 @@ function handleSelectionRect(rawRect) {
     notify(t('notify.regionSmall.title'), t('notify.regionSmall.body'));
     return;
   }
+  const mode = overlayMode;
+  overlayMode = 'single';
   closeOverlay();
+  if (mode === 'translate') {
+    handleTranslateSelection(display, clamped);
+    return;
+  }
+  if (mode === 'multi' && session) {
+    handleAdditionalShot(display, clamped);
+    return;
+  }
   handleSelection(display, clamped);
 }
 
@@ -498,6 +531,7 @@ async function handleSelection(display, rect) {
     webEnabled: Boolean(config.webEnabled),
     sources: [],
     pendingSources: [],
+    shots: [],
     history: [],
     lastQuestion: '',
     lastAnswerComplete: false,
@@ -514,6 +548,7 @@ async function handleSelection(display, rect) {
     selectionText: '',
     windowInfo: {},
     preview: session.previewDataUrl,
+    shotCount: 0,
     vision: session.vision,
     webEnabled: session.webEnabled,
     provider: config.provider,
@@ -571,12 +606,19 @@ async function handleSelection(display, rect) {
   if (!session || session.id !== id) return;
 
   session.selectionText = ocr.text;
+  session.shots = [{
+    text: ocr.text,
+    preview: session.previewDataUrl,
+    image: session.imageDataUrl,
+    windowInfo: session.windowInfo
+  }];
   sendResult({
     type: 'ocr',
     text: ocr.text,
     error: ocr.error,
     lang: ocr.lang || '',
-    empty: !ocr.text
+    empty: !ocr.text,
+    shotCount: 1
   });
 
   const windowInfo = await contextPromise;
@@ -586,6 +628,10 @@ async function handleSelection(display, rect) {
 
   const hasModelAccess = hasModelConfig(resolveModel(store.getConfig(), 'initial', Boolean(session.imageDataUrl)));
   if (!hasModelAccess) {
+    if (config.searchProvider !== 'off' && session.selectionText) {
+      startSearchOnly();
+      return;
+    }
     sendResult({
       type: 'error',
       code: 'config',
@@ -609,6 +655,285 @@ async function handleSelection(display, rect) {
   }
 
   startInitial();
+}
+
+/* ------------------------------------------------------------------ */
+/* Additional screenshots                                              */
+/* ------------------------------------------------------------------ */
+
+async function handleAdditionalShot(display, rect) {
+  const current = session;
+  if (!current) {
+    await handleSelection(display, rect);
+    return;
+  }
+  if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
+  if (resultWin && !resultWin.isDestroyed()) resultWin.hide();
+  await delay(120);
+  if (session !== current) return;
+
+  let capture = null;
+  try {
+    capture = await captureRegion(display, rect);
+  } catch (err) {
+    log('additional capture failed', err.message);
+    if (resultWin && !resultWin.isDestroyed()) resultWin.show();
+    sendResult({ type: 'error', code: 'capture', message: t('main.captureFailed'), hint: err.message, retryable: true });
+    return;
+  }
+  if (session !== current) {
+    if (capture) cleanupCapture(capture.pngPath);
+    return;
+  }
+
+  let text = '';
+  try {
+    const ocr = await recognizeImage(capture.pngPath);
+    text = ocr.text || '';
+  } catch (err) {
+    log('additional ocr failed', err.message);
+  } finally {
+    cleanupCapture(capture.pngPath);
+  }
+  if (session !== current) return;
+
+  current.shots = Array.isArray(current.shots) ? current.shots : [];
+  current.shots.push({ text, preview: capture.previewDataUrl, image: capture.visionDataUrl });
+  current.selectionText = current.shots
+    .map((shot, index) => `【截图 ${index + 1}】\n${shot.text || '（无 OCR 文字）'}`)
+    .join('\n\n');
+  current.imageDataUrl = capture.visionDataUrl || current.imageDataUrl;
+  current.previewDataUrl = capture.previewDataUrl || current.previewDataUrl;
+
+  if (resultWin && !resultWin.isDestroyed()) {
+    resultWin.show();
+    resultWin.focus();
+  }
+  sendResult({
+    type: 'shot',
+    count: current.shots.length,
+    preview: current.previewDataUrl,
+    text
+  });
+
+  if (current.abort) {
+    try { current.abort.abort(); } catch { /* ignore */ }
+    current.busy = false;
+    current.abort = null;
+  }
+  await delay(80);
+  if (session !== current) return;
+  current.systemContext = buildSystemContext({
+    selection: current.selectionText,
+    windowInfo: current.windowInfo,
+    sources: current.sources
+  });
+  if (current.history.some((item) => item.role === 'assistant')) {
+    await handleAsk(t('main.newShotQuestion'));
+  } else {
+    await startInitial();
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Screenshot translation                                              */
+/* ------------------------------------------------------------------ */
+
+function translationTarget(text) {
+  const source = String(text || '');
+  const cjk = (source.match(/[\u3400-\u9fff]/g) || []).length;
+  return cjk > Math.max(2, source.length * 0.12) ? 'en' : 'zh';
+}
+
+function translationPrompt(target) {
+  const language = target === 'en' ? 'English' : 'Simplified Chinese';
+  return `You are a precise screenshot translator. Translate the supplied screen text into ${language}. ` +
+    'Output only the translation, with no explanation, no quotes and no markdown heading. ' +
+    'Preserve line breaks, numbers, code identifiers, shortcuts and UI labels. ' +
+    'If the source is already in the target language, return it unchanged.';
+}
+
+async function ensureTranslateWindow() {
+  if (translateWin && !translateWin.isDestroyed()) return translateWin;
+  translateWin = new BrowserWindow({
+    width: 880,
+    height: 620,
+    minWidth: 640,
+    minHeight: 420,
+    frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
+    resizable: true,
+    movable: true,
+    minimizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    skipTaskbar: true,
+    alwaysOnTop: true,
+    hasShadow: false,
+    show: false,
+    title: 'FloatAsk Translate',
+    webPreferences: {
+      preload: PRELOAD,
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true
+    }
+  });
+  translateWin.setMenuBarVisibility(false);
+  translateWin.setAlwaysOnTop(true, 'screen-saver');
+  try { translateWin.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true }); } catch { /* ignore */ }
+  secureWindow(translateWin);
+  translateWin.on('close', (event) => {
+    if (isQuitting) return;
+    event.preventDefault();
+    translateWin.hide();
+    if (translationState?.abort) translationState.abort.abort();
+    translationState = null;
+    refreshBubble();
+  });
+  await translateWin.loadFile(path.join(RENDERER, 'translate.html'));
+  return translateWin;
+}
+
+async function showTranslation(payload) {
+  const win = await ensureTranslateWindow();
+  if (!win || win.isDestroyed()) return;
+  win.webContents.send('translate:init', payload);
+  win.show();
+  win.focus();
+  refreshBubble();
+}
+
+function sendTranslation(payload) {
+  if (translateWin && !translateWin.isDestroyed()) translateWin.webContents.send('translate:event', payload);
+}
+
+async function handleTranslateSelection(display, rect) {
+  if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
+  if (resultWin && !resultWin.isDestroyed()) resultWin.hide();
+  await delay(140);
+
+  let capture = null;
+  try {
+    capture = await captureRegion(display, rect);
+  } catch (err) {
+    log('translate capture failed', err.message);
+    await showTranslation({ preview: '', text: '', target: 'zh', error: t('main.captureFailed'), hint: err.message });
+    return;
+  }
+
+  let text = '';
+  try {
+    const ocr = await recognizeImage(capture.pngPath);
+    text = ocr.text || '';
+  } catch (err) {
+    log('translate ocr failed', err.message);
+  } finally {
+    cleanupCapture(capture.pngPath);
+  }
+
+  if (translationState?.abort) {
+    try { translationState.abort.abort(); } catch { /* ignore */ }
+  }
+  const target = translationTarget(text);
+  translationState = {
+    preview: capture.previewDataUrl || '',
+    image: capture.visionDataUrl || null,
+    text,
+    target,
+    translation: '',
+    abort: null,
+    id: ++sessionCounter
+  };
+  await showTranslation({ preview: translationState.preview, text, target, status: 'ready' });
+  await translateCurrent(target);
+}
+
+async function translateCurrent(target) {
+  const state = translationState;
+  if (!state) return;
+  if (state.abort) {
+    try { state.abort.abort(); } catch { /* ignore */ }
+  }
+  state.translation = '';
+  state.target = target === 'en' ? 'en' : 'zh';
+  sendTranslation({ type: 'target', target: state.target });
+
+  const config = resolveModel(store.getConfig(), 'initial', Boolean(state.image));
+  if (!hasModelConfig(config)) {
+    sendTranslation({ type: 'error', message: t('main.noModel'), hint: t('main.noModelHint') });
+    return;
+  }
+  if (!state.text.trim() && !config.vision) {
+    sendTranslation({ type: 'error', message: '没有识别到可翻译的文字', hint: '请框选包含文字的区域，或在设置中启用支持图片理解的模型。' });
+    return;
+  }
+
+  const controller = new AbortController();
+  state.abort = controller;
+  const content = state.text.trim()
+    ? `<source_text>\n${state.text.slice(0, 12000)}\n</source_text>`
+    : 'Translate every piece of text visible in this screenshot.';
+  sendTranslation({ type: 'start', target: state.target });
+  try {
+    const result = await streamChat({
+      config,
+      signal: controller.signal,
+      messages: [
+        { role: 'system', content: translationPrompt(state.target) },
+        { role: 'user', content, image: config.vision ? state.image : undefined }
+      ],
+      onDelta: (delta) => {
+        state.translation += delta;
+        sendTranslation({ type: 'delta', text: delta });
+      }
+    });
+    if (state.abort !== controller) return;
+    const finalText = (result?.text || state.translation || '').trim();
+    state.translation = finalText;
+    state.abort = null;
+    sendTranslation({ type: 'done', text: finalText });
+  } catch (err) {
+    if (state.abort !== controller) return;
+    state.abort = null;
+    if (err.code === 'aborted') return;
+    sendTranslation({ type: 'error', message: err.message || '翻译失败', hint: err.hint || '' });
+  }
+}
+
+async function searchTranslation(rawText) {
+  const query = String(rawText || '').replace(/\s+/g, ' ').trim().slice(0, 180);
+  if (!query) {
+    sendTranslation({ type: 'search-error', message: '没有可检索的文字' });
+    return;
+  }
+  const config = store.getConfig();
+  if (config.searchProvider === 'off') {
+    sendTranslation({ type: 'search-error', message: '联网检索未开启，请先在设置中启用搜索' });
+    return;
+  }
+  sendTranslation({ type: 'search-start', query });
+  try {
+    const web = await searchWeb(query, {
+      provider: config.searchProvider,
+      searxngUrl: config.searxngUrl,
+      fetchPages: true,
+      pageLimit: 4
+    });
+    if (!translateWin || translateWin.isDestroyed()) return;
+    sendTranslation({
+      type: 'search-results',
+      query,
+      results: (web.results || []).slice(0, 8).map((item) => ({
+        title: item.title || '',
+        url: item.url || '',
+        snippet: item.snippet || item.content || ''
+      }))
+    });
+  } catch (err) {
+    sendTranslation({ type: 'search-error', message: `检索失败：${err.message}` });
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -780,6 +1105,65 @@ async function performSearch(query, config) {
   return { results: web.results, note: '' };
 }
 
+async function startSearchOnly(question = '') {
+  if (!session) return;
+  const config = store.getConfig();
+  if (config.searchProvider === 'off') {
+    sendResult({
+      type: 'error',
+      code: 'config',
+      message: t('main.noModel'),
+      hint: t('main.noModelHint'),
+      retryable: false
+    });
+    return;
+  }
+  const id = session.id;
+  const query = question ? searchQueryForQuestion(question) : searchQueryForInitial();
+  if (!query.trim()) {
+    sendResult({
+      type: 'error',
+      code: 'config',
+      message: t('searchOnly.noText'),
+      hint: t('searchOnly.noTextHint'),
+      retryable: false
+    });
+    return;
+  }
+  if (session.abort) {
+    try { session.abort.abort(); } catch { /* ignore */ }
+  }
+  const controller = new AbortController();
+  session.abort = controller;
+  session.busy = true;
+  sendResult({ type: 'phase', phase: 'searching', code: 'searching', message: t('main.phaseSearching') });
+  try {
+    const result = await performSearch(query, config);
+    if (!session || session.id !== id || controller.signal.aborted) return;
+    session.sources = result.results || [];
+    sendResult({
+      type: 'search-only',
+      query,
+      results: session.sources,
+      count: session.sources.length
+    });
+  } catch (err) {
+    if (!session || session.id !== id || controller.signal.aborted) return;
+    sendResult({
+      type: 'error',
+      code: 'search',
+      message: t('searchOnly.failed'),
+      hint: err.message,
+      retryable: true
+    });
+  } finally {
+    if (session && session.id === id) {
+      session.busy = false;
+      if (session.abort === controller) session.abort = null;
+    }
+  }
+}
+
 async function startInitial() {
   if (!session) return;
   const id = session.id;
@@ -852,6 +1236,10 @@ async function handleAsk(rawQuestion) {
   session.vision = config.vision;
   const error = configError(config);
   if (error) {
+    if (store.getConfig().searchProvider !== 'off' && session.selectionText) {
+      await startSearchOnly(question);
+      return;
+    }
     sendResult({ type: 'error', ...error, retryable: false });
     return;
   }
@@ -1412,6 +1800,12 @@ function registerHotkey(accel) {
       log('hotkey failed', candidate, err.message);
     }
   }
+  for (const [accelerator, handler] of [
+    ['Alt+Shift+Q', () => startMultiSelection()],
+    ['Alt+T', () => startTranslationSelection()]
+  ]) {
+    try { globalShortcut.register(accelerator, handler); } catch (err) { log('extra hotkey failed', accelerator, err.message); }
+  }
   refreshTray();
   if (!hotkeyOk) {
     log('no global hotkey available');
@@ -1471,6 +1865,8 @@ function draftConfig(patch) {
 /* ------------------------------------------------------------------ */
 
 ipcMain.on('app:start-selection', () => startSelection());
+ipcMain.on('app:start-multi-selection', () => startMultiSelection());
+ipcMain.on('app:start-translation', () => startTranslationSelection());
 ipcMain.on('app:settings', () => openSettings(false));
 ipcMain.on('app:bubble-menu', () => {
   if (!bubbleWin || bubbleWin.isDestroyed()) return;
@@ -1526,6 +1922,15 @@ ipcMain.on('session:stop', () => {
 });
 ipcMain.on('session:retry', () => { retryLast(); });
 ipcMain.on('session:regenerate', () => { retryLast(); });
+ipcMain.on('session:add-shot', () => { if (session) startMultiSelection(); });
+ipcMain.on('translate:retry', (_event, target) => { if (translationState) translateCurrent(target); });
+ipcMain.on('translate:search', (_event, text) => { searchTranslation(text); });
+ipcMain.on('translate:close', () => {
+  if (translationState?.abort) translationState.abort.abort();
+  translationState = null;
+  if (translateWin && !translateWin.isDestroyed()) translateWin.hide();
+  refreshBubble();
+});
 ipcMain.on('session:web', (_event, enabled) => {
   if (session) session.webEnabled = Boolean(enabled);
 });

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="translate.css">
+  <title>截图翻译</title>
+</head>
+<body>
+  <div class="shell">
+    <div class="card">
+      <header class="titlebar drag">
+        <div class="brand">
+          <img class="brand-logo" src="../../resources/icon.png" alt="">
+          <div>
+            <div class="brand-title">截图翻译 <span>OCR TRANSLATE</span></div>
+            <div class="brand-sub">原图 / 译文 · 对照查看</div>
+          </div>
+        </div>
+        <div class="actions no-drag">
+          <button id="compareBtn" class="mode-btn active" type="button" title="原图与译文对照">对照</button>
+          <button id="closeBtn" class="icon-btn" type="button" title="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="m6 6 12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="split">
+        <section id="sourcePane" class="pane source-pane">
+          <div class="pane-head">
+            <span>原图</span>
+            <span id="ocrMeta" class="meta">识别中…</span>
+          </div>
+          <div id="previewWrap" class="preview-wrap">
+            <img id="previewImg" alt="截图">
+          </div>
+          <pre id="sourceText" class="source-text"></pre>
+        </section>
+
+        <section id="targetPane" class="pane target-pane">
+          <div class="pane-head">
+            <span>译文</span>
+            <span id="targetChip" class="target-chip">中文</span>
+          </div>
+          <div id="translationText" class="translation-text">
+            <div class="waiting"><span class="spinner"></span>正在读取截图…</div>
+          </div>
+          <div id="translationStatus" class="translation-status"></div>
+        </section>
+
+        <section id="searchPanel" class="search-panel" hidden>
+          <div class="search-head">
+            <span>联网检索</span>
+            <div class="search-actions">
+              <button type="button" data-search-source="translation" class="source-chip active">检索译文</button>
+              <button type="button" data-search-source="source" class="source-chip">检索原文</button>
+              <button id="searchClose" type="button" class="search-close" title="关闭检索">×</button>
+            </div>
+          </div>
+          <div id="searchQuery" class="search-query"></div>
+          <div id="searchStatus" class="search-status"></div>
+          <div id="searchResults" class="search-results"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="lang-actions">
+          <span class="lang-label">目标语言</span>
+          <button type="button" data-target="zh" class="lang-btn active">中文</button>
+          <button type="button" data-target="en" class="lang-btn">English</button>
+        </div>
+        <div class="footer-actions">
+          <button id="searchBtn" class="btn" type="button">检索</button>
+          <button id="copyBtn" class="btn" type="button">复制译文</button>
+          <button id="retryBtn" class="btn" type="button">重新翻译</button>
+          <button id="closeFooterBtn" class="btn primary" type="button">完成</button>
+        </div>
+      </footer>
+
+      <div id="toast" class="toast"></div>
+    </div>
+  </div>
+  <script src="font-utils.js"></script>
+  <script src="translate.js"></script>
+</body>
+</html>

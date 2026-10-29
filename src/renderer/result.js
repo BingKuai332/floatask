@@ -53,6 +53,7 @@ const state = {
   selectionText: '',
   windowInfo: {},
   preview: '',
+  shotCount: 1,
   vision: false,
   webEnabled: true,
   providerLabel: '',
@@ -145,7 +146,8 @@ function updateContext() {
 
   if (state.selectionText) {
     const chars = state.selectionText.replace(/\s+/g, '').length;
-    els.contextMeta.textContent = tt('result.charCount', { n: chars });
+    const prefix = state.shotCount > 1 ? `${state.shotCount} 张 · ` : '';
+    els.contextMeta.textContent = prefix + tt('result.charCount', { n: chars });
   } else {
     els.contextMeta.textContent = '';
   }
@@ -416,6 +418,7 @@ function showManual(message) {
 function reset(payload) {
   state.selectionText = payload?.selectionText || '';
   state.windowInfo = payload?.windowInfo || {};
+  state.shotCount = Number(payload?.shotCount) || 1;
   state.vision = Boolean(payload?.vision);
   state.webEnabled = payload?.webEnabled !== false;
   state.providerLabel = payload?.providerLabel || '';
@@ -743,8 +746,21 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+function ensureAddShotButton() {
+  const actions = document.querySelector('.titlebar .actions');
+  if (!actions || document.getElementById('addShotBtn')) return;
+  const button = document.createElement('button');
+  button.id = 'addShotBtn';
+  button.className = 'icon-btn';
+  button.type = 'button';
+  button.title = tt('result.addShot');
+  button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2l1.2-2h6.6L16.5 7h2A1.5 1.5 0 0 1 20 8.5v8A1.5 1.5 0 0 1 18.5 18h-13A1.5 1.5 0 0 1 4 16.5Z"></path><circle cx="12" cy="12.5" r="3.2"></circle></svg>';
+  button.addEventListener('click', () => api.addShot());
+  actions.insertBefore(button, actions.firstChild);
+}
+
 api.onFontUpdated((font) => applyReadingFont(font));
-api.onResultInit((payload) => reset(payload));
+api.onResultInit((payload) => { ensureAddShotButton(); reset(payload); });
 
 api.onResultEvent((payload) => {
   if (!payload || !payload.type) return;
@@ -754,12 +770,21 @@ api.onResultEvent((payload) => {
       state.vision = payload.vision; setModelChip(); updateVisionHint();
       break;
     case 'ocr':
+      if (payload.shotCount) state.shotCount = payload.shotCount;
       setOcr(payload.text, payload.error);
+      updateContext();
       if (payload.empty) {
         els.contextMeta.textContent = tt('result.ocrEmptyShort');
         els.contextPanel.classList.add('open');
         els.contextStrip.classList.add('open');
       }
+      break;
+    case 'shot':
+      state.shotCount = Number(payload.count) || state.shotCount;
+      setPreview(payload.preview || state.preview);
+      if (payload.text !== undefined) setOcr(payload.text, '');
+      updateContext();
+      toast(`已添加第 ${state.shotCount} 张截图`);
       break;
     case 'context':
       state.windowInfo = payload.windowInfo || {};
@@ -776,6 +801,18 @@ api.onResultEvent((payload) => {
           hideLoading();
         }
       }
+      break;
+    case 'search-only':
+      hideLoading();
+      hidePhase();
+      setBusyUI(false);
+      handleDone({
+        text: payload.results?.length
+          ? tt('searchOnly.message')
+          : tt('searchOnly.none'),
+        sources: payload.results || []
+      });
+      setStatus('done', tt('searchOnly.status'));
       break;
     case 'sources':
       handleSources(payload);

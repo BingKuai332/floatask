@@ -16,6 +16,8 @@ contextBridge.exposeInMainWorld('floatask', {
 
   // Launcher bubble
   startSelection: () => ipcRenderer.send('app:start-selection'),
+  startMultiSelection: () => ipcRenderer.send('app:start-multi-selection'),
+  startTranslation: () => ipcRenderer.send('app:start-translation'),
   bubbleMenu: () => ipcRenderer.send('app:bubble-menu'),
   getAppInfo: () => ipcRenderer.invoke('app:info'),
 
@@ -27,6 +29,7 @@ contextBridge.exposeInMainWorld('floatask', {
   stop: () => ipcRenderer.send('session:stop'),
   retry: () => ipcRenderer.send('session:retry'),
   regenerate: () => ipcRenderer.send('session:regenerate'),
+  addShot: () => ipcRenderer.send('session:add-shot'),
   setManualText: (text) => ipcRenderer.send('session:manual', text),
   setWebEnabled: (enabled) => ipcRenderer.send('session:web', Boolean(enabled)),
   closeResult: () => ipcRenderer.send('result:close'),
@@ -39,6 +42,13 @@ contextBridge.exposeInMainWorld('floatask', {
   downloadUpdate: () => ipcRenderer.invoke('updates:download'),
   installUpdate: () => ipcRenderer.invoke('updates:install'),
   onUpdateState: (cb) => subscribe('updates:state', cb),
+
+  // Screenshot translation
+  onTranslateInit: (cb) => subscribe('translate:init', cb),
+  onTranslateEvent: (cb) => subscribe('translate:event', cb),
+  retranslate: (target) => ipcRenderer.send('translate:retry', target),
+  searchTranslation: (text) => ipcRenderer.send('translate:search', text),
+  closeTranslate: () => ipcRenderer.send('translate:close'),
 
   // Settings
   getSettings: () => ipcRenderer.invoke('settings:get'),

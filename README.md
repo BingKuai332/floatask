@@ -8,13 +8,13 @@
     <img alt="Electron" src="https://img.shields.io/badge/Electron-45-47848F?logo=electron&logoColor=white">
     <img alt="Node.js" src="https://img.shields.io/badge/Node.js-22.12%2B-339933?logo=node.js&logoColor=white">
     <img alt="License" src="https://img.shields.io/badge/License-MIT-green">
-    <img alt="Status" src="https://img.shields.io/badge/Status-v0.3.1-orange">
+    <img alt="Status" src="https://img.shields.io/badge/Status-v0.3.2-orange">
   </p>
 </div>
 
 > 框选屏幕上任何看不懂的内容，浮问会结合窗口、上下文和联网资料，用几句话说清它是什么、有什么用、和当前场景有什么关系。然后可以在浮窗里继续追问、举例、深入，或联网核查并给出来源。
 
-> **Windows 便携版下载**：[Releases](https://github.com/BingKuai332/floatask/releases/latest)
+> **Windows 便携版下载**：[Releases](https://github.com/BingKuai332/floatask/releases/latest) · **更新日志**：[CHANGELOG.md](CHANGELOG.md)
 
 <p align="center">
   <img src="docs/result.png" width="330" alt="浮问解释窗口">
@@ -69,6 +69,9 @@
 | **上下文理解** | 自动读取前台窗口标题/进程名，把“这段内容出现在哪里”一起交给模型 |
 | **结构化解释** | 默认回答“是什么 / 有什么用 / 和这里的关系 / 一句话记住” |
 | **浮动对话窗** | 置顶、可拖动、可缩放；支持多轮追问、停止生成、复制回答 |
+| **连续多图** | `Alt+Shift+Q` 或悬浮球 `＋` 连续截多张；追问时也能继续补图，合并 OCR 上下文 |
+| **截图翻译** | `Alt+T` 或悬浮球 `译`；原图与译文左右对照，可切换目标语言，并直接在翻译窗口检索 |
+| **无 Key 搜索** | 没有模型 API Key 时仍可单独使用必应 / SearXNG 搜索，以来源卡片返回结果 |
 | **联网检索** | 内置必应搜索（免 Key），抓取网页正文，回答中标注来源；支持自建 SearXNG |
 | **截图理解** | 可选把压缩截图发给支持视觉的模型，适合图表、界面、无法 OCR 的内容 |
 | **中英双语** | 设置中即时切换简体中文 / English，窗口、菜单、状态与模型回答同步切换 |
@@ -216,6 +219,9 @@ dist/FloatAsk-win32-x64/
 | 操作 | 说明 |
 | --- | --- |
 | `Alt+Q` | 框选解释（可在设置里更换） |
+| `Alt+Shift+Q` | 连续截多张；每次截图都追加到当前会话 |
+| `Alt+T` | 一键截图翻译，打开原图/译文对照窗口 |
+| 悬浮球 `＋` / `译` | 不记快捷键也能直接连续截图 / 截图翻译 |
 | 拖拽选区 | 松开鼠标立即截图、OCR、解释 |
 | `Esc` | 取消框选 |
 | 浮窗输入框 | 继续追问；`Enter` 发送，`Shift+Enter` 换行 |
@@ -227,6 +233,16 @@ dist/FloatAsk-win32-x64/
 | 悬浮球左键 | 开始框选 |
 | 悬浮球右键 | 设置、显示/隐藏悬浮球、退出 |
 | 托盘菜单 | 框选解释、解释剪贴板文字、设置、退出 |
+
+### 连续多图与截图翻译
+
+**连续多图**：`Alt+Shift+Q` 或悬浮球 `＋` 开始；第一张截图正常解释，之后每次补图都会把新 OCR 文字并入当前会话并更新回答。结果窗口标题栏的相机按钮可在追问时继续加图。
+
+**截图翻译**：`Alt+T` 或悬浮球 `译` 框选后打开独立窗口，左侧原图/OCR，右侧译文；顶部 `对照 / 原图` 切换对比方式，底部可切换中文/English、复制译文或重新翻译。翻译窗口打开时悬浮球保持可用，`Alt+Q` 等主流程不受影响。
+
+翻译窗口底部的 **检索** 按钮会直接搜索当前译文，不需要再次框选；也可切换检索原文，结果在窗口内以来源卡片展示，点击即用默认浏览器打开。
+
+没有模型 API Key 时，框选仍会执行必应 / SearXNG 搜索并显示来源（状态为“仅搜索”），但不会生成 AI 解释；截图翻译本身仍需要模型。
 
 ### 语言、历史与收藏
 

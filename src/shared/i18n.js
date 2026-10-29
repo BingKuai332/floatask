@@ -88,6 +88,8 @@ const LOCALES = {
 
     // ---- tray ----
     'tray.select': '框选解释',
+    'tray.multiSelect': '连续框选（多图）',
+    'tray.translate': '截图翻译',
     'tray.clipboard': '解释剪贴板文字',
     'tray.showBubble': '显示悬浮球',
     'tray.settings': '设置…',
@@ -116,10 +118,13 @@ const LOCALES = {
     // ---- bubble ----
     'bubble.tooltip': '浮问 · {hotkey} 框选解释\n拖动左侧调整位置，右键更多',
     'bubble.button': '框选屏幕内容（{hotkey}）',
+    'bubble.multi': '连续截多张',
+    'bubble.translate': '截图翻译',
 
     // ---- result window: static ----
     'result.statusIdle': '待命',
     'result.reselect': '重新框选',
+    'result.addShot': '添加一张截图',
     'result.unpin': '取消置顶',
     'result.pin': '置顶窗口',
     'result.settings': '设置',
@@ -219,6 +224,13 @@ const LOCALES = {
     'main.visionFallback': '当前模型不支持截图，已自动改用识别文字回答。',
     'main.searchSuffix': ' 是什么 作用',
     'main.clipboardTitle': '剪贴板',
+    'main.newShotQuestion': '我补充了一张截图，请结合前面所有截图一起看，并补充或更新你的解释。',
+    'searchOnly.message': '未配置模型 API Key，以下是搜索到的相关内容。配置模型后可以生成解释。',
+    'searchOnly.none': '没有找到搜索结果。可以换个说法，或检查搜索设置。',
+    'searchOnly.status': '仅搜索',
+    'searchOnly.failed': '搜索失败',
+    'searchOnly.noText': '没有可检索的文字',
+    'searchOnly.noTextHint': '请框选包含文字的区域，或先在设置中配置模型。',
 
     // ---- ai.js errors ----
     'ai.noBaseUrl': '还没有填写 API 地址',
@@ -515,6 +527,8 @@ const LOCALES = {
 
     // ---- tray ----
     'tray.select': 'Capture & explain',
+    'tray.multiSelect': 'Capture multiple screenshots',
+    'tray.translate': 'Screenshot translation',
     'tray.clipboard': 'Explain clipboard text',
     'tray.showBubble': 'Show floating bubble',
     'tray.settings': 'Settings…',
@@ -543,10 +557,13 @@ const LOCALES = {
     // ---- bubble ----
     'bubble.tooltip': 'FloatAsk · {hotkey} capture & explain\nDrag the left side to move, right-click for more',
     'bubble.button': 'Capture screen region ({hotkey})',
+    'bubble.multi': 'Capture multiple',
+    'bubble.translate': 'Translate screenshot',
 
     // ---- result window: static ----
     'result.statusIdle': 'Standby',
     'result.reselect': 'Capture again',
+    'result.addShot': 'Add screenshot',
     'result.unpin': 'Unpin',
     'result.pin': 'Pin window',
     'result.settings': 'Settings',
@@ -646,6 +663,13 @@ const LOCALES = {
     'main.visionFallback': 'This model does not support screenshots; answering from recognized text instead.',
     'main.searchSuffix': ' what is it',
     'main.clipboardTitle': 'Clipboard',
+    'main.newShotQuestion': 'I added another screenshot. Look at all screenshots together and update or extend your explanation.',
+    'searchOnly.message': 'No model API key is configured. These are the search results; configure a model to generate an explanation.',
+    'searchOnly.none': 'No search results found. Try different words or check search settings.',
+    'searchOnly.status': 'Search only',
+    'searchOnly.failed': 'Search failed',
+    'searchOnly.noText': 'No searchable text',
+    'searchOnly.noTextHint': 'Select a region containing text, or configure a model in Settings.',
 
     // ---- ai.js errors ----
     'ai.noBaseUrl': 'API base URL is missing',
