@@ -160,6 +160,19 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,"document.getElementById('checkUpdatesBtn').click()");
    await waitFor(()=>js(settings,"document.getElementById('updateStatus').textContent.includes('999.0.0')"),'updates UI');
    assert.equal(await js(settings,"document.getElementById('downloadUpdateBtn').hidden"),true,'source builds cannot download updates');
+   // Updates & about (task 10): install stays disabled before verification; about links and diagnostics.
+   await js(settings,"document.querySelector('.settings-nav-item[data-panel=updates]').click();true");
+   assert.equal(await js(settings,"document.getElementById('installUpdateBtn').hidden"),false,'install action stays visible');
+   assert.equal(await js(settings,"document.getElementById('installUpdateBtn').disabled"),true,'install stays disabled before SHA-256 verification');
+   const externalLinks=await js(settings,"[...document.querySelectorAll('[data-external]')].map(b=>b.dataset.external)");
+   assert.equal(externalLinks.length,3,'about offers GitHub, release notes and license links');
+   assert.ok(externalLinks.every(url=>url.startsWith('https://github.com/')),'external links point at the repository');
+   assert.ok(await js(settings,"Boolean(document.getElementById('diagPreviewBtn') && document.getElementById('diagCopyBtn'))"),'diagnostics preview and copy actions exist');
+   const diagnostics=await js(settings,'(async()=>window.floatask.getDiagnostics())()');
+   assert.ok(diagnostics.includes('FloatAsk'),'diagnostics names the app');
+   assert.ok(diagnostics.includes('OS:'),'diagnostics lists the OS');
+   assert.ok(/Displays: \d+/.test(diagnostics),'diagnostics lists display configuration');
+   assert.ok(!diagnostics.includes('sk-') && !diagnostics.includes('An isolated screenshot') && !diagnostics.includes('Term about databases'),'diagnostics never contains keys, OCR text or conversation');
    await js(settings,"document.getElementById('updatesSection').scrollIntoView({block:'start'})");
    await screenshot(settings,'updates-en');
    const history=require('../src/main/history');

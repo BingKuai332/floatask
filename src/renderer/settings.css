@@ -518,3 +518,34 @@ html, body {
 
 .ob-footer { display: flex; justify-content: space-between; gap: 10px; padding-top: 12px; border-top: 1px solid var(--fa-divider); }
 .ob-footer .btn.primary { margin-left: auto; }
+
+/* About card & diagnostics (task 10) */
+.about-head { color: var(--fa-text); font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.about-links { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; margin-bottom: 10px; }
+.link-btn {
+  border: none;
+  background: transparent;
+  color: var(--fa-accent);
+  font-size: 12px;
+  padding: 3px 0;
+  cursor: pointer;
+  text-align: left;
+}
+.link-btn:hover { text-decoration: underline; }
+.about-diagnostics { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.diag-preview {
+  margin: 0;
+  padding: 10px 12px;
+  max-width: 460px;
+  max-height: 150px;
+  overflow: auto;
+  border-radius: var(--fa-radius-small);
+  border: 1px solid var(--fa-border-control);
+  background: var(--fa-surface-2);
+  color: var(--fa-body);
+  font-family: var(--fa-font-code);
+  font-size: 10.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  user-select: text;
+}

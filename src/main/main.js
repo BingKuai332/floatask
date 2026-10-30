@@ -6,8 +6,10 @@ const {
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 const store = require('./store');
+const { buildDiagnostics } = require('./diagnostics');
 const {
   CAPSULE_EXPANDED,
   HALF_CAPSULE_VERTICAL,
@@ -133,7 +135,7 @@ function secureWindow(win) {
 function openExternal(url) {
   try {
     const parsed = new URL(String(url));
-    if (!['http:', 'https:'].includes(parsed.protocol)) return false;
+    if (parsed.protocol !== 'https:') return false;
     shell.openExternal(parsed.href).catch(() => {});
     return true;
   } catch {
@@ -2006,6 +2008,18 @@ ipcMain.handle('app:info', () => ({
   onboarded: store.getConfig().onboarded
 }));
 ipcMain.handle('app:open-external', (_event, url) => openExternal(url));
+ipcMain.handle('app:diagnostics', () => buildDiagnostics({
+  version: app.getVersion(),
+  platform: process.platform,
+  osRelease: os.release(),
+  displays: screen.getAllDisplays().map(d => ({
+    width: d.size.width,
+    height: d.size.height,
+    scaleFactor: d.scaleFactor,
+    workArea: { width: d.workArea.width, height: d.workArea.height }
+  })),
+  lastUpdateError: updater?.getState?.().error || ''
+}));
 ipcMain.handle('app:language', () => store.getConfig().language);
 ipcMain.handle('app:set-language', (_event, language) => {
   try {

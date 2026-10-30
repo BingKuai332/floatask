@@ -214,6 +214,7 @@ function populate() {
   populateAppearance();
   selectPanel('model');
   initWizard(settings);
+  initAbout(settings);
 
   window.FloatAskAdvanced.populate(settings, collectDraft);
   renderProviders();
@@ -644,4 +645,36 @@ function initWizard(current) {
       root.hidden = false;
     }
   });
+}
+
+/* ------------------------------------------------------------------ */
+/* About links & diagnostics (task 10)                                */
+/* ------------------------------------------------------------------ */
+
+function initAbout(current) {
+  const aboutVersion = document.getElementById('aboutVersion');
+  if (aboutVersion) aboutVersion.textContent = current.appVersion || '0.1.0';
+
+  if (typeof document.querySelectorAll === 'function') {
+    for (const btn of document.querySelectorAll('[data-external]')) {
+      btn.addEventListener('click', () => api.openExternal(btn.dataset.external));
+    }
+  }
+
+  const previewBtn = document.getElementById('diagPreviewBtn');
+  const preview = document.getElementById('diagPreview');
+  const copyBtn = document.getElementById('diagCopyBtn');
+  if (previewBtn && preview && typeof api.getDiagnostics === 'function') {
+    previewBtn.addEventListener('click', async () => {
+      const text = await api.getDiagnostics();
+      preview.textContent = text;
+      preview.hidden = false;
+      if (copyBtn) copyBtn.hidden = false;
+    });
+  }
+  if (copyBtn && preview) {
+    copyBtn.addEventListener('click', async () => {
+      if (preview.textContent.trim()) await api.copyText(preview.textContent);
+    });
+  }
 }

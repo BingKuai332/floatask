@@ -100,6 +100,7 @@ contextBridge.exposeInMainWorld('floatask', {
 
   // Small utilities
   openExternal: (url) => ipcRenderer.invoke('app:open-external', url),
+  getDiagnostics: () => ipcRenderer.invoke('app:diagnostics'),
   copyText: (text) => ipcRenderer.invoke('app:copy', text),
   readClipboard: () => ipcRenderer.invoke('app:read-clipboard'),
   quitApp: () => ipcRenderer.send('app:quit')
