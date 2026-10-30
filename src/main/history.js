@@ -28,8 +28,13 @@ function load() {
   loaded = true;
   try {
     const raw = fs.readFileSync(historyPath(), 'utf8');
-    const data = JSON.parse(raw);
-    records = Array.isArray(data.records) ? data.records.filter((r) => r && typeof r.id === 'string' && Array.isArray(r.messages)).map(r => ({ ...r, messages: clampMessages(r.messages), sources: Array.isArray(r.sources) ? r.sources.slice(0, MAX_SOURCES) : [] })) : [];
+    const data = JSON.parse(raw.replace(/^\uFEFF/, ''));
+    records = Array.isArray(data?.records) ? data.records
+      .filter((r) => r && typeof r.id === 'string' && r.id && Array.isArray(r.messages))
+      .map(r => ({ ...r, title: textValue(r.title), windowTitle: textValue(r.windowTitle),
+        selectionText: textValue(r.selectionText).slice(0, MAX_SELECTION_CHARS),
+        createdAt: timestamp(r.createdAt), updatedAt: timestamp(r.updatedAt, timestamp(r.createdAt)),
+        messages: clampMessages(r.messages), sources: normalizeSources(r.sources) })) : [];
   } catch (err) {
     if (err.code !== 'ENOENT') console.warn('[history] could not read history:', err.message);
     records = [];
@@ -54,15 +59,30 @@ function persist() {
 function clampMessages(messages) {
   const out = [];
   let budget = MAX_TOTAL_MESSAGE_CHARS;
-  for (const item of messages || []) {
-    if (!item || !item.content) continue;
+  // Keep the newest turns when a conversation exceeds the storage budget,
+  // then restore chronological order for display and continued conversations.
+  for (let index = (messages?.length || 0) - 1; index >= 0; index--) {
+    const item = messages[index];
+    if (!item || !item.content || typeof item.content !== 'string') continue;
     if (item.role !== 'user' && item.role !== 'assistant') continue;
     const content = String(item.content).slice(0, Math.max(0, budget));
     budget -= content.length;
     out.push({ role: item.role, content });
     if (budget <= 0) break;
   }
-  return out;
+  return out.reverse();
+}
+
+function textValue(value) { return typeof value === 'string' ? value : ''; }
+
+function timestamp(value, fallback = 0) {
+  const number = typeof value === 'number' || typeof value === 'string' ? Number(value) : NaN;
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function normalizeSources(sources) {
+  return Array.isArray(sources) ? sources.filter(source => source && typeof source.url === 'string')
+    .slice(0, MAX_SOURCES).map(source => ({ title: textValue(source.title), url: source.url })) : [];
 }
 
 function makeTitle(session) {
@@ -104,7 +124,7 @@ function record(session, meta = {}) {
     updatedAt: now, messages, messageCount: messages.length,
     title: rec.title || makeTitle(session),
     selectionText: String(session.selectionText || '').slice(0, MAX_SELECTION_CHARS),
-    sources: (session.pendingSources || session.sources || []).slice(0, MAX_SOURCES).map(({title,url}) => ({title,url})),
+    sources: normalizeSources(session.pendingSources || session.sources),
     model: meta.model || rec.model || '', provider: meta.provider || rec.provider || '',
     hasImage: Boolean(rec.hasImage || session.imageDataUrl)
   });

@@ -8,7 +8,7 @@
     <img alt="Electron" src="https://img.shields.io/badge/Electron-45-47848F?logo=electron&logoColor=white">
     <img alt="Node.js" src="https://img.shields.io/badge/Node.js-22.12%2B-339933?logo=node.js&logoColor=white">
     <img alt="License" src="https://img.shields.io/badge/License-MIT-green">
-    <img alt="Status" src="https://img.shields.io/badge/Status-v0.3.2-orange">
+    <img alt="Status" src="https://img.shields.io/badge/Status-v0.3.3-orange">
   </p>
 </div>
 
@@ -405,7 +405,7 @@ npm run pack
 运行 `npm run release:assets` 生成带固定目录结构的 ZIP 和 SHA-256 文件，再一起上传 GitHub Releases。仓库已提供 `.github/workflows/release.yml`：推送与 package.json 版本一致的 `vX.Y.Z` 标签后，Windows runner 会测试、打包并发布这两个文件。示例：
 
 ```text
-FloatAsk-v0.3.2-win32-x64.zip
+FloatAsk-v0.3.3-win32-x64.zip
 ```
 
 
@@ -419,7 +419,7 @@ FloatAsk-v0.3.2-win32-x64.zip
 - 导入字体文件最大 40MB；导入后会复制到本机应用数据目录，不会上传。
 - 联网检索质量取决于搜索引擎和网页可抓取性；抓不到正文时只用摘要。
 - 个别受控桌面不显示系统托盘；此时右键悬浮球打开设置或退出。
-- 历史仅保存文字、来源和元数据，不保存截图；恢复会话后使用文字上下文继续追问。每条记录最多保留 60,000 字消息和 2,000 字框选文字；最多保留 500 条普通记录（优先淘汰最久未更新的非收藏，收藏不自动删除）。
+- 历史仅保存文字、来源和元数据，不保存截图；恢复会话后使用文字上下文继续追问。每条记录保留最近的最多 60,000 字消息和 2,000 字框选文字；最多保留 500 条普通记录（优先淘汰最久未更新的非收藏，收藏不自动删除）。
 - 自动更新仅支持已打包的 Windows 便携版；需要可访问 GitHub Releases，且发布包包含 SHA-256 校验文件。
 
 ## Roadmap

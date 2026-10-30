@@ -7,9 +7,11 @@ const path = require('path');
 const http = require('http');
 const assert = require('assert/strict');
 const root = path.join(__dirname, '..');
+const unhandled = [];
+process.on('unhandledRejection', error => unhandled.push(String(error?.stack || error)));
 const data = process.env.FLOATASK_USER_DATA || fs.mkdtempSync(path.join(os.tmpdir(), 'floatask-smoke-'));
 process.env.FLOATASK_USER_DATA = data;
-let calls = [], requestPaths = [], errors = [], slowSearch = false, rejectImages = false, captureDelay = 0, captureTag = "fixture";
+let calls = [], requestPaths = [], errors = [], slowSearch = false, rejectImages = false, captureDelay = 0, captureTag = "fixture", streamDelay = 120;
 const updaterModule = require('../src/main/updater');
 const realCreateUpdater = updaterModule.createUpdater;
 updaterModule.createUpdater = options => realCreateUpdater({ ...options, request: async () => Response.json({
@@ -38,7 +40,7 @@ const server = http.createServer((req,res) => {
   if (!payload.stream) { res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify({model:payload.model,choices:[{message:{content:'OK'}}]})); return; }
   res.writeHead(200, {'Content-Type':'text/event-stream'});
   res.write('data: '+JSON.stringify({choices:[{delta:{content:'A useful explanation with enough text to save.'}}]})+'\n\n');
-  setTimeout(()=>res.end('data: [DONE]\n\n'),120);
+  setTimeout(()=>res.end('data: [DONE]\n\n'),streamDelay);
  });
 });
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -195,6 +197,20 @@ server.listen(0,'127.0.0.1',()=>{
    const racedState = await js(result,'window.floatask.getResultState()');
    assert(racedState.init.selectionText.includes('new-capture'),'slow earlier capture must not replace the newer session');
    assert(!calls.slice(beforeCaptureRace).some(call=>call.messages[0].content.includes('old-capture')),'stale capture must not start an AI request');
+   const assistantCount = await js(result,"document.querySelectorAll('.message.assistant').length");
+   streamDelay = 600;
+   await js(result,"document.getElementById('questionInput').value='Reload fixture';document.getElementById('sendBtn').click()");
+   await waitFor(()=>calls.at(-1)?.messages.at(-1).content==='Reload fixture','reload fixture started');
+   await pause(50);
+   const liveSnapshot = await js(result,'window.floatask.getResultState()');
+   assert(Number.isSafeInteger(liveSnapshot.revision),'snapshot must identify its event boundary');
+   assert.equal(liveSnapshot.activeResponse.text,'A useful explanation with enough text to save.');
+   const loaded = new Promise(resolve => result.webContents.once('did-finish-load',resolve));
+   result.webContents.reload(); await loaded;
+   await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'answer completed after reload');
+   assert.equal(await js(result,"document.querySelectorAll('.message.assistant').length"),assistantCount+1,'reloading a partial answer must not duplicate or drop it');
+   assert.equal(await js(result,"Array.from(document.querySelectorAll('.message.assistant .md-body')).at(-1).textContent.trim()"),'A useful explanation with enough text to save.');
+   streamDelay = 120;
    await js(settings,"window.floatask.setLanguage('en')");
    await waitFor(()=>js(font,"document.getElementById('importBtn').textContent==='＋ Import font file…'"),'font translated');
    await js(result,'window.floatask.closeResult()');
@@ -215,6 +231,20 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(reopenedSettings,"document.getElementById('hotkey').value==='Ctrl+Alt+Shift+K'"),'settings restored after releasing renderer');
    await js(reopenedSettings,'window.floatask.closeSettings()');
    await waitFor(()=>!page('settings'),'reopened renderer released');
+   let interruptedFont;
+   app.once('browser-window-created', (_event, win) => {
+     interruptedFont = win;
+     win.webContents.once('did-start-loading', () => { if (!win.isDestroyed()) win.close(); });
+   });
+   await js(bubble,'window.floatask.openFontWindow()');
+   await waitFor(()=>interruptedFont?.isDestroyed(),'font closed during load');
+   await js(bubble,'window.floatask.openFontWindow()');
+   const recreatedFont=await waitFor(()=>page('font'),'font reopened after interrupted load');
+   await waitFor(()=>js(recreatedFont,"document.querySelector('.brand-title')?.textContent==='Fonts & reading'"),'font reloaded');
+   await js(bubble,'window.floatask.closeFontWindow()');
+   await waitFor(()=>!page('font'),'recreated font closed');
+   await pause(150);
+   assert.deepEqual(unhandled,[],'closing a loading window must not leave rejected promises');
    assert.deepEqual(errors,[],'no renderer errors');
    console.log('PASS: real Electron pages, bilingual UI, shortcut recording/conflict, per-task routing, profile testing, screenshot routing/fallback, update UI, history/privacy');
    app.exit(0);

@@ -1,6 +1,6 @@
 'use strict';
 
-const { desktopCapturer, nativeImage } = require('electron');
+const { desktopCapturer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const { tempDir } = require('./powershell');
@@ -15,6 +15,10 @@ function clamp(value, min, max) {
  * @param {{x:number,y:number,width:number,height:number}} rect DIP coordinates relative to the display
  */
 async function captureRegion(display, rect, { vision = false } = {}) {
+  if (!display?.size || ![display.size.width, display.size.height].every(value => Number.isFinite(value) && value > 0) ||
+      !rect || ![rect.x, rect.y, rect.width, rect.height].every(Number.isFinite) || rect.width <= 0 || rect.height <= 0) {
+    throw new Error('无效的屏幕选区');
+  }
   const scale = display.scaleFactor || 1;
   const thumbWidth = Math.max(1, Math.round(display.size.width * scale));
   const thumbHeight = Math.max(1, Math.round(display.size.height * scale));
@@ -28,9 +32,12 @@ async function captureRegion(display, rect, { vision = false } = {}) {
 
   let source = sources.find((s) => String(s.display_id) === String(display.id));
   if (!source) {
+    // A removed/unavailable monitor must not silently capture a different one.
+    if (sources.some(s => s.display_id != null && String(s.display_id))) throw new Error('选定的屏幕已不可用，请重新框选');
     const displays = require('electron').screen.getAllDisplays();
     const index = displays.findIndex((d) => d.id === display.id);
-    source = sources[index] || sources[0];
+    source = index >= 0 ? sources[index] : null;
+    if (!source) throw new Error('选定的屏幕已不可用，请重新框选');
   }
 
   let image = source.thumbnail;
@@ -39,10 +46,11 @@ async function captureRegion(display, rect, { vision = false } = {}) {
   const logical = image.getSize();
   const ratioX = logical.width / display.size.width;
   const ratioY = logical.height / display.size.height;
-  const x = clamp(Math.round(rect.x * ratioX), 0, Math.max(0, logical.width - 2));
-  const y = clamp(Math.round(rect.y * ratioY), 0, Math.max(0, logical.height - 2));
-  const width = clamp(Math.round(rect.width * ratioX), 2, logical.width - x);
-  const height = clamp(Math.round(rect.height * ratioY), 2, logical.height - y);
+  const x = clamp(Math.floor(rect.x * ratioX), 0, logical.width);
+  const y = clamp(Math.floor(rect.y * ratioY), 0, logical.height);
+  const width = clamp(Math.ceil((rect.x + rect.width) * ratioX), 0, logical.width) - x;
+  const height = clamp(Math.ceil((rect.y + rect.height) * ratioY), 0, logical.height) - y;
+  if (width < 1 || height < 1) throw new Error('屏幕选区已超出边界，请重新框选');
 
   image = image.crop({ x, y, width, height });
   if (!image || image.isEmpty()) throw new Error('裁剪选区失败');
@@ -61,27 +69,32 @@ async function captureRegion(display, rect, { vision = false } = {}) {
     });
   }
   const ocrPath = path.join(dir, `capture-${id}.png`);
-  fs.writeFileSync(ocrPath, ocrImage.toPNG());
+  try {
+      fs.writeFileSync(ocrPath, ocrImage.toPNG());
 
-  let visionDataUrl = null;
-  if (vision) {
-    const edge = Math.max(cropped.width, cropped.height);
-    const visionImage = edge > 1600 ? image.resize({
-      width: Math.round(cropped.width * 1600 / edge), height: Math.round(cropped.height * 1600 / edge), quality: 'good'
-    }) : image;
-    visionDataUrl = 'data:image/jpeg;base64,' + visionImage.toJPEG(82).toString('base64');
+      let visionDataUrl = null;
+      if (vision) {
+        const edge = Math.max(cropped.width, cropped.height);
+        const visionImage = edge > 1600 ? image.resize({
+          width: Math.max(1, Math.round(cropped.width * 1600 / edge)), height: Math.max(1, Math.round(cropped.height * 1600 / edge)), quality: 'good'
+        }) : image;
+        visionDataUrl = 'data:image/jpeg;base64,' + visionImage.toJPEG(82).toString('base64');
+      }
+
+      const preview = image.resize({ width: Math.min(420, cropped.width), quality: 'good' });
+      const previewDataUrl = preview.toDataURL();
+
+      return {
+        pngPath: ocrPath,
+        width: cropped.width,
+        height: cropped.height,
+        previewDataUrl,
+        visionDataUrl
+      };
+  } catch (error) {
+    cleanupCapture(ocrPath);
+    throw error;
   }
-
-  const preview = image.resize({ width: Math.min(420, cropped.width), quality: 'good' });
-  const previewDataUrl = preview.toDataURL();
-
-  return {
-    pngPath: ocrPath,
-    width: cropped.width,
-    height: cropped.height,
-    previewDataUrl,
-    visionDataUrl
-  };
 }
 
 function cleanupCapture(pngPath) {

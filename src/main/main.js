@@ -17,6 +17,7 @@ const { normalizeHotkey } = require('../shared/hotkeys');
 const { createUpdater } = require('./updater');
 let updater = null;
 let recordingTimer = null;
+let recordingOwner = null;
 let lastNotifiedUpdate = '';
 const { captureRegion, cleanupCapture } = require('./capture');
 const { recognizeImage, getForegroundInfo, listSystemFonts } = require('./powershell');
@@ -46,12 +47,36 @@ let isQuitting = false;
 let pinned = true;
 let session = null;
 let resultState = null;
+let resultRevision = 0;
 let hotkey = 'Alt+Q';
 let hotkeyOk = false;
 let settingsFirstRun = false;
 let sessionCounter = 0;
 let bubbleMoveTimer = null;
 let bubbleCreating = null;
+const windowLoads = new WeakMap();
+
+function loadRendererWindow(win, name) {
+  const ready = (async () => {
+    try {
+      await win.loadFile(path.join(RENDERER, name));
+      return !win.isDestroyed();
+    } catch (err) {
+      if (!win.isDestroyed()) {
+        log('window load failed', name, err.message);
+        win.destroy();
+      }
+      return false;
+    }
+  })();
+  windowLoads.set(win, ready);
+  return ready;
+}
+
+async function windowIsReady(win) {
+  await windowLoads.get(win);
+  return !win.isDestroyed();
+}
 
 app.setName('FloatAsk');
 
@@ -234,8 +259,8 @@ function clampBubblePosition(x, y) {
 }
 
 async function ensureBubble() {
-  if (bubbleWin && !bubbleWin.isDestroyed()) return bubbleWin;
   if (bubbleCreating) return bubbleCreating;
+  if (bubbleWin && !bubbleWin.isDestroyed()) return bubbleWin;
 
   bubbleCreating = (async () => {
   bubbleWin = new BrowserWindow({
@@ -285,11 +310,12 @@ async function ensureBubble() {
     }, 400);
   });
 
-  bubbleWin.on('closed', () => { bubbleWin = null; });
+  const win = bubbleWin;
+  win.on('closed', () => {
+    if (bubbleWin === win) { clearTimeout(bubbleMoveTimer); bubbleWin = null; }
+  });
 
-  await bubbleWin.loadFile(path.join(RENDERER, 'bubble.html'));
-  bubbleWin.showInactive();
-  return bubbleWin;
+  return await loadRendererWindow(win, 'bubble.html') ? win : null;
   })();
 
   try {
@@ -311,6 +337,8 @@ function refreshBubble() {
   }
   ensureBubble().then((win) => {
     if (!win || win.isDestroyed()) return;
+    if (isQuitting || !store.getConfig().showBubble || (overlayWin && !overlayWin.isDestroyed()) ||
+      (resultWin && !resultWin.isDestroyed() && resultWin.isVisible())) return;
     if (!win.isVisible()) win.showInactive();
   }).catch((err) => log('bubble error', err.message));
 }
@@ -616,7 +644,10 @@ async function handleSelection(display, rect) {
 /* ------------------------------------------------------------------ */
 
 async function ensureResultWindow() {
-  if (resultWin && !resultWin.isDestroyed()) return resultWin;
+  if (resultWin && !resultWin.isDestroyed()) {
+    const win = resultWin;
+    return await windowIsReady(win) ? win : null;
+  }
 
   resultWin = new BrowserWindow({
     width: 460,
@@ -650,15 +681,16 @@ async function ensureResultWindow() {
   } catch { /* ignore */ }
   secureWindow(resultWin);
 
-  resultWin.on('close', (event) => {
+  const win = resultWin;
+  win.on('close', (event) => {
+    if (resultWin !== win) return;
     if (isQuitting) return;
     event.preventDefault();
     hideResult();
   });
-  resultWin.on('closed', () => { resultWin = null; });
+  win.on('closed', () => { if (resultWin === win) resultWin = null; });
 
-  await resultWin.loadFile(path.join(RENDERER, 'result.html'));
-  return resultWin;
+  return await loadRendererWindow(win, 'result.html') ? win : null;
 }
 
 function positionResult(screenRect, display) {
@@ -703,8 +735,16 @@ function hideResult() {
 }
 
 function sendResult(payload) {
+  const event = { ...payload, revision: ++resultRevision };
+  if (session) {
+    if (payload.type === 'sources' && session.activeResponse) session.activeResponse.sources = payload.sources || [];
+    if (['done', 'stopped', 'error', 'needs-input'].includes(payload.type)) {
+      session.activeResponse = null;
+      session.terminalEvent = payload.type === 'done' ? null : event;
+    }
+  }
   if (resultWin && !resultWin.isDestroyed() && !resultWin.webContents.isDestroyed()) {
-    resultWin.webContents.send('result:event', payload);
+    resultWin.webContents.send('result:event', event);
   }
 }
 
@@ -713,10 +753,17 @@ function sendResult(payload) {
 /* ------------------------------------------------------------------ */
 
 let historyIdleTimer;
-function broadcastHistory() {
+function scheduleHistoryRelease() {
   clearTimeout(historyIdleTimer);
-  historyIdleTimer = setTimeout(() => { if (!historyWin || !historyWin.isVisible()) history.release(); }, 30000);
+  historyIdleTimer = setTimeout(() => {
+    historyIdleTimer = null;
+    if (!historyWin || historyWin.isDestroyed() || !historyWin.isVisible()) history.release();
+  }, 30000);
   historyIdleTimer.unref();
+}
+
+function broadcastHistory() {
+  scheduleHistoryRelease();
   if (historyWin && !historyWin.isDestroyed()) historyWin.webContents.send('history:update');
 }
 
@@ -798,6 +845,8 @@ async function startInitial() {
   session.history = [];
   session.lastAnswerComplete = false;
   session.busy = true;
+  session.activeResponse = { mode: 'initial', question: '', text: '', sources: [] };
+  session.terminalEvent = null;
   const requestController = new AbortController();
   session.abort = requestController;
   session.sources = [];
@@ -861,6 +910,8 @@ async function handleAsk(rawQuestion) {
   }
 
   session.busy = true;
+  session.activeResponse = { mode: 'followup', question, text: '', sources: [] };
+  session.terminalEvent = null;
   const requestController = new AbortController();
   session.abort = requestController;
   session.lastQuestion = question;
@@ -915,6 +966,9 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
   sendResult({ type: 'model', model: config.model, providerLabel: PRESETS[config.provider]?.label || config.provider, vision: config.vision });
   session.abort = controller;
   session.busy = true;
+  const activeResponse = { mode, question, text: '', sources: session.pendingSources || [], started: true };
+  session.activeResponse = activeResponse;
+  session.terminalEvent = null;
 
   let full = '';
   sendResult({ type: 'start', mode });
@@ -925,6 +979,7 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
       signal: controller.signal,
       onDelta: (delta) => {
         full += delta;
+        activeResponse.text = full;
         if (session && session.id === id && session.abort === controller) sendResult({ type: 'delta', text: delta });
       }
     });
@@ -1203,8 +1258,8 @@ function broadcastLanguage() {
 
 async function openFontWindow() {
   if (fontWin && !fontWin.isDestroyed()) {
-    fontWin.show();
-    fontWin.focus();
+    const win = fontWin;
+    if (await windowIsReady(win)) { win.show(); win.focus(); }
     return;
   }
 
@@ -1240,18 +1295,22 @@ async function openFontWindow() {
   fontWin.setMenuBarVisibility(false);
   secureWindow(fontWin);
 
-  fontWin.on('closed', () => { fontWin = null; });
+  const win = fontWin;
+  win.on('closed', () => { if (fontWin === win) fontWin = null; });
 
-  await fontWin.loadFile(path.join(RENDERER, 'font.html'));
-  fontWin.show();
-  fontWin.focus();
+  if (!await loadRendererWindow(win, 'font.html')) return;
+  win.show();
+  win.focus();
 }
 
 async function openHistory(recordId = '') {
+  clearTimeout(historyIdleTimer);
   if (historyWin && !historyWin.isDestroyed()) {
-    historyWin.show();
-    historyWin.focus();
-    if (recordId) historyWin.webContents.send('history:show-record', { id: recordId });
+    const win = historyWin;
+    if (!await windowIsReady(win)) return;
+    win.show();
+    win.focus();
+    if (recordId) win.webContents.send('history:show-record', { id: recordId });
     return;
   }
 
@@ -1287,15 +1346,18 @@ async function openHistory(recordId = '') {
   historyWin.setMenuBarVisibility(false);
   secureWindow(historyWin);
 
-  historyWin.on('closed', () => { historyWin = null; history.release(); });
+  const win = historyWin;
+  win.on('closed', () => {
+    if (historyWin === win) { historyWin = null; history.release(); }
+  });
 
-  await historyWin.loadFile(path.join(RENDERER, 'history.html'));
-  historyWin.show();
-  historyWin.focus();
+  if (!await loadRendererWindow(win, 'history.html')) return;
+  win.show();
+  win.focus();
   if (recordId) {
     setTimeout(() => {
-      if (historyWin && !historyWin.isDestroyed()) {
-        historyWin.webContents.send('history:show-record', { id: recordId });
+      if (historyWin === win && !win.isDestroyed()) {
+        win.webContents.send('history:show-record', { id: recordId });
       }
     }, 350);
   }
@@ -1304,8 +1366,8 @@ async function openHistory(recordId = '') {
 async function openSettings(firstRun = false) {
   if (firstRun) settingsFirstRun = true;
   if (settingsWin && !settingsWin.isDestroyed()) {
-    settingsWin.show();
-    settingsWin.focus();
+    const win = settingsWin;
+    if (await windowIsReady(win)) { win.show(); win.focus(); }
     return;
   }
 
@@ -1340,15 +1402,18 @@ async function openSettings(firstRun = false) {
   settingsWin.setMenuBarVisibility(false);
   secureWindow(settingsWin);
 
-  settingsWin.on('hide', stopHotkeyRecording);
-  settingsWin.on('closed', () => { stopHotkeyRecording(); settingsWin = null; });
+  const win = settingsWin;
+  win.on('hide', () => { if (settingsWin === win) stopHotkeyRecording(); });
+  win.on('closed', () => {
+    if (settingsWin === win) { stopHotkeyRecording(); settingsWin = null; }
+  });
 
-  await settingsWin.loadFile(path.join(RENDERER, 'settings.html'));
-  settingsWin.show();
-  settingsWin.focus();
+  if (!await loadRendererWindow(win, 'settings.html')) return;
+  win.show();
+  win.focus();
   setTimeout(() => {
-    if (!settingsWin || settingsWin.isDestroyed()) return;
-    settingsWin.webContents.executeJavaScript(
+    if (settingsWin !== win || win.isDestroyed()) return;
+    win.webContents.executeJavaScript(
       "document.querySelector('.scroll-body')?.scrollTo(0, 0);"
     ).catch(() => {});
   }, 320);
@@ -1370,7 +1435,8 @@ function applyLoginItem(config) {
 function stopHotkeyRecording() {
   if (!recordingTimer) return;
   clearTimeout(recordingTimer); recordingTimer = null;
-  registerHotkey(store.getConfig().hotkey);
+  recordingOwner = null;
+  if (!isQuitting) registerHotkey(store.getConfig().hotkey);
 }
 function registerHotkey(accel) {
   globalShortcut.unregisterAll();
@@ -1485,7 +1551,14 @@ ipcMain.on('result:pin', (_event, value) => {
   if (resultWin && !resultWin.isDestroyed()) resultWin.setAlwaysOnTop(pinned, 'screen-saver');
 });
 ipcMain.handle('session:state', () => ({
-  init: resultState ? { ...resultState, selectionText: session?.selectionText || resultState.selectionText, messages: session?.history || [], sources: session?.pendingSources || [] } : null,
+  init: resultState ? { ...resultState, selectionText: session?.selectionText ?? resultState.selectionText,
+    windowInfo: session?.windowInfo || resultState.windowInfo, vision: Boolean(session?.vision),
+    model: session?.lastModel?.model || resultState.model,
+    providerLabel: session?.lastModel ? PRESETS[session.lastModel.provider]?.label || session.lastModel.provider : resultState.providerLabel,
+    pinned, webEnabled: Boolean(session?.webEnabled), messages: session?.history || [], sources: session?.pendingSources || [] } : null,
+  revision: resultRevision,
+  activeResponse: session?.activeResponse ? { ...session.activeResponse, sources: [...session.activeResponse.sources] } : null,
+  terminalEvent: session?.terminalEvent || null,
   busy: Boolean(session?.busy),
   pinned,
   webEnabled: Boolean(session?.webEnabled)
@@ -1495,8 +1568,12 @@ ipcMain.on('session:ask', (_event, question) => { handleAsk(question); });
 ipcMain.on('session:stop', () => {
   if (session?.abort) {
     session.abort.abort();
-    session.busy = false;
-    sendResult({ type: 'stopped' });
+    // Streaming aborts settle through runStream, which saves their partial text
+    // before emitting the terminal event. Searches have no stream to settle.
+    if (!session.activeResponse?.started) {
+      session.busy = false;
+      sendResult({ type: 'stopped' });
+    }
   }
 });
 ipcMain.on('session:retry', () => { retryLast(); });
@@ -1516,6 +1593,9 @@ ipcMain.on('session:manual', async (_event, text) => {
   session.historyDeleted = false;
   session.abort = null;
   session.busy = false;
+  session.activeResponse = null;
+  session.terminalEvent = null;
+  session.lastModel = null;
   session.selectionText = value;
   session.manual = true;
   session.imageDataUrl = null;
@@ -1598,9 +1678,14 @@ ipcMain.on('font:close', () => {
 
 ipcMain.handle('hotkey:recording', (_event, enabled) => {
   if (enabled) {
+    if (!settingsWin || settingsWin.isDestroyed() || !settingsWin.isVisible() || _event.sender !== settingsWin.webContents) return false;
     clearTimeout(recordingTimer); globalShortcut.unregisterAll();
+    recordingOwner = _event.sender;
     recordingTimer = setTimeout(stopHotkeyRecording, 30000);
-  } else stopHotkeyRecording();
+  } else {
+    if (recordingOwner && _event.sender !== recordingOwner) return false;
+    stopHotkeyRecording();
+  }
   return true;
 });
 ipcMain.handle('updates:state', () => updater?.getState());
@@ -1692,6 +1777,7 @@ ipcMain.on('settings:close', () => {
 ipcMain.handle('history:resume', async (_event, id) => {
   try {
     const record = history.get(String(id || ''));
+    scheduleHistoryRelease();
     if (!record || !record.messages?.length) return { ok: false, message: t('history.resumeFailed') };
     if (session?.abort) session.abort.abort();
     const config = store.getConfig();
@@ -1720,11 +1806,11 @@ ipcMain.handle('history:resume', async (_event, id) => {
   } catch (err) { return { ok: false, message: err.message }; }
 });
 ipcMain.handle('history:list', (_event, options) => {
-  try { return { ok: true, records: history.list({ query: String(options?.query || '').slice(0, 2000), favorites: Boolean(options?.favorites) }) }; }
+  try { const records = history.list({ query: String(options?.query || '').slice(0, 2000), favorites: Boolean(options?.favorites) }); scheduleHistoryRelease(); return { ok: true, records }; }
   catch (err) { return { ok: false, message: err.message }; }
 });
 ipcMain.handle('history:get', (_event, id) => {
-  try { return { ok: true, record: history.get(String(id || '')) }; }
+  try { const record = history.get(String(id || '')); scheduleHistoryRelease(); return { ok: true, record }; }
   catch (err) { return { ok: false, message: err.message }; }
 });
 ipcMain.handle('history:favorite', (_event, { id, favorite }) => {

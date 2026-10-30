@@ -71,6 +71,10 @@ const state = {
   toastTimer: null,
   renderQueued: false
 };
+let restoringState = true;
+let queuedResultEvents = [];
+let restoreTimer = null;
+let snapshotRevision = null;
 
 function escapeHtml(value) {
   return md.escapeHtml(value);
@@ -414,6 +418,8 @@ function showManual(message) {
 }
 
 function reset(payload) {
+  els.lightbox.classList.remove('open');
+  els.lightboxImg.removeAttribute('src');
   state.selectionText = payload?.selectionText || '';
   state.windowInfo = payload?.windowInfo || {};
   state.vision = Boolean(payload?.vision);
@@ -563,6 +569,7 @@ function handleStopped(payload) {
   state.streaming = false;
   setBusyUI(false);
   hidePhase();
+  hideLoading();
   setStatus('stopped', tt('result.stopped'));
   if (state.current) {
     state.current.content.innerHTML = md.render(payload?.text || state.currentAnswer || '');
@@ -744,9 +751,16 @@ document.addEventListener('keydown', (event) => {
 });
 
 api.onFontUpdated((font) => applyReadingFont(font));
-api.onResultInit((payload) => reset(payload));
+api.onResultInit((payload) => {
+  // A new session supersedes both the startup snapshot and any old events
+  // received while that snapshot was in flight.
+  restoringState = false;
+  clearTimeout(restoreTimer);
+  queuedResultEvents = [];
+  reset(payload);
+});
 
-api.onResultEvent((payload) => {
+function handleResultEvent(payload) {
   if (!payload || !payload.type) return;
   switch (payload.type) {
     case 'model':
@@ -823,20 +837,53 @@ api.onResultEvent((payload) => {
     default:
       break;
   }
+}
+api.onResultEvent((payload) => {
+  if (restoringState) {
+    queuedResultEvents.push(payload);
+    // A stalled IPC must not retain an unbounded stream in this renderer.
+    if (queuedResultEvents.length >= 256) finishRestoring();
+  }
+  else handleResultEvent(payload);
 });
 
+function finishRestoring() {
+  if (!restoringState) return;
+  restoringState = false;
+  clearTimeout(restoreTimer);
+  const events = queuedResultEvents; queuedResultEvents = [];
+  for (const payload of events) {
+    if (Number.isSafeInteger(snapshotRevision) && Number.isSafeInteger(payload?.revision) && payload.revision <= snapshotRevision) continue;
+    handleResultEvent(payload);
+  }
+}
+
 // Restore state if the renderer was reloaded while the window stayed open.
+restoreTimer = setTimeout(finishRestoring, 2000);
 (async () => {
   try {
     const saved = await api.getResultState();
+    if (!restoringState) return;
+    snapshotRevision = saved?.revision;
     if (saved?.init) {
       reset(saved.init);
+      if (saved.activeResponse) {
+        const response = saved.activeResponse;
+        if (response.question) addUserMessage(response.question);
+        handleSources({sources:response.sources || []});
+        handleStart(response.mode);
+        if (response.text) handleDelta(response.text);
+      }
       if (saved.busy) {
         setBusyUI(true);
         setStatus('working', tt('result.processing'));
       }
+      // Terminal events are already counted by the snapshot revision, so the
+      // queued copy will be skipped below. Restore their UI explicitly.
+      if (saved.terminalEvent) handleResultEvent(saved.terminalEvent);
     }
   } catch { /* initial payload will arrive normally */ }
+  finally { finishRestoring(); }
 })();
 
 document.addEventListener('floatask:language', () => {
