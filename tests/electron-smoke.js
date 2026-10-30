@@ -266,6 +266,41 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(result,"document.documentElement.lang==='zh-CN'"),'switch back');
    assert.equal(await js(result,"document.getElementById('sendBtn').title"),'发送');
    assert.equal(await js(result,"document.getElementById('statusText').textContent"),'已完成');
+   // OCR correction (task 5): raw/corrected stay distinguishable; correction never auto-resends.
+   const ocrProbe=await js(result,`(async()=>{const s=await window.floatask.getResultState();return {raw:s.ocrRaw,corrected:s.ocrCorrected}})()`);
+   assert.ok(ocrProbe.raw && ocrProbe.raw.length>0,'raw OCR exposed in result state');
+   assert.equal(ocrProbe.corrected,null,'no correction applied yet');
+   assert.ok(await js(result,"Boolean(document.getElementById('ocrEditBtn') && document.getElementById('localOnlyNote'))"),'context panel exposes the correction affordance and local-only note');
+   const callsBeforeCorrection=calls.length;
+   await js(result,"window.floatask.correctOcr('corrected needle')");
+   await pause(400);
+   assert.equal(calls.length,callsBeforeCorrection,'correction does not resend the model request');
+   const ocrAfter=await js(result,`(async()=>{const s=await window.floatask.getResultState();return {raw:s.ocrRaw,corrected:s.ocrCorrected}})()`);
+   assert.equal(ocrAfter.corrected,'corrected needle','corrected OCR is tracked');
+   assert.equal(ocrAfter.raw,ocrProbe.raw,'raw OCR is untouched by the correction');
+   await waitFor(()=>js(result,"!document.getElementById('ocrCorrectedBadge').hidden"),'corrected badge shows');
+   assert.equal(await js(result,"document.getElementById('ocrText').textContent"),'corrected needle','context panel shows the corrected text');
+   // Reverting restores the raw text and clears the correction.
+   await js(result,"window.floatask.correctOcr('')");
+   await waitFor(()=>js(result,"document.getElementById('ocrCorrectedBadge').hidden"),'badge clears on revert');
+   const ocrReverted=await js(result,`(async()=>{const s=await window.floatask.getResultState();return {raw:s.ocrRaw,corrected:s.ocrCorrected}})()`);
+   assert.equal(ocrReverted.corrected,null,'revert clears the correction');
+   assert.equal(ocrReverted.raw,ocrProbe.raw,'revert keeps the raw OCR');
+   assert.equal(await js(result,"document.getElementById('ocrText').textContent"),ocrProbe.raw,'context restores the raw text');
+   await js(result,"window.floatask.correctOcr('corrected needle')");
+   await waitFor(()=>js(result,"!document.getElementById('ocrCorrectedBadge').hidden"),'re-correction badge shows');
+   await js(result,"document.getElementById('questionInput').value='Correction check';document.getElementById('sendBtn').click()");
+   await waitFor(()=>calls.length>callsBeforeCorrection,'corrected followup sent');
+   const correctedCall=calls.at(-1);
+   assert.ok(correctedCall.messages[0].content.includes('corrected needle'),'system context uses the corrected OCR text');
+   assert.ok(!correctedCall.messages[0].content.includes(ocrProbe.raw),'raw OCR text is no longer sent');
+   // Re-selection must confirm before discarding the correction.
+   await js(result,"window.__confirmCalled=false;window.confirm=()=>{window.__confirmCalled=true;return false};true");
+   await js(result,"document.getElementById('newSelectBtn').click()");
+   await pause(300);
+   assert.equal(await js(result,"window.__confirmCalled"),true,'re-selection asks for confirmation while a correction exists');
+   assert.equal(Boolean(page('selection')),false,'confirmation declined: no selection overlay opens');
+   await js(result,"delete window.confirm");
    await js(result,"window.floatask.openFontWindow()");
    const font=await waitFor(()=>page('font'),'font');
    await waitFor(()=>js(font,"document.querySelector('.brand-title')?.textContent==='字体与阅读'"),'font ready');
@@ -281,7 +316,7 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,'window.floatask.saveSettings({saveHistory:false})');
    await js(result,"window.floatask.setWebEnabled(false);document.getElementById('questionInput').value='Private followup';document.getElementById('sendBtn').click()");
    await waitFor(()=>calls.length>before,'private request'); await pause(350);
-   assert.equal(history.get(record.id).messages.length,6,'disabled history stays unchanged (4 + long-stream exchange)');
+   assert.equal(history.get(record.id).messages.length,8,'disabled history stays unchanged (6 + correction-check exchange)');
    // Reload storage from disk; favorites and text survive a process restart.
    delete require.cache[require.resolve('../src/main/history')];
    assert.equal(require('../src/main/history').get(record.id).favorite,true);
@@ -301,6 +336,12 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>calls.at(-1)?.model==='vision-model','vision task model');
    assert(Array.isArray(calls.at(-1).messages.at(-1).content),'screenshot attached to vision model');
    assert.equal(requestPaths.at(-1),'/v1/chat/completions','vision inheritance uses default endpoint, not the initial override');
+   const visionProbe=await js(result,`(async()=>{const s=await window.floatask.getResultState();return s.visionAttachment})()`);
+   assert.equal(visionProbe.enabled,true,'vision attachment marked as sent');
+   assert.ok(visionProbe.bytes>0,'vision attachment exposes its compressed size');
+   assert.equal(visionProbe.width,200,'vision attachment exposes the selection width');
+   assert.equal(visionProbe.height,100,'vision attachment exposes the selection height');
+   assert.ok((await js(result,"document.getElementById('visionAttachmentNote').textContent")).includes('200'),'context panel shows the attachment dimensions');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'vision model done');
    rejectImages = true;
    await js(result,"document.getElementById('questionInput').value='Followup with unsupported image';document.getElementById('sendBtn').click()");

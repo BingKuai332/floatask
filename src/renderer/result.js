@@ -18,6 +18,11 @@ const els = {
   previewWrap: document.getElementById('previewWrap'),
   previewImg: document.getElementById('previewImg'),
   ocrText: document.getElementById('ocrText'),
+  ocrEditArea: document.getElementById('ocrEditArea'),
+  ocrEditBtn: document.getElementById('ocrEditBtn'),
+  ocrRevertBtn: document.getElementById('ocrRevertBtn'),
+  ocrCorrectedBadge: document.getElementById('ocrCorrectedBadge'),
+  visionAttachmentNote: document.getElementById('visionAttachmentNote'),
   copyOcrBtn: document.getElementById('copyOcrBtn'),
   windowInfo: document.getElementById('windowInfo'),
   pinBtn: document.getElementById('pinBtn'),
@@ -55,6 +60,9 @@ function applyReadingFont(font) {
 
 const state = {
   selectionText: '',
+  ocrRaw: '',
+  ocrCorrected: null,
+  ocrEditing: false,
   windowInfo: {},
   preview: '',
   shotCount: 1,
@@ -457,6 +465,16 @@ function showManual(message) {
 
 function reset(payload) {
   state.selectionText = payload?.selectionText || '';
+  state.ocrRaw = payload?.selectionText || '';
+  state.ocrCorrected = null;
+  state.ocrEditing = false;
+  els.ocrCorrectedBadge.hidden = true;
+  els.ocrRevertBtn.hidden = true;
+  els.ocrEditArea.hidden = true;
+  els.ocrText.style.display = '';
+  els.ocrEditBtn.textContent = tt('result.ocrEdit');
+  els.ocrEditBtn.disabled = false;
+  els.ocrEditBtn.title = '';
   state.windowInfo = payload?.windowInfo || {};
   state.shotCount = Number(payload?.shotCount) || 1;
   state.vision = Boolean(payload?.vision);
@@ -732,7 +750,68 @@ function syncResultMode(expanded) {
 }
 api.onResultMode(payload => syncResultMode(Boolean(payload && payload.expanded)));
 api.getSettings().then(settings => syncResultMode(Boolean(settings && settings.resultExpanded))).catch(() => {});
-els.newSelectBtn.addEventListener('click', () => api.startSelection());
+els.newSelectBtn.addEventListener('click', () => {
+  if (state.ocrCorrected && !window.confirm(tt('result.ocrReselectConfirm'))) return;
+  api.startSelection();
+});
+
+// OCR correction: edit the recognized text; corrections apply to the next
+// request only and never touch the original screenshot or the raw OCR copy.
+function setOcrCorrected(raw, corrected) {
+  state.ocrRaw = raw;
+  state.ocrCorrected = corrected;
+  setOcr(corrected || raw || '', '');
+  els.ocrCorrectedBadge.hidden = !corrected;
+  els.ocrRevertBtn.hidden = !corrected;
+  updateContext();
+}
+
+function setOcrEditing(editing) {
+  state.ocrEditing = editing;
+  els.ocrEditArea.hidden = !editing;
+  els.ocrText.style.display = editing ? 'none' : '';
+  els.ocrEditBtn.textContent = tt(editing ? 'result.ocrEditing' : 'result.ocrEdit');
+  if (editing) {
+    els.ocrEditArea.value = state.ocrCorrected || els.ocrText.textContent;
+    els.ocrEditArea.focus();
+  }
+}
+
+els.ocrEditBtn.addEventListener('click', () => {
+  if (state.ocrEditing) {
+    const value = els.ocrEditArea.value.trim();
+    setOcrEditing(false);
+    if (value) api.correctOcr(value);
+  } else {
+    setOcrEditing(true);
+  }
+});
+
+els.ocrRevertBtn.addEventListener('click', () => {
+  setOcrEditing(false);
+  api.correctOcr('');
+});
+
+async function refreshSessionMeta() {
+  try {
+    const meta = await api.getResultState();
+    if (!meta) return;
+    state.ocrRaw = meta.ocrRaw || state.ocrRaw || '';
+    state.ocrCorrected = meta.ocrCorrected || null;
+    els.ocrCorrectedBadge.hidden = !state.ocrCorrected;
+    els.ocrRevertBtn.hidden = !state.ocrCorrected;
+    const attachment = meta.visionAttachment;
+    els.ocrEditBtn.disabled = state.shotCount > 1;
+    els.ocrEditBtn.title = state.shotCount > 1 ? tt('result.ocrEditMultiHint') : '';
+    if (attachment && attachment.width) {
+      const kb = Math.max(1, Math.round(attachment.bytes / 1024));
+      els.visionAttachmentNote.hidden = false;
+      els.visionAttachmentNote.textContent = `${attachment.width}×${attachment.height} · ${kb} KB · ${tt(attachment.enabled ? 'result.visionSent' : 'result.visionHeld')}`;
+    } else {
+      els.visionAttachmentNote.hidden = true;
+    }
+  } catch { /* state unavailable */ }
+}
 document.getElementById('historyBtn').addEventListener('click', () => api.openHistory());
 
 els.settingsBtn.addEventListener('click', () => api.openSettings());
@@ -807,7 +886,7 @@ function ensureAddShotButton() {
 }
 
 api.onFontUpdated((font) => applyReadingFont(font));
-api.onResultInit((payload) => { ensureAddShotButton(); reset(payload); });
+api.onResultInit((payload) => { ensureAddShotButton(); reset(payload); refreshSessionMeta(); });
 
 api.onResultEvent((payload) => {
   if (!payload || !payload.type) return;
@@ -825,6 +904,10 @@ api.onResultEvent((payload) => {
         els.contextPanel.classList.add('open');
         els.contextStrip.classList.add('open');
       }
+      break;
+    case 'ocr-corrected':
+      setOcrCorrected(payload.raw, payload.corrected);
+      refreshSessionMeta();
       break;
     case 'shot':
       state.shotCount = Number(payload.count) || state.shotCount;
@@ -900,6 +983,14 @@ api.onResultEvent((payload) => {
       state.streaming = false;
       clearError();
       setOcr(payload.text || '', '');
+      state.ocrRaw = payload.text || '';
+      state.ocrCorrected = null;
+      state.ocrEditing = false;
+      els.ocrCorrectedBadge.hidden = true;
+      els.ocrRevertBtn.hidden = true;
+      els.ocrEditArea.hidden = true;
+      els.ocrText.style.display = '';
+      els.ocrEditBtn.textContent = tt('result.ocrEdit');
       state.windowInfo = { title: tt('result.manualInputTitle'), process: '' };
       updateContext();
       showLoading(tt('result.organizing'));

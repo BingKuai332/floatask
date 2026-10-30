@@ -524,6 +524,8 @@ async function handleSelection(display, rect) {
   session = {
     id,
     selectionText: '',
+    ocrRawText: '',
+    ocrCorrectedText: null,
     windowInfo: {},
     imageDataUrl: capture?.visionDataUrl || null,
     previewDataUrl: capture?.previewDataUrl || '',
@@ -606,6 +608,8 @@ async function handleSelection(display, rect) {
   if (!session || session.id !== id) return;
 
   session.selectionText = ocr.text;
+  session.ocrRawText = ocr.text;
+  session.ocrCorrectedText = null;
   session.shots = [{
     text: ocr.text,
     preview: session.previewDataUrl,
@@ -1430,6 +1434,8 @@ async function askClipboard() {
   session = {
     id,
     selectionText: text,
+    ocrRawText: text,
+    ocrCorrectedText: null,
     windowInfo: { title: t('main.clipboardTitle'), process: 'clipboard' },
     imageDataUrl: null,
     previewDataUrl: '',
@@ -1940,8 +1946,26 @@ ipcMain.handle('session:state', () => ({
   init: resultState ? { ...resultState, selectionText: session?.selectionText || resultState.selectionText, messages: session?.history || [], sources: session?.pendingSources || [] } : null,
   busy: Boolean(session?.busy),
   pinned,
-  webEnabled: Boolean(session?.webEnabled)
+  webEnabled: Boolean(session?.webEnabled),
+  ocrRaw: session?.ocrRawText ?? null,
+  ocrCorrected: session?.ocrCorrectedText ?? null,
+  visionAttachment: session ? {
+    enabled: Boolean(session.vision),
+    width: session.rect?.width || 0,
+    height: session.rect?.height || 0,
+    bytes: session.imageDataUrl ? Math.round(session.imageDataUrl.length * 3 / 4) : 0
+  } : null
 }));
+
+ipcMain.on('session:correct-ocr', (_event, text) => {
+  if (!session) return;
+  const value = typeof text === 'string' ? text : '';
+  session.ocrCorrectedText = value || null;
+  session.selectionText = value || session.ocrRawText || session.selectionText;
+  if (session.shots?.[0]) session.shots[0].text = session.selectionText;
+  if (session.systemContext) session.systemContext = buildSystemContext({ selection: session.selectionText, windowInfo: session.windowInfo, sources: session.sources || [] });
+  sendResult({ type: 'ocr-corrected', raw: session.ocrRawText || '', corrected: session.ocrCorrectedText });
+});
 
 ipcMain.on('session:ask', (_event, question) => { handleAsk(question); });
 ipcMain.on('session:stop', () => {
@@ -1978,6 +2002,9 @@ ipcMain.on('session:manual', async (_event, text) => {
   session.abort = null;
   session.busy = false;
   session.selectionText = value;
+  session.ocrRawText = '';
+  session.ocrCorrectedText = null;
+  session.shots = [];
   session.manual = true;
   session.imageDataUrl = null;
   session.vision = false;
@@ -2162,7 +2189,8 @@ ipcMain.handle('history:resume', async (_event, id) => {
     const screenRect = { x: area.x + Math.round(area.width / 2), y: area.y + 50, width: 0, height: 0 };
     session = {
       id: ++sessionCounter, historyId: record.id,
-      selectionText: record.selectionText || '', windowInfo: { title: record.windowTitle || '', process: record.process || '' },
+      selectionText: record.selectionText || '', ocrRawText: record.selectionText || '', ocrCorrectedText: null,
+      windowInfo: { title: record.windowTitle || '', process: record.process || '' },
       imageDataUrl: null, previewDataUrl: '', vision: false,
       webEnabled: Boolean(config.webEnabled), sources: record.sources || [], pendingSources: record.sources || [],
       history: record.messages, lastQuestion: '', lastAnswerComplete: true,

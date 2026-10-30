@@ -846,3 +846,36 @@ html, body {
 [data-density='compact'] { --fa-density-factor: 0.92; }
 [data-density='relaxed'] { --fa-density-factor: 1.12; }
 .md-body { line-height: calc(var(--reading-line, 1.55) * var(--fa-density-factor)); }
+
+/* OCR correction & attachment notes (task 5) */
+.ocr-actions { display: flex; align-items: center; gap: 5px; }
+.ocr-badge {
+  padding: 1px 6px;
+  border-radius: var(--fa-radius-pill);
+  background: var(--fa-accent-soft);
+  color: var(--fa-accent);
+  font-size: 8.5px;
+  letter-spacing: 0.04em;
+}
+.ocr-edit {
+  width: 100%;
+  min-height: 88px;
+  margin-top: 4px;
+  padding: 7px 9px;
+  border-radius: var(--fa-radius-small);
+  border: 1px solid var(--fa-border-active);
+  background: var(--fa-surface-2);
+  color: var(--fa-text);
+  font-family: var(--reading-font);
+  font-size: max(9px, calc(var(--reading-size) - 1.8px));
+  line-height: 1.62;
+  resize: vertical;
+  user-select: text;
+}
+.preview-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 5px 12px 6px;
+}
+.preview-note { color: var(--fa-faint); font-size: 8.5px; letter-spacing: 0.02em; }

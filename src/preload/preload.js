@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld('floatask', {
   regenerate: () => ipcRenderer.send('session:regenerate'),
   addShot: () => ipcRenderer.send('session:add-shot'),
   setManualText: (text) => ipcRenderer.send('session:manual', text),
+  correctOcr: (text) => ipcRenderer.send('session:correct-ocr', text),
   setWebEnabled: (enabled) => ipcRenderer.send('session:web', Boolean(enabled)),
   closeResult: () => ipcRenderer.send('result:close'),
   setPinned: (pinned) => ipcRenderer.send('result:pin', Boolean(pinned)),

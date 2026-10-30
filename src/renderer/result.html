@@ -80,10 +80,20 @@
           <div class="ocr-wrap">
             <div class="ocr-head">
               <span data-i18n="result.ocrTitle">识别文字</span>
-              <button id="copyOcrBtn" class="mini-btn" data-i18n="common.copy">复制</button>
+              <div class="ocr-actions no-drag">
+                <span id="ocrCorrectedBadge" class="ocr-badge" hidden data-i18n="result.ocrCorrected">已修正</span>
+                <button id="ocrEditBtn" class="mini-btn" data-i18n="result.ocrEdit">修正</button>
+                <button id="ocrRevertBtn" class="mini-btn" hidden data-i18n="result.ocrRevert">还原原文</button>
+                <button id="copyOcrBtn" class="mini-btn" data-i18n="common.copy">复制</button>
+              </div>
             </div>
             <pre id="ocrText" class="ocr-text"></pre>
+            <textarea id="ocrEditArea" class="ocr-edit" hidden spellcheck="false"></textarea>
           </div>
+        </div>
+        <div class="preview-notes">
+          <span id="localOnlyNote" class="preview-note" data-i18n="result.ocrLocalOnly">原始截图仅保留在本机</span>
+          <span id="visionAttachmentNote" class="preview-note" hidden></span>
         </div>
         <div id="windowInfo" class="window-info"></div>
       </section>
