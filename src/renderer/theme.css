@@ -152,7 +152,60 @@
   --mono: var(--fa-font-code);
 }
 
+@media (forced-colors: active) {
+  :root,
+  [data-theme="dark"],
+  [data-theme="light"] {
+    --fa-bg: Canvas;
+    --fa-surface: Canvas;
+    --fa-surface-2: Canvas;
+    --fa-surface-3: ButtonFace;
+    --fa-divider: CanvasText;
+    --fa-text: CanvasText;
+    --fa-body: CanvasText;
+    --fa-muted: GrayText;
+    --fa-faint: GrayText;
+    --fa-accent: LinkText;
+    --fa-accent-soft: Highlight;
+    --fa-green: CanvasText;
+    --fa-red: CanvasText;
+    --fa-red-soft: Canvas;
+    --fa-primary-button: ButtonFace;
+    --fa-on-primary: ButtonText;
+    --fa-overlay: Canvas;
+    --fa-border-floating: CanvasText;
+    --fa-border-control: CanvasText;
+    --fa-border-active: Highlight;
+    --fa-shadow-floating: none;
+    --fa-shadow-toolbar: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --fa-motion-theme-color: 0ms;
+    --fa-motion-toolbar: 0ms;
+    --fa-motion-toolbar-fade: 0ms;
+    --fa-motion-toolbar-expand-delay: 0ms;
+    --fa-motion-hover-expand: 0ms;
+    --fa-motion-leave-collapse: 0ms;
+  }
+}
+
 /* Base layer: resets and shared primitives. Component classes (.fa-*) arrive with Task 3. */
+/* Bundled typefaces; license notes live in resources/fonts/LICENSE.txt. */
+@font-face {
+  font-family: 'Liter';
+  src: url('../../resources/fonts/Liter.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MiSans';
+  src: url('../../resources/fonts/MiSans.ttf') format('truetype');
+  font-display: swap;
+}
+
 * { box-sizing: border-box; }
 
 [hidden] { display: none !important; }

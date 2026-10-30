@@ -85,6 +85,9 @@ contextBridge.exposeInMainWorld('floatask', {
   getLanguage: () => ipcRenderer.invoke('app:language'),
   onLanguageUpdated: (cb) => subscribe('language:update', cb),
 
+  // Theme
+  onThemeUpdated: (cb) => subscribe('theme:update', cb),
+
   // Small utilities
   openExternal: (url) => ipcRenderer.invoke('app:open-external', url),
   copyText: (text) => ipcRenderer.invoke('app:copy', text),

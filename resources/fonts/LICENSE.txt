@@ -1,0 +1,19 @@
+Bundled typefaces for FloatAsk「朝日 / 近月」
+==========================================
+
+Liter.ttf
+  Source: https://fonts.google.com/specimen/Liter (mirrored at
+  https://statics.kimi.ai/neo-design-static/p-font/Liter.ttf)
+  License: SIL Open Font License 1.1 — free for commercial use and
+  redistribution; see https://openfontlicense.org
+
+MiSans.ttf
+  Source: https://hyperos.mi.com/font/ (Xiaomi HyperOS MiSans;
+  mirrored at https://statics.kimi.ai/neo-design-static/p-font/MiSans.ttf)
+  License: MiSans is released by Xiaomi for free commercial use and
+  embedding, including redistribution with software products. The full
+  MiSans license text (Chinese) ships with the official distribution;
+  this bundle keeps the binary unmodified.
+
+Both files are loaded locally via @font-face in src/renderer/theme.css.
+The application never downloads fonts at runtime.

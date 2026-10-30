@@ -280,6 +280,10 @@ const LOCALES = {
 
     // ---- settings page ----
     'settings.title': '浮问设置',
+    'theme.label': '主题',
+    'theme.system': '跟随系统',
+    'theme.light': '朝日 · 白天',
+    'theme.dark': '近月 · 深夜',
     'settings.subtitle': '屏幕理解助手',
     'settings.welcomeKicker': '欢迎使用',
     'settings.welcomeTitle': '框一下，就懂了。',
@@ -719,6 +723,10 @@ const LOCALES = {
 
     // ---- settings page ----
     'settings.title': 'FloatAsk Settings',
+    'theme.label': 'Theme',
+    'theme.system': 'System',
+    'theme.light': 'Asahi · Day',
+    'theme.dark': 'Near Moon · Night',
     'settings.subtitle': 'Screen understanding assistant',
     'settings.welcomeKicker': 'Welcome',
     'settings.welcomeTitle': 'Box it. Get it.',

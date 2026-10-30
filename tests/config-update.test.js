@@ -83,3 +83,18 @@ test('development builds check releases but do not install or download', async (
  await updater.check();assert.equal(updater.getState().canInstall,false);
  assert.equal((await updater.download()).error,'update.devOnly');
 }));
+test('store persists the theme choice and falls back to system for invalid values', () => temporary(directory => {
+ const filename=path.resolve(__dirname,'../src/main/store.js');
+ const actualRequire=createRequire(filename);
+ const electron={app:{getPath:()=>directory,getLocale:()=>'en'},safeStorage:{isEncryptionAvailable:()=>true,encryptString:s=>Buffer.from(s),decryptString:b=>b.toString()}};
+ const context={require:name=>name==='electron'?electron:actualRequire(name),module:{exports:{}},console};
+ vm.runInNewContext(fs.readFileSync(filename,'utf8'),context);const store=context.module.exports;
+ assert.equal(store.getConfig().theme,'system','default theme is system');
+ store.save({theme:'light'});assert.equal(store.getConfig().theme,'light');
+ store.save({theme:'dark'});assert.equal(store.getConfig().theme,'dark');
+ store.save({theme:'neon'});assert.equal(store.getConfig().theme,'system','invalid string falls back to system');
+ store.save({theme:'dark'});store.save({theme:42});assert.equal(store.getConfig().theme,'dark','non-string patch is ignored like other settings fields');
+ store.save({theme:'light'});store.save({hotkey:'Alt+Q'});assert.equal(store.getConfig().theme,'light','patches without theme keep the current value');
+ assert.equal(store.publicSettings().theme,'light','theme is part of the public settings payload');
+ const raw=fs.readFileSync(store.getConfigPath(),'utf8');assert(JSON.parse(raw).theme==='light','theme persisted to disk');
+}));

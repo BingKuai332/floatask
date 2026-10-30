@@ -2,7 +2,7 @@
 
 const {
   app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, nativeImage,
-  screen, shell, clipboard, Notification, protocol, dialog
+  screen, shell, clipboard, Notification, protocol, dialog, nativeTheme
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -1569,9 +1569,23 @@ function broadcastFont() {
   if (historyWin && !historyWin.isDestroyed()) historyWin.webContents.send('font:update', payload);
 }
 
+function resolvedTheme() {
+  return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
+}
+
+/** Sync nativeTheme with the saved preference and push the resolved theme to every live renderer. */
+function broadcastTheme() {
+  const preference = store.getConfig().theme;
+  const source = ['light', 'dark'].includes(preference) ? preference : 'system';
+  if (nativeTheme.themeSource !== source) nativeTheme.themeSource = source;
+  const payload = { theme: resolvedTheme(), preference };
+  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin]) {
+    if (win && !win.isDestroyed()) win.webContents.send('theme:update', payload);
+  }
+}
+
 /** Push the current locale to every live renderer and refresh native chrome. */
-function broadcastLanguage() {
-  const langCode = store.getConfig().language;
+function broadcastLanguage() {  const langCode = store.getConfig().language;
   const payload = { language: langCode };
   for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin]) {
     if (win && !win.isDestroyed()) win.webContents.send('language:update', payload);
@@ -2084,6 +2098,7 @@ ipcMain.handle('settings:save', (_event, patch) => {
     settingsFirstRun = false;
     applySettings();
     if (store.getConfig().language !== prevLanguage) broadcastLanguage();
+    if ('theme' in (patch || {})) broadcastTheme();
     return { ok: true, settings: { ...saved, hotkeyOk, actualHotkey: hotkey } };
   } catch (err) {
     return { ok: false, message: err.message };
@@ -2195,6 +2210,8 @@ if (!gotLock) {
   app.whenReady().then(() => {
     app.setAppUserModelId('com.floatask.app');
     store.load();
+    broadcastTheme();
+    nativeTheme.on('updated', broadcastTheme);
     protocol.handle('floatask-font', handleFontProtocol);
     history.load();
     updater = createUpdater({ app, onState: state => {

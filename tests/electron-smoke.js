@@ -1,6 +1,6 @@
 'use strict';
 // Runs the real main process, preload, IPC and renderer pages against a local AI.
-const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut, nativeTheme } = require('electron');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -109,6 +109,21 @@ server.listen(0,'127.0.0.1',()=>{
    await js(win,"document.querySelector('.detail-actions button').click()");
    await waitFor(()=>history.get(record.id).favorite,'favorite');
    await screenshot(win,'history-en');
+   // Theme runtime: saving a theme broadcasts it to every open window without restart.
+   const themeSaved=await js(settings,"window.floatask.saveSettings({theme:'light'})");
+   assert.equal(themeSaved.settings.theme,'light');
+   assert.equal(nativeTheme.themeSource,'light','nativeTheme follows the saved theme');
+   await waitFor(()=>js(settings,"document.documentElement.dataset.theme==='light'"),'settings applies light theme');
+   await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'history follows light theme');
+   const lightSurface=await js(settings,"getComputedStyle(document.documentElement).getPropertyValue('--fa-surface').trim()");
+   assert.equal(lightSurface,'#F4F3ED','light theme swaps semantic variables only');
+   await js(settings,"window.floatask.saveSettings({theme:'bogus'})");
+   const invalidTheme=await js(settings,"(async()=>(await window.floatask.getSettings()).theme)()");
+   assert.equal(invalidTheme,'system','invalid theme value falls back to system');
+   await waitFor(()=>js(settings,"['dark','light'].includes(document.documentElement.dataset.theme)"),'system theme resolves to a concrete variant');
+   await js(settings,"window.floatask.saveSettings({theme:'dark'})");
+   await waitFor(()=>js(settings,"document.documentElement.dataset.theme==='dark' && getComputedStyle(document.documentElement).getPropertyValue('--fa-surface').trim()==='#171A20'"),'dark theme restores near-moon surface');
+   await js(settings,"window.floatask.saveSettings({theme:'system'})");
    await js(win,"document.getElementById('searchInput').value='rare searchable needle';document.getElementById('searchInput').dispatchEvent(new Event('input'))");
    assert.equal(await js(win,"document.querySelectorAll('.record').length"),1);
    await js(win,`window.floatask.resumeHistory(${JSON.stringify(record.id)})`);

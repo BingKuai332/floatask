@@ -94,3 +94,37 @@ test('committed theme.css is in sync with the token source', () => {
   assert.equal(check.status, 0, check.stdout + check.stderr);
   assert.equal(fs.readFileSync(themeCssPath, 'utf8'), renderTheme(loadTokens(tokensPath)));
 });
+
+test('forced-colors media block hands palette to system colors', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  const block = css.match(/@media \(forced-colors: active\)\s*\{([\s\S]*?)\n\}/);
+  assert.ok(block, 'forced-colors block exists');
+  const body = block[1];
+  assert.match(body, /--fa-surface:\s*Canvas\b/);
+  assert.match(body, /--fa-text:\s*CanvasText\b/);
+  assert.match(body, /--fa-accent:\s*LinkText\b/);
+  assert.match(body, /--fa-shadow-floating:\s*none/);
+  assert.match(body, /--fa-shadow-toolbar:\s*none/);
+});
+
+test('prefers-reduced-motion collapses motion durations to instant', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  const block = css.match(/@media \(prefers-reduced-motion: reduce\)\s*\{([\s\S]*?)\n\}/);
+  assert.ok(block, 'reduced-motion block exists');
+  for (const variable of ['--fa-motion-theme-color', '--fa-motion-toolbar', '--fa-motion-toolbar-fade', '--fa-motion-hover-expand', '--fa-motion-leave-collapse']) {
+    assert.match(block[1], new RegExp(variable + ':\\s*0ms'), `${variable} zeroed`);
+  }
+});
+
+test('bundled fonts are declared locally for both typefaces', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  for (const family of ['Liter', 'MiSans']) {
+    const block = css.split('@font-face').slice(1).find(chunk => chunk.includes(`font-family: '${family}'`));
+    assert.ok(block, `@font-face for ${family} exists`);
+    assert.ok(block.includes('../../resources/fonts/'), `${family} loads from the local bundle`);
+    assert.ok(!block.includes('http'), `${family} never loads from a CDN`);
+  }
+});

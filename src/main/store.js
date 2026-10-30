@@ -42,7 +42,8 @@ const DEFAULTS = {
   showBubble: true,
   bubblePosition: null,
   autoLaunch: false,
-  onboarded: false
+  onboarded: false,
+  theme: 'system'
 };
 
 let configPath = null;
@@ -104,6 +105,8 @@ function sanitize(patch, current) {
   }
   if (patch.fontScope === 'all' || patch.fontScope === 'reading') next.fontScope = patch.fontScope;
   if (!['all', 'reading'].includes(next.fontScope)) next.fontScope = 'all';
+  if (typeof patch.theme === 'string') next.theme = patch.theme;
+  if (!['system', 'light', 'dark'].includes(next.theme)) next.theme = 'system';
   if (typeof patch.customFontFile === 'string') next.customFontFile = patch.customFontFile.trim().slice(0, 160);
   if (typeof patch.customFontName === 'string') next.customFontName = patch.customFontName.trim().slice(0, 120);
   if (next.customFontFile && !/^custom-[a-z0-9._-]+$/i.test(next.customFontFile)) next.customFontFile = '';
@@ -219,6 +222,7 @@ function publicSettings() {
     showBubble: c.showBubble,
     autoLaunch: c.autoLaunch,
     onboarded: c.onboarded,
+    theme: c.theme,
     hasApiKey: Boolean(c.apiKey),
     presets: Object.values(PRESETS).map(({ id, label, baseUrl, model, vision, keyUrl, note }) => ({
       id, label, baseUrl, model, vision, keyUrl, note
