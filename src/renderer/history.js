@@ -28,8 +28,9 @@ function renderList() {
  if(!rows.length) { const el=document.createElement('p'); el.className='empty'; el.textContent=tt(query?'history.emptySearch':favorites?'history.emptyFav':'history.empty'); list.append(el); }
  for(const row of rows) {
   const el=document.createElement('button'); el.className='record'+(selected?.id===row.id?' selected':''); el.dataset.id=row.id;
-  const star=document.createElement('span'); star.className='record-star'+(row.favorite?' on':''); star.textContent='★'; star.setAttribute('role','button'); star.setAttribute('aria-label',tt(row.favorite?'history.unfavorite':'history.favorite'));
+  const star=document.createElement('span'); star.className='record-star'+(row.favorite?' on':''); star.textContent='★'; star.setAttribute('role','button'); star.setAttribute('tabindex','0'); star.setAttribute('aria-label',tt(row.favorite?'history.unfavorite':'history.favorite'));
   star.addEventListener('click',(event)=>{event.stopPropagation();toggleFavorite(row);});
+  star.addEventListener('keydown',(event)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();toggleFavorite(row);}});
   const title=document.createElement('strong'); title.textContent=row.title || tt('history.untitled');
   const snippet=document.createElement('p'); snippet.textContent=row.snippet;
   const meta=document.createElement('small'); meta.textContent=date(row.updatedAt)+' · '+tt('history.msgCount',{n:row.messageCount});

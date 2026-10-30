@@ -212,8 +212,9 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(await js(win,"document.querySelectorAll('.record').length"),0,'the web filter hides a plain text record');
    await js(win,"document.querySelector('[data-type-filter=all]').click();true");
    assert.ok(await js(win,"Boolean(document.querySelector('.record .record-star'))"),'list rows expose a star toggle');
-   await js(win,"document.querySelector('.record .record-star').click();true");
-   await waitFor(()=>history.get(record.id).favorite===false,'list star unfavorites');
+   assert.equal(await js(win,"document.querySelector('.record .record-star').getAttribute('tabindex')"),'0','the star is keyboard focusable');
+   await js(win,"const s=document.querySelector('.record .record-star');s.focus();s.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));true");
+   await waitFor(()=>history.get(record.id).favorite===false,'keyboard Enter toggles the star');
    await waitFor(()=>js(win,"document.querySelector('.detail-actions button').textContent===window.FloatAskI18n.t('history.favorite')"),'detail star state syncs from the list');
    await js(win,"document.querySelector('.detail-actions button').click();true");
    await waitFor(()=>history.get(record.id).favorite===true,'detail star refavorites');

@@ -873,3 +873,9 @@ html, body {
   padding: 5px 12px 6px;
 }
 .preview-note { color: var(--fa-faint); font-size: 8.5px; letter-spacing: 0.02em; }
+
+/* Reduced motion: jump straight to final states, keep all feedback. */
+@media (prefers-reduced-motion: reduce) {
+  .messages { scroll-behavior: auto; }
+  .card * { transition: none; animation: none; }
+}

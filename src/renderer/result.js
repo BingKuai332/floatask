@@ -94,9 +94,18 @@ function truncate(text, length = 56) {
   return value.length > length ? value.slice(0, length - 1) + '…' : value;
 }
 
+// Announce completion, errors and recovery to screen readers. The same
+// message never repeats within the throttle window, and language refresh of
+// an unchanged status kind stays silent.
+let lastAnnounce = { text: '', at: 0 };
 function announceStatus(kind) {
   const key = { done: 'result.announceDone', error: 'result.announceError', stopped: 'result.announceStopped' }[kind];
-  if (key) els.liveRegion.textContent = tt(key);
+  if (!key) return;
+  const text = tt(key);
+  const now = Date.now();
+  if (text === lastAnnounce.text && now - lastAnnounce.at < 1500) return;
+  lastAnnounce = { text, at: now };
+  els.liveRegion.textContent = text;
 }
 
 function setStatus(kind, text) {
