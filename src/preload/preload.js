@@ -59,12 +59,11 @@ contextBridge.exposeInMainWorld('floatask', {
   // History
   openHistory: () => ipcRenderer.send('history:open'),
   closeHistory: () => ipcRenderer.send('history:close'),
-  listHistory: () => ipcRenderer.invoke('history:list'),
+  listHistory: (options) => ipcRenderer.invoke('history:list', options),
   getHistoryRecord: (id) => ipcRenderer.invoke('history:get', id),
   setHistoryFavorite: (id, favorite) => ipcRenderer.invoke('history:favorite', { id, favorite }),
   deleteHistoryRecord: (id) => ipcRenderer.invoke('history:delete', id),
   clearHistory: (keepFavorites) => ipcRenderer.invoke('history:clear', keepFavorites),
-  copyHistoryText: (text) => ipcRenderer.send('history:copy', text),
   onHistoryShowRecord: (cb) => subscribe('history:show-record', cb),
 
   resumeHistory: (id) => ipcRenderer.invoke('history:resume', id),

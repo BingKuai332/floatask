@@ -16,6 +16,7 @@ const MAX_SOURCES = 8;
 let records = [];
 let loaded = false;
 let filePath = null;
+let summaries = new WeakMap();
 
 function historyPath() {
   if (!filePath) filePath = path.join(app.getPath('userData'), 'history.json');
@@ -86,48 +87,28 @@ function sourceOf(session) {
 function record(session, meta = {}) {
   load();
   const messages = clampMessages(session.history || []);
-  const lastAssistant = [...messages].reverse().find((m) => m.role === 'assistant');
+  const lastAssistant = messages.some((m) => m.role === 'assistant');
   if (!lastAssistant) return null;
 
   if (!session.historyId) session.historyId = `h-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const existing = records.find((r) => r.id === session.historyId);
   const now = Date.now();
 
-  if (existing) {
-    existing.updatedAt = now;
-    existing.messages = messages;
-    existing.messageCount = messages.length;
-    existing.title = existing.title || makeTitle(session);
-    existing.selectionText = String(session.selectionText || '').slice(0, MAX_SELECTION_CHARS);
-    existing.sources = (session.pendingSources || session.sources || []).slice(0, MAX_SOURCES)
-      .map(({ title, url }) => ({ title, url }));
-    existing.model = meta.model || existing.model;
-    existing.provider = meta.provider || existing.provider;
-    existing.hasImage = existing.hasImage || Boolean(session.imageDataUrl);
-    persist();
-    return existing;
-  }
-
-  const rec = {
-    id: session.historyId,
-    createdAt: now,
-    updatedAt: now,
-    favorite: false,
-    title: makeTitle(session),
-    source: sourceOf(session),
+  const rec = existing || {
+    id: session.historyId, createdAt: now, favorite: false, source: sourceOf(session),
     windowTitle: String(session.windowInfo?.title || '').slice(0, 160),
-    process: String(session.windowInfo?.process || '').slice(0, 80),
-    selectionText: String(session.selectionText || '').slice(0, MAX_SELECTION_CHARS),
-    messages,
-    messageCount: messages.length,
-    sources: (session.pendingSources || session.sources || []).slice(0, MAX_SOURCES)
-      .map(({ title, url }) => ({ title, url })),
-    model: meta.model || '',
-    provider: meta.provider || '',
-    hasImage: Boolean(session.imageDataUrl)
+    process: String(session.windowInfo?.process || '').slice(0, 80)
   };
-  records.unshift(rec);
-  trim();
+  summaries.delete(rec);
+  Object.assign(rec, {
+    updatedAt: now, messages, messageCount: messages.length,
+    title: rec.title || makeTitle(session),
+    selectionText: String(session.selectionText || '').slice(0, MAX_SELECTION_CHARS),
+    sources: (session.pendingSources || session.sources || []).slice(0, MAX_SOURCES).map(({title,url}) => ({title,url})),
+    model: meta.model || rec.model || '', provider: meta.provider || rec.provider || '',
+    hasImage: Boolean(rec.hasImage || session.imageDataUrl)
+  });
+  if (!existing) { records.unshift(rec); trim(); }
   persist();
   return rec;
 }
@@ -146,24 +127,30 @@ function trim() {
 }
 
 /** Light rows for the list view. */
-function list() {
+function release() {
+  records = []; loaded = false; summaries = new WeakMap();
+}
+
+function matches(record, query) {
+  return [record.title, record.windowTitle, record.selectionText].some(text => String(text || '').toLowerCase().includes(query)) ||
+    record.messages.some(message => message.content.toLowerCase().includes(query));
+}
+
+function list(options = {}) {
   load();
   return records
-    .slice()
+    .filter(record => (!options.favorites || record.favorite) && (!options.query || matches(record, String(options.query).toLowerCase().trim())))
     .sort((a, b) => b.updatedAt - a.updatedAt)
-    .map((r) => ({
-      id: r.id,
-      createdAt: r.createdAt,
-      updatedAt: r.updatedAt,
-      favorite: Boolean(r.favorite),
-      title: r.title || '',
-      source: r.source,
-      windowTitle: r.windowTitle || '',
-      messageCount: r.messageCount || (r.messages || []).length,
-      snippet: String(
-        [...(r.messages || [])].reverse().find((m) => m.role === 'assistant')?.content || ''
-      ).replace(/\s+/g, ' ').trim().slice(0, 120)
-    }));
+    .map((r) => {
+      if (!summaries.has(r)) {
+        let lastAnswer = '';
+        for (let i = r.messages.length - 1; i >= 0; i--) if (r.messages[i].role === 'assistant') { lastAnswer = r.messages[i].content; break; }
+        summaries.set(r, { id: r.id, createdAt: r.createdAt, updatedAt: r.updatedAt, favorite: Boolean(r.favorite),
+          title: r.title || '', source: r.source, windowTitle: r.windowTitle || '', messageCount: r.messages.length,
+          snippet: String(lastAnswer).slice(0, 500).replace(/\s+/g, ' ').trim().slice(0, 120) });
+      }
+      return { ...summaries.get(r) };
+    });
 }
 
 function get(id) {
@@ -176,6 +163,7 @@ function setFavorite(id, favorite) {
   load();
   const rec = records.find((r) => r.id === id);
   if (!rec) return false;
+  summaries.delete(rec);
   rec.favorite = Boolean(favorite);
   persist();
   return true;
@@ -199,4 +187,4 @@ function clear(keepFavorites = true) {
   return before - records.length;
 }
 
-module.exports = { load, record, list, get, setFavorite, remove, clear, historyPath };
+module.exports = { load, record, list, get, release, setFavorite, remove, clear, historyPath };

@@ -100,9 +100,12 @@ server.listen(0,'127.0.0.1',()=>{
    await screenshot(settings,'updates-en');
    const history=require('../src/main/history');
    const record=history.record({selectionText:'Term about databases',windowInfo:{title:'Test window'},history:[{role:'user',content:'Explain'},{role:'assistant',content:'A rare searchable needle in a useful explanation.'}]},{model:'mock'});
+   const originalGetHistory = history.get; let detailReads = 0;
+   history.get = (...args) => { detailReads++; return originalGetHistory(...args); };
    await js(settings,'window.floatask.openHistory()');
    const win=await waitFor(()=>page('history'),'history');
    await waitFor(()=>js(win,"document.querySelectorAll('.record').length===1"),'history list');
+   assert.equal(detailReads,0,'history list must not load full conversations');
    await js(win,"document.querySelector('.record').click()");
    await waitFor(()=>js(win,"document.querySelectorAll('.history-message').length===2"),'detail');
    assert.equal(await js(win,"document.querySelector('#detail h2').textContent"),'Term about databases');
@@ -110,9 +113,11 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>history.get(record.id).favorite,'favorite');
    await screenshot(win,'history-en');
    await js(win,"document.getElementById('searchInput').value='rare searchable needle';document.getElementById('searchInput').dispatchEvent(new Event('input'))");
-   assert.equal(await js(win,"document.querySelectorAll('.record').length"),1);
+   await waitFor(()=>js(win,"document.querySelectorAll('.record').length===1"),'full text search');
+   await js(win,"document.getElementById('searchInput').value='no-such-conversation';document.getElementById('searchInput').dispatchEvent(new Event('input'))");
+   await waitFor(()=>js(win,"document.querySelectorAll('.record').length===0"),'non matching search');
    await js(win,`window.floatask.resumeHistory(${JSON.stringify(record.id)})`);
-   const result=await waitFor(()=>page('result'),'result');
+   let result=await waitFor(()=>page('result'),'result');
    await waitFor(()=>js(result,"document.querySelectorAll('.message.assistant').length===1"),'restored messages');
    assert.equal(await js(result,"document.getElementById('statusText').textContent"),'Done');
    await screenshot(result,'result-en');
@@ -158,6 +163,7 @@ server.listen(0,'127.0.0.1',()=>{
    const screenshotSelection=await waitFor(()=>page('selection'),'mock screenshot selection');
    await js(screenshotSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='vision-model','vision task model');
+   result = await waitFor(()=>page('result'),'recreated result');
    assert(Array.isArray(calls.at(-1).messages.at(-1).content),'screenshot attached to vision model');
    assert.equal(requestPaths.at(-1),'/v1/chat/completions','vision inheritance uses default endpoint, not the initial override');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'vision model done');
@@ -170,6 +176,7 @@ server.listen(0,'127.0.0.1',()=>{
    const fallbackSelection=await waitFor(()=>page('selection'),'initial fallback selection');
    await js(fallbackSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='initial-fast','initial image fallback');
+   result = await waitFor(()=>page('result'),'recreated result');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'initial fallback completed');
    await js(settings,"window.floatask.saveSettings({vision:false})");
    captureDelay = 1000; captureTag = 'old-capture';
@@ -183,6 +190,7 @@ server.listen(0,'127.0.0.1',()=>{
    const newSelection = await waitFor(()=>page('selection'),'new race selection');
    await js(newSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.length>beforeCaptureRace && calls.at(-1).messages[0].content.includes('new-capture'),'new capture answer');
+   result = await waitFor(()=>page('result'),'recreated result');
    await pause(1100);
    const racedState = await js(result,'window.floatask.getResultState()');
    assert(racedState.init.selectionText.includes('new-capture'),'slow earlier capture must not replace the newer session');
@@ -197,6 +205,16 @@ server.listen(0,'127.0.0.1',()=>{
    const selection=await waitFor(()=>page('selection'),'selection');
    await waitFor(()=>js(selection,"document.documentElement.lang==='en' && !/[\u4e00-\u9fff]/.test(document.getElementById('hintText').textContent)"),'selection translated');
    await js(selection,'window.floatask.cancelSelection()');
+   await js(settings,'window.floatask.closeFontWindow()');
+   await waitFor(()=>!page('font'),'font renderer released');
+   await js(settings,'window.floatask.closeSettings()');
+   await waitFor(()=>!page('settings'),'settings renderer released');
+   await waitFor(()=>!page('result'),'result renderer released');
+   await js(bubble,'window.floatask.openSettings()');
+   const reopenedSettings=await waitFor(()=>page('settings'),'reopened settings');
+   await waitFor(()=>js(reopenedSettings,"document.getElementById('hotkey').value==='Ctrl+Alt+Shift+K'"),'settings restored after releasing renderer');
+   await js(reopenedSettings,'window.floatask.closeSettings()');
+   await waitFor(()=>!page('settings'),'reopened renderer released');
    assert.deepEqual(errors,[],'no renderer errors');
    console.log('PASS: real Electron pages, bilingual UI, shortcut recording/conflict, per-task routing, profile testing, screenshot routing/fallback, update UI, history/privacy');
    app.exit(0);

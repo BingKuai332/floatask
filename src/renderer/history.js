@@ -6,7 +6,7 @@ const list = document.getElementById('recordList');
 const detail = document.getElementById('detail');
 let records = [], selected = null, favorites = false, query = '', generation = 0;
 let clearArmed = false, deleteArmed = false, toastTimer;
-const texts = new Map();
+let refreshGeneration = 0, searchTimer;
 function toast(text) {
  const el=document.getElementById('toast'); el.textContent=text; el.className='show';
  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.className='',2800);
@@ -19,7 +19,7 @@ function button(key, action) {
 }
 function renderList() {
  list.replaceChildren();
- const rows=records.filter(r=>(!favorites || r.favorite) && (!query || texts.get(r.id)?.includes(query)));
+ const rows=records;
  if(!rows.length) { const el=document.createElement('p'); el.className='empty'; el.textContent=tt(query?'history.emptySearch':favorites?'history.emptyFav':'history.empty'); list.append(el); }
  for(const row of rows) {
   const el=document.createElement('button'); el.className='record'+(selected?.id===row.id?' selected':''); el.dataset.id=row.id;
@@ -43,7 +43,7 @@ function renderDetail() {
  const meta=document.createElement('small'); meta.textContent=[date(record.updatedAt),record.windowTitle,record.model].filter(Boolean).join(' · ');
  const actions=document.createElement('div'); actions.className='detail-actions';
  actions.append(button(record.favorite?'history.unfavorite':'history.favorite', async()=>{
-  check(await api.setHistoryFavorite(record.id,!record.favorite)); await refresh(); await select(record.id);
+  check(await api.setHistoryFavorite(record.id,!record.favorite));
  }),button('history.resume',async()=>{check(await api.resumeHistory(record.id));}),
  button('history.copyAll',async()=>{await api.copyText([record.selectionText,...record.messages.map(m=>m.content)].filter(Boolean).join('\n\n')); toast(tt('history.copiedToast'));}),
  button(deleteArmed?'common.confirmDelete':'common.delete',async()=>{
@@ -64,18 +64,18 @@ function renderDetail() {
  }
 }
 async function refresh() {
- const result=check(await api.listHistory()); records=result.records;
- texts.clear();
- // Full text is indexed locally; no queries leave this device.
- await Promise.all(records.map(async r=>{
-  const result=check(await api.getHistoryRecord(r.id)); const record=result.record;
-  texts.set(r.id,[r.title,r.windowTitle,record?.selectionText,...(record?.messages || []).map(m=>m.content)].join(' ').toLowerCase());
- }));
- renderList();
+ const version = ++refreshGeneration;
+ const result = check(await api.listHistory({query, favorites}));
+ if (version !== refreshGeneration) return;
+ records = result.records; renderList();
 }
-document.getElementById('searchInput').addEventListener('input',event=>{query=event.target.value.trim().toLowerCase();renderList();});
+function refreshSafely() { return refresh().catch(err=>toast(err.message)); }
+document.getElementById('searchInput').addEventListener('input',event=>{
+ query=event.target.value.trim().toLowerCase(); ++refreshGeneration;
+ clearTimeout(searchTimer); searchTimer=setTimeout(refreshSafely,120);
+});
 for(const [id,value] of [['allBtn',false],['favBtn',true]]) document.getElementById(id).onclick=()=>{
- favorites=value; document.getElementById('allBtn').classList.toggle('active',!value);document.getElementById('favBtn').classList.toggle('active',value);renderList();
+ favorites=value; document.getElementById('allBtn').classList.toggle('active',!value);document.getElementById('favBtn').classList.toggle('active',value);refreshSafely();
 };
 document.getElementById('clearBtn').onclick=async()=>{
  try {
