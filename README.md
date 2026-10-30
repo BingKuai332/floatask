@@ -421,7 +421,7 @@ npm run pack
 运行 `npm run release:assets` 生成带固定目录结构的 ZIP 和 SHA-256 文件，再一起上传 GitHub Releases。仓库已提供 `.github/workflows/release.yml`：推送与 package.json 版本一致的 `vX.Y.Z` 标签后，Windows runner 会测试、打包并发布这两个文件。示例：
 
 ```text
-FloatAsk-v0.3.1-win32-x64.zip
+FloatAsk-v0.3.2-win32-x64.zip
 ```
 
 

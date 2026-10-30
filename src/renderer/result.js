@@ -280,10 +280,10 @@ function renderCurrent(force = false) {
 function scheduleRender() {
   if (state.renderQueued) return;
   state.renderQueued = true;
-  requestAnimationFrame(() => {
+  setTimeout(() => {
     state.renderQueued = false;
     renderCurrent();
-  });
+  }, 80);
 }
 
 function addSourceCards(container, sources) {

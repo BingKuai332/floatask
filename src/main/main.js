@@ -503,7 +503,7 @@ async function handleSelection(display, rect) {
   let capture = null;
   let captureError = null;
   try {
-    capture = await captureRegion(display, rect);
+    capture = await captureRegion(display, rect, { vision: store.getConfig().vision });
   } catch (err) {
     captureError = err;
     log('capture failed', err.message);
@@ -525,7 +525,7 @@ async function handleSelection(display, rect) {
     id,
     selectionText: '',
     windowInfo: {},
-    imageDataUrl: capture?.visionDataUrl || null,
+    imageDataUrl: config.vision ? capture?.visionDataUrl || null : null,
     previewDataUrl: capture?.previewDataUrl || '',
     vision: resolveModel(config, 'initial', Boolean(capture)).vision,
     webEnabled: Boolean(config.webEnabled),
@@ -1020,7 +1020,7 @@ async function showResult(payload, screenRect, display, sessionId = session?.id)
 
 function hideResult() {
   ++sessionCounter;
-  if (resultWin && !resultWin.isDestroyed()) resultWin.hide();
+  if (resultWin && !resultWin.isDestroyed()) resultWin.destroy();
   if (session?.abort) session.abort.abort();
   session = null;
   resultState = null;
@@ -1037,7 +1037,11 @@ function sendResult(payload) {
 /* Conversation                                                        */
 /* ------------------------------------------------------------------ */
 
+let historyIdleTimer;
 function broadcastHistory() {
+  clearTimeout(historyIdleTimer);
+  historyIdleTimer = setTimeout(() => { if (!historyWin || !historyWin.isVisible()) history.release(); }, 30000);
+  historyIdleTimer.unref();
   if (historyWin && !historyWin.isDestroyed()) historyWin.webContents.send('history:update');
 }
 
@@ -1294,7 +1298,7 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
   if (!session) return;
   const id = session.id;
   const config = requestConfig || resolveModel(store.getConfig(), mode === 'initial' ? 'initial' : 'followup', Boolean(session.imageDataUrl));
-  session.lastModel = config;
+  session.lastModel = { model: config.model, provider: config.provider };
   session.vision = config.vision;
   sendResult({ type: 'model', model: config.model, providerLabel: PRESETS[config.provider]?.label || config.provider, vision: config.vision });
   session.abort = controller;
@@ -1587,9 +1591,6 @@ function broadcastLanguage() {
 
 async function openFontWindow() {
   if (fontWin && !fontWin.isDestroyed()) {
-    if (!fontWin.isVisible()) {
-      try { await fontWin.loadFile(path.join(RENDERER, 'font.html')); } catch (err) { log('font reload failed', err.message); }
-    }
     fontWin.show();
     fontWin.focus();
     return;
@@ -1626,11 +1627,7 @@ async function openFontWindow() {
   });
   fontWin.setMenuBarVisibility(false);
   secureWindow(fontWin);
-  fontWin.on('close', (event) => {
-    if (isQuitting) return;
-    event.preventDefault();
-    fontWin.hide();
-  });
+
   fontWin.on('closed', () => { fontWin = null; });
 
   await fontWin.loadFile(path.join(RENDERER, 'font.html'));
@@ -1640,13 +1637,6 @@ async function openFontWindow() {
 
 async function openHistory(recordId = '') {
   if (historyWin && !historyWin.isDestroyed()) {
-    if (!historyWin.isVisible()) {
-      try {
-        await historyWin.loadFile(path.join(RENDERER, 'history.html'));
-      } catch (err) {
-        log('history reload failed', err.message);
-      }
-    }
     historyWin.show();
     historyWin.focus();
     if (recordId) historyWin.webContents.send('history:show-record', { id: recordId });
@@ -1684,12 +1674,8 @@ async function openHistory(recordId = '') {
   });
   historyWin.setMenuBarVisibility(false);
   secureWindow(historyWin);
-  historyWin.on('close', (event) => {
-    if (isQuitting) return;
-    event.preventDefault();
-    historyWin.hide();
-  });
-  historyWin.on('closed', () => { historyWin = null; });
+
+  historyWin.on('closed', () => { historyWin = null; history.release(); });
 
   await historyWin.loadFile(path.join(RENDERER, 'history.html'));
   historyWin.show();
@@ -1706,13 +1692,6 @@ async function openHistory(recordId = '') {
 async function openSettings(firstRun = false) {
   if (firstRun) settingsFirstRun = true;
   if (settingsWin && !settingsWin.isDestroyed()) {
-    if (!settingsWin.isVisible()) {
-      try {
-        await settingsWin.loadFile(path.join(RENDERER, 'settings.html'));
-      } catch (err) {
-        log('settings reload failed', err.message);
-      }
-    }
     settingsWin.show();
     settingsWin.focus();
     return;
@@ -1748,11 +1727,7 @@ async function openSettings(firstRun = false) {
   });
   settingsWin.setMenuBarVisibility(false);
   secureWindow(settingsWin);
-  settingsWin.on('close', (event) => {
-    if (isQuitting) return;
-    event.preventDefault();
-    settingsWin.hide();
-  });
+
   settingsWin.on('hide', stopHotkeyRecording);
   settingsWin.on('closed', () => { stopHotkeyRecording(); settingsWin = null; });
 
@@ -2023,7 +1998,7 @@ ipcMain.handle('font:apply', (_event, patch) => {
 });
 ipcMain.on('font:open', () => { openFontWindow(); });
 ipcMain.on('font:close', () => {
-  if (fontWin && !fontWin.isDestroyed()) fontWin.hide();
+  if (fontWin && !fontWin.isDestroyed()) fontWin.close();
 });
 
 ipcMain.handle('hotkey:recording', (_event, enabled) => {
@@ -2111,7 +2086,7 @@ ipcMain.handle('settings:test', async (_event, patch) => {
   }
 });
 ipcMain.on('settings:close', () => {
-  if (settingsWin && !settingsWin.isDestroyed()) settingsWin.hide();
+  if (settingsWin && !settingsWin.isDestroyed()) settingsWin.close();
   refreshBubble();
 });
 
@@ -2142,12 +2117,15 @@ ipcMain.handle('history:resume', async (_event, id) => {
       webEnabled: session.webEnabled, provider: config.provider, providerLabel: PRESETS[config.provider]?.label || config.provider,
       model: config.model, hasApiKey: Boolean(config.apiKey) || isLocalBaseUrl(config.baseUrl), hotkey, pinned,
       font: fontPayload(), status: 'history', messages: record.messages, sources: record.sources || [] }, screenRect, display);
-    if (historyWin && !historyWin.isDestroyed()) historyWin.hide();
+    if (historyWin && !historyWin.isDestroyed()) {
+      const closedHistory = historyWin; closedHistory.hide();
+      setTimeout(() => { if (!closedHistory.isDestroyed() && !closedHistory.isVisible()) closedHistory.close(); }, 100);
+    }
     return { ok: true };
   } catch (err) { return { ok: false, message: err.message }; }
 });
-ipcMain.handle('history:list', () => {
-  try { return { ok: true, records: history.list() }; }
+ipcMain.handle('history:list', (_event, options) => {
+  try { return { ok: true, records: history.list({ query: String(options?.query || '').slice(0, 2000), favorites: Boolean(options?.favorites) }) }; }
   catch (err) { return { ok: false, message: err.message }; }
 });
 ipcMain.handle('history:get', (_event, id) => {
@@ -2168,11 +2146,9 @@ ipcMain.handle('history:clear', (_event, keepFavorites) => {
 });
 ipcMain.on('history:open', () => { openHistory(); });
 ipcMain.on('history:close', () => {
-  if (historyWin && !historyWin.isDestroyed()) historyWin.hide();
+  if (historyWin && !historyWin.isDestroyed()) historyWin.close();
 });
-ipcMain.on('history:copy', (_event, text) => {
-  try { clipboard.writeText(String(text || '').slice(0, 200000)); } catch { /* ignore */ }
-});
+
 
 /* ------------------------------------------------------------------ */
 /* App lifecycle                                                      */
@@ -2196,7 +2172,6 @@ if (!gotLock) {
     app.setAppUserModelId('com.floatask.app');
     store.load();
     protocol.handle('floatask-font', handleFontProtocol);
-    history.load();
     updater = createUpdater({ app, onState: state => {
       if (settingsWin && !settingsWin.isDestroyed()) settingsWin.webContents.send('updates:state', state);
       if (state.phase === 'available' && state.available.version !== lastNotifiedUpdate) {

@@ -14,7 +14,7 @@ function clamp(value, min, max) {
  * @param {Electron.Display} display
  * @param {{x:number,y:number,width:number,height:number}} rect DIP coordinates relative to the display
  */
-async function captureRegion(display, rect) {
+async function captureRegion(display, rect, { vision = false } = {}) {
   const scale = display.scaleFactor || 1;
   const thumbWidth = Math.max(1, Math.round(display.size.width * scale));
   const thumbHeight = Math.max(1, Math.round(display.size.height * scale));
@@ -63,20 +63,20 @@ async function captureRegion(display, rect) {
   const ocrPath = path.join(dir, `capture-${id}.png`);
   fs.writeFileSync(ocrPath, ocrImage.toPNG());
 
-  // Vision payload: max 1600px, JPEG to keep the request small.
-  let visionImage = image;
-  if (cropped.width > 1600 || cropped.height > 1600) {
-    visionImage = image.resize({ width: 1600, quality: 'good' });
+  let visionDataUrl = null;
+  if (vision) {
+    const edge = Math.max(cropped.width, cropped.height);
+    const visionImage = edge > 1600 ? image.resize({
+      width: Math.round(cropped.width * 1600 / edge), height: Math.round(cropped.height * 1600 / edge), quality: 'good'
+    }) : image;
+    visionDataUrl = 'data:image/jpeg;base64,' + visionImage.toJPEG(82).toString('base64');
   }
-  const visionBuffer = visionImage.toJPEG(82);
-  const visionDataUrl = `data:image/jpeg;base64,${visionBuffer.toString('base64')}`;
 
   const preview = image.resize({ width: Math.min(420, cropped.width), quality: 'good' });
   const previewDataUrl = preview.toDataURL();
 
   return {
     pngPath: ocrPath,
-    pngBuffer: image.toPNG(),
     width: cropped.width,
     height: cropped.height,
     previewDataUrl,
