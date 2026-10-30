@@ -18,7 +18,8 @@ function loadTokens(tokensPath = DEFAULT_TOKENS_PATH) {
 }
 
 function kebab(name) {
-  return name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
+  // Split on case changes and on letter→digit boundaries: surface2 -> surface-2.
+  return name.replace(/([a-z])([A-Z0-9])/g, '$1-$2').toLowerCase();
 }
 
 function shadow({ blur, color, offset }) {
