@@ -375,6 +375,17 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,'window.floatask.saveSettings({showBubble:true})');
    const bubble=await waitFor(()=>page('bubble'),'bubble');
    await waitFor(()=>js(bubble,"document.getElementById('askBtn').title.includes('Capture')"),'bubble translated');
+   // Capsule toolbar (task 6): expanded capsule geometry and more-menu discipline.
+   assert.deepEqual(bubble.getSize(),[348,72],'bubble window hosts the 328x52 expanded capsule plus its shadow padding');
+   assert.equal(await js(bubble,"document.body.dataset.mode"),'expanded','capsule starts expanded');
+   await js(bubble,"document.getElementById('moreBtn').click()");
+   assert.equal(await js(bubble,"document.getElementById('moreMenu').hidden"),false,'more button opens the menu');
+   const menuItems=await js(bubble,"[...document.querySelectorAll('#moreMenu .fa-menu-item')].map(b=>b.textContent)");
+   assert.deepEqual(menuItems,['Settings','Hide toolbar','Quit FloatAsk'],'menu carries only settings, hide and quit');
+   assert.equal(await js(bubble,"document.activeElement.textContent"),'Settings','focus enters the menu on open');
+   await js(bubble,"document.getElementById('moreMenu').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))");
+   assert.equal(await js(bubble,"document.getElementById('moreMenu').hidden"),true,'Escape closes the menu');
+   assert.equal(await js(bubble,"document.activeElement.id"),'moreBtn','Escape returns focus to the more button');
    await js(bubble,'window.floatask.startSelection()');
    const selection=await waitFor(()=>page('selection'),'selection');
    await waitFor(()=>js(selection,"document.documentElement.lang==='en' && !/[\u4e00-\u9fff]/.test(document.getElementById('hintText').textContent)"),'selection translated');

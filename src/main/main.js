@@ -8,6 +8,21 @@ const path = require('path');
 const fs = require('fs');
 
 const store = require('./store');
+const {
+  CAPSULE_EXPANDED,
+  HALF_CAPSULE_VERTICAL,
+  HALF_CAPSULE_HORIZONTAL,
+  clampToWorkArea,
+  snapToolbar,
+  edgeGapPosition
+} = require('./window-geometry');
+
+const BUBBLE_PADDING = 10;
+const CAPSULE = { width: CAPSULE_EXPANDED[0], height: CAPSULE_EXPANDED[1] };
+const BUBBLE_WINDOW_EXPANDED = [CAPSULE.width + BUBBLE_PADDING * 2, CAPSULE.height + BUBBLE_PADDING * 2];
+let bubbleMode = 'expanded';
+let bubbleEdge = null;
+let preMenuBounds = null;
 const { PRESETS } = require('../shared/presets');
 const { t } = require('./i18n');
 const { normalizeLocale } = require('../shared/i18n');
@@ -231,7 +246,7 @@ function defaultBubblePosition() {
   const display = screen.getPrimaryDisplay();
   const area = display.workArea;
   return {
-    x: area.x + area.width - 238 - 16,
+    x: area.x + area.width - BUBBLE_WINDOW_EXPANDED[0] - 16,
     y: area.y + Math.round(area.height * 0.52)
   };
 }
@@ -239,11 +254,69 @@ function defaultBubblePosition() {
 function clampBubblePosition(x, y) {
   const displays = screen.getAllDisplays();
   const display = screen.getDisplayNearestPoint({ x, y }) || displays[0];
+  const bounds = clampToWorkArea(
+    { x, y, width: BUBBLE_WINDOW_EXPANDED[0], height: BUBBLE_WINDOW_EXPANDED[1] },
+    display.workArea
+  );
+  return { x: bounds.x, y: bounds.y };
+}
+
+function capsuleBounds(winX, winY) {
+  return { x: winX + BUBBLE_PADDING, y: winY + BUBBLE_PADDING, width: CAPSULE.width, height: CAPSULE.height };
+}
+
+function sendBubbleMode() {
+  if (bubbleWin && !bubbleWin.isDestroyed()) {
+    bubbleWin.webContents.send('bubble:mode', { mode: bubbleMode, edge: bubbleEdge });
+  }
+}
+
+/** Resize/position the bubble window for the given capsule mode. */
+function setBubbleMode(mode, edge) {
+  bubbleMode = mode;
+  bubbleEdge = edge || null;
+  if (!bubbleWin || bubbleWin.isDestroyed()) return;
+  const bounds = bubbleWin.getBounds();
+  const cap = capsuleBounds(bounds.x, bounds.y);
+  const display = screen.getDisplayNearestPoint({ x: cap.x + cap.width / 2, y: cap.y + cap.height / 2 });
   const area = display.workArea;
-  return {
-    x: Math.round(Math.min(Math.max(x, area.x + 4), area.x + area.width - 238 - 4)),
-    y: Math.round(Math.min(Math.max(y, area.y + 4), area.y + area.height - 68 - 4))
-  };
+  if (mode === 'expanded') {
+    const next = bubbleEdge ? edgeGapPosition(bubbleEdge, CAPSULE, cap, area) : cap;
+    bubbleWin.setBounds({
+      x: next.x - BUBBLE_PADDING,
+      y: next.y - BUBBLE_PADDING,
+      width: BUBBLE_WINDOW_EXPANDED[0],
+      height: BUBBLE_WINDOW_EXPANDED[1]
+    });
+  } else {
+    const vertical = mode === 'left' || mode === 'right';
+    const size = vertical ? { width: HALF_CAPSULE_VERTICAL[0], height: HALF_CAPSULE_VERTICAL[1] }
+      : { width: HALF_CAPSULE_HORIZONTAL[0], height: HALF_CAPSULE_HORIZONTAL[1] };
+    const anchors = {
+      left: { x: area.x, y: cap.y },
+      right: { x: area.x + area.width - size.width, y: cap.y },
+      top: { x: cap.x, y: area.y },
+      bottom: { x: cap.x, y: area.y + area.height - size.height }
+    };
+    const docked = clampToWorkArea({ ...anchors[mode], ...size }, area);
+    bubbleWin.setBounds({
+      x: docked.x - BUBBLE_PADDING,
+      y: docked.y - BUBBLE_PADDING,
+      width: docked.width + BUBBLE_PADDING * 2,
+      height: docked.height + BUBBLE_PADDING * 2
+    });
+  }
+  sendBubbleMode();
+}
+
+/** After a drag ends, snap to an edge half-capsule or stay floating expanded. */
+function finalizeBubbleDock(winX, winY) {
+  if (!bubbleWin || bubbleWin.isDestroyed()) return;
+  const cap = capsuleBounds(winX, winY);
+  const display = screen.getDisplayNearestPoint({ x: cap.x + cap.width / 2, y: cap.y + cap.height / 2 });
+  const { edge } = snapToolbar(cap, CAPSULE, display.workArea);
+  if (edge) setBubbleMode(edge, edge);
+  else setBubbleMode('expanded', null);
 }
 
 async function ensureBubble() {
@@ -252,8 +325,8 @@ async function ensureBubble() {
 
   bubbleCreating = (async () => {
   bubbleWin = new BrowserWindow({
-    width: 238,
-    height: 68,
+    width: BUBBLE_WINDOW_EXPANDED[0],
+    height: BUBBLE_WINDOW_EXPANDED[1],
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
@@ -295,12 +368,14 @@ async function ensureBubble() {
       if (!bubbleWin || bubbleWin.isDestroyed()) return;
       const [x, y] = bubbleWin.getPosition();
       store.setBubblePosition(x, y);
+      finalizeBubbleDock(x, y);
     }, 400);
   });
 
   bubbleWin.on('closed', () => { bubbleWin = null; });
 
   await bubbleWin.loadFile(path.join(RENDERER, 'bubble.html'));
+  sendBubbleMode();
   bubbleWin.showInactive();
   return bubbleWin;
   })();
@@ -1893,6 +1968,29 @@ ipcMain.on('app:start-selection', () => startSelection());
 ipcMain.on('app:start-multi-selection', () => startMultiSelection());
 ipcMain.on('app:start-translation', () => startTranslationSelection());
 ipcMain.on('app:settings', () => openSettings(false));
+ipcMain.on('app:clipboard-explain', () => askClipboard());
+ipcMain.on('bubble:expand', () => { if (bubbleEdge) setBubbleMode('expanded', bubbleEdge); });
+ipcMain.on('bubble:collapse', () => { if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge); });
+ipcMain.on('bubble:hide', () => {
+  store.save({ showBubble: false });
+  if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
+  refreshTray();
+});
+ipcMain.on('bubble:menu-open', (_event, { direction, height } = {}) => {
+  if (!bubbleWin || bubbleWin.isDestroyed()) return;
+  if (!preMenuBounds) preMenuBounds = bubbleWin.getBounds();
+  const grow = 12 + Math.max(100, Number(height) || 152);
+  const b = preMenuBounds;
+  const next = direction === 'down'
+    ? { ...b, height: b.height + grow }
+    : { ...b, y: b.y - grow, height: b.height + grow };
+  const display = screen.getDisplayNearestPoint({ x: next.x + next.width / 2, y: next.y + next.height / 2 });
+  bubbleWin.setBounds(clampToWorkArea(next, display.workArea));
+});
+ipcMain.on('bubble:menu-close', () => {
+  if (preMenuBounds && bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.setBounds(preMenuBounds);
+  preMenuBounds = null;
+});
 ipcMain.on('app:bubble-menu', () => {
   if (!bubbleWin || bubbleWin.isDestroyed()) return;
   buildTrayMenu().popup({ window: bubbleWin });
@@ -2257,6 +2355,18 @@ if (!gotLock) {
     store.load();
     broadcastTheme();
     nativeTheme.on('updated', broadcastTheme);
+    screen.on('display-removed', () => {
+      // External display gone: pull every floating window back into the
+      // primary work area instead of leaving them on a dead display.
+      const primaryArea = screen.getPrimaryDisplay().workArea;
+      if (bubbleWin && !bubbleWin.isDestroyed()) {
+        bubbleWin.setBounds(clampToWorkArea(bubbleWin.getBounds(), primaryArea));
+        if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge);
+      }
+      if (resultWin && !resultWin.isDestroyed()) {
+        resultWin.setBounds(clampToWorkArea(resultWin.getBounds(), primaryArea));
+      }
+    });
     protocol.handle('floatask-font', handleFontProtocol);
     history.load();
     updater = createUpdater({ app, onState: state => {

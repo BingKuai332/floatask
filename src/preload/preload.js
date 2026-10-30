@@ -18,7 +18,14 @@ contextBridge.exposeInMainWorld('floatask', {
   startSelection: () => ipcRenderer.send('app:start-selection'),
   startMultiSelection: () => ipcRenderer.send('app:start-multi-selection'),
   startTranslation: () => ipcRenderer.send('app:start-translation'),
+  startClipboardExplain: () => ipcRenderer.send('app:clipboard-explain'),
   bubbleMenu: () => ipcRenderer.send('app:bubble-menu'),
+  expandBubble: () => ipcRenderer.send('bubble:expand'),
+  collapseBubble: () => ipcRenderer.send('bubble:collapse'),
+  hideBubble: () => ipcRenderer.send('bubble:hide'),
+  bubbleMenuOpen: (direction, height) => ipcRenderer.send('bubble:menu-open', { direction, height }),
+  bubbleMenuClose: () => ipcRenderer.send('bubble:menu-close'),
+  onBubbleMode: (cb) => subscribe('bubble:mode', cb),
   getAppInfo: () => ipcRenderer.invoke('app:info'),
 
   // Result window

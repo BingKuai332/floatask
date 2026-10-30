@@ -6,21 +6,38 @@
   <link rel="stylesheet" href="bubble.css">
   <title data-i18n="common.appName">浮问</title>
 </head>
-<body>
-  <div class="bubble" id="bubble" title="拖动调整位置" data-i18n-title="font.drag">
-    <div class="grip drag" id="grip">
-      <img src="../../resources/icon.png" alt="" class="logo">
-      <span class="grip-dots"><i></i><i></i><i></i></span>
+<body data-mode="expanded">
+  <div class="bubble" id="bubble">
+    <div class="brand drag" id="grip" title="拖动调整位置" data-i18n-title="font.drag">
+      <span class="brand-mark" aria-hidden="true">浮</span>
     </div>
-    <button id="askBtn" class="ask no-drag" title="框选屏幕内容">
+    <button id="askBtn" class="ask no-drag" title="框选屏幕内容" data-i18n-title="bubble.button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
-        <path d="M5 9V6.5A1.5 1.5 0 0 1 6.5 5H9M15 5h2.5A1.5 1.5 0 0 1 19 6.5V9M19 15v2.5a1.5 1.5 0 0 1-1.5 1.5H15M9 19H6.5A1.5 1.5 0 0 1 5 17.5V15"></path>
+        <path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"></path>
         <path d="M12 8.5v7M8.5 12h7" opacity=".6"></path>
       </svg>
       <span data-i18n="selection.title">框选</span>
     </button>
-    <button id="multiBtn" class="mini no-drag" type="button" title="连续截多张" data-i18n-title="bubble.multi">＋</button>
-    <button id="transBtn" class="mini no-drag" type="button" title="截图翻译" data-i18n-title="bubble.translate">译</button>
+    <button id="multiBtn" class="mini bubble-secondary no-drag" type="button" title="连续截多张" data-i18n-title="bubble.multi">＋</button>
+    <button id="transBtn" class="mini bubble-secondary no-drag" type="button" title="截图翻译" data-i18n-title="bubble.translate">译</button>
+    <button id="clipBtn" class="mini bubble-secondary no-drag" type="button" title="剪贴板解释" data-i18n-title="bubble.clipboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="6" y="4.5" width="12" height="16" rx="2.5"></rect>
+        <path d="M9 4.5V3.6A1.1 1.1 0 0 1 10.1 2.5h3.8A1.1 1.1 0 0 1 15 3.6v.9M9 10h6M9 13.5h6M9 17h3.5"></path>
+      </svg>
+    </button>
+    <button id="historyBtn" class="mini bubble-secondary no-drag" type="button" title="历史记录" data-i18n-title="bubble.history">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+        <circle cx="12" cy="12" r="8.5"></circle>
+        <path d="M12 7.5V12l3 2"></path>
+      </svg>
+    </button>
+    <button id="moreBtn" class="mini bubble-secondary no-drag" type="button" title="更多" data-i18n-title="bubble.more" aria-haspopup="menu">⋯</button>
+  </div>
+  <div id="moreMenu" class="fa-menu" hidden>
+    <button class="fa-menu-item" id="menuSettings" data-i18n="bubble.menuSettings">设置</button>
+    <button class="fa-menu-item" id="menuHide" data-i18n="bubble.menuHide">隐藏工具栏</button>
+    <button class="fa-menu-item" id="menuQuit" data-i18n="tray.quit">退出浮问</button>
   </div>
   <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="theme.js"></script><script src="focus.js"></script>
   <script src="bubble.js"></script>
