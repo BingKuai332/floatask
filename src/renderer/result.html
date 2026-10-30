@@ -2,7 +2,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="controls.css">
   <link rel="stylesheet" href="result.css">
   <title data-i18n="common.appName">浮问</title>
 </head>
@@ -113,10 +113,10 @@
 
       <footer class="composer">
         <div id="quickRow" class="quick-row no-drag">
-          <button class="quick-chip" data-question="用更通俗的话解释，最好打个比方。" data-i18n="result.quickSimpler" data-question-key="result.qSimpler">更通俗</button>
-          <button class="quick-chip" data-question="举一个具体、贴近实际的例子帮助理解。" data-i18n="result.quickExample" data-question-key="result.qExample">举个例子</button>
-          <button class="quick-chip" data-question="再深入一点，讲讲它的原理或关键细节。" data-i18n="result.quickDeeper" data-question-key="result.qDeeper">深入一点</button>
-          <button class="quick-chip" data-question="帮我联网核查一下这个内容，并给出来源。" data-web="1" data-i18n="result.quickWeb" data-question-key="result.qWeb">联网核查</button>
+          <button class="quick-chip fa-chip" data-question="用更通俗的话解释，最好打个比方。" data-i18n="result.quickSimpler" data-question-key="result.qSimpler">更通俗</button>
+          <button class="quick-chip fa-chip" data-question="举一个具体、贴近实际的例子帮助理解。" data-i18n="result.quickExample" data-question-key="result.qExample">举个例子</button>
+          <button class="quick-chip fa-chip" data-question="再深入一点，讲讲它的原理或关键细节。" data-i18n="result.quickDeeper" data-question-key="result.qDeeper">深入一点</button>
+          <button class="quick-chip fa-chip" data-question="帮我联网核查一下这个内容，并给出来源。" data-web="1" data-i18n="result.quickWeb" data-question-key="result.qWeb">联网核查</button>
         </div>
         <div class="input-shell no-drag">
           <button id="webToggle" class="web-toggle on" title="联网检索" data-i18n-title="settings.webTitle">
@@ -148,7 +148,7 @@
       </div>
     </div>
   </div>
-  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="theme.js"></script>
+  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="theme.js"></script><script src="focus.js"></script>
   <script src="markdown.js"></script>
   <script src="result.js"></script>
 

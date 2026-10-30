@@ -131,6 +131,68 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(result,"document.querySelectorAll('.message.assistant').length===1"),'restored messages');
    assert.equal(await js(result,"document.getElementById('statusText').textContent"),'Done');
    await screenshot(result,'result-en');
+   // Shared controls (task 3): token-driven geometry, visible keyboard focus, menu discipline.
+   const chipMetrics=await js(result,`(() => {
+    const chip=document.querySelector('.quick-chip');
+    const style=getComputedStyle(chip);
+    return {radius:style.borderRadius,height:style.height,fontSize:style.fontSize};
+   })()`);
+   assert.equal(chipMetrics.radius,'8px','chips use the 8px radius token');
+   assert.equal(chipMetrics.height,'28px','chips use the 28px height token');
+   settings.focus();
+   await pause(150);
+   const focusRule=await js(settings,`(() => {
+    const probe=document.createElement('button');
+    probe.id='fixtureFocusProbe';
+    document.body.appendChild(probe);
+    probe.focus({focusVisible:true});
+    const style=getComputedStyle(probe);
+    const result={width:style.outlineWidth,offset:style.outlineOffset,style:style.outlineStyle};
+    probe.remove();
+    return result;
+   })()`);
+   assert.equal(focusRule.width,'2px','focus outline is 2px wide');
+   assert.equal(focusRule.offset,'2px','focus outline has a 2px offset');
+   assert.notEqual(focusRule.style,'none','focus outline is visible');
+   const disabledSkipsTab=await js(settings,`(() => {
+    const b=document.createElement('button');
+    b.id='fixtureDisabledBtn'; b.disabled=true; b.className='fa-button';
+    document.body.appendChild(b);
+    b.focus();
+    const result={skipped:document.activeElement!==b,cursor:getComputedStyle(b).cursor};
+    b.remove();
+    return result;
+   })()`);
+   assert.ok(disabledSkipsTab.skipped,'disabled controls stay out of the tab order');
+   assert.equal(disabledSkipsTab.cursor,'not-allowed','disabled controls expose their state');
+   const menuProbe=await js(settings,`(() => {
+    if (typeof window.FloatAskFocus!=='object' || typeof window.FloatAskFocus.menu!=='function') return {missing:true};
+    const trigger=document.createElement('button');
+    trigger.id='fixtureMenuTrigger'; trigger.textContent='More';
+    const menu=document.createElement('div');
+    menu.id='fixtureMenu'; menu.className='fa-menu'; menu.hidden=true;
+    menu.innerHTML="<button class='fa-menu-item' role='menuitem'>One</button><button class='fa-menu-item' role='menuitem'>Two</button>";
+    document.body.append(trigger,menu);
+    window.__fixtureMenu=window.FloatAskFocus.menu({trigger,menu});
+    const itemStyle=getComputedStyle(menu.querySelector('.fa-menu-item'));
+    return {missing:false,itemRadius:itemStyle.borderRadius,itemHeight:itemStyle.height};
+   })()`);
+   assert.ok(!menuProbe.missing,'focusMenu utility is exposed to pages');
+   assert.equal(menuProbe.itemRadius,'10px','menu items use the 10px radius token');
+   assert.equal(menuProbe.itemHeight,'36px','menu items use the 36px height token');
+   await js(settings,"document.getElementById('fixtureMenuTrigger').click()");
+   assert.equal(await js(settings,"document.getElementById('fixtureMenu').hidden"),false,'trigger opens the menu');
+   assert.equal(await js(settings,"document.activeElement.textContent"),'One','focus enters the menu on open');
+   await js(settings,"document.getElementById('fixtureMenu').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true}))");
+   assert.equal(await js(settings,"document.activeElement.textContent"),'Two','arrow keys move within the menu');
+   await js(settings,"document.getElementById('fixtureMenu').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))");
+   assert.equal(await js(settings,"document.getElementById('fixtureMenu').hidden"),true,'Escape closes the menu');
+   assert.equal(await js(settings,"document.activeElement.id"),'fixtureMenuTrigger','Escape returns focus to the trigger');
+   await js(settings,"document.getElementById('fixtureMenuTrigger').click()");
+   await js(settings,"document.body.dispatchEvent(new MouseEvent('pointerdown',{bubbles:true}))");
+   assert.equal(await js(settings,"document.getElementById('fixtureMenu').hidden"),true,'outside pointer closes the menu');
+   assert.equal(await js(settings,"document.activeElement.id"),'fixtureMenuTrigger','outside close returns focus to the trigger');
+   await js(settings,"window.__fixtureMenu.destroy();document.getElementById('fixtureMenuTrigger').remove();document.getElementById('fixtureMenu').remove()");
    await js(result,"document.getElementById('questionInput').value='Next question';document.getElementById('sendBtn').click()");
    await waitFor(()=>history.get(record.id).messages.length===4,'saved followup');
    assert.equal(calls.at(-1).model,'followup-reasoning');
