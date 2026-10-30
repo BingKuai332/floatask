@@ -213,6 +213,7 @@ function populate() {
 
   populateAppearance();
   selectPanel('model');
+  initWizard(settings);
 
   window.FloatAskAdvanced.populate(settings, collectDraft);
   renderProviders();
@@ -491,3 +492,156 @@ bindSegmented('densityControl', 'density-value', (btn) => {
   setSegmented('densityControl', 'densityValue', btn.dataset.densityValue);
   applyAppearancePreview();
 });
+
+/* ------------------------------------------------------------------ */
+/* First-run onboarding wizard (task 9)                               */
+/* ------------------------------------------------------------------ */
+
+function initWizard(current) {
+  const root = document.getElementById('onboarding');
+  if (!root || typeof root.addEventListener !== 'function') return;
+
+  const steps = typeof document.querySelectorAll === 'function' ? [...document.querySelectorAll('#obSteps .ob-step')] : [];
+  const panes = typeof document.querySelectorAll === 'function' ? [...document.querySelectorAll('[data-ob-pane]')] : [];
+  const providerBtns = typeof document.querySelectorAll === 'function' ? [...document.querySelectorAll('[data-ob-provider]')] : [];
+  const keyInput = document.getElementById('obKey');
+  const error = document.getElementById('obError');
+  const testBtn = document.getElementById('obTest');
+  const testResult = document.getElementById('obTestResult');
+  const hotkeyLabel = document.getElementById('obHotkey');
+  const backBtn = document.getElementById('obBack');
+  const laterBtn = document.getElementById('obLater');
+  const nextBtn = document.getElementById('obNext');
+  const startBtn = document.getElementById('obStart');
+  const fullSettingsBtn = document.getElementById('obFullSettings');
+  const recordBtn = document.getElementById('obRecord');
+  const hiddenHotkey = document.getElementById('hotkey');
+
+  let step = 1;
+  let provider = ['deepseek', 'openai', 'ollama'].includes(current.provider) ? current.provider : 'deepseek';
+  let providerDirty = false;
+  let dismissed = false;
+
+  const preset = (id) => (current.presets || []).find(p => p.id === id) || {};
+  const isLocal = () => /^(https?:\/\/)?(127\.0\.0\.1|localhost)/i.test(preset(provider).baseUrl || '');
+
+  function draft(extra = {}) {
+    // Never clobber an existing configuration with preset defaults the user
+    // never touched: carry provider/baseUrl/model only after an explicit pick.
+    const p = preset(provider);
+    const key = keyInput && keyInput.value.trim() || '';
+    const touched = providerDirty || Boolean(key);
+    return {
+      ...(touched ? { provider, baseUrl: p.baseUrl || '', model: p.model || '' } : {}),
+      ...(key ? { apiKey: key } : {}),
+      ...(hiddenHotkey ? { hotkey: hiddenHotkey.value } : {}),
+      onboardingStep: step,
+      keepOnboarding: true,
+      ...extra
+    };
+  }
+
+  function show(next) {
+    step = next;
+    root.dataset.step = String(next);
+    for (const s of steps) {
+      const n = Number(s.dataset.obStep);
+      s.classList.toggle('active', n === next);
+      s.classList.toggle('done', n < next);
+    }
+    for (const pane of panes) pane.hidden = Number(pane.dataset.obPane) !== next;
+    if (backBtn) backBtn.hidden = next === 1;
+    if (nextBtn) nextBtn.hidden = next === 3;
+    if (error) error.textContent = '';
+  }
+
+  function syncProviderUi() {
+    for (const btn of providerBtns) btn.classList.toggle('active', btn.dataset.obProvider === provider);
+  }
+
+  async function saveDraft(extra) {
+    const result = await api.saveSettings(draft(extra));
+    if (!result.ok) {
+      if (error) error.textContent = result.message || '';
+      return null;
+    }
+    return result;
+  }
+
+  for (const btn of providerBtns) {
+    btn.addEventListener('click', () => { provider = btn.dataset.obProvider; providerDirty = true; syncProviderUi(); });
+  }
+
+  if (nextBtn) nextBtn.addEventListener('click', async () => {
+    if (step === 1) {
+      if (!isLocal() && !(keyInput && keyInput.value.trim())) {
+        if (error) error.textContent = tt('settings.validateKey');
+        return;
+      }
+      if (!await saveDraft({ onboardingStep: 2 })) return;
+      show(2);
+    } else if (step === 2) {
+      if (!await saveDraft({ onboardingStep: 3 })) return;
+      show(3);
+    }
+  });
+
+  if (backBtn) backBtn.addEventListener('click', async () => {
+    if (step === 2) { await saveDraft({ onboardingStep: 1 }); show(1); }
+    else if (step === 3) show(2);
+  });
+
+  if (laterBtn) laterBtn.addEventListener('click', async () => {
+    dismissed = true;
+    await saveDraft({ onboardingStep: step });
+    root.hidden = true;
+  });
+
+  if (startBtn) startBtn.addEventListener('click', async () => {
+    dismissed = true;
+    const result = await api.saveSettings(draft({ onboardingStep: 3, keepOnboarding: false }));
+    if (!result.ok) { if (error) error.textContent = result.message || ''; return; }
+    root.hidden = true;
+    api.startSelection();
+  });
+
+  if (fullSettingsBtn) fullSettingsBtn.addEventListener('click', () => {
+    dismissed = true;
+    root.hidden = true;
+    els.welcome.hidden = false;
+  });
+
+  if (testBtn) testBtn.addEventListener('click', async () => {
+    if (testResult) testResult.textContent = '…';
+    const result = await api.testConnection(draft());
+    if (testResult) {
+      testResult.textContent = result.ok ? tt('settings.testOk', { ms: Math.round(result.ms || 0) }) : (result.message || '');
+      testResult.className = `test-result${result.ok ? ' ok' : ' bad'}`;
+    }
+  });
+
+  if (recordBtn && hiddenHotkey) {
+    recordBtn.addEventListener('click', () => {
+      const recorder = document.getElementById('recordHotkeyBtn');
+      if (recorder) recorder.click();
+    });
+    hiddenHotkey.addEventListener('input', () => { if (hotkeyLabel) hotkeyLabel.textContent = hiddenHotkey.value; });
+  }
+
+  syncProviderUi();
+  if (hotkeyLabel) hotkeyLabel.textContent = current.actualHotkey || current.hotkey || 'Alt+Q';
+  if (current.firstRun) {
+    show(Number(current.onboardingStep) >= 1 && Number(current.onboardingStep) <= 3 ? Number(current.onboardingStep) : 1);
+    root.hidden = false;
+    if (els.welcome) els.welcome.hidden = true;
+  } else {
+    root.hidden = true;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && current.firstRun && !dismissed && root.hidden) {
+      show(step);
+      root.hidden = false;
+    }
+  });
+}

@@ -296,6 +296,75 @@
       </div>
       </div>
 
+      <div id="onboarding" class="onboarding" data-step="1" hidden>
+        <div class="ob-header">
+          <b data-i18n="ob.title">浮问 FloatAsk</b>
+          <span data-i18n="ob.tagline">框一下，就懂了。</span>
+        </div>
+        <div class="ob-steps" id="obSteps">
+          <span class="ob-step" data-ob-step="1" data-i18n="ob.stepModel">模型服务</span>
+          <span class="ob-step" data-ob-step="2" data-i18n="ob.stepHotkey">快捷键与隐私</span>
+          <span class="ob-step" data-ob-step="3" data-i18n="ob.stepReady">开始使用</span>
+        </div>
+
+        <div class="ob-pane" data-ob-pane="1">
+          <h2 data-i18n="ob.modelHeadline">先连接一个模型服务</h2>
+          <p class="ob-desc" data-i18n="ob.modelDesc">使用任意 OpenAI 兼容接口。首次解释、追问和截图理解稍后可以在设置中分别配置。</p>
+          <div class="ob-providers" id="obProviders">
+            <button type="button" class="ob-provider" data-ob-provider="deepseek">
+              <b data-i18n="ob.presetDeepseek">DeepSeek</b>
+              <small data-i18n="ob.presetDeepseekNote">推荐 · 国内可直连</small>
+            </button>
+            <button type="button" class="ob-provider" data-ob-provider="openai">
+              <b data-i18n="ob.presetOpenai">OpenAI 兼容</b>
+              <small data-i18n="ob.presetOpenaiNote">自建或第三方服务</small>
+            </button>
+            <button type="button" class="ob-provider" data-ob-provider="ollama">
+              <b data-i18n="ob.presetOllama">本地 Ollama</b>
+              <small data-i18n="ob.presetOllamaNote">模型留在本机</small>
+            </button>
+          </div>
+          <label class="field ob-key-field">
+            <span class="field-label" data-i18n="ob.keyLabel">API Key · 使用 Windows DPAPI 加密</span>
+            <input id="obKey" type="password" spellcheck="false" autocomplete="off" data-i18n-ph="ob.keyPlaceholder" placeholder="sk-…">
+            <small class="field-help" data-i18n="ob.keyLocalNote">密钥不会写入明文配置；测试连接只向当前服务发送必要请求。</small>
+          </label>
+          <div class="inline-actions">
+            <button id="obTest" class="btn" type="button" data-i18n="ob.test">测试连接</button>
+            <span id="obTestResult" class="test-result" role="status"></span>
+          </div>
+          <p id="obError" class="ob-error" role="alert"></p>
+        </div>
+
+        <div class="ob-pane" data-ob-pane="2" hidden>
+          <h2 data-i18n="ob.hotkeyHeadline">试试你的框选快捷键</h2>
+          <p class="ob-desc" data-i18n="ob.hotkeyDesc">按下组合键即可录制；若系统占用，可修改后继续。</p>
+          <div class="ob-hotkey-row">
+            <kbd id="obHotkey" class="kbd">Alt+Q</kbd>
+            <button id="obRecord" class="btn" type="button" data-i18n="ob.record">录制快捷键</button>
+          </div>
+          <p class="note" id="obOcrNote" data-i18n="ob.ocrNote">本机 OCR · 始终启用。识别文字会随模型请求发送；原始截图默认只保留在本机，截图理解默认关闭、可在需要时开启。</p>
+        </div>
+
+        <div class="ob-pane" data-ob-pane="3" hidden>
+          <div class="ob-ready">
+            <div class="ob-ready-mark" aria-hidden="true">浮</div>
+            <h2 data-i18n="ob.readyTitle">准备就绪</h2>
+            <p class="ob-desc" data-i18n="ob.readyDesc">在任意页面按下快捷键，框选你想理解的内容。</p>
+            <div class="ob-ready-actions">
+              <button id="obStart" class="btn primary" type="button" data-i18n="ob.startCapture">开始第一次框选</button>
+              <button id="obFullSettings" class="btn ghost" type="button" data-i18n="ob.fullSettings">打开完整设置</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ob-footer">
+          <button id="obBack" class="btn ghost" type="button" data-i18n="ob.back">上一步</button>
+          <button id="obLater" class="btn ghost" type="button" data-i18n="ob.later">稍后配置</button>
+          <button id="obNext" class="btn primary" type="button" data-i18n="ob.next">下一步</button>
+        </div>
+      </div>
+
       <footer class="footer">
         <div id="saveHint" class="save-hint"></div>
         <div class="footer-actions">

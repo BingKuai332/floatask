@@ -98,3 +98,16 @@ test('store persists the theme choice and falls back to system for invalid value
  assert.equal(store.publicSettings().theme,'light','theme is part of the public settings payload');
  const raw=fs.readFileSync(store.getConfigPath(),'utf8');assert(JSON.parse(raw).theme==='light','theme persisted to disk');
 }));
+test('store persists the onboarding step and rejects out-of-range values', () => temporary(directory => {
+ const filename=path.resolve(__dirname,'../src/main/store.js');
+ const actualRequire=createRequire(filename);
+ const electron={app:{getPath:()=>directory,getLocale:()=>'en'},safeStorage:{isEncryptionAvailable:()=>true,encryptString:s=>Buffer.from(s),decryptString:b=>b.toString()}};
+ const context={require:name=>name==='electron'?electron:actualRequire(name),module:{exports:{}},console};
+ vm.runInNewContext(fs.readFileSync(filename,'utf8'),context);const store=context.module.exports;
+ assert.equal(store.getConfig().onboardingStep,1,'default onboarding step is 1');
+ store.save({onboardingStep:2});assert.equal(store.getConfig().onboardingStep,2);
+ store.save({onboardingStep:3});assert.equal(store.getConfig().onboardingStep,3);
+ store.save({onboardingStep:9});assert.equal(store.getConfig().onboardingStep,3,'out-of-range step keeps the current value');
+ store.save({onboardingStep:0});assert.equal(store.getConfig().onboardingStep,3,'zero step keeps the current value');
+ assert.equal(store.publicSettings().onboardingStep,3,'onboarding step exposed in public settings');
+}));

@@ -126,7 +126,7 @@
     if (event.key === 'Escape') { finishRecording(true); return; }
     if (recordingPending) return;
     const value = window.FloatAskHotkeys.fromKeyboard(event);
-    if (value) { hotkey.value = value; finishRecording(false); }
+    if (value) { hotkey.value = value; hotkey.dispatchEvent(new Event('input', { bubbles: true })); finishRecording(false); }
   },true);
   window.addEventListener('blur', () => finishRecording(true));
   document.getElementById('resetHotkeyBtn').onclick = async () => { await finishRecording(true); hotkey.value = 'Alt+Q'; };

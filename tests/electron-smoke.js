@@ -76,6 +76,35 @@ server.listen(0,'127.0.0.1',()=>{
   try {
    const settings=await waitFor(()=>page('settings'),'settings');
    await waitFor(()=>js(settings,"document.getElementById('providerGrid').children.length === 6"),'settings ready');
+   // Onboarding wizard (task 9): three steps, back/forward, failure keeps inputs, resume.
+   const preWizard=await js(settings,'(async()=>{const s=await window.floatask.getSettings();return {provider:s.provider,baseUrl:s.baseUrl,model:s.model}})()');
+   await waitFor(()=>js(settings,"document.getElementById('onboarding') && !document.getElementById('onboarding').hidden"),'onboarding wizard shows on first run');
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'1','wizard starts at step 1');
+   assert.equal(await js(settings,"document.querySelectorAll('#obSteps .ob-step').length"),3,'three steps indicated');
+   await js(settings,"document.getElementById('obNext').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'1','missing key stays on step 1');
+   assert.ok((await js(settings,"document.getElementById('obError').textContent")).length>0,'the failure explains itself');
+   await js(settings,"document.querySelector('[data-ob-provider=ollama]').click();true");
+   await js(settings,"document.getElementById('obNext').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'2','ollama proceeds without a key');
+   assert.ok((await js(settings,"document.getElementById('obOcrNote').textContent")).includes('OCR'),'step 2 explains local OCR');
+   await js(settings,"document.getElementById('obBack').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'1','back returns to step 1');
+   assert.equal(await js(settings,"document.querySelector('[data-ob-provider].active')?.dataset.obProvider"),'ollama','provider choice survives going back');
+   await js(settings,"document.getElementById('obNext').click();true");
+   await js(settings,"document.getElementById('obNext').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'3','wizard reaches the ready step');
+   assert.equal(await js(settings,"document.querySelectorAll('#onboarding .btn.primary:not([hidden])').length"),1,'ready step has exactly one primary action');
+   assert.ok(await js(settings,"Boolean(document.getElementById('obStart') && document.getElementById('obFullSettings'))"),'start capture and full settings entries exist');
+   await js(settings,"document.getElementById('obBack').click();true");
+   await js(settings,"document.getElementById('obLater').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').hidden"),true,'later hides the wizard');
+   settings.webContents.reload();
+   await waitFor(()=>js(settings,"document.getElementById('providerGrid') && document.getElementById('providerGrid').children.length === 6"),'settings ready after reload');
+   await waitFor(()=>js(settings,"document.getElementById('onboarding') && !document.getElementById('onboarding').hidden && document.getElementById('onboarding').dataset.step==='2'"),'wizard resumes at the unfinished step');
+   await js(settings,"document.getElementById('obLater').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').hidden"),true,'wizard stays dismissed for the remaining flows');
+   await js(settings,'window.floatask.saveSettings({provider:'+JSON.stringify(preWizard.provider)+',baseUrl:'+JSON.stringify(preWizard.baseUrl)+',model:'+JSON.stringify(preWizard.model)+',onboardingStep:1,keepOnboarding:true})');
    assert.equal(await js(settings,"typeof window.FloatAskI18n.t"),'function');
    // Settings navigation (task 8): six fixed sections, appearance preview, unified save semantics.
    const navItems=await js(settings,"[...document.querySelectorAll('.settings-nav-item')].map(b=>b.textContent)");

@@ -2235,9 +2235,12 @@ ipcMain.handle('settings:save', (_event, patch) => {
       if (error && !(deletingKey && config.baseUrl && config.model && !config.apiKey)) throw new Error(error.message);
     }
     const prevLanguage = store.getConfig().language;
+    const keepOnboarding = patch && patch.keepOnboarding === true;
     const saved = store.save(patch && typeof patch === 'object' ? patch : {});
-    store.markOnboarded();
-    settingsFirstRun = false;
+    if (!keepOnboarding) {
+      store.markOnboarded();
+      settingsFirstRun = false;
+    }
     applySettings();
     if (store.getConfig().language !== prevLanguage) broadcastLanguage();
     if ('theme' in (patch || {})) broadcastTheme();
