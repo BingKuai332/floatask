@@ -6,7 +6,12 @@
 <title data-i18n="history.title">历史记录</title></head><body>
 <div class="history-shell">
  <header class="history-header drag"><div><h1 data-i18n="history.title">历史记录</h1><small data-i18n="history.subtitle">FLOATASK · SESSIONS & FAVORITES</small></div><button id="closeBtn" class="icon-btn no-drag" data-i18n-title="common.close">×</button></header>
- <div class="history-toolbar"><input id="searchInput" data-i18n-ph="history.searchPlaceholder" type="search"><button id="allBtn" class="btn active" data-i18n="history.filterAll">全部</button><button id="favBtn" class="btn" data-i18n="history.filterFav">收藏</button><button id="clearBtn" class="btn" data-i18n="history.clearBtn">清空</button></div>
+ <div class="history-toolbar"><input id="searchInput" data-i18n-ph="history.searchPlaceholder" type="search"><div class="history-filters"><button id="allBtn" class="btn active" data-i18n="history.filterAll">全部</button><button id="favBtn" class="btn" data-i18n="history.filterFav">收藏</button><span class="filter-divider"></span><button class="btn type-filter active" data-type-filter="all" data-i18n="history.typeAll">全部类型</button><button class="btn type-filter" data-type-filter="capture" data-i18n="history.typeCapture">截图理解</button><button class="btn type-filter" data-type-filter="text" data-i18n="history.typeText">纯文本</button><button class="btn type-filter" data-type-filter="web" data-i18n="history.typeWeb">联网回答</button></div><button id="clearBtn" class="btn" data-i18n="history.clearBtn">清空</button></div>
+ <div id="clearScope" class="clear-scope" hidden>
+  <span id="clearScopeText"></span>
+  <button id="historyClearConfirm" class="btn danger" data-i18n="common.confirmDelete">确认删除</button>
+  <button id="historyClearCancel" class="btn ghost" data-i18n="common.cancel">取消</button>
+ </div>
  <div class="history-content"><nav id="recordList" aria-label="Conversations"></nav><main id="detail"><p class="empty" data-i18n="history.pick">选择一条记录查看内容</p></main></div>
  <div id="toast" role="status"></div>
 </div>

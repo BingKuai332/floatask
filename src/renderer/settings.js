@@ -32,6 +32,7 @@ const els = {
   autoLaunch: document.getElementById('autoLaunch'),
   autoLaunchHelp: document.getElementById('autoLaunchHelp'),
   saveHistory: document.getElementById('saveHistory'),
+  historyRetention: document.getElementById('historyRetention'),
   openHistoryBtn: document.getElementById('openHistoryBtn'),
   currentFontLabel: document.getElementById('currentFontLabel'),
   currentFontMeta: document.getElementById('currentFontMeta'),
@@ -192,6 +193,10 @@ function populate() {
   els.hotkey.value = settings.hotkey || 'Alt+Q';
   els.showBubble.checked = settings.showBubble !== false;
   els.saveHistory.checked = settings.saveHistory !== false;
+  if (els.historyRetention) {
+    const retention = String(settings.historyRetentionDays ?? 90);
+    els.historyRetention.value = [...els.historyRetention.options].some(o => o.value === retention) ? retention : '90';
+  }
   els.language.value = settings.language || 'zh-CN';
   els.autoLaunch.checked = Boolean(settings.autoLaunch);
   els.version.textContent = settings.appVersion || '0.1.0';
@@ -252,6 +257,7 @@ function collectDraft() {
     autoLaunch: els.autoLaunch.checked,
     language: els.language.value,
     saveHistory: els.saveHistory.checked,
+    historyRetentionDays: els.historyRetention ? Number(els.historyRetention.value) : undefined,
     theme: appearance.theme,
     fontSize: appearance.fontSize,
     lineHeight: appearance.lineHeight,

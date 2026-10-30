@@ -218,6 +218,18 @@
             </label>
             <button id="openHistoryBtn" class="btn" type="button" data-i18n="settings.openHistoryBtn">打开历史记录…</button>
           </div>
+          <div class="form-grid compact">
+            <label class="field">
+              <span class="field-label" data-i18n="settings.retentionLabel">记录保留期限</span>
+              <select id="historyRetention">
+                <option value="30">30</option>
+                <option value="90">90</option>
+                <option value="180">180</option>
+                <option value="0" data-i18n="settings.retentionForever">永久保留</option>
+              </select>
+              <span class="field-help" data-i18n="settings.retentionNote">到期后自动清理未收藏记录；收藏始终保留。清除历史不影响 API Key 与模型配置。</span>
+            </label>
+          </div>
           <p class="note" data-i18n="settings.historyNote">关闭后新的会话不再记录，已有记录仍会保留。</p>
         </section>
 

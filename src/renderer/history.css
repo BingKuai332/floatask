@@ -21,3 +21,39 @@ input { flex:1; min-width:80px; background:var(--bg); border:1px solid var(--lin
 #toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--panel-2); color:var(--accent); padding:8px 14px; border:1px solid var(--line-strong); display:none; max-width:80%; }
 #toast.show { display:block; }
 @media(max-width:800px) { .history-content { grid-template-columns:240px minmax(0,1fr); } .history-toolbar .btn { padding:0 8px; } }
+
+/* History privacy operations (task 11) */
+.record { position: relative; }
+.record-star {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: var(--fa-muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: var(--fa-radius-small);
+}
+.record-star:hover { color: var(--fa-accent); background: var(--fa-accent-soft); }
+.record-star.on { color: var(--fa-accent); }
+.record.selected .record-star { color: var(--fa-accent); }
+
+.history-filters { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.filter-divider { width: 1px; height: 16px; background: var(--fa-divider); margin: 0 6px; }
+.type-filter.active { background: var(--fa-accent-soft); color: var(--fa-accent); }
+
+.clear-scope {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: var(--fa-radius-container);
+  border: 1px solid var(--fa-red);
+  background: var(--fa-red-soft);
+  color: var(--fa-red);
+  font-size: 11.5px;
+}
+.clear-scope[hidden] { display: none; }
+.clear-scope .btn.danger { color: var(--fa-red); border-color: var(--fa-red); background: transparent; }
+.clear-scope .btn.danger:hover { background: var(--fa-red); color: var(--fa-on-primary); }

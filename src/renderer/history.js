@@ -5,7 +5,7 @@ const md = window.FloatAskMarkdown;
 const list = document.getElementById('recordList');
 const detail = document.getElementById('detail');
 let records = [], selected = null, favorites = false, query = '', generation = 0;
-let clearArmed = false, deleteArmed = false, toastTimer;
+let typeFilter = 'all', deleteArmed = false, toastTimer;
 const texts = new Map();
 function toast(text) {
  const el=document.getElementById('toast'); el.textContent=text; el.className='show';
@@ -17,17 +17,32 @@ function button(key, action) {
  const el=document.createElement('button'); el.className='btn'; el.textContent=tt(key);
  el.addEventListener('click',()=>Promise.resolve().then(()=>action(el)).catch(err=>toast(err.message))); return el;
 }
+function typeOf(row) {
+ if (Number(row.sourceCount) > 0) return 'web';
+ if (row.hasImage || row.source === 'selection') return 'capture';
+ return 'text';
+}
 function renderList() {
  list.replaceChildren();
- const rows=records.filter(r=>(!favorites || r.favorite) && (!query || texts.get(r.id)?.includes(query)));
+ const rows=records.filter(r=>(!favorites || r.favorite) && (typeFilter==='all' || typeOf(r)===typeFilter) && (!query || texts.get(r.id)?.includes(query)));
  if(!rows.length) { const el=document.createElement('p'); el.className='empty'; el.textContent=tt(query?'history.emptySearch':favorites?'history.emptyFav':'history.empty'); list.append(el); }
  for(const row of rows) {
   const el=document.createElement('button'); el.className='record'+(selected?.id===row.id?' selected':''); el.dataset.id=row.id;
-  const title=document.createElement('strong'); title.textContent=(row.favorite?'★ ':'')+(row.title || tt('history.untitled'));
+  const star=document.createElement('span'); star.className='record-star'+(row.favorite?' on':''); star.textContent='★'; star.setAttribute('role','button'); star.setAttribute('aria-label',tt(row.favorite?'history.unfavorite':'history.favorite'));
+  star.addEventListener('click',(event)=>{event.stopPropagation();toggleFavorite(row);});
+  const title=document.createElement('strong'); title.textContent=row.title || tt('history.untitled');
   const snippet=document.createElement('p'); snippet.textContent=row.snippet;
   const meta=document.createElement('small'); meta.textContent=date(row.updatedAt)+' · '+tt('history.msgCount',{n:row.messageCount});
-  el.append(title,snippet,meta); el.addEventListener('click',()=>select(row.id)); list.append(el);
+  el.append(star,title,snippet,meta); el.addEventListener('click',()=>select(row.id)); list.append(el);
  }
+}
+async function toggleFavorite(row) {
+ try {
+  check(await api.setHistoryFavorite(row.id,!row.favorite));
+  const target=records.find(r=>r.id===row.id); if(target) target.favorite=!row.favorite;
+  if(selected?.id===row.id) selected.favorite=!row.favorite;
+  renderList(); renderDetail();
+ } catch(err) { toast(err.message); }
 }
 async function select(id) {
  const version=++generation;
@@ -43,7 +58,9 @@ function renderDetail() {
  const meta=document.createElement('small'); meta.textContent=[date(record.updatedAt),record.windowTitle,record.model].filter(Boolean).join(' · ');
  const actions=document.createElement('div'); actions.className='detail-actions';
  actions.append(button(record.favorite?'history.unfavorite':'history.favorite', async()=>{
-  check(await api.setHistoryFavorite(record.id,!record.favorite)); await refresh(); await select(record.id);
+  check(await api.setHistoryFavorite(record.id,!record.favorite));
+  const target=records.find(r=>r.id===record.id); if(target) target.favorite=!record.favorite;
+  selected.favorite=!record.favorite; renderList(); renderDetail();
  }),button('history.resume',async()=>{check(await api.resumeHistory(record.id));}),
  button('history.copyAll',async()=>{await api.copyText([record.selectionText,...record.messages.map(m=>m.content)].filter(Boolean).join('\n\n')); toast(tt('history.copiedToast'));}),
  button(deleteArmed?'common.confirmDelete':'common.delete',async()=>{
@@ -77,11 +94,22 @@ document.getElementById('searchInput').addEventListener('input',event=>{query=ev
 for(const [id,value] of [['allBtn',false],['favBtn',true]]) document.getElementById(id).onclick=()=>{
  favorites=value; document.getElementById('allBtn').classList.toggle('active',!value);document.getElementById('favBtn').classList.toggle('active',value);renderList();
 };
-document.getElementById('clearBtn').onclick=async()=>{
+for(const btn of document.querySelectorAll('[data-type-filter]')) btn.onclick=()=>{
+ typeFilter=btn.dataset.typeFilter;
+ for(const other of document.querySelectorAll('[data-type-filter]')) other.classList.toggle('active',other===btn);
+ renderList();
+};
+const clearScope=document.getElementById('clearScope');
+document.getElementById('clearBtn').onclick=()=>{
+ const total=records.length, kept=records.filter(r=>r.favorite).length;
+ document.getElementById('clearScopeText').textContent=tt('history.clearScope',{remove:total-kept,keep:kept});
+ clearScope.hidden=false;
+};
+document.getElementById('historyClearCancel').onclick=()=>{ clearScope.hidden=true; };
+document.getElementById('historyClearConfirm').onclick=async()=>{
  try {
-  if(!clearArmed) { clearArmed=true; document.getElementById('clearBtn').textContent=tt('history.clearBtnConfirm'); return; }
-  check(await api.clearHistory(true)); clearArmed=false; selected=null; await refresh(); renderDetail();
-  document.getElementById('clearBtn').textContent=tt('history.clearBtn'); toast(tt('history.clearedToast'));
+  check(await api.clearHistory(true)); selected=null; clearScope.hidden=true; await refresh(); renderDetail();
+  toast(tt('history.clearedToast'));
  } catch(err) {toast(err.message);}
 };
 document.getElementById('closeBtn').onclick=()=>api.closeHistory();

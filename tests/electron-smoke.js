@@ -131,6 +131,7 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(primaryCheck.background,hexToRgb(primaryCheck.token),'save button uses the primary-button token');
    await js(settings,"document.getElementById('themeOption-system').click();true");
    await js(settings,"document.querySelector('.settings-nav-item[data-panel=model]').click();true");
+   assert.equal(await js(settings,"document.getElementById('historyRetention')?.value"),'90','history retention defaults to 90 days');
    await js(settings,"document.getElementById('language').value='en';document.getElementById('language').dispatchEvent(new Event('change'))");
    await waitFor(()=>js(settings,"document.documentElement.lang==='en'"),'language switch');
    assert.equal(await js(settings,"document.querySelector('.brand-title').textContent"),'FloatAsk Settings');
@@ -203,6 +204,26 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,"window.floatask.saveSettings({theme:'system'})");
    await js(win,"document.getElementById('searchInput').value='rare searchable needle';document.getElementById('searchInput').dispatchEvent(new Event('input'))");
    assert.equal(await js(win,"document.querySelectorAll('.record').length"),1);
+   // History privacy operations (task 11): star sync, type filter, clear scope.
+   await js(win,"document.getElementById('searchInput').value='';document.getElementById('searchInput').dispatchEvent(new Event('input'))");
+   const typeFilters=await js(win,"[...document.querySelectorAll('[data-type-filter]')].map(b=>b.dataset.typeFilter)");
+   assert.deepEqual(typeFilters,['all','capture','text','web'],'type filters offered');
+   await js(win,"document.querySelector('[data-type-filter=web]').click();true");
+   assert.equal(await js(win,"document.querySelectorAll('.record').length"),0,'the web filter hides a plain text record');
+   await js(win,"document.querySelector('[data-type-filter=all]').click();true");
+   assert.ok(await js(win,"Boolean(document.querySelector('.record .record-star'))"),'list rows expose a star toggle');
+   await js(win,"document.querySelector('.record .record-star').click();true");
+   await waitFor(()=>history.get(record.id).favorite===false,'list star unfavorites');
+   await waitFor(()=>js(win,"document.querySelector('.detail-actions button').textContent===window.FloatAskI18n.t('history.favorite')"),'detail star state syncs from the list');
+   await js(win,"document.querySelector('.detail-actions button').click();true");
+   await waitFor(()=>history.get(record.id).favorite===true,'detail star refavorites');
+   assert.equal(await js(win,"document.querySelector('.record .record-star').classList.contains('on')"),true,'list star reflects the detail toggle');
+   await js(win,"document.getElementById('clearBtn').click();true");
+   assert.equal(await js(win,"document.getElementById('historyClearConfirm').hidden"),false,'clear offers an in-place confirm');
+   assert.ok((await js(win,"document.getElementById('clearScope').textContent")).includes('1'),'clear shows the impact scope first');
+   await js(win,"document.getElementById('historyClearCancel').click();true");
+   assert.equal(await js(win,"document.getElementById('clearScope').hidden"),true,'cancel dismisses the confirm');
+   assert.equal(history.list().length,1,'cancel keeps every record');
    await js(win,`window.floatask.resumeHistory(${JSON.stringify(record.id)})`);
    const result=await waitFor(()=>page('result'),'result');
    await waitFor(()=>js(result,"document.querySelectorAll('.message.assistant').length===1"),'restored messages');

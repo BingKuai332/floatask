@@ -111,3 +111,18 @@ test('store persists the onboarding step and rejects out-of-range values', () =>
  store.save({onboardingStep:0});assert.equal(store.getConfig().onboardingStep,3,'zero step keeps the current value');
  assert.equal(store.publicSettings().onboardingStep,3,'onboarding step exposed in public settings');
 }));
+test('store persists the history retention window and rejects invalid values', () => temporary(directory => {
+ const filename=path.resolve(__dirname,'../src/main/store.js');
+ const actualRequire=createRequire(filename);
+ const electron={app:{getPath:()=>directory,getLocale:()=>'en'},safeStorage:{isEncryptionAvailable:()=>true,encryptString:s=>Buffer.from(s),decryptString:b=>b.toString()}};
+ const context={require:name=>name==='electron'?electron:actualRequire(name),module:{exports:{}},console};
+ vm.runInNewContext(fs.readFileSync(filename,'utf8'),context);const store=context.module.exports;
+ assert.equal(store.getConfig().historyRetentionDays,90,'default retention is 90 days');
+ store.save({historyRetentionDays:30});assert.equal(store.getConfig().historyRetentionDays,30);
+ store.save({historyRetentionDays:0});assert.equal(store.getConfig().historyRetentionDays,0,'zero means keep forever');
+ store.save({historyRetentionDays:30});
+ store.save({historyRetentionDays:999});assert.equal(store.getConfig().historyRetentionDays,365,'out-of-range values clamp like other numeric settings');
+ store.save({historyRetentionDays:-5});assert.equal(store.getConfig().historyRetentionDays,0,'negative values clamp to keep forever');
+ store.save({historyRetentionDays:30});
+ assert.equal(store.publicSettings().historyRetentionDays,30,'retention exposed in public settings');
+}));

@@ -1922,6 +1922,8 @@ function applySettings() {
   const config = store.getConfig();
   registerHotkey(config.hotkey);
   applyLoginItem(config);
+  // Retention only ever drops non-favorite records past the window.
+  try { history.purge(config.historyRetentionDays); } catch { /* retention is best-effort */ }
   if (config.showBubble) refreshBubble();
   else if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
   refreshTray();

@@ -158,6 +158,8 @@ function list() {
       favorite: Boolean(r.favorite),
       title: r.title || '',
       source: r.source,
+      hasImage: Boolean(r.hasImage),
+      sourceCount: Array.isArray(r.sources) ? r.sources.length : 0,
       windowTitle: r.windowTitle || '',
       messageCount: r.messageCount || (r.messages || []).length,
       snippet: String(
@@ -199,4 +201,21 @@ function clear(keepFavorites = true) {
   return before - records.length;
 }
 
-module.exports = { load, record, list, get, setFavorite, remove, clear, historyPath };
+/**
+ * Retention: drop non-favorite records whose last update is older than the
+ * given window. Favorites are never purged; a zero/negative window disables
+ * purging. Returns how many records were removed.
+ */
+function purge(retentionDays) {
+  load();
+  const days = Number(retentionDays);
+  if (!Number.isFinite(days) || days <= 0) return 0;
+  const cutoff = Date.now() - days * 86400000;
+  const before = records.length;
+  records = records.filter((r) => r.favorite || Number(r.updatedAt) >= cutoff);
+  const removed = before - records.length;
+  if (removed > 0) persist();
+  return removed;
+}
+
+module.exports = { load, record, list, get, setFavorite, remove, clear, purge, historyPath };

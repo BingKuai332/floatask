@@ -56,3 +56,15 @@ test('all favorites survive capacity and write failures surface to callers',()=>
   assert.throws(()=>history.setFavorite('h0',false));
  });
 });
+
+test('history retention purges only expired non-favorite records', () => withHistory([
+ {id:'old-plain',createdAt:Date.now()-40*86400000,updatedAt:Date.now()-40*86400000,favorite:false,title:'old',messages:[{role:'user',content:'a'}]},
+ {id:'old-fav',createdAt:Date.now()-60*86400000,updatedAt:Date.now()-60*86400000,favorite:true,title:'old fav',messages:[{role:'user',content:'b'}]},
+ {id:'fresh',createdAt:Date.now()-86400000,updatedAt:Date.now()-86400000,favorite:false,title:'fresh',messages:[{role:'user',content:'c'}]}
+],(history)=>{
+ assert.equal(history.purge(30),1,'one expired non-favorite removed');
+ const ids=[...history.list().map(r=>r.id)].sort();
+ assert.deepEqual(ids,['fresh','old-fav'],'favorites and recent records survive');
+ assert.equal(history.purge(0),0,'zero retention disables purging');
+ assert.equal(history.purge(365),0,'nothing expires within a year');
+}));
