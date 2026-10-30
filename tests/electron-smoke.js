@@ -35,6 +35,16 @@ const server = http.createServer((req,res) => {
  let body='';req.on('data',chunk=>body+=chunk);req.on('end',()=>{
   const payload=JSON.parse(body); calls.push(payload); requestPaths.push(req.url);
   if (rejectImages && payload.messages.some(message => Array.isArray(message.content))) { res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:{message:'images not supported'}}));return; }
+  if (payload.messages.at(-1).content==='Long stream test') {
+   res.writeHead(200, {'Content-Type':'text/event-stream'});
+   let n=0;
+   const timer=setInterval(()=>{
+    n++;
+    res.write('data: '+JSON.stringify({choices:[{delta:{content:'第'+n+'段 这一段内容足够长用来撑开回答视口的高度。'}}]})+'\n\n');
+    if(n>=50){clearInterval(timer);res.end('data: [DONE]\n\n');}
+   },25);
+   return;
+  }
   if (!payload.stream) { res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify({model:payload.model,choices:[{message:{content:'OK'}}]})); return; }
   res.writeHead(200, {'Content-Type':'text/event-stream'});
   res.write('data: '+JSON.stringify({choices:[{delta:{content:'A useful explanation with enough text to save.'}}]})+'\n\n');
@@ -198,6 +208,60 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(calls.at(-1).model,'followup-reasoning');
    assert(calls.at(-1).messages.some(m=>m.content.includes('rare searchable needle')),'restored context sent');
    assert(calls.at(-1).messages[0].content.startsWith('You are'),'English model prompt');
+   // Result window structure (task 4): compact 480x360, pinned sections, follow behavior.
+   assert.deepEqual(result.getSize(),[480,360],'result window opens in the 480x360 compact state');
+   assert.equal(await js(result,"document.body.dataset.mode"),'compact','compact mode is pinned on the document');
+   await screenshot(result,'task4-compact-dark');
+   assert.ok(['compact','standard','relaxed'].includes(await js(result,"document.documentElement.dataset.density")),'reading density attribute is set');
+   assert.equal(await js(result,"document.querySelector('.scan-line')"),null,'scan-line decoration removed');
+   const isolation=await js(result,`(() => {
+    const doc=document.scrollingElement;
+    return {docScroll:doc.scrollHeight-doc.clientHeight,messagesScroll:document.getElementById('messages').scrollHeight-document.getElementById('messages').clientHeight};
+   })()`);
+   assert.equal(isolation.docScroll,0,'the window itself never scrolls');
+   const codeScroll=await js(result,`(() => {
+    const probe=document.createElement('div');
+    probe.className='md-body';
+    probe.innerHTML='<pre><code>const x="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"</code></pre>';
+    document.getElementById('messages').appendChild(probe);
+    const style=getComputedStyle(probe.querySelector('pre'));
+    const value=style.overflowX;
+    probe.remove();
+    return value;
+   })()`);
+   assert.equal(codeScroll,'auto','code blocks scroll horizontally inside the viewport');
+   await js(result,"document.getElementById('expandBtn').click()");
+   assert.equal(await js(result,"document.body.dataset.mode"),'expanded','expand switches the window mode');
+   assert.deepEqual(result.getSize(),[560,640],'expanded state resizes the window');
+   assert.equal(require('../src/main/store').getConfig().resultExpanded,true,'expanded state persists');
+   await screenshot(result,'task4-expanded-dark');
+   await js(result,"document.getElementById('expandBtn').click()");
+   assert.deepEqual(result.getSize(),[480,360],'collapse restores the compact size');
+   assert.equal(require('../src/main/store').getConfig().resultExpanded,false,'compact state persists');
+   // Streaming follow: pinned at the bottom, pauses when reading up, resumes via the follow button.
+   await js(result,"document.getElementById('liveRegion').textContent=''");
+   await js(result,"document.getElementById('questionInput').value='Long stream test';document.getElementById('sendBtn').click()");
+   await waitFor(()=>js(result,"document.getElementById('messages').scrollHeight>document.getElementById('messages').clientHeight*1.5"),'long stream overflows the viewport');
+   const midLive=await js(result,"document.getElementById('liveRegion').textContent");
+   assert.equal(midLive,'','streaming tokens are not announced');
+   await js(result,"const m=document.getElementById('messages');m.scrollTop=0;m.dispatchEvent(new Event('scroll'))");
+   await waitFor(()=>js(result,"!document.getElementById('followBtn').hidden"),'follow button appears while reading up');
+   const pinnedTop=await js(result,"document.getElementById('messages').scrollTop");
+   await pause(300);
+   assert.ok(await js(result,"document.getElementById('messages').scrollTop")<60,'streaming pauses follow while reading up');
+   assert.equal(await js(result,"document.getElementById('followBtn').hidden"),false,'follow stays offered while reading up');
+   await js(result,"document.getElementById('followBtn').click()");
+   await waitFor(()=>js(result,"(()=>{const m=document.getElementById('messages');return m.scrollHeight-m.scrollTop-m.clientHeight<8})()"),'follow button returns to the bottom');
+   assert.equal(await js(result,"document.getElementById('followBtn').hidden"),true,'follow button hides at the bottom');
+   await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='Done'"),'long stream completes');
+   await waitFor(()=>js(result,"document.getElementById('liveRegion').textContent.length>0"),'completion announced once');
+   const announcement=await js(result,"document.getElementById('liveRegion').textContent");
+   assert.equal(announcement,await js(result,"window.FloatAskI18n.t('result.announceDone')"),'live region announces completion, not tokens');
+   await js(settings,"window.floatask.saveSettings({theme:'light'})");
+   await waitFor(()=>js(result,"document.documentElement.dataset.theme==='light'"),'result follows light theme');
+   await screenshot(result,'task4-compact-light');
+   await js(settings,"window.floatask.saveSettings({theme:'dark'})");
+   await waitFor(()=>js(result,"document.documentElement.dataset.theme==='dark'"),'result returns to dark theme');
    await js(result,"window.floatask.setLanguage('zh-CN')");
    await waitFor(()=>js(result,"document.documentElement.lang==='zh-CN'"),'switch back');
    assert.equal(await js(result,"document.getElementById('sendBtn').title"),'发送');
@@ -217,7 +281,7 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,'window.floatask.saveSettings({saveHistory:false})');
    await js(result,"window.floatask.setWebEnabled(false);document.getElementById('questionInput').value='Private followup';document.getElementById('sendBtn').click()");
    await waitFor(()=>calls.length>before,'private request'); await pause(350);
-   assert.equal(history.get(record.id).messages.length,4,'disabled history stays unchanged');
+   assert.equal(history.get(record.id).messages.length,6,'disabled history stays unchanged (4 + long-stream exchange)');
    // Reload storage from disk; favorites and text survive a process restart.
    delete require.cache[require.resolve('../src/main/history')];
    assert.equal(require('../src/main/history').get(record.id).favorite,true);

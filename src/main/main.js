@@ -940,14 +940,18 @@ async function searchTranslation(rawText) {
 /* Result window                                                       */
 /* ------------------------------------------------------------------ */
 
+const RESULT_COMPACT_SIZE = [480, 360];
+const RESULT_EXPANDED_SIZE = [560, 640];
+
 async function ensureResultWindow() {
   if (resultWin && !resultWin.isDestroyed()) return resultWin;
 
+  const [width, height] = store.getConfig().resultExpanded ? RESULT_EXPANDED_SIZE : RESULT_COMPACT_SIZE;
   resultWin = new BrowserWindow({
-    width: 460,
-    height: 650,
-    minWidth: 380,
-    minHeight: 440,
+    width,
+    height,
+    minWidth: 400,
+    minHeight: 320,
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
@@ -988,8 +992,9 @@ async function ensureResultWindow() {
 
 function positionResult(screenRect, display) {
   const area = display.workArea;
-  const width = Math.min(460, area.width - 24);
-  const height = Math.min(650, area.height - 24);
+  const [modeWidth, modeHeight] = store.getConfig().resultExpanded ? RESULT_EXPANDED_SIZE : RESULT_COMPACT_SIZE;
+  const width = Math.min(modeWidth, area.width - 24);
+  const height = Math.min(modeHeight, area.height - 24);
   let x = screenRect.x + screenRect.width + 14;
   if (x + width > area.x + area.width - 8) x = screenRect.x - width - 14;
   if (x < area.x + 8) x = area.x + Math.round((area.width - width) / 2);
@@ -1915,6 +1920,18 @@ ipcMain.on('selection:finish', (_event, rect) => handleSelectionRect(rect));
 ipcMain.on('selection:cancel', () => cancelSelection());
 
 ipcMain.on('result:close', () => hideResult());
+ipcMain.on('result:toggle-expand', () => {
+  const expanded = !store.getConfig().resultExpanded;
+  store.save({ resultExpanded: expanded });
+  applyResultSize();
+});
+function applyResultSize() {
+  if (!resultWin || resultWin.isDestroyed()) return;
+  const expanded = store.getConfig().resultExpanded;
+  const [width, height] = expanded ? RESULT_EXPANDED_SIZE : RESULT_COMPACT_SIZE;
+  resultWin.setSize(width, height);
+  resultWin.webContents.send('result:mode', { expanded });
+}
 ipcMain.on('result:pin', (_event, value) => {
   pinned = Boolean(value);
   if (resultWin && !resultWin.isDestroyed()) resultWin.setAlwaysOnTop(pinned, 'screen-saver');

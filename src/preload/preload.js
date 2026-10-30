@@ -34,6 +34,8 @@ contextBridge.exposeInMainWorld('floatask', {
   setWebEnabled: (enabled) => ipcRenderer.send('session:web', Boolean(enabled)),
   closeResult: () => ipcRenderer.send('result:close'),
   setPinned: (pinned) => ipcRenderer.send('result:pin', Boolean(pinned)),
+  toggleResultExpand: () => ipcRenderer.send('result:toggle-expand'),
+  onResultMode: (cb) => subscribe('result:mode', cb),
 
   setHotkeyRecording: (enabled) => ipcRenderer.invoke('hotkey:recording', Boolean(enabled)),
   testModelProfile: (task, patch) => ipcRenderer.invoke('settings:test-profile', { task, patch }),

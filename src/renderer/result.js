@@ -34,6 +34,9 @@ const els = {
   sendBtn: document.getElementById('sendBtn'),
   visionHint: document.getElementById('visionHint'),
   toast: document.getElementById('toast'),
+  followBtn: document.getElementById('followBtn'),
+  liveRegion: document.getElementById('liveRegion'),
+  expandBtn: document.getElementById('expandBtn'),
   lightbox: document.getElementById('lightbox'),
   lightboxImg: document.getElementById('lightboxImg')
 };
@@ -47,6 +50,7 @@ function applyReadingFont(font) {
   const root = document.documentElement;
   root.style.setProperty('--reading-size', `${size}px`);
   root.style.setProperty('--reading-line', String(line));
+  root.dataset.density = line < 1.6 ? 'compact' : (line > 1.95 ? 'relaxed' : 'standard');
 }
 
 const state = {
@@ -82,7 +86,13 @@ function truncate(text, length = 56) {
   return value.length > length ? value.slice(0, length - 1) + '…' : value;
 }
 
+function announceStatus(kind) {
+  const key = { done: 'result.announceDone', error: 'result.announceError', stopped: 'result.announceStopped' }[kind];
+  if (key) els.liveRegion.textContent = tt(key);
+}
+
 function setStatus(kind, text) {
+  if (state.statusKind !== kind) announceStatus(kind);
   els.statusPill.className = `status-pill ${kind}`;
   els.statusText.textContent = text;
   state.statusKind = kind;
@@ -98,12 +108,42 @@ function toast(message, error = false) {
   }, 2800);
 }
 
-function scrollToBottom(force = false) {
+// Stream follow: only chase the tail while the reader is at the bottom.
+// Scrolling up pauses following and surfaces the "back to bottom" action.
+const follow = { pinned: true };
+
+function atBottom() {
   const distance = els.messages.scrollHeight - els.messages.scrollTop - els.messages.clientHeight;
-  if (force || distance < 110) {
+  return distance < 24;
+}
+
+function updateFollowButton() {
+  els.followBtn.hidden = follow.pinned;
+}
+
+function scrollToBottom(force = false) {
+  if (force) follow.pinned = true;
+  if (force || follow.pinned) {
     els.messages.scrollTop = els.messages.scrollHeight;
   }
+  updateFollowButton();
 }
+
+els.messages.addEventListener('scroll', () => {
+  if (atBottom() && !follow.pinned) {
+    follow.pinned = true;
+    updateFollowButton();
+  } else if (!atBottom() && follow.pinned) {
+    follow.pinned = false;
+    updateFollowButton();
+  }
+});
+
+els.followBtn.addEventListener('click', () => {
+  follow.pinned = true;
+  els.messages.scrollTop = els.messages.scrollHeight;
+  updateFollowButton();
+});
 
 function autoResize() {
   els.questionInput.style.height = 'auto';
@@ -685,6 +725,13 @@ els.pinBtn.addEventListener('click', () => {
 });
 
 els.closeBtn.addEventListener('click', () => api.closeResult());
+els.expandBtn.addEventListener('click', () => api.toggleResultExpand());
+function syncResultMode(expanded) {
+  document.body.dataset.mode = expanded ? 'expanded' : 'compact';
+  els.expandBtn.title = tt(expanded ? 'result.collapse' : 'result.expand');
+}
+api.onResultMode(payload => syncResultMode(Boolean(payload && payload.expanded)));
+api.getSettings().then(settings => syncResultMode(Boolean(settings && settings.resultExpanded))).catch(() => {});
 els.newSelectBtn.addEventListener('click', () => api.startSelection());
 document.getElementById('historyBtn').addEventListener('click', () => api.openHistory());
 

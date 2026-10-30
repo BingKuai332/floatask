@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head>
+<!DOCTYPE html><html lang="zh-CN" data-density="standard"><head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,6 +40,11 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
               <circle cx="12" cy="12" r="3.2"></circle>
               <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.36a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.64 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.64 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.64a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.36 9v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"></path>
+            </svg>
+          </button>
+          <button id="expandBtn" class="icon-btn" title="展开阅读" data-i18n-title="result.expand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"></path>
             </svg>
           </button>
           <button id="closeBtn" class="icon-btn close" title="关闭" data-i18n-title="common.close">
@@ -85,7 +90,6 @@
 
       <main id="messages" class="messages">
         <div id="loadingCard" class="loading-card">
-          <div class="scan-line"></div>
           <div class="loading-head">
             <span class="spinner"></span>
             <span id="loadingText">正在读取屏幕…</span>
@@ -143,6 +147,13 @@
       </footer>
 
       <div id="toast" class="toast"></div>
+      <button id="followBtn" class="follow-btn" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M6 13l6 6 6-6"></path>
+        </svg>
+        <span data-i18n="result.followBottom">回到底部</span>
+      </button>
+      <div id="liveRegion" class="visually-hidden" aria-live="polite" role="status"></div>
       <div id="lightbox" class="lightbox">
         <img id="lightboxImg" alt="框选截图" data-i18n-alt="result.screenshotAlt">
       </div>

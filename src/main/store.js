@@ -43,7 +43,8 @@ const DEFAULTS = {
   bubblePosition: null,
   autoLaunch: false,
   onboarded: false,
-  theme: 'system'
+  theme: 'system',
+  resultExpanded: false
 };
 
 let configPath = null;
@@ -117,7 +118,7 @@ function sanitize(patch, current) {
   if (typeof patch.maxTokens !== 'undefined') {
     next.maxTokens = Math.round(clampNumber(patch.maxTokens, current.maxTokens, 128, 8000));
   }
-  for (const field of ['vision', 'webEnabled', 'showBubble', 'autoLaunch', 'onboarded', 'saveHistory', 'autoCheckUpdates']) {
+  for (const field of ['vision', 'webEnabled', 'showBubble', 'autoLaunch', 'onboarded', 'saveHistory', 'autoCheckUpdates', 'resultExpanded']) {
     if (typeof patch[field] === 'boolean') next[field] = patch[field];
   }
   if (patch.bubblePosition === null) {
@@ -223,6 +224,7 @@ function publicSettings() {
     autoLaunch: c.autoLaunch,
     onboarded: c.onboarded,
     theme: c.theme,
+    resultExpanded: c.resultExpanded,
     hasApiKey: Boolean(c.apiKey),
     presets: Object.values(PRESETS).map(({ id, label, baseUrl, model, vision, keyUrl, note }) => ({
       id, label, baseUrl, model, vision, keyUrl, note
