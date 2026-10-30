@@ -389,7 +389,23 @@ server.listen(0,'127.0.0.1',()=>{
    await js(bubble,'window.floatask.startSelection()');
    const selection=await waitFor(()=>page('selection'),'selection');
    await waitFor(()=>js(selection,"document.documentElement.lang==='en' && !/[\u4e00-\u9fff]/.test(document.getElementById('hintText').textContent)"),'selection translated');
-   await js(selection,'window.floatask.cancelSelection()');
+   // Selection overlay (task 7): restrained mask, viewfinder corners, size hint, Esc.
+   const overlayMetrics=await js(selection,`(() => {
+    const stage=document.getElementById('stage');
+    const box=document.getElementById('box');
+    return {
+      mask:getComputedStyle(stage).backgroundColor,
+      glow:getComputedStyle(box).boxShadow,
+      corners:document.querySelectorAll('#box .corner').length
+    };
+   })()`);
+   assert.equal(overlayMetrics.mask,'rgba(6, 8, 11, 0.72)','mask uses the overlay token');
+   assert.equal(overlayMetrics.glow,'none','selection box carries no glow');
+   assert.equal(overlayMetrics.corners,4,'viewfinder corners present');
+   await js(selection,"const s=document.getElementById('stage');s.dispatchEvent(new PointerEvent('pointerdown',{clientX:120,clientY:120,button:0,bubbles:true}));s.dispatchEvent(new PointerEvent('pointermove',{clientX:320,clientY:220,bubbles:true}));true");
+   assert.equal(await js(selection,"document.getElementById('size').textContent"),'200 × 100','size hint follows the drag');
+   await js(selection,"window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
+   await waitFor(()=>!page('selection'),'Escape closes the overlay');
    assert.deepEqual(errors,[],'no renderer errors');
    console.log('PASS: real Electron pages, bilingual UI, shortcut recording/conflict, per-task routing, profile testing, screenshot routing/fallback, update UI, history/privacy');
    app.exit(0);

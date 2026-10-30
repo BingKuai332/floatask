@@ -5,8 +5,6 @@ const box = document.getElementById('box');
 const sizeLabel = document.getElementById('size');
 const tip = document.getElementById('tip');
 const hintText = document.getElementById('hintText');
-const crosshairX = document.getElementById('crosshairX');
-const crosshairY = document.getElementById('crosshairY');
 const flash = document.getElementById('flash');
 const api = window.floatask;
 const tt = (key, params) => window.FloatAskI18n.t(key, params);
@@ -58,8 +56,6 @@ function placeTip(clientX, clientY) {
 }
 
 function updateCursor(clientX, clientY) {
-  crosshairX.style.top = `${clientY}px`;
-  crosshairY.style.left = `${clientX}px`;
   stage.classList.add('hovering');
   placeTip(clientX, clientY);
 }
@@ -67,8 +63,10 @@ function updateCursor(clientX, clientY) {
 stage.addEventListener('pointermove', (event) => {
   const x = Math.min(window.innerWidth, Math.max(0, event.clientX));
   const y = Math.min(window.innerHeight, Math.max(0, event.clientY));
-  updateCursor(x, y);
-  if (!dragging || !start) return;
+  if (!dragging || !start) {
+    updateCursor(x, y);
+    return;
+  }
   rect = normalize(start.x, start.y, x, y);
   setBox(rect);
   tip.textContent = tt('selection.release');
