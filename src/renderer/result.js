@@ -875,10 +875,13 @@ document.addEventListener('click', (event) => {
 });
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && els.lightbox.classList.contains('open')) {
+  if (event.key !== 'Escape') return;
+  if (els.lightbox.classList.contains('open')) {
     els.lightbox.classList.remove('open');
     els.lightboxImg.removeAttribute('src');
+    return;
   }
+  api.closeResult();
 });
 
 function ensureAddShotButton() {
@@ -923,7 +926,7 @@ api.onResultEvent((payload) => {
       setPreview(payload.preview || state.preview);
       if (payload.text !== undefined) setOcr(payload.text, '');
       updateContext();
-      toast(`已添加第 ${state.shotCount} 张截图`);
+      toast(tt('result.shotAdded',{n:state.shotCount}));
       break;
     case 'context':
       state.windowInfo = payload.windowInfo || {};

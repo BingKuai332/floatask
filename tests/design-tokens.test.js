@@ -128,3 +128,12 @@ test('bundled fonts are declared locally for both typefaces', () => {
     assert.ok(!block.includes('http'), `${family} never loads from a CDN`);
   }
 });
+
+test('digit-suffixed roles emit dashed variable names', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  for (const variable of ['--fa-surface-2', '--fa-surface-3', '--fa-accent-soft', '--fa-red-soft', '--fa-primary-button', '--fa-on-primary']) {
+    assert.ok(css.includes(`${variable}:`), `${variable} defined`);
+  }
+  assert.ok(!css.includes('--fasurface2') && !/--fa-surface2\b/.test(css), 'no digit-suffixed variable names');
+});

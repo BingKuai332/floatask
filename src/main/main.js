@@ -1651,10 +1651,9 @@ function cleanupCustomFonts() {
 
 function broadcastFont() {
   const payload = fontPayload();
-  if (resultWin && !resultWin.isDestroyed()) resultWin.webContents.send('font:update', payload);
-  if (settingsWin && !settingsWin.isDestroyed()) settingsWin.webContents.send('font:update', payload);
-  if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.webContents.send('font:update', payload);
-  if (historyWin && !historyWin.isDestroyed()) historyWin.webContents.send('font:update', payload);
+  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, translateWin]) {
+    if (win && !win.isDestroyed()) win.webContents.send('font:update', payload);
+  }
 }
 
 function resolvedTheme() {
@@ -1667,7 +1666,7 @@ function broadcastTheme() {
   const source = ['light', 'dark'].includes(preference) ? preference : 'system';
   if (nativeTheme.themeSource !== source) nativeTheme.themeSource = source;
   const payload = { theme: resolvedTheme(), preference };
-  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin]) {
+  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin, translateWin]) {
     if (win && !win.isDestroyed()) win.webContents.send('theme:update', payload);
   }
 }
@@ -1675,7 +1674,7 @@ function broadcastTheme() {
 /** Push the current locale to every live renderer and refresh native chrome. */
 function broadcastLanguage() {  const langCode = store.getConfig().language;
   const payload = { language: langCode };
-  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin]) {
+  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin, translateWin]) {
     if (win && !win.isDestroyed()) win.webContents.send('language:update', payload);
   }
   refreshTray();

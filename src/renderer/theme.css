@@ -70,8 +70,8 @@
   color-scheme: dark;
   --fa-bg: #0C0E12;
   --fa-surface: #171A20;
-  --fa-surface2: #1D2128;
-  --fa-surface3: #242931;
+  --fa-surface-2: #1D2128;
+  --fa-surface-3: #242931;
   --fa-divider: #2A3039;
   --fa-text: #E8EBF0;
   --fa-body: #CDD3DC;
@@ -113,8 +113,8 @@
   color-scheme: light;
   --fa-bg: #E7E7DF;
   --fa-surface: #F4F3ED;
-  --fa-surface2: #FAF9F4;
-  --fa-surface3: #E9EBE4;
+  --fa-surface-2: #FAF9F4;
+  --fa-surface-3: #E9EBE4;
   --fa-divider: #D6D9D0;
   --fa-text: #20242B;
   --fa-body: #3F4650;

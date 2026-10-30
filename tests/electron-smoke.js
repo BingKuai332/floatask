@@ -104,6 +104,44 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(settings,"document.getElementById('onboarding') && !document.getElementById('onboarding').hidden && document.getElementById('onboarding').dataset.step==='2'"),'wizard resumes at the unfinished step');
    await js(settings,"document.getElementById('obLater').click();true");
    assert.equal(await js(settings,"document.getElementById('onboarding').hidden"),true,'wizard stays dismissed for the remaining flows');
+   // Extension fixture (task 13): one more provider and one more settings entry
+   // must not break geometry, keyboard order or either theme.
+   await js(settings,`(() => {
+    const grid=document.getElementById('providerGrid');
+    const card=document.createElement('button'); card.className='provider-card'; card.id='fixtureProvider';
+    card.innerHTML='<b>Fixture Provider</b><small>fixture.example.com</small>';
+    grid.appendChild(card);
+    const nav=document.querySelector('.settings-nav');
+    const item=document.createElement('button'); item.className='settings-nav-item'; item.id='fixtureNav'; item.dataset.panel='fixture'; item.textContent='Fixture';
+    nav.appendChild(item);
+    const section=document.createElement('section'); section.className='section'; section.id='fixtureSection'; section.dataset.panelSection='fixture';
+    section.innerHTML='<div class="section-head"><div><h2>Fixture</h2></div></div><p>fixture body</p>';
+    document.querySelector('.scroll-body').appendChild(section);
+    document.getElementById('fixtureNav').addEventListener('click',()=>{
+      for(const b of document.querySelectorAll('.settings-nav-item')) b.classList.toggle('active',b.dataset.panel==='fixture');
+      for(const s of document.querySelectorAll('[data-panel-section]')) s.hidden=s.dataset.panelSection!=='fixture';
+    });
+    return true;
+   })()`);
+   assert.equal(await js(settings,"document.getElementById('providerGrid').children.length"),7,'fixture provider joins the grid');
+   assert.ok(await js(settings,"document.getElementById('providerGrid').scrollWidth<=document.getElementById('providerGrid').clientWidth+1"),'the grid wraps instead of overflowing');
+   assert.ok(await js(settings,"document.getElementById('fixtureNav').tabIndex===0"),'new nav entry stays in the tab order');
+   await js(settings,"document.getElementById('fixtureNav').click();true");
+   assert.equal(await js(settings,"document.getElementById('fixtureSection').hidden"),false,'new settings entry reaches an ordered panel');
+   await js(settings,"window.floatask.saveSettings({theme:'light'})");
+   await pause(250);
+   const fixtureThemed=await js(settings,`(() => {
+    const card=getComputedStyle(document.getElementById('fixtureProvider'));
+    const nav=getComputedStyle(document.getElementById('fixtureNav'));
+    return {cardBg:card.backgroundColor, navColor:nav.color};
+   })()`);
+   assert.equal(fixtureThemed.cardBg,'rgb(250, 249, 244)','fixture card follows the light surface token');
+   assert.equal(fixtureThemed.navColor,'rgb(80, 107, 146)','the active fixture nav item uses the light accent selection color');
+   await js(settings,"window.floatask.saveSettings({theme:'dark'})");
+   await pause(250);
+   assert.equal(await js(settings,"getComputedStyle(document.getElementById('fixtureNav')).color"),'rgb(143, 166, 201)','the active fixture nav item follows the dark accent');
+   await js(settings,"document.getElementById('fixtureProvider').remove();document.getElementById('fixtureNav').remove();document.getElementById('fixtureSection').remove();document.querySelector('.settings-nav-item[data-panel=model]').click();true");
+   assert.equal(await js(settings,"document.getElementById('providerGrid').children.length"),6,'fixture data removed');
    await js(settings,'window.floatask.saveSettings({provider:'+JSON.stringify(preWizard.provider)+',baseUrl:'+JSON.stringify(preWizard.baseUrl)+',model:'+JSON.stringify(preWizard.model)+',onboardingStep:1,keepOnboarding:true})');
    assert.equal(await js(settings,"typeof window.FloatAskI18n.t"),'function');
    // Settings navigation (task 8): six fixed sections, appearance preview, unified save semantics.
@@ -460,7 +498,8 @@ server.listen(0,'127.0.0.1',()=>{
    assert(!calls.slice(beforeCaptureRace).some(call=>call.messages[0].content.includes('old-capture')),'stale capture must not start an AI request');
    await js(settings,"window.floatask.setLanguage('en')");
    await waitFor(()=>js(font,"document.getElementById('importBtn').textContent==='＋ Import font file…'"),'font translated');
-   await js(result,'window.floatask.closeResult()');
+   await js(result,"document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
+   assert.equal(result.isVisible(),false,'Escape closes the answer window at the top of its Esc hierarchy');
    await js(settings,'window.floatask.saveSettings({showBubble:true})');
    const bubble=await waitFor(()=>page('bubble'),'bubble');
    await waitFor(()=>js(bubble,"document.getElementById('askBtn').title.includes('Capture')"),'bubble translated');
