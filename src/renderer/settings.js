@@ -211,6 +211,9 @@ function populate() {
     customName: settings.customFontName
   });
 
+  populateAppearance();
+  selectPanel('model');
+
   window.FloatAskAdvanced.populate(settings, collectDraft);
   renderProviders();
   updateProviderUi(false);
@@ -247,6 +250,9 @@ function collectDraft() {
     autoLaunch: els.autoLaunch.checked,
     language: els.language.value,
     saveHistory: els.saveHistory.checked,
+    theme: appearance.theme,
+    fontSize: appearance.fontSize,
+    lineHeight: appearance.lineHeight,
     clearApiKey: pendingClearKey
   };
 }
@@ -356,7 +362,11 @@ els.saveBtn.addEventListener('click', async () => {
 
 els.openFontBtn.addEventListener('click', () => api.openFontWindow());
 els.openHistoryBtn.addEventListener('click', () => api.openHistory());
-els.cancelBtn.addEventListener('click', () => api.closeSettings());
+els.cancelBtn.addEventListener('click', () => {
+  appearance.theme = savedAppearance.theme;
+  applyAppearancePreview();
+  api.closeSettings();
+});
 els.closeBtn.addEventListener('click', () => api.closeSettings());
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && !window.FloatAskAdvanced.recording) api.closeSettings();
@@ -385,4 +395,99 @@ els.language.addEventListener('change', async () => {
   const font = await api.getFont(); updateFontDisplay(font);
   els.saveBtn.textContent = tt(settings.firstRun ? 'settings.saveBtnStart' : 'settings.saveBtn');
   els.autoLaunchHelp.textContent = tt(settings.isPackaged ? 'settings.autoLaunchHelpOn' : 'settings.autoLaunchHelpOff');
+});
+
+/* ------------------------------------------------------------------ */
+/* Six-section navigation & appearance preview (task 8)               */
+/* ------------------------------------------------------------------ */
+
+const navItems = typeof document.querySelectorAll === 'function' ? [...document.querySelectorAll('.settings-nav-item')] : [];
+const panelSections = typeof document.querySelectorAll === 'function' ? [...document.querySelectorAll('[data-panel-section]')] : [];
+let currentPanel = 'model';
+
+function selectPanel(name) {
+  currentPanel = name;
+  for (const item of navItems) {
+    const active = item.dataset.panel === name;
+    item.classList.toggle('active', active);
+    if (active) item.setAttribute('aria-current', 'page');
+    else item.removeAttribute('aria-current');
+  }
+  for (const section of panelSections) section.hidden = section.dataset.panelSection !== name;
+  const body = document.querySelector('.scroll-body');
+  if (body) body.scrollTop = 0;
+}
+for (const item of navItems) item.addEventListener('click', () => selectPanel(item.dataset.panel));
+
+/* Theme / answer size / density: live preview now, persisted on save.
+   The underlying model stays compatible: untouched values pass through. */
+const DENSITY_LINE_HEIGHT = { compact: 1.5, standard: 1.72, relaxed: 2.0 };
+const SIZE_CHOICES = [12, 14, 16];
+const appearance = { theme: 'system', fontSize: 14, lineHeight: 1.72 };
+let savedAppearance = { ...appearance };
+
+function nearestChoice(values, actual) {
+  return values.reduce((best, v) => Math.abs(v - actual) < Math.abs(best - actual) ? v : best, values[0]);
+}
+
+function setSegmented(containerId, dataAttr, value) {
+  if (typeof document.querySelectorAll !== 'function') return;
+  for (const btn of document.querySelectorAll(`#${containerId} .segmented-option`)) {
+    btn.classList.toggle('active', btn.dataset[dataAttr] === String(value));
+  }
+}
+
+function resolvePreviewTheme(value) {
+  if (value === 'light' || value === 'dark') return value;
+  try { return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  catch { return 'dark'; }
+}
+
+function applyAppearancePreview() {
+  document.documentElement.dataset.theme = resolvePreviewTheme(appearance.theme);
+  if (typeof document.getElementById !== 'function') return;
+  const preview = document.getElementById('readingPreview');
+  if (preview) {
+    const line = appearance.lineHeight;
+    preview.dataset.density = line < 1.6 ? 'compact' : (line > 1.95 ? 'relaxed' : 'standard');
+    preview.style.setProperty('--preview-size', `${appearance.fontSize}px`);
+  }
+}
+
+function populateAppearance() {
+  appearance.theme = settings.theme || 'system';
+  appearance.fontSize = Number(settings.fontSize) || 14;
+  appearance.lineHeight = Number(settings.lineHeight) || 1.72;
+  savedAppearance = { ...appearance };
+  setSegmented('themeControl', 'themeValue', appearance.theme);
+  setSegmented('sizeControl', 'sizeValue', nearestChoice(SIZE_CHOICES, appearance.fontSize));
+  const line = appearance.lineHeight;
+  setSegmented('densityControl', 'densityValue', line < 1.6 ? 'compact' : (line > 1.95 ? 'relaxed' : 'standard'));
+  applyAppearancePreview();
+}
+
+function bindSegmented(id, attr, apply) {
+  const root = typeof document.getElementById === 'function' ? document.getElementById(id) : null;
+  if (!root || typeof root.addEventListener !== 'function') return;
+  root.addEventListener('click', (event) => {
+    const btn = event.target.closest(`[data-${attr}]`);
+    if (!btn) return;
+    apply(btn);
+  });
+}
+
+bindSegmented('themeControl', 'theme-value', (btn) => {
+  appearance.theme = btn.dataset.themeValue;
+  setSegmented('themeControl', 'themeValue', appearance.theme);
+  applyAppearancePreview();
+});
+bindSegmented('sizeControl', 'size-value', (btn) => {
+  appearance.fontSize = Number(btn.dataset.sizeValue);
+  setSegmented('sizeControl', 'sizeValue', appearance.fontSize);
+  applyAppearancePreview();
+});
+bindSegmented('densityControl', 'density-value', (btn) => {
+  appearance.lineHeight = DENSITY_LINE_HEIGHT[btn.dataset.densityValue] || 1.72;
+  setSegmented('densityControl', 'densityValue', btn.dataset.densityValue);
+  applyAppearancePreview();
 });

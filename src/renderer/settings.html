@@ -24,6 +24,16 @@
         </button>
       </header>
 
+      <div class="body-row">
+      <nav class="settings-nav" aria-label="设置导航">
+        <button type="button" class="settings-nav-item active" data-panel="model" data-i18n="settings.navModel">模型服务</button>
+        <button type="button" class="settings-nav-item" data-panel="web" data-i18n="settings.navWeb">联网检索</button>
+        <button type="button" class="settings-nav-item" data-panel="general" data-i18n="settings.navGeneral">通用与快捷键</button>
+        <button type="button" class="settings-nav-item" data-panel="privacy" data-i18n="settings.navPrivacy">历史与隐私</button>
+        <button type="button" class="settings-nav-item" data-panel="appearance" data-i18n="settings.navAppearance">外观与阅读</button>
+        <button type="button" class="settings-nav-item" data-panel="updates" data-i18n="settings.navUpdates">更新与关于</button>
+      </nav>
+
       <div class="scroll-body">
         <section id="welcome" class="welcome" hidden="">
           <div class="welcome-kicker" data-i18n="settings.welcomeKicker">欢迎使用</div>
@@ -40,7 +50,7 @@
           </div>
         </section>
 
-        <section class="section">
+        <section class="section" data-panel-section="model">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.modelTitle">模型服务</h2>
@@ -94,9 +104,9 @@
             </button>
             <span id="testResult" class="test-result"></span>
           </div>
-        </section><section class="section" id="taskModelsSection"><div class="section-head"><div><h2 data-i18n="models.title"></h2><p data-i18n="models.desc"></p></div></div><div id="modelProfiles"></div></section><section class="section" id="updatesSection"><div class="section-head"><div><h2 data-i18n="update.title"></h2><p data-i18n="update.desc"></p></div></div><label class="switch-row"><span class="switch"><input id="autoCheckUpdates" type="checkbox"><i></i></span><span><b data-i18n="update.auto"></b><small data-i18n="update.autoNote"></small></span></label><div class="inline-actions"><button id="checkUpdatesBtn" class="btn" type="button" data-i18n="update.check"></button><button id="downloadUpdateBtn" class="btn" type="button" data-i18n="update.download" hidden=""></button><button id="installUpdateBtn" class="btn primary" type="button" data-i18n="update.install" hidden=""></button></div><p id="updateStatus" role="status" class="note"></p><p id="updateDevNote" class="note" data-i18n="update.devNote" hidden=""></p></section>
+        </section><section class="section" id="taskModelsSection" data-panel-section="model"><div class="section-head"><div><h2 data-i18n="models.title"></h2><p data-i18n="models.desc"></p></div></div><div id="modelProfiles"></div></section><section class="section" id="updatesSection" data-panel-section="updates"><div class="section-head"><div><h2 data-i18n="update.title"></h2><p data-i18n="update.desc"></p></div></div><label class="switch-row"><span class="switch"><input id="autoCheckUpdates" type="checkbox"><i></i></span><span><b data-i18n="update.auto"></b><small data-i18n="update.autoNote"></small></span></label><div class="inline-actions"><button id="checkUpdatesBtn" class="btn" type="button" data-i18n="update.check"></button><button id="downloadUpdateBtn" class="btn" type="button" data-i18n="update.download" hidden=""></button><button id="installUpdateBtn" class="btn primary" type="button" data-i18n="update.install" hidden=""></button></div><p id="updateStatus" role="status" class="note"></p><p id="updateDevNote" class="note" data-i18n="update.devNote" hidden=""></p></section>
 
-        <section class="section">
+        <section class="section" data-panel-section="web">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.webTitle">联网检索</h2>
@@ -136,7 +146,7 @@
           <p class="note" data-i18n="settings.webNote">联网时会把你框选的文字片段作为搜索词发送给搜索引擎。若内容涉密，请关闭联网。</p>
         </section>
 
-        <section class="section">
+        <section class="section" data-panel-section="general">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.usageTitle">使用方式</h2>
@@ -187,7 +197,7 @@
           </div>
         </section>
 
-        <section class="section">
+        <section class="section" data-panel-section="privacy">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.historyTitle">历史记录</h2>
@@ -211,7 +221,7 @@
           <p class="note" data-i18n="settings.historyNote">关闭后新的会话不再记录，已有记录仍会保留。</p>
         </section>
 
-        <section class="section">
+        <section class="section" data-panel-section="appearance">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.fontTitle">字体与阅读</h2>
@@ -228,9 +238,43 @@
             <button id="openFontBtn" class="btn" type="button" data-i18n="settings.openFontBtn">打开字体设置…</button>
           </div>
           <p class="note" data-i18n="settings.fontNote">字体列表来自 Windows 已安装字体；安装新字体后重新打开字体窗口即可看到。</p>
+
+          <div class="appearance-grid">
+            <div class="field">
+              <span class="field-label" data-i18n="theme.label">主题</span>
+              <div class="segmented" id="themeControl" role="radiogroup" aria-label="主题">
+                <button type="button" class="segmented-option" id="themeOption-system" data-theme-value="system" data-i18n="theme.system">跟随系统</button>
+                <button type="button" class="segmented-option" id="themeOption-light" data-theme-value="light" data-i18n="theme.light">朝日 · 白天</button>
+                <button type="button" class="segmented-option" id="themeOption-dark" data-theme-value="dark" data-i18n="theme.dark">近月 · 深夜</button>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label" data-i18n="settings.sizeLabel">正文字号</span>
+              <div class="segmented" id="sizeControl" aria-label="正文字号">
+                <button type="button" class="segmented-option" data-size-value="12">12</button>
+                <button type="button" class="segmented-option" data-size-value="14">14</button>
+                <button type="button" class="segmented-option" data-size-value="16">16</button>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label" data-i18n="settings.densityLabel">阅读密度</span>
+              <div class="segmented" id="densityControl" aria-label="阅读密度">
+                <button type="button" class="segmented-option" id="densityOption-compact" data-density-value="compact" data-i18n="settings.densityCompact">紧凑</button>
+                <button type="button" class="segmented-option" id="densityOption-standard" data-density-value="standard" data-i18n="settings.densityStandard">标准</button>
+                <button type="button" class="segmented-option" id="densityOption-relaxed" data-density-value="relaxed" data-i18n="settings.densityRelaxed">宽松</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="reading-preview-wrap">
+            <span class="field-label" data-i18n="settings.previewTitle">阅读预览</span>
+            <div id="readingPreview" class="reading-preview" data-density="standard">
+              <span data-i18n="settings.previewSample"><b>Transformer</b> 是一种基于自注意力机制的神经网络架构，用来处理长上下文。</span>
+            </div>
+          </div>
         </section>
 
-        <section class="section privacy">
+        <section class="section privacy" data-panel-section="privacy">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.privacyTitle">隐私说明</h2>
@@ -245,17 +289,18 @@
           </ul>
         </section>
 
-        <div class="version-line">
+        <div class="version-line" data-panel-section="updates">
           <span>浮问 FloatAsk <span id="version">0.1.0</span></span>
           <span>Windows · Electron</span>
         </div>
+      </div>
       </div>
 
       <footer class="footer">
         <div id="saveHint" class="save-hint"></div>
         <div class="footer-actions">
           <button id="cancelBtn" class="btn ghost" type="button" data-i18n="common.cancel">取消</button>
-          <button id="saveBtn" class="btn primary" type="button">保存并开始使用</button>
+          <button id="saveBtn" class="btn primary" type="button" data-i18n="settings.saveBtnStart">保存并开始使用</button>
         </div>
       </footer>
 

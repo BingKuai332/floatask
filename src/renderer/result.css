@@ -840,12 +840,6 @@ html, body {
   border: 0;
 }
 
-/* Reading density only changes rhythm, never control geometry.
-   Density factors 0.92/1.12 are implementation constants (no numeric token exists). */
-:root { --fa-density-factor: 1; }
-[data-density='compact'] { --fa-density-factor: 0.92; }
-[data-density='relaxed'] { --fa-density-factor: 1.12; }
-.md-body { line-height: calc(var(--reading-line, 1.55) * var(--fa-density-factor)); }
 
 /* OCR correction & attachment notes (task 5) */
 .ocr-actions { display: flex; align-items: center; gap: 5px; }

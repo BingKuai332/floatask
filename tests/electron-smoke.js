@@ -77,6 +77,31 @@ server.listen(0,'127.0.0.1',()=>{
    const settings=await waitFor(()=>page('settings'),'settings');
    await waitFor(()=>js(settings,"document.getElementById('providerGrid').children.length === 6"),'settings ready');
    assert.equal(await js(settings,"typeof window.FloatAskI18n.t"),'function');
+   // Settings navigation (task 8): six fixed sections, appearance preview, unified save semantics.
+   const navItems=await js(settings,"[...document.querySelectorAll('.settings-nav-item')].map(b=>b.textContent)");
+   assert.deepEqual(navItems,['模型服务','联网检索','通用与快捷键','历史与隐私','外观与阅读','更新与关于'],'six fixed nav entries in design order');
+   assert.equal(await js(settings,"document.querySelector('.settings-nav-item.active')?.dataset.panel"),'model','model section starts active');
+   await js(settings,"document.querySelector('.settings-nav-item[data-panel=appearance]').click();true");
+   const panelVisibility=await js(settings,`(() => {
+    const vis=name=>{const s=document.querySelector('[data-panel-section="'+name+'"]');return Boolean(s&&s.offsetParent!==null);};
+    return {model:vis('model'),web:vis('web'),appearance:vis('appearance')};
+   })()`);
+   assert.ok(panelVisibility.appearance,'appearance panel shows after nav click');
+   assert.ok(!panelVisibility.model && !panelVisibility.web,'other panels hide');
+   await js(settings,"document.getElementById('themeOption-light').click();true");
+   assert.equal(await js(settings,"document.documentElement.dataset.theme"),'light','theme preview applies before saving');
+   await pause(250); // theme color transition (120 ms) must settle before sampling colors
+   await js(settings,"document.getElementById('densityOption-compact').click();true");
+   assert.equal(await js(settings,"document.getElementById('readingPreview').dataset.density"),'compact','density preview applies to the reading preview');
+   const primaryCheck=await js(settings,`(() => {
+    const btn=getComputedStyle(document.getElementById('saveBtn'));
+    const token=getComputedStyle(document.documentElement).getPropertyValue('--fa-primary-button').trim();
+    return {background:btn.backgroundColor, token};
+   })()`);
+   const hexToRgb=h=>{const n=parseInt(h.slice(1),16);return 'rgb('+[(n>>16)&255,(n>>8)&255,n&255].join(', ')+')';};
+   assert.equal(primaryCheck.background,hexToRgb(primaryCheck.token),'save button uses the primary-button token');
+   await js(settings,"document.getElementById('themeOption-system').click();true");
+   await js(settings,"document.querySelector('.settings-nav-item[data-panel=model]').click();true");
    await js(settings,"document.getElementById('language').value='en';document.getElementById('language').dispatchEvent(new Event('change'))");
    await waitFor(()=>js(settings,"document.documentElement.lang==='en'"),'language switch');
    assert.equal(await js(settings,"document.querySelector('.brand-title').textContent"),'FloatAsk Settings');
@@ -402,8 +427,13 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(overlayMetrics.mask,'rgba(6, 8, 11, 0.72)','mask uses the overlay token');
    assert.equal(overlayMetrics.glow,'none','selection box carries no glow');
    assert.equal(overlayMetrics.corners,4,'viewfinder corners present');
-   await js(selection,"const s=document.getElementById('stage');s.dispatchEvent(new PointerEvent('pointerdown',{clientX:120,clientY:120,button:0,bubbles:true}));s.dispatchEvent(new PointerEvent('pointermove',{clientX:320,clientY:220,bubbles:true}));true");
-   assert.equal(await js(selection,"document.getElementById('size').textContent"),'200 × 100','size hint follows the drag');
+   const dragSize=await js(selection,`(() => {
+    const s=document.getElementById('stage');
+    s.dispatchEvent(new PointerEvent('pointerdown',{clientX:120,clientY:120,button:0,bubbles:true}));
+    s.dispatchEvent(new PointerEvent('pointermove',{clientX:320,clientY:220,bubbles:true}));
+    return document.getElementById('size').textContent;
+   })()`);
+   assert.equal(dragSize,'200 × 100','size hint follows the drag');
    await js(selection,"window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
    await waitFor(()=>!page('selection'),'Escape closes the overlay');
    assert.deepEqual(errors,[],'no renderer errors');
