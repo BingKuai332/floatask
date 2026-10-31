@@ -1,8 +1,8 @@
 # FloatAsk「朝日／近月」五十页逐页验收矩阵
 
 > 状态图例：**✅ 自动证据通过**（smoke/单测，可复跑）· **🖼 截图比对**（渲染图对照设计稿）· **🖥 实机待验**（未执行，保持未勾选）· **⚠ 差异/限制**
-> 截图路径相对仓库根：`shots/`（smoke 以 `FLOATASK_TEST_SHOTS=shots` 生成，gitignored）。
-> 更新：2026-10-31 · 基线 `d0e279f..main`（Task 13）
+> 截图路径相对仓库根：`shots/`（smoke 以 `FLOATASK_TEST_SHOTS=shots` 生成，gitignored；捕获时铺中性底色，圆角卡片不再呈现黑圈）。
+> 更新：2026-10-31（返修轮 review fixes 1–7，基线 `d0e279f..8602039`）
 
 | 页 | 验收对象 | 实现位置 | 自动证据 | 截图/实机 | 状态 |
 | --- | --- | --- | --- | --- | --- |
@@ -15,9 +15,9 @@
 | 07 | 更多菜单 | bubble.html fa-menu+focusMenu | smoke 三项/Esc/焦点返回 | — | ✅ |
 | 08 | 收放过渡 | bubble.css motion token | 减少动态=直切（CSS 测试） | — | ✅（180/80/60 逐帧未验） |
 | 09 | 紧凑答案窗 | main.js 480×360+result 紧凑态 | smoke 尺寸/模式/操作保留 | 🖼 task4-compact-dark | ✅＋🖥 |
-| 10 | 长内容与滚动 | result.css pre/table 横向滚动 | smoke overflow-x + 隔离滚动 | — | ✅（代码复制按钮未加） |
+| 10 | 长内容与滚动 | result.css pre/table 横向滚动+代码块复制 | smoke overflow-x/隔离滚动/复制按钮文案·位置·剪贴板往返 | — | ✅（复制按钮位于代码块右上角，fix 4） |
 | 11 | 流式跟随 | result.js follow 门控+回到底部 | smoke 50 段真实流式全行为 | — | ✅ |
-| 12 | 截图与 OCR 上下文 | result 上下文面板+session:correct-ocr | smoke raw/corrected/附件/确认守卫 | — | ✅ |
+| 12 | 截图与 OCR 上下文 | result 上下文面板+session:correct-ocr | smoke raw/corrected/附件；覆盖确认守卫全入口（按钮/IPC/剪贴板，拒绝+接受） | — | ✅（守卫在主进程，fix 2） |
 | 13 | 空态与恢复 | 既有错误卡/手动面板+守卫 | smoke 恢复路径回归 | — | ✅（断网/检索失败逐页截图未做） |
 | 14 | 历史与收藏 | history.* 星标同步+类型筛选 | smoke 双向同步/筛选/搜索 | — | ✅ |
 | 15 | 通用与快捷键 | settings general 面板 | smoke 录制/冲突保留旧值 | — | ✅ |
@@ -25,33 +25,33 @@
 | 17 | 历史与隐私 | settings privacy：保留期限+清除卡 | 单测 retention/purge+smoke 清除范围 | — | ✅ |
 | 18 | 外观与阅读 | settings appearance：主题/字号/密度+预览 | smoke 预览先于保存/密度 | — | ✅ |
 | 19 | 双主题系统 | theme.css 双块+theme.js | smoke 三窗广播/语义变量切换 | — | ✅ |
-| 20 | 朝日完整答案窗 | 同 01（token 自动适配） | smoke 亮色计算色 | 🖼 task4-compact-light | ✅＋🖥对比度实机 |
+| 20 | 朝日完整答案窗 | 同 01（token 自动适配） | smoke 亮色：标题栏同面透明、选中态=accent token | 🖼 task4-compact-light | ✅＋🖥对比度实机（标题栏回归已修，fix 3） |
 | 21 | 朝日模型设置 | 同 03 | smoke 夹具亮色断言 | — | ✅ |
 | 22 | 朝日历史 | 同 14（token 驱动） | smoke 亮色主题切换覆盖 | — | ✅（历史无缩略图=上游不存图，非伪造） |
 | 23 | 朝日工具栏菜单 | 同 06/07 | 单测+smoke（几何主题无关） | — | ✅ |
 | 24 | 朝日框选 | 同 04 | smoke 遮罩 token | — | ✅＋🖥浅色桌面辨识 |
-| 25 | 朝日紧凑答案窗 | 同 09 | smoke 尺寸+亮色 | 🖼 task4-compact-light | ✅ |
+| 25 | 朝日紧凑答案窗 | 同 09 | smoke 尺寸+亮色+标题栏同面 | 🖼 task4-compact-light | ✅（fix 3） |
 | 26 | 朝日流式跟随 | 同 11 | smoke 亮色下跟随 | — | ✅ |
 | 27 | 朝日异常恢复 | 同 13 | smoke 亮色错误卡颜色 | — | ✅ |
-| 28 | 朝日长内容 | 同 10 | smoke 亮色代码块 | — | ✅ |
+| 28 | 朝日长内容 | 同 10 | smoke 亮色代码块+复制按钮 | — | ✅（fix 4） |
 | 29 | 朝日截图上下文 | 同 12 | smoke 附件披露 | — | ✅ |
 | 30 | 朝日通用设置 | 同 15 | smoke | — | ✅ |
 | 31 | 朝日联网设置 | 同 16 | smoke | — | ✅ |
 | 32 | 朝日隐私设置 | 同 17 | smoke+单测 | — | ✅ |
 | 33 | 朝日外观阅读 | 同 18 | smoke 亮色预览 | — | ✅ |
-| 34 | 首次配置模型 | settings.html onboarding pane1 | smoke 首现/失败保留/ollama 免 Key | — | ✅ |
-| 35 | 快捷键与完成 | onboarding pane2/3 | smoke 录制委托/唯一主动作 | — | ✅ |
+| 34 | 首次配置模型 | settings.html onboarding pane1 | smoke 首现/失败保留/ollama 免 Key/输入即存/关窗 flush/已存密钥满足校验 | — | ✅（fix 1） |
+| 35 | 快捷键与完成 | onboarding pane2/3 | smoke 录制委托/唯一主动作/恢复从未完成步骤 | — | ✅（fix 1） |
 | 36 | 更新下载校验 | settings updates（上游 updater） | smoke 检查/下载禁用/安装门控 | — | ✅（dev 构建不可达下载） |
 | 37 | 更新失败恢复 | 上游 updater 错误码+i18n 文案 | updater 单测（corruption/rollback） | — | ✅（打包版走查待做） |
-| 38 | 关于与许可 | settings about 卡片+诊断 | smoke 外链/诊断边界+单测 | — | ✅ |
-| 39 | 朝日首次配置 | 同 34 | smoke（token 驱动） | — | ✅ |
-| 40 | 朝日快捷键完成 | 同 35 | smoke | — | ✅ |
+| 38 | 关于与许可 | settings about 卡片+诊断 | smoke 外链/诊断边界+单测 | — | ✅（MiSans 完整许可原文已随包，fix 7） |
+| 39 | 朝日首次配置 | 同 34 | smoke（token 驱动+fix 1） | — | ✅ |
+| 40 | 朝日快捷键完成 | 同 35 | smoke（fix 1） | — | ✅ |
 | 41 | 朝日更新流程 | 同 36 | smoke disabled 门控 | — | ✅ |
 | 42 | 朝日更新与关于 | 同 38 | smoke | — | ✅ |
 | 43 | 多显示器与边缘 | window-geometry+display-removed | 单测 clamp/snap | — | 🖥全部实机待验 |
 | 44 | DPI 与窗口迁移 | physicalSize+capture ratio | 单测 100/125/150% | — | 🖥混合 DPI 实机待验 |
 | 45 | 键盘焦点 | controls.css :focus-visible+focusMenu | smoke 2px/2px/disabled/Esc | — | ✅＋🖥纯键盘全程 |
-| 46 | 高对比度与减少动态 | theme.css forced-colors+reduced-motion | 单测系统色映射/变量置零 | — | ✅（真实 HC 环境待验） |
+| 46 | 高对比度与减少动态 | theme.css forced-colors+reduced-motion | 单测系统色映射/变量置零/新描边 token 接管 | — | ✅（真实 HC 环境待验） |
 | 47 | 朝日多显示器 | 同 43 | 单测 | — | 🖥 |
 | 48 | 朝日 DPI | 同 44 | 单测 | — | 🖥 |
 | 49 | 朝日键盘焦点 | 同 45 | smoke 亮色焦点 | — | ✅ |
@@ -60,13 +60,27 @@
 ## 汇总
 
 - 自动证据通过：50/50 页的功能面（其中 43/44/47/48 的几何正确性由单测保证，实机行为待验）。
-- 截图比对：4 张（task4 紧凑/展开 × 深浅），结构对照设计页 1/9/25 通过。
-- 实机待验：见 `floatask-windows-ui.md` 14 项，全部保持 `[ ]`。
+- 截图比对：8 张（task4 紧凑/展开 × 深浅、settings/task-models/updates/history/result × en、font-zh 迁移对照），全部铺中性底色重生成（8602039）。
+- 实机待验：见 `floatask-windows-ui.md` 14 项，全部保持 `[ ]`——本轮仍为声明，未执行。
 - 扩展 fixture：虚构 provider+设置项注入→几何不溢出/Tab 序/双主题→移除（smoke 通过）。
+
+## 返修轮（2026-10-31，复核结论驱动）
+
+| 修复 | 内容 | 提交 |
+| --- | --- | --- |
+| fix 1 | 首次配置输入即存（防抖+关窗 flush+pagehide），已存密钥满足校验且不回显；保守快照不改写存量端点 | 9a4b089 |
+| fix 2 | OCR 覆盖确认守卫移至主进程，覆盖重新框选/Alt+Q/Alt+Shift+Q/托盘/胶囊/剪贴板解释全入口；附 Electron 45 剪贴板 thenable 兼容修复 | c3ad45b |
+| fix 3 | result.css 旧色值/微型字号/散列圆角全部 token 化；朝日标题栏同面；token v1.4.3（microText、mini/compact/media 半径、border-danger） | b8a833c、368be9f |
+| fix 4 | 代码块右上角复制按钮（第 10 页），结果窗与历史窗同享委托实现 | c73cfd6、31fc526 |
+| fix 5 | 字体导入窗口整体迁移至 graphite 系统（去 tactical terminal 层） | 41bde62、7ae2cc3 |
+| fix 6 | 组件几何常量录入 token 源（expandedSize、collapsedOuterRadius、readingDensity），主进程 design-constants 单源 | 9605e81 |
+| fix 7 | MiSans 官方许可原文（中英全文）随包附上 | 5255868 |
 
 ## 已登记差异 / 后续问题
 
-1. **font.css 残留旧色板**（约 21 处琥珀引用）：字体导入窗口未做视觉迁移——不在五十页内，属同一应用，建议后续任务清理。translate.css 已在终审修复轮全部 token 化；settings.css 同步清零。
-2. 代码块"复制"按钮未实现（第 10 页角落入口）。
-3. 历史页键盘可达性已补星标；其余实机项见验收记录。
-4. 设计页 46/50 的"系统接管配色"标识存在于设计稿与生成 CSS 注释；应用内真实高对比度由系统接管，无需应用内标识。
+1. ~~font.css 残留旧色板~~ → 已解决（fix 5，字体窗迁移完成，截图 font-zh）。
+2. ~~代码块"复制"按钮未实现~~ → 已解决（fix 4）。
+3. translate.css / settings.css 仍有零星非 token 字面量（终审 M7 备注，不影响验收）：建议下一轮统一纳入源码扫描护栏。
+4. 守卫 askRenderer 内层 20s 定时器与 15s 守卫超时并存（review Minor）：方向安全（超时=拒绝），暂留。
+5. 设计页 46/50 的"系统接管配色"标识存在于设计稿与生成 CSS 注释；应用内真实高对比度由系统接管，无需应用内标识。
+6. 设置窗主操作位于底部栏（Cancel / 保存并开始使用），设计稿（page-30 等）为右上角"保存更改"且无底栏：属既有实现决策（task 8 统一保存语义），功能等价，本轮不改版；如需贴合稿面另开任务评估改动面。
