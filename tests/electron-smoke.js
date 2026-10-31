@@ -63,10 +63,15 @@ async function screenshot(win,name) {
  if (!process.env.FLOATASK_TEST_SHOTS) return;
  await pause(300); // Wait for transitions and the compositor to paint.
  // The windows are transparent; flatten each capture onto a neutral
- // backdrop so rounded cards read instead of floating on black.
- await js(win, "document.documentElement.style.background='#4b5563';document.body.style.background='#4b5563';true");
+ // backdrop so rounded cards read instead of floating on black. RAW_SHOTS
+ // skips the injection for alpha-channel debugging.
+ if (!process.env.RAW_SHOTS) {
+  await js(win, "document.documentElement.style.background='#4b5563';document.body.style.background='#4b5563';true");
+ }
  const png=(await win.webContents.capturePage()).toPNG();
- await js(win, "document.documentElement.style.background='';document.body.style.background='';true");
+ if (!process.env.RAW_SHOTS) {
+  await js(win, "document.documentElement.style.background='';document.body.style.background='';true");
+ }
  fs.mkdirSync(process.env.FLOATASK_TEST_SHOTS,{recursive:true});
  fs.writeFileSync(path.join(process.env.FLOATASK_TEST_SHOTS,name+'.png'),png);
 }
@@ -75,7 +80,7 @@ app.on('web-contents-created', (_event,wc)=> {
  wc.on('preload-error',(_event,_path,error)=>errors.push(error.message));
 });
 server.listen(0,'127.0.0.1',()=>{
- fs.writeFileSync(path.join(data,'config.json'),JSON.stringify({language:'zh-CN',provider:'custom',baseUrl:`http://127.0.0.1:${server.address().port}/v1`,model:'mock',webEnabled:false,showBubble:false,onboarded:false,saveHistory:true}));
+ fs.writeFileSync(path.join(data,'config.json'),JSON.stringify({language:'zh-CN',provider:'custom',baseUrl:`http://127.0.0.1:${server.address().port}/v1`,model:'mock',webEnabled:false,showBubble:false,onboarded:false,saveHistory:true,hotkey:'Ctrl+Alt+Shift+F9'}));
  require('../src/main/main');
  app.whenReady().then(async()=> {
   try {
@@ -468,9 +473,54 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(titlebarProbe.cardBg,titlebarProbe.surface,'the light card face is the uniform surface token');
    assert.equal(titlebarProbe.activeColor,titlebarProbe.accent,'the pinned button follows the accent token in the light theme');
    await screenshot(settings,'settings-light');
-   // capturePage can hang on a window that has been left occluded; bring
-   // the history window forward for its capture, the flow does not depend
-   // on its z-order afterwards.
+   // Review round 3: every floating surface must follow the light theme, not
+   // just the answer window.
+   const historyLightProbe=await js(win,`(() => {
+     const shell=getComputedStyle(document.querySelector('.history-shell'));
+     const probe=document.createElement('span');
+     probe.style.background='var(--fa-surface)';
+     document.body.appendChild(probe);
+     const surface=getComputedStyle(probe).backgroundColor;
+     probe.remove();
+     return {shellBg:shell.backgroundColor,surface};
+   })()`);
+   assert.equal(historyLightProbe.shellBg,historyLightProbe.surface,'the history window face follows the light theme');
+   await js(result,"window.floatask.closeResult();true");
+   await js(settings,"window.floatask.saveSettings({showBubble:true})");
+   const bubbleLight=await waitFor(()=>page('bubble'),'bubble in light theme');
+   await pause(600);
+   const bubbleLightProbe=await js(bubbleLight,`(() => {
+     const body=getComputedStyle(document.querySelector('.bubble'));
+     const probe=document.createElement('span');
+     probe.style.background='var(--fa-surface)';
+     document.body.appendChild(probe);
+     const surface=getComputedStyle(probe).backgroundColor;
+     probe.remove();
+     return {bubbleBg:body.backgroundColor,surface,theme:document.documentElement.dataset.theme};
+   })()`);
+   console.log('BUBBLE-PROBE',JSON.stringify(bubbleLightProbe));
+   assert.equal(bubbleLightProbe.bubbleBg,bubbleLightProbe.surface,'the capsule toolbar follows the light theme');
+   await js(bubbleLight,"document.getElementById('moreBtn').click();true");
+   const menuLightProbe=await js(bubbleLight,`(() => {
+     const item=document.querySelector('#moreMenu .fa-menu-item');
+     const style=getComputedStyle(item);
+     const menu=getComputedStyle(document.getElementById('moreMenu'));
+     const probe=document.createElement('span');
+     probe.style.color='var(--fa-text)';
+     document.body.appendChild(probe);
+     const text=getComputedStyle(probe).color;
+     probe.remove();
+     return {itemColor:style.color,text,menuBg:menu.backgroundColor,visible:style.visibility!=='hidden'&&style.display!=='none'};
+   })()`);
+   assert.ok(menuLightProbe.visible,'the more menu renders items in the light theme');
+   assert.equal(menuLightProbe.itemColor,menuLightProbe.text,'menu item text uses the theme text token');
+   assert.notEqual(menuLightProbe.itemColor,menuLightProbe.menuBg,'menu item text contrasts with the menu panel');
+   await js(bubbleLight,"document.getElementById('moreMenu').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
+   await js(settings,"window.floatask.saveSettings({showBubble:false})");
+   await pause(300);
+   const restoredRecord = require('../src/main/history').list()[0];
+   await js(result,`window.floatask.resumeHistory(${JSON.stringify(restoredRecord.id)});true`);
+   await waitFor(()=>js(result,"document.querySelectorAll('.message.assistant').length>0"),'result window restored');
    win.show();
    win.focus();
    await screenshot(win,'history-light');

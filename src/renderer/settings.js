@@ -4,9 +4,7 @@ const api = window.floatask;
 
 const els = {
   closeBtn: document.getElementById('closeBtn'),
-  cancelBtn: document.getElementById('cancelBtn'),
   saveBtn: document.getElementById('saveBtn'),
-  saveHint: document.getElementById('saveHint'),
   welcome: document.getElementById('welcome'),
   welcomeHotkey: document.getElementById('welcomeHotkey'),
   getKeyLink: document.getElementById('getKeyLink'),
@@ -82,8 +80,8 @@ function showToast(message, bad = false) {
 }
 
 function setHint(text, kind = '') {
-  els.saveHint.textContent = text || '';
-  els.saveHint.className = `save-hint${kind ? ' ' + kind : ''}`;
+  // The footer is gone by design; save feedback rides the toast.
+  if (text) showToast(text, kind === 'bad');
 }
 
 function updateKeyUi() {
@@ -374,18 +372,19 @@ els.saveBtn.addEventListener('click', async () => {
 
 els.openFontBtn.addEventListener('click', () => api.openFontWindow());
 els.openHistoryBtn.addEventListener('click', () => api.openHistory());
-els.cancelBtn.addEventListener('click', () => {
+function restoreAppearancePreview() {
   appearance.theme = savedAppearance.theme;
   applyAppearancePreview();
-  api.closeSettings();
-});
+}
 els.closeBtn.addEventListener('click', () => {
   if (wizardFlush) void wizardFlush();
+  restoreAppearancePreview();
   api.closeSettings();
 });
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && !window.FloatAskAdvanced.recording) {
     if (wizardFlush) void wizardFlush();
+    restoreAppearancePreview();
     api.closeSettings();
   }
 });

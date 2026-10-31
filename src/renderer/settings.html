@@ -17,6 +17,7 @@
             <div class="brand-sub">FLOATASK · <span data-i18n="settings.subtitle">屏幕理解助手</span></div>
           </div>
         </div>
+        <button id="saveBtn" class="btn primary no-drag" type="button" data-i18n="settings.saveBtn">保存更改</button>
         <button id="closeBtn" class="icon-btn no-drag" data-i18n-title="common.close" title="关闭">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <path d="m6 6 12 12M18 6 6 18"></path>
@@ -281,7 +282,7 @@
           <div class="reading-preview-wrap">
             <span class="field-label" data-i18n="settings.previewTitle">阅读预览</span>
             <div id="readingPreview" class="reading-preview" data-density="standard">
-              <span data-i18n="settings.previewSample"><b>Transformer</b> 是一种基于自注意力机制的神经网络架构，用来处理长上下文。</span>
+              <span data-i18n-html="settings.previewSample"><b>Transformer</b> 是一种基于自注意力机制的神经网络架构，用来处理长上下文。</span>
             </div>
           </div>
         </section>
@@ -396,14 +397,6 @@
           <button id="obNext" class="btn primary" type="button" data-i18n="ob.next">下一步</button>
         </div>
       </div>
-
-      <footer class="footer">
-        <div id="saveHint" class="save-hint"></div>
-        <div class="footer-actions">
-          <button id="cancelBtn" class="btn ghost" type="button" data-i18n="common.cancel">取消</button>
-          <button id="saveBtn" class="btn primary" type="button" data-i18n="settings.saveBtnStart">保存并开始使用</button>
-        </div>
-      </footer>
 
       <div id="toast" class="toast"></div>
     </div>

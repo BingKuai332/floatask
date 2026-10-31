@@ -17,13 +17,30 @@
     }
   }
 
+  const CACHE_KEY = 'floatask-theme';
+
+  function cachedTheme() {
+    try { return global.localStorage ? global.localStorage.getItem(CACHE_KEY) : null; }
+    catch { return null; }
+  }
+
+  function rememberTheme(theme) {
+    try { if (global.localStorage && theme) global.localStorage.setItem(CACHE_KEY, theme); }
+    catch { /* cache is best-effort */ }
+  }
+
   function apply(theme) {
     if (!global.document || !theme) return;
     global.document.documentElement.dataset.theme = theme;
+    rememberTheme(theme);
   }
 
   async function init() {
     const api = global.floatask;
+    // Paint the last known theme synchronously so a freshly created window
+    // never flashes the opposite theme while getSettings is in flight.
+    const cached = cachedTheme();
+    if (cached) apply(cached);
     if (!api || typeof api.getSettings !== 'function') return;
     let preference = 'system';
     try {
