@@ -281,6 +281,10 @@ html, body {
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  /* Streaming re-renders innerHTML every delta; native scroll anchoring
+     fights the explicit follow gating and can yank the viewport to the
+     bottom while the user is reading up. */
+  overflow-anchor: none;
   padding: 15px 14px 6px;
   scroll-behavior: smooth;
 }

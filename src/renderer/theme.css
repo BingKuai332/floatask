@@ -54,10 +54,10 @@
   --fa-focus-outline-width: 2px;
   --fa-focus-outline-offset: 2px;
   /* component geometry */
-  --fa-answer-compact-width: 480px;
-  --fa-answer-compact-height: 360px;
-  --fa-answer-expanded-width: 560px;
-  --fa-answer-expanded-height: 640px;
+  --fa-answer-compact-width: 800px;
+  --fa-answer-compact-height: 1425px;
+  --fa-answer-expanded-width: 960px;
+  --fa-answer-expanded-height: 1600px;
   --fa-settings-sidebar-width: 218px;
   --fa-toolbar-width: 328px;
   --fa-toolbar-height: 52px;

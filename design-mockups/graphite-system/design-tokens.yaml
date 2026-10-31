@@ -98,8 +98,8 @@ typography:
 components:
   answerWindow:
     radius: 16
-    compactSize: [480, 360]
-    expandedSize: [560, 640]
+    compactSize: [800, 1425]
+    expandedSize: [960, 1600]
     header: fixed
     context: fixed
     composer: fixed

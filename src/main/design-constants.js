@@ -10,8 +10,8 @@
 // test run (development), so the two cannot silently diverge.
 
 module.exports = Object.freeze({
-  ANSWER_COMPACT_SIZE: Object.freeze([480, 360]),
-  ANSWER_EXPANDED_SIZE: Object.freeze([560, 640]),
+  ANSWER_COMPACT_SIZE: Object.freeze([800, 1425]),
+  ANSWER_EXPANDED_SIZE: Object.freeze([960, 1600]),
   CAPSULE_EXPANDED: Object.freeze([328, 52]),
   CAPSULE_COLLAPSED_VERTICAL: Object.freeze([44, 64]),
   CAPSULE_COLLAPSED_HORIZONTAL: Object.freeze([64, 44]),

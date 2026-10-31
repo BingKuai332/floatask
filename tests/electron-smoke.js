@@ -1,6 +1,6 @@
 'use strict';
 // Runs the real main process, preload, IPC and renderer pages against a local AI.
-const { app, BrowserWindow, ipcMain, globalShortcut, nativeTheme, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut, nativeTheme, clipboard, screen } = require('electron');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -200,13 +200,16 @@ server.listen(0,'127.0.0.1',()=>{
    await pause(250); // theme color transition (120 ms) must settle before sampling colors
    await js(settings,"document.getElementById('densityOption-compact').click();true");
    assert.equal(await js(settings,"document.getElementById('readingPreview').dataset.density"),'compact','density preview applies to the reading preview');
-   const primaryCheck=await js(settings,`(() => {
-    const btn=getComputedStyle(document.getElementById('saveBtn'));
-    const token=getComputedStyle(document.documentElement).getPropertyValue('--fa-primary-button').trim();
-    return {background:btn.backgroundColor, token};
-   })()`);
    const hexToRgb=h=>{const n=parseInt(h.slice(1),16);return 'rgb('+[(n>>16)&255,(n>>8)&255,n&255].join(', ')+')';};
-   assert.equal(primaryCheck.background,hexToRgb(primaryCheck.token),'save button uses the primary-button token');
+   const primaryCheck=await waitFor(async () => {
+    const probe=await js(settings,`(() => {
+     const btn=getComputedStyle(document.getElementById('saveBtn'));
+     const token=getComputedStyle(document.documentElement).getPropertyValue('--fa-primary-button').trim();
+     return {background:btn.backgroundColor, token};
+    })()`);
+    return probe.background === hexToRgb(probe.token) ? probe : false;
+   },'save button uses the primary-button token');
+   assert.ok(primaryCheck,'save button uses the primary-button token');
    await js(settings,"document.getElementById('themeOption-system').click();true");
    await js(settings,"document.querySelector('.settings-nav-item[data-panel=model]').click();true");
    assert.equal(await js(settings,"document.getElementById('historyRetention')?.value"),'90','history retention defaults to 90 days');
@@ -375,8 +378,12 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(calls.at(-1).model,'followup-reasoning');
    assert(calls.at(-1).messages.some(m=>m.content.includes('rare searchable needle')),'restored context sent');
    assert(calls.at(-1).messages[0].content.startsWith('You are'),'English model prompt');
-   // Result window structure (task 4): compact 480x360, pinned sections, follow behavior.
-   assert.deepEqual(result.getSize(),[480,360],'result window opens in the 480x360 compact state');
+   // Result window structure (task 4): design compact size, pinned sections, follow behavior.
+   const resultPos = result.getPosition();
+   const resultWorkArea = screen.getDisplayNearestPoint({ x: resultPos[0], y: resultPos[1] }).workArea;
+   const compactExpect = [Math.min(800, resultWorkArea.width - 24), Math.min(1425, resultWorkArea.height - 24)];
+   const expandedExpect = [Math.min(960, resultWorkArea.width - 24), Math.min(1600, resultWorkArea.height - 24)];
+   assert.deepEqual(result.getSize(), compactExpect, 'result window opens in the design compact state');
    assert.equal(await js(result,"document.body.dataset.mode"),'compact','compact mode is pinned on the document');
    await screenshot(result,'task4-compact-dark');
    assert.ok(['compact','standard','relaxed'].includes(await js(result,"document.documentElement.dataset.density")),'reading density attribute is set');
@@ -424,22 +431,38 @@ server.listen(0,'127.0.0.1',()=>{
    await Promise.resolve(clipboard.writeText(clipBackup));
    await js(result,"(() => { const w=document.getElementById('codeCopyFixture'); if (w) w.remove(); return true; })()");
    await js(result,"document.getElementById('expandBtn').click()");
+   await pause(400);
+   console.log('EXPAND-PROBE', JSON.stringify(await js(result,"(async()=>({mode:document.body.dataset.mode,expanded:(await window.floatask.getResultState())&&true}))()")), 'size', JSON.stringify(result.getSize()));
    assert.equal(await js(result,"document.body.dataset.mode"),'expanded','expand switches the window mode');
-   assert.deepEqual(result.getSize(),[560,640],'expanded state resizes the window');
+   assert.deepEqual(result.getSize(),expandedExpect,'expanded state resizes the window');
    assert.equal(require('../src/main/store').getConfig().resultExpanded,true,'expanded state persists');
    await screenshot(result,'task4-expanded-dark');
    await js(result,"document.getElementById('expandBtn').click()");
-   assert.deepEqual(result.getSize(),[480,360],'collapse restores the compact size');
+   assert.deepEqual(result.getSize(),compactExpect,'collapse restores the compact size');
    assert.equal(require('../src/main/store').getConfig().resultExpanded,false,'compact state persists');
+   // Review round 3: manual sizes are remembered per mode and survive reopen.
+   result.setSize(720, 900);
+   await waitFor(() => {
+    const saved = require('../src/main/store').getConfig().resultSize;
+    return Boolean(saved && Array.isArray(saved.compact) && saved.compact[0] === 720 && saved.compact[1] === 900);
+   },'manual size saved');
+   await js(result,"window.floatask.closeResult();true");
+   await pause(400);
+   const resizeRecord = history.list()[0];
+   await js(result,`window.floatask.resumeHistory(${JSON.stringify(resizeRecord.id)});true`);
+   await waitFor(() => { const s = result.getSize(); return s[0] === 720 && s[1] === Math.min(900, resultWorkArea.height - 24); },'reopened result keeps the manual size');
+   require('../src/main/store').save({ resultSize: null });
    // Streaming follow: pinned at the bottom, pauses when reading up, resumes via the follow button.
    await js(result,"document.getElementById('liveRegion').textContent=''");
    await js(result,"document.getElementById('questionInput').value='Long stream test';document.getElementById('sendBtn').click()");
    await waitFor(()=>js(result,"document.getElementById('messages').scrollHeight>document.getElementById('messages').clientHeight*1.5"),'long stream overflows the viewport');
    const midLive=await js(result,"document.getElementById('liveRegion').textContent");
    assert.equal(midLive,'','streaming tokens are not announced');
-   await js(result,"const m=document.getElementById('messages');m.scrollTop=0;m.dispatchEvent(new Event('scroll'))");
+   // Programmatic scrollTop assignments fire the real scroll event on their
+   // own; dispatching a synthetic one doubles the handler run and races the
+   // live stream.
+   await js(result,"document.getElementById('messages').scrollTop=0");
    await waitFor(()=>js(result,"!document.getElementById('followBtn').hidden"),'follow button appears while reading up');
-   const pinnedTop=await js(result,"document.getElementById('messages').scrollTop");
    await pause(300);
    assert.ok(await js(result,"document.getElementById('messages').scrollTop")<60,'streaming pauses follow while reading up');
    assert.equal(await js(result,"document.getElementById('followBtn').hidden"),false,'follow stays offered while reading up');
@@ -499,7 +522,6 @@ server.listen(0,'127.0.0.1',()=>{
      probe.remove();
      return {bubbleBg:body.backgroundColor,surface,theme:document.documentElement.dataset.theme};
    })()`);
-   console.log('BUBBLE-PROBE',JSON.stringify(bubbleLightProbe));
    assert.equal(bubbleLightProbe.bubbleBg,bubbleLightProbe.surface,'the capsule toolbar follows the light theme');
    await js(bubbleLight,"document.getElementById('moreBtn').click();true");
    const menuLightProbe=await js(bubbleLight,`(() => {

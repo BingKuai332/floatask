@@ -45,6 +45,7 @@ const DEFAULTS = {
   onboarded: false,
   theme: 'system',
   resultExpanded: false,
+  resultSize: null,
   onboardingStep: 1,
   historyRetentionDays: 90
 };
@@ -134,6 +135,27 @@ function sanitize(patch, current) {
       x: Math.round(patch.bubblePosition.x),
       y: Math.round(patch.bubblePosition.y)
     };
+  }
+  if (patch.resultSize === null) {
+    next.resultSize = null;
+  } else if (patch.resultSize && typeof patch.resultSize === 'object') {
+    // Per-mode manual sizes the user dragged the answer window to; each
+    // mode falls back to the design size while its entry is missing.
+    const clampDim = (value, fallback, min, max) => {
+      const n = Math.round(Number(value));
+      return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
+    };
+    const entry = (value) => {
+      if (!Array.isArray(value) || value.length !== 2) return undefined;
+      return [clampDim(value[0], 800, 400, 4000), clampDim(value[1], 1425, 320, 4000)];
+    };
+    const compact = entry(patch.resultSize.compact);
+    const expanded = entry(patch.resultSize.expanded);
+    next.resultSize = {
+      ...(compact ? { compact } : {}),
+      ...(expanded ? { expanded } : {})
+    };
+    if (!compact && !expanded) next.resultSize = null;
   }
   if (!PRESETS[next.provider]) next.provider = 'custom';
   if (next.searchProvider === 'searxng' && next.searxngUrl) {

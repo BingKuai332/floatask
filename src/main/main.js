@@ -1075,10 +1075,64 @@ async function searchTranslation(rawText) {
 const RESULT_COMPACT_SIZE = designConstants.ANSWER_COMPACT_SIZE;
 const RESULT_EXPANDED_SIZE = designConstants.ANSWER_EXPANDED_SIZE;
 
+function resolveResultSize(mode) {
+  const custom = store.getConfig().resultSize?.[mode];
+  if (Array.isArray(custom) && custom.length === 2) return custom;
+  return mode === 'expanded' ? RESULT_EXPANDED_SIZE : RESULT_COMPACT_SIZE;
+}
+
+function resultSizeMode() {
+  return store.getConfig().resultExpanded ? 'expanded' : 'compact';
+}
+
+function clampResultSize([width, height], display) {
+  const area = (display || screen.getPrimaryDisplay()).workArea;
+  return [Math.min(width, area.width - 24), Math.min(height, area.height - 24)];
+}
+
+// Distinguishes app-driven sizing from the user dragging the window edge,
+// so manual sizes are remembered without catching our own setBounds calls.
+// Size changes are polled: the 'resize' event is not reliable enough on
+// transparent Windows windows to build persistence on.
+let resultProgrammaticResize = 0;
+let resultSizePollTimer = null;
+let resultSizePollWindow = null;
+let lastResultSize = null;
+function runResultProgrammatic(action) {
+  resultProgrammaticResize++;
+  try {
+    action();
+  } finally {
+    setTimeout(() => { resultProgrammaticResize = Math.max(0, resultProgrammaticResize - 1); }, 60);
+  }
+}
+function watchUserResultResize() {
+  if (!resultWin || resultWin.isDestroyed()) return;
+  if (resultSizePollWindow === resultWin) return;
+  resultSizePollWindow = resultWin;
+  clearInterval(resultSizePollTimer);
+  lastResultSize = resultWin.getSize().join('x');
+  resultSizePollTimer = setInterval(() => {
+    if (isQuitting || !resultWin || resultWin.isDestroyed()) return;
+    const currentSize = resultWin.getSize();
+    if (resultProgrammaticResize > 0 || !resultWin.isVisible()) {
+      lastResultSize = currentSize.join('x');
+      return;
+    }
+    const current = currentSize.join('x');
+    if (current === lastResultSize) return;
+    lastResultSize = current;
+    const previous = store.getConfig().resultSize || {};
+    store.save({ resultSize: { ...previous, [resultSizeMode()]: [widthOf(currentSize), heightOf(currentSize)] } });
+  }, 700);
+}
+function widthOf(size) { return size[0]; }
+function heightOf(size) { return size[1]; }
+
 async function ensureResultWindow() {
   if (resultWin && !resultWin.isDestroyed()) return resultWin;
 
-  const [width, height] = store.getConfig().resultExpanded ? RESULT_EXPANDED_SIZE : RESULT_COMPACT_SIZE;
+  const [width, height] = resolveResultSize(store.getConfig().resultExpanded ? 'expanded' : 'compact');
   resultWin = new BrowserWindow({
     width,
     height,
@@ -1119,7 +1173,13 @@ async function ensureResultWindow() {
     event.preventDefault();
     hideResult();
   });
-  resultWin.on('closed', () => { resultWin = null; });
+  resultWin.on('closed', () => {
+    resultWin = null;
+    resultSizePollWindow = null;
+    clearInterval(resultSizePollTimer);
+    resultSizePollTimer = null;
+  });
+  watchUserResultResize();
 
   await resultWin.loadFile(path.join(RENDERER, 'result.html'));
   return resultWin;
@@ -1127,7 +1187,7 @@ async function ensureResultWindow() {
 
 function positionResult(screenRect, display) {
   const area = display.workArea;
-  const [modeWidth, modeHeight] = store.getConfig().resultExpanded ? RESULT_EXPANDED_SIZE : RESULT_COMPACT_SIZE;
+  const [modeWidth, modeHeight] = clampResultSize(resolveResultSize(store.getConfig().resultExpanded ? 'expanded' : 'compact'), display);
   const width = Math.min(modeWidth, area.width - 24);
   const height = Math.min(modeHeight, area.height - 24);
   let x = screenRect.x + screenRect.width + 14;
@@ -1149,7 +1209,7 @@ async function showResult(payload, screenRect, display, sessionId = session?.id)
   const win = await ensureResultWindow();
   if (!win || win.isDestroyed() || !session || session.id !== sessionId) return;
   const bounds = positionResult(screenRect, display);
-  win.setBounds(bounds, false);
+  runResultProgrammatic(() => win.setBounds(bounds, false));
   resultState = payload;
   win.show();
   win.focus();
@@ -1811,6 +1871,7 @@ async function openHistory(recordId = '') {
       }
     }
     historyWin.show();
+    broadcastTheme();
     historyWin.focus();
     if (recordId) historyWin.webContents.send('history:show-record', { id: recordId });
     return;
@@ -2115,8 +2176,9 @@ ipcMain.on('result:toggle-expand', () => {
 function applyResultSize() {
   if (!resultWin || resultWin.isDestroyed()) return;
   const expanded = store.getConfig().resultExpanded;
-  const [width, height] = expanded ? RESULT_EXPANDED_SIZE : RESULT_COMPACT_SIZE;
-  resultWin.setSize(width, height);
+  const bounds = resultWin.getBounds();
+  const [width, height] = clampResultSize(resolveResultSize(expanded ? 'expanded' : 'compact'), screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y }));
+  runResultProgrammatic(() => resultWin.setSize(width, height));
   resultWin.webContents.send('result:mode', { expanded });
 }
 ipcMain.on('result:pin', (_event, value) => {

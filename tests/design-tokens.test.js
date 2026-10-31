@@ -69,8 +69,10 @@ test('registered micro sizes and dense radii emit as variables', () => {
 test('component geometry constants emit from the token source', () => {
   const { loadTokens, renderTheme } = loadBuildTheme();
   const css = renderTheme(loadTokens(tokensPath));
-  assert.match(css, /--fa-answer-expanded-width:\s*560px/);
-  assert.match(css, /--fa-answer-expanded-height:\s*640px/);
+  assert.match(css, /--fa-answer-compact-width:\s*800px/);
+  assert.match(css, /--fa-answer-compact-height:\s*1425px/);
+  assert.match(css, /--fa-answer-expanded-width:\s*960px/);
+  assert.match(css, /--fa-answer-expanded-height:\s*1600px/);
   assert.match(css, /--fa-toolbar-primary-radius:\s*21px/);
   assert.match(css, /--fa-toolbar-collapsed-radius:\s*22px/);
   assert.match(css, /\[data-density='compact'\]\s*\{\s*--fa-density-factor:\s*0\.92;?\s*\}/);

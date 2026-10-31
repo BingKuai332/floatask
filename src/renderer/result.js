@@ -138,9 +138,19 @@ function updateFollowButton() {
   els.followBtn.hidden = follow.pinned;
 }
 
+function scrollToBottomIfPinned() {
+  // A re-created answer card must not yank the viewport while the user is
+  // reading up; the follow button keeps the resume affordance instead.
+  if (follow.pinned) scrollToBottom(true);
+  else updateFollowButton();
+}
+
 function scrollToBottom(force = false) {
   if (force) follow.pinned = true;
-  if (force || follow.pinned) {
+  // The pinned flag can be stale for one event-loop turn after the user
+  // scrolls up (the scroll event has not been delivered yet); only follow
+  // when the viewport is genuinely at the bottom.
+  if (force || (follow.pinned && atBottom())) {
     els.messages.scrollTop = els.messages.scrollHeight;
   }
   updateFollowButton();
@@ -320,7 +330,7 @@ function createAssistant() {
   };
   state.current = current;
   els.messages.appendChild(message);
-  scrollToBottom(true);
+  scrollToBottomIfPinned();
   return current;
 }
 
@@ -592,7 +602,7 @@ function handleStart(mode) {
   current.message.classList.add('streaming');
   current.time.textContent = tt('result.answering');
   state.streaming = true;
-  scrollToBottom(true);
+  scrollToBottomIfPinned();
 }
 
 function handleDelta(text) {
@@ -623,7 +633,7 @@ function handleDone(payload) {
   state.current.time.dataset.i18n = 'result.justNow';
   addSourceCards(state.current.sources, payload?.sources || state.pendingSources || []);
   addActions(state.current.actions, text);
-  scrollToBottom(true);
+  scrollToBottomIfPinned();
   state.current = null;
   state.pendingSources = [];
   setTimeout(() => els.questionInput.focus(), 80);
