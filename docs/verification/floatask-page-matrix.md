@@ -60,6 +60,7 @@
 ## 汇总
 
 - 自动证据通过：50/50 页的功能面（其中 43/44/47/48 的几何正确性由单测保证，实机行为待验）。
+- 第四轮（2026-10-31 晚，实机+子代理调查驱动）：答案摘要窗默认 800×1425（token v1.4.4，用户定向调整，页 9/25 基线被取代并登记）；用户拖拽尺寸按模式记忆（resultSize）；跟随滚动真实竞态修复（仅视口确在底部才自动跟随、阅读中重建卡片不强制回底、overflow-anchor 关闭）；新建窗口推送权威主题（localStorage 同步预涂 + broadcastTheme）；胶囊菜单增长 bounds 在隐藏时还原；调查结论：用户深色胶囊/白边截图系旧构建产物（时间线+asar 证据），打包产物与单实例锁核验无误。
 - 截图比对：10 张（task4 紧凑/展开 × 深浅、settings/updates/history/result × en、settings-light、history-light、font-zh 迁移对照），全部铺中性底色生成；桌面级前后对照见 `shots/debug-desktop.png`（修复前，窗口下垫一层透明白）与 `shots/debug-desktop2.png`（修复后）。
 - 实机待验：见 `floatask-windows-ui.md` 13 项，全部保持 `[ ]`——本轮仍为声明，未执行。
 - 扩展 fixture：虚构 provider+设置项注入→几何不溢出/Tab 序/双主题→移除（smoke 通过）。
