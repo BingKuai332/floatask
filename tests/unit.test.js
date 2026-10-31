@@ -182,6 +182,21 @@ test('fenced code blocks render a copy action at the top right', () => {
  assert.ok(bare.includes('plain line'), 'bare fence content is preserved');
 });
 
+test('no production source requires the dev-only toolchain', () => {
+ // The packaged app excludes scripts/, tests/ and devDependencies (yaml),
+ // so a runtime require of any of them breaks only in the package.
+ const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+  const full = path.join(dir, entry.name);
+  return entry.isDirectory() ? walk(full) : [full];
+ });
+ const srcRoot = path.join(__dirname, '..', 'src');
+ for (const file of walk(srcRoot).filter(name => name.endsWith('.js'))) {
+  const source = fs.readFileSync(file, 'utf8');
+  const relative = path.relative(srcRoot, file);
+  assert.ok(!/require\((['"])\.\.\/\.\.\/scripts\//.test(source), `${relative} must not require scripts/ (excluded from the package)`);
+  assert.ok(!/require\((['"])yaml\1\)/.test(source), `${relative} must not require the yaml devDependency`);
+ }
+});
 test('main-process design constants mirror the token source', () => {
  // The module ships as literals (the packaged app excludes the YAML
  // toolchain), so this test is the runtime reconciliation against the
