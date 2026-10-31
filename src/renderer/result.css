@@ -365,13 +365,46 @@ html, body {
   color: var(--fa-accent);
 }
 .md-body pre {
-  margin: 8px 0;
+  margin: 0;
   padding: 10px 11px;
   overflow-x: auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+.code-block {
+  margin: 8px 0;
+  overflow: hidden;
   border-radius: var(--fa-radius-control);
   border: 1px solid var(--fa-border-control);
   background: var(--fa-surface-2);
 }
+.code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 6px 4px 11px;
+  border-bottom: 1px solid var(--fa-border-control);
+}
+.code-lang {
+  font-family: var(--fa-font-code);
+  font-size: var(--fa-size-nano);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fa-faint);
+}
+.code-copy {
+  height: 22px;
+  padding: 0 9px;
+  border-radius: var(--fa-radius-mini);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fa-muted);
+  font-size: var(--fa-size-nano);
+}
+.code-copy:hover { color: var(--fa-accent); background: var(--fa-accent-soft); }
+.code-copy.copied { color: var(--fa-green); }
 .md-body pre code {
   padding: 0;
   border: none;

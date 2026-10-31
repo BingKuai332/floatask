@@ -387,6 +387,31 @@ server.listen(0,'127.0.0.1',()=>{
     return value;
    })()`);
    assert.equal(codeScroll,'auto','code blocks scroll horizontally inside the viewport');
+   // Review fix 4: fenced code blocks carry a translated copy action that
+   // writes the code to the clipboard (design page 10).
+   const codeFixture='const answer = "框一下，就懂了。";';
+   const blockProbe=await js(result,`(() => {
+     const md=${JSON.stringify('```js\n'+codeFixture+'\n```')};
+     const wrap=document.createElement('div');
+     wrap.className='md-body';
+     wrap.innerHTML=window.FloatAskMarkdown.render(md);
+     document.getElementById('messages').appendChild(wrap);
+     const block=wrap.querySelector('.code-block');
+     const btn=block && block.querySelector('.code-copy');
+     const rect=btn && btn.getBoundingClientRect();
+     const blockRect=block && block.getBoundingClientRect();
+     return {hasBlock:Boolean(block),hasBtn:Boolean(btn),label:btn&&btn.textContent,expected:window.FloatAskI18n.t('result.copyCode'),topRight:Boolean(rect&&blockRect&&blockRect.right-rect.right<30&&rect.top-blockRect.top<30),code:block&&block.querySelector('pre code').textContent};
+   })()`);
+   assert.ok(blockProbe.hasBlock,'fenced code renders a code block');
+   assert.ok(blockProbe.hasBtn,'the code block carries a copy button');
+   assert.equal(blockProbe.label,blockProbe.expected,'the copy button label is translated');
+   assert.ok(blockProbe.topRight,'the copy button sits at the code block top right');
+   assert.equal(blockProbe.code,codeFixture,'the block exposes the code text');
+   const clipBackup=await Promise.resolve(clipboard.readText());
+   await js(result,"(() => { const b=document.querySelector('#messages .code-copy'); if (b) b.click(); return true; })()");
+   await waitFor(async () => (await Promise.resolve(clipboard.readText())) === codeFixture,'copy button writes the code to the clipboard');
+   await Promise.resolve(clipboard.writeText(clipBackup));
+   await js(result,"(() => { const w=[...document.querySelectorAll('#messages .md-body')].pop(); if (w) w.remove(); return true; })()");
    await js(result,"document.getElementById('expandBtn').click()");
    assert.equal(await js(result,"document.body.dataset.mode"),'expanded','expand switches the window mode');
    assert.deepEqual(result.getSize(),[560,640],'expanded state resizes the window');

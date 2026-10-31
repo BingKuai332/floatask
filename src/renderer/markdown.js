@@ -42,6 +42,23 @@
     return value.split('|').map((cell) => cell.trim());
   }
 
+  // Design page 10: the copy action always sits at the code block's top
+  // right, next to the language label.
+  function copyLabel() {
+    return (typeof window !== 'undefined' && window.FloatAskI18n && window.FloatAskI18n.t)
+      ? window.FloatAskI18n.t('result.copyCode')
+      : '复制';
+  }
+
+  function codeBlock(lang, code) {
+    const label = escapeHtml(String(lang || '').trim());
+    const cls = label ? ` class="language-${label}"` : '';
+    return `<div class="code-block"${label ? ` data-lang="${label}"` : ''}>` +
+      `<div class="code-head"><span class="code-lang">${label}</span>` +
+      `<button type="button" class="code-copy">${copyLabel()}</button></div>` +
+      `<pre><code${cls}>${escapeHtml(code)}</code></pre></div>`;
+  }
+
   function render(markdown) {
     let source = String(markdown || '').replace(/\r\n?/g, '\n');
     const fences = [];
@@ -73,8 +90,7 @@
       const fenceRef = /^\u0000F(\d+)\u0000$/.exec(trimmed);
       if (fenceRef) {
         const fence = fences[Number(fenceRef[1])];
-        const lang = fence.lang ? ` class="language-${escapeHtml(fence.lang)}"` : '';
-        out.push(`<pre><code${lang}>${escapeHtml(fence.code.replace(/\n$/, ''))}</code></pre>`);
+        out.push(codeBlock(fence.lang, fence.code.replace(/\n$/, '')));
         i++;
         continue;
       }
@@ -88,8 +104,7 @@
           i++;
         }
         if (i < lines.length) i++;
-        const cls = lang ? ` class="language-${escapeHtml(lang)}"` : '';
-        out.push(`<pre><code${cls}>${escapeHtml(code.join('\n'))}</code></pre>`);
+        out.push(codeBlock(lang, code.join('\n')));
         continue;
       }
 
@@ -177,5 +192,30 @@
     return out.join('');
   }
 
-  window.FloatAskMarkdown = { render, escapeHtml };
+  // One delegated listener covers every page that renders markdown (result
+  // and history) without page-side wiring.
+  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+    document.addEventListener('click', (event) => {
+      const button = event.target && typeof event.target.closest === 'function'
+        ? event.target.closest('.code-copy')
+        : null;
+      if (!button) return;
+      const block = typeof button.closest === 'function' ? button.closest('.code-block') : null;
+      const code = block && block.querySelector('pre code');
+      if (!code || typeof window === 'undefined' || !window.floatask) return;
+      event.preventDefault();
+      Promise.resolve(window.floatask.copyText(code.textContent)).then(() => {
+        const t = (window.FloatAskI18n && window.FloatAskI18n.t) ? window.FloatAskI18n.t('result.copiedCode') : '已复制';
+        const original = button.textContent;
+        button.textContent = t;
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove('copied');
+        }, 1200);
+      }).catch(() => {});
+    });
+  }
+
+  window.FloatAskMarkdown = { render, escapeHtml, codeBlock };
 })();

@@ -156,3 +156,18 @@ test('generated theme.css is in sync with design-tokens.yaml', () => {
  const onDisk = fs.readFileSync(path.join(__dirname, '..', 'src', 'renderer', 'theme.css'), 'utf8');
  assert.equal(onDisk, generated, 'run `npm run build:tokens` after editing design-tokens.yaml');
 });
+
+test('fenced code blocks render a copy action at the top right', () => {
+ const context = { window: {}, console };
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'src', 'renderer', 'markdown.js'), 'utf8'), context);
+ const { render } = context.window.FloatAskMarkdown;
+ const html = render('```python\nscores = query @ key.transpose(-2, -1)\n```');
+ assert.ok(html.includes('class="code-block"'), 'fenced code wraps in a code block');
+ assert.ok(html.includes('data-lang="python"'), 'the block keeps the language');
+ assert.ok(html.includes('class="code-copy"'), 'the block carries a copy button');
+ assert.ok(html.includes('language-python'), 'the code keeps its language class');
+ assert.ok(html.includes('scores = query @ key.transpose(-2, -1)'), 'code content is preserved');
+ const bare = render('```\nplain line\n```');
+ assert.ok(bare.includes('class="code-copy"'), 'blocks without a language still offer copying');
+ assert.ok(bare.includes('plain line'), 'bare fence content is preserved');
+});
