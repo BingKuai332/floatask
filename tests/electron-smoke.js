@@ -551,7 +551,8 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,"window.floatask.saveSettings({theme:'dark'})");
    await waitFor(()=>js(result,"document.documentElement.dataset.theme==='dark'"),'result returns to dark theme');
    await pause(300); // let the theme color transition settle before sampling
-   const darkTitlebar=await js(result,`(() => {
+   const darkTitlebar=await waitFor(async () => {
+    const probe=await js(result,`(() => {
      const bar=getComputedStyle(document.querySelector('.titlebar'));
      const active=getComputedStyle(document.getElementById('pinBtn'));
      const card=getComputedStyle(document.querySelector('.card'));
@@ -560,13 +561,15 @@ server.listen(0,'127.0.0.1',()=>{
      document.body.appendChild(surfaceProbe);
      const surface=getComputedStyle(surfaceProbe).backgroundColor;
      surfaceProbe.remove();
-     const probe=document.createElement('span');
-     probe.style.color='var(--fa-accent)';
-     document.body.appendChild(probe);
-     const accent=getComputedStyle(probe).color;
-     probe.remove();
+     const accentProbe=document.createElement('span');
+     accentProbe.style.color='var(--fa-accent)';
+     document.body.appendChild(accentProbe);
+     const accent=getComputedStyle(accentProbe).color;
+     accentProbe.remove();
      return {barBg:bar.backgroundColor,activeColor:active.color,cardBg:card.backgroundColor,surface,accent};
-   })()`);
+    })()`);
+    return probe.barBg === 'rgba(0, 0, 0, 0)' && probe.cardBg === probe.surface && probe.activeColor === probe.accent ? probe : false;
+   },'dark theme settles on the result window');
    assert.equal(darkTitlebar.barBg,'rgba(0, 0, 0, 0)','dark titlebar is flush with the card surface');
    assert.equal(darkTitlebar.cardBg,darkTitlebar.surface,'the dark card face is the uniform surface token');
    assert.equal(darkTitlebar.activeColor,darkTitlebar.accent,'the pinned button follows the accent token in the dark theme');
