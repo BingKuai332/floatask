@@ -10,6 +10,7 @@ const os = require('os');
 
 const store = require('./store');
 const { buildDiagnostics } = require('./diagnostics');
+const { createSelectionGuard } = require('./selection-guard');
 const {
   CAPSULE_EXPANDED,
   HALF_CAPSULE_VERTICAL,
@@ -426,12 +427,52 @@ function closeOverlay() {
   }
 }
 
+// Every selection entry (global hotkey, tray, tray icon, launcher bubble,
+// result-window button) funnels through startSelection, so guarding here
+// covers them all. Translation selections leave the result session alone.
+const selectionGuard = createSelectionGuard({
+  hasPendingCorrection: () => Boolean(session?.ocrCorrectedText),
+  hasResultWindow: () => Boolean(resultWin && !resultWin.isDestroyed()),
+  showResultWindow: () => {
+    try {
+      resultWin.show();
+      resultWin.focus();
+      resultWin.setAlwaysOnTop(pinned, 'screen-saver');
+    } catch { /* the window went away mid-guard */ }
+  },
+  askRenderer: () => new Promise((resolve) => {
+    const onReply = (_event, ok) => {
+      clearTimeout(timer);
+      ipcMain.removeListener('result:ocr-guard-response', onReply);
+      resolve(Boolean(ok));
+    };
+    const timer = setTimeout(() => {
+      ipcMain.removeListener('result:ocr-guard-response', onReply);
+      resolve(false);
+    }, 20000);
+    ipcMain.on('result:ocr-guard-response', onReply);
+    resultWin.webContents.send('result:ocr-guard');
+  }),
+  askNative: async () => {
+    const { response } = await dialog.showMessageBox({
+      type: 'warning',
+      message: t('result.ocrReselectConfirm'),
+      buttons: [t('common.continue'), t('common.cancel')],
+      defaultId: 1,
+      cancelId: 1,
+      noLink: true
+    });
+    return response === 0;
+  }
+});
+
 async function startSelection(mode = 'single') {
   if (isQuitting) return;
   if (overlayWin && !overlayWin.isDestroyed()) {
     overlayWin.focus();
     return;
   }
+  if (mode !== 'translate' && !(await selectionGuard.confirm())) return;
   overlayMode = mode;
   if (mode === 'single' && resultWin && !resultWin.isDestroyed() && resultWin.isVisible()) hideResult();
   if (mode === 'translate' && translateWin && !translateWin.isDestroyed()) translateWin.hide();
@@ -1487,13 +1528,18 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
 }
 
 async function askClipboard() {
+  // Electron 45 returns a thenable from clipboard methods; await tolerates
+  // both the legacy sync string and the async variant.
   let text = '';
-  try { text = clipboard.readText().trim(); } catch { /* ignore */ }
+  try { text = String(await Promise.resolve(clipboard.readText()) || '').trim(); } catch { /* ignore */ }
   if (!text) {
     notify(t('notify.clipboardEmpty.title'), t('notify.clipboardEmpty.body'));
     return;
   }
   if (text.length > 6000) text = text.slice(0, 6000);
+  // Explaining the clipboard replaces the result session, so a pending OCR
+  // correction must be confirmed before it is discarded (review fix 2).
+  if (!(await selectionGuard.confirm())) return;
   if (resultWin && !resultWin.isDestroyed() && resultWin.isVisible()) hideResult();
   if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
 
@@ -2028,11 +2074,11 @@ ipcMain.handle('app:set-language', (_event, language) => {
     return { ok: true };
   } catch (err) { return { ok: false, message: err.message }; }
 });
-ipcMain.handle('app:copy', (_event, text) => {
-  try { clipboard.writeText(String(text || '').slice(0, 100000)); return true; } catch { return false; }
+ipcMain.handle('app:copy', async (_event, text) => {
+  try { await Promise.resolve(clipboard.writeText(String(text || '').slice(0, 100000))); return true; } catch { return false; }
 });
-ipcMain.handle('app:read-clipboard', () => {
-  try { return clipboard.readText().slice(0, 10000); } catch { return ''; }
+ipcMain.handle('app:read-clipboard', async () => {
+  try { return String(await Promise.resolve(clipboard.readText()) || '').slice(0, 10000); } catch { return ''; }
 });
 
 ipcMain.on('selection:finish', (_event, rect) => handleSelectionRect(rect));
@@ -2346,8 +2392,8 @@ ipcMain.on('history:open', () => { openHistory(); });
 ipcMain.on('history:close', () => {
   if (historyWin && !historyWin.isDestroyed()) historyWin.hide();
 });
-ipcMain.on('history:copy', (_event, text) => {
-  try { clipboard.writeText(String(text || '').slice(0, 200000)); } catch { /* ignore */ }
+ipcMain.on('history:copy', async (_event, text) => {
+  try { await Promise.resolve(clipboard.writeText(String(text || '').slice(0, 200000))); } catch { /* ignore */ }
 });
 
 /* ------------------------------------------------------------------ */

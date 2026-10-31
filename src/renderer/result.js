@@ -760,8 +760,13 @@ function syncResultMode(expanded) {
 api.onResultMode(payload => syncResultMode(Boolean(payload && payload.expanded)));
 api.getSettings().then(settings => syncResultMode(Boolean(settings && settings.resultExpanded))).catch(() => {});
 els.newSelectBtn.addEventListener('click', () => {
-  if (state.ocrCorrected && !window.confirm(tt('result.ocrReselectConfirm'))) return;
   api.startSelection();
+});
+// The main-process guard asks this window before any selection entry
+// (this button, the global hotkey, tray or bubble) discards a pending OCR
+// correction, so every entry shares one confirmation.
+api.onOcrGuard(() => {
+  api.resolveOcrGuard(window.confirm(tt('result.ocrReselectConfirm')));
 });
 
 // OCR correction: edit the recognized text; corrections apply to the next

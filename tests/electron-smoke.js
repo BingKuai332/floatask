@@ -1,6 +1,6 @@
 'use strict';
 // Runs the real main process, preload, IPC and renderer pages against a local AI.
-const { app, BrowserWindow, ipcMain, globalShortcut, nativeTheme } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut, nativeTheme, clipboard } = require('electron');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -451,13 +451,30 @@ server.listen(0,'127.0.0.1',()=>{
    const correctedCall=calls.at(-1);
    assert.ok(correctedCall.messages[0].content.includes('corrected needle'),'system context uses the corrected OCR text');
    assert.ok(!correctedCall.messages[0].content.includes(ocrProbe.raw),'raw OCR text is no longer sent');
-   // Re-selection must confirm before discarding the correction.
+   // Re-selection must confirm before discarding the correction. The same
+   // flag-setting false stub stays installed for both entries below.
    await js(result,"window.__confirmCalled=false;window.confirm=()=>{window.__confirmCalled=true;return false};true");
    await js(result,"document.getElementById('newSelectBtn').click()");
-   await pause(300);
-   assert.equal(await js(result,"window.__confirmCalled"),true,'re-selection asks for confirmation while a correction exists');
+   await waitFor(()=>js(result,"window.__confirmCalled"),'re-selection asks for confirmation while a correction exists');
+   await pause(200);
    assert.equal(Boolean(page('selection')),false,'confirmation declined: no selection overlay opens');
+   // Review fix 2: the guard lives in the main process, so the renderer
+   // entry shares it with the hotkey/tray/bubble entries.
+   await js(result,"window.__confirmCalled=false;window.floatask.startSelection();true");
+   await waitFor(()=>js(result,"window.__confirmCalled"),'the renderer entry routes through the main-process guard');
+   await pause(200);
+   assert.equal(Boolean(page('selection')),false,'guard declined: the renderer entry aborts too');
+   // Review fix 2 (clipboard entry): explaining the clipboard replaces the
+   // result session as well, so it passes the same guard.
+   await Promise.resolve(clipboard.writeText('clipboard guard fixture'));
+   await js(result,"window.__confirmCalled=false;window.floatask.startClipboardExplain();true");
+   await waitFor(()=>js(result,"window.__confirmCalled"),'the clipboard entry routes through the main-process guard');
+   const clipboardGuarded=await js(result,"(async()=>(await window.floatask.getResultState())?.ocrCorrected)()");
+   assert.equal(clipboardGuarded,'corrected needle','declined clipboard explain keeps the corrected session');
+   clipboard.writeText('');
    await js(result,"delete window.confirm");
+   await js(result,"window.floatask.correctOcr('')");
+   await waitFor(()=>js(result,"document.getElementById('ocrCorrectedBadge').hidden"),'fixture correction reverted');
    await js(result,"window.floatask.openFontWindow()");
    const font=await waitFor(()=>page('font'),'font');
    await waitFor(()=>js(font,"document.querySelector('.brand-title')?.textContent==='字体与阅读'"),'font ready');
@@ -486,6 +503,16 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>calls.at(-1)?.model==='initial-fast','initial task model');
    assert.equal(requestPaths.at(-1),'/initial-service/v1/chat/completions','initial override uses its endpoint');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'initial model done');
+   // Accepted guard: confirming discards the correction and opens the
+   // overlay (accepting inherently starts a new session).
+   await js(result,"window.floatask.correctOcr('accepted-guard-fixture')");
+   await waitFor(()=>js(result,"!document.getElementById('ocrCorrectedBadge').hidden"),'accepted-guard correction set');
+   await js(result,"window.confirm=()=>true;true");
+   await js(result,"window.floatask.startSelection();true");
+   await waitFor(()=>page('selection'),'accepted guard opens the selection overlay');
+   await js(page('selection'),"window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
+   await waitFor(()=>!page('selection'),'Escape closes the accepted overlay');
+   await js(result,"delete window.confirm");
    await js(settings,"window.floatask.saveSettings({vision:true})");
    await js(result,'window.floatask.startSelection()');
    const screenshotSelection=await waitFor(()=>page('selection'),'mock screenshot selection');

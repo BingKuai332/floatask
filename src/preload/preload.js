@@ -31,6 +31,8 @@ contextBridge.exposeInMainWorld('floatask', {
   // Result window
   onResultInit: (cb) => subscribe('result:init', cb),
   onResultEvent: (cb) => subscribe('result:event', cb),
+  onOcrGuard: (cb) => subscribe('result:ocr-guard', cb),
+  resolveOcrGuard: (ok) => ipcRenderer.send('result:ocr-guard-response', Boolean(ok)),
   getResultState: () => ipcRenderer.invoke('session:state'),
   ask: (question) => ipcRenderer.send('session:ask', question),
   stop: () => ipcRenderer.send('session:stop'),

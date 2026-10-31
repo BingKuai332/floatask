@@ -68,3 +68,71 @@ test('history retention purges only expired non-favorite records', () => withHis
  assert.equal(history.purge(0),0,'zero retention disables purging');
  assert.equal(history.purge(365),0,'nothing expires within a year');
 }));
+
+const { createSelectionGuard } = require('../src/main/selection-guard');
+test('selection guard passes silently without a pending OCR correction', async () => {
+ let rendererCalls = 0, nativeCalls = 0;
+ const guard = createSelectionGuard({
+  hasPendingCorrection: () => false,
+  hasResultWindow: () => true,
+  showResultWindow: () => {},
+  askRenderer: () => { rendererCalls += 1; return Promise.resolve(true); },
+  askNative: () => { nativeCalls += 1; return Promise.resolve(true); }
+ });
+ assert.equal(await guard.confirm(), true);
+ assert.equal(rendererCalls, 0);
+ assert.equal(nativeCalls, 0);
+});
+test('selection guard asks the result window and honors both answers', async () => {
+ let shown = 0;
+ const accept = createSelectionGuard({
+  hasPendingCorrection: () => true,
+  hasResultWindow: () => true,
+  showResultWindow: () => { shown += 1; },
+  askRenderer: () => Promise.resolve(true),
+  askNative: () => Promise.resolve(false)
+ });
+ assert.equal(await accept.confirm(), true);
+ assert.equal(shown, 1, 'the result window is raised so the user sees the question');
+ const decline = createSelectionGuard({
+  hasPendingCorrection: () => true,
+  hasResultWindow: () => true,
+  showResultWindow: () => {},
+  askRenderer: () => Promise.resolve(false),
+  askNative: () => Promise.resolve(true)
+ });
+ assert.equal(await decline.confirm(), false);
+});
+test('selection guard aborts when the result window never replies', async () => {
+ const guard = createSelectionGuard({
+  hasPendingCorrection: () => true,
+  hasResultWindow: () => true,
+  showResultWindow: () => {},
+  askRenderer: () => new Promise(() => {}),
+  askNative: () => Promise.resolve(true),
+  timeoutMs: 25
+ });
+ assert.equal(await guard.confirm(), false, 'an unanswered guard must not allow discarding');
+});
+test('selection guard falls back to a native prompt without a result window', async () => {
+ let nativeCalls = 0;
+ const guard = createSelectionGuard({
+  hasPendingCorrection: () => true,
+  hasResultWindow: () => false,
+  showResultWindow: () => {},
+  askRenderer: () => Promise.resolve(true),
+  askNative: () => { nativeCalls += 1; return Promise.resolve(true); }
+ });
+ assert.equal(await guard.confirm(), true);
+ assert.equal(nativeCalls, 1);
+});
+test('selection guard treats a broken renderer reply as a refusal', async () => {
+ const guard = createSelectionGuard({
+  hasPendingCorrection: () => true,
+  hasResultWindow: () => true,
+  showResultWindow: () => {},
+  askRenderer: () => Promise.reject(new Error('contents gone')),
+  askNative: () => Promise.resolve(true)
+ });
+ assert.equal(await guard.confirm(), false);
+});
