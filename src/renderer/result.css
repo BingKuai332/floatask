@@ -355,7 +355,7 @@ html, body {
 .md-body ul, .md-body ol { margin: 2px 0 9px; padding-left: 19px; }
 .md-body li { margin: 2px 0; padding-left: 1px; }
 .md-body li::marker { color: var(--fa-accent); }
-.md-body code {
+.md-body code, .history-message code {
   padding: 1px 5px;
   border-radius: var(--fa-radius-small);
   border: 1px solid var(--fa-border-control);

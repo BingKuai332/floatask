@@ -150,6 +150,16 @@ test('result window CSS carries no pre-migration hardcoded colors or stray sizes
  }
 });
 
+test('font window CSS carries no tactical-terminal remnants', () => {
+ const css = fs.readFileSync(path.join(__dirname, '..', 'src', 'renderer', 'font.css'), 'utf8');
+ for (const banned of ['229, 180, 90', 'clip-path', 'border-radius: 0', 'border-radius:0', '#0c1015', '#080b0e', '#060809', '#040607', '#0b0f13', '125, 211, 252', '251, 113, 133', 'repeating-linear-gradient']) {
+  assert.ok(!css.includes(banned), `font.css still contains ${banned}`);
+ }
+ for (const match of css.matchAll(/font-size:\s*([0-9]+(?:\.[0-9]+)?)px/g)) {
+  assert.ok(parseFloat(match[1]) >= 10, `font.css hardcodes sub-auxiliary ${match[0].trim()}`);
+ }
+});
+
 test('generated theme.css is in sync with design-tokens.yaml', () => {
  const { renderTheme, loadTokens } = require('../scripts/build-theme');
  const generated = renderTheme(loadTokens());
