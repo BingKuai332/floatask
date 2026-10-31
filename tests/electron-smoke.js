@@ -466,12 +466,13 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(Boolean(page('selection')),false,'guard declined: the renderer entry aborts too');
    // Review fix 2 (clipboard entry): explaining the clipboard replaces the
    // result session as well, so it passes the same guard.
+   const clipboardBackup = await Promise.resolve(clipboard.readText());
    await Promise.resolve(clipboard.writeText('clipboard guard fixture'));
    await js(result,"window.__confirmCalled=false;window.floatask.startClipboardExplain();true");
    await waitFor(()=>js(result,"window.__confirmCalled"),'the clipboard entry routes through the main-process guard');
    const clipboardGuarded=await js(result,"(async()=>(await window.floatask.getResultState())?.ocrCorrected)()");
    assert.equal(clipboardGuarded,'corrected needle','declined clipboard explain keeps the corrected session');
-   clipboard.writeText('');
+   await Promise.resolve(clipboard.writeText(clipboardBackup));
    await js(result,"delete window.confirm");
    await js(result,"window.floatask.correctOcr('')");
    await waitFor(()=>js(result,"document.getElementById('ocrCorrectedBadge').hidden"),'fixture correction reverted');
