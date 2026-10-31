@@ -9,7 +9,6 @@ const transBtn = document.getElementById('transBtn');
 const clipBtn = document.getElementById('clipBtn');
 const historyBtn = document.getElementById('historyBtn');
 const moreBtn = document.getElementById('moreBtn');
-const moreMenu = document.getElementById('moreMenu');
 
 let mode = 'expanded';
 let originEdge = null;
@@ -74,33 +73,12 @@ bubble.addEventListener('click', () => {
   if (mode !== 'expanded') { clearTimers(); requestExpand(); }
 });
 
-/* More menu: settings / hide toolbar / quit — nothing that level one already offers. */
-let menuController = null;
+// Review round 4: the rightmost action jumps straight to settings instead
+// of growing the toolbar to host a menu (hide/quit stay on the tray menu).
 moreBtn.addEventListener('click', () => {
-  // Runs before focusMenu's own toggle listener: grow the window only when opening.
-  if (moreMenu.hidden) {
-    menuOpen = true;
-    const direction = document.body.dataset.mode === 'top' ? 'down' : 'up';
-    api.bubbleMenuOpen(direction, 0); // placeholder; refined with the measured height below
-    requestAnimationFrame(() => {
-      const measured = moreMenu.offsetHeight;
-      if (measured) api.bubbleMenuOpen(direction, measured);
-    });
-  }
+  menuOpen = false;
+  api.openSettings();
 });
-if (typeof window.FloatAskFocus === 'object' && typeof window.FloatAskFocus.menu === 'function') {
-  menuController = window.FloatAskFocus.menu({
-    trigger: moreBtn,
-    menu: moreMenu,
-    onClose: () => {
-      menuOpen = false;
-      api.bubbleMenuClose();
-    }
-  });
-}
-document.getElementById('menuSettings').addEventListener('click', () => api.openSettings());
-document.getElementById('menuHide').addEventListener('click', () => api.hideBubble());
-document.getElementById('menuQuit').addEventListener('click', () => api.quitApp());
 
 function applyUiFont(font) {
   window.FloatAskFont.apply(font, { ui: true });

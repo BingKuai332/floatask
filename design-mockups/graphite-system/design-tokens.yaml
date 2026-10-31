@@ -53,8 +53,8 @@ themes:
       active: {width: 1, color: "#8FA6C999"}
       danger: {width: 1, color: "#E1A0A84D"}
     shadows:
-      floating: {blur: 38, color: "#00000066", offset: [0, 14]}
-      toolbar: {blur: 26, color: "#00000077", offset: [0, 10]}
+      floating: {blur: 6, color: "#00000066", offset: [0, 2]}
+      toolbar: {blur: 6, color: "#00000077", offset: [0, 2]}
   light:
     label: 朝日 · 白天
     colors:
@@ -81,8 +81,8 @@ themes:
       active: {width: 1, color: "#506B9299"}
       danger: {width: 1, color: "#A14D584D"}
     shadows:
-      floating: {blur: 38, color: "#26314726", offset: [0, 14]}
-      toolbar: {blur: 26, color: "#2631472E", offset: [0, 10]}
+      floating: {blur: 6, color: "#26314726", offset: [0, 2]}
+      toolbar: {blur: 6, color: "#2631472E", offset: [0, 2]}
 typography:
   windowTitle: {size: 23, weight: 600}
   sectionTitle: {size: 15, weight: 600}

@@ -100,8 +100,8 @@
   --fa-border-control: #FFFFFF1A;
   --fa-border-active: #8FA6C999;
   --fa-border-danger: #E1A0A84D;
-  --fa-shadow-floating: 0px 14px 38px #00000066;
-  --fa-shadow-toolbar: 0px 10px 26px #00000077;
+  --fa-shadow-floating: 0px 2px 6px #00000066;
+  --fa-shadow-toolbar: 0px 2px 6px #00000077;
   --bg: var(--fa-bg);
   --bg-soft: var(--fa-surface);
   --panel: var(--fa-surface);
@@ -144,8 +144,8 @@
   --fa-border-control: #141B2E14;
   --fa-border-active: #506B9299;
   --fa-border-danger: #A14D584D;
-  --fa-shadow-floating: 0px 14px 38px #26314726;
-  --fa-shadow-toolbar: 0px 10px 26px #2631472E;
+  --fa-shadow-floating: 0px 2px 6px #26314726;
+  --fa-shadow-toolbar: 0px 2px 6px #2631472E;
   --bg: var(--fa-bg);
   --bg-soft: var(--fa-surface);
   --panel: var(--fa-surface);
