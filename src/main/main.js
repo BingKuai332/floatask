@@ -384,6 +384,9 @@ async function ensureBubble() {
   await bubbleWin.loadFile(path.join(RENDERER, 'bubble.html'));
   sendBubbleMode();
   bubbleWin.showInactive();
+  // A fresh renderer resolves its own theme via getSettings + matchMedia;
+  // push the authoritative theme too so it never sits on the wrong default.
+  broadcastTheme();
   return bubbleWin;
   })();
 
@@ -397,10 +400,12 @@ async function ensureBubble() {
 function refreshBubble() {
   const config = store.getConfig();
   if (isQuitting || !config.showBubble) {
+    restoreBubbleMenuBounds();
     if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
     return;
   }
   if ((overlayWin && !overlayWin.isDestroyed()) || (resultWin && !resultWin.isDestroyed() && resultWin.isVisible())) {
+    restoreBubbleMenuBounds();
     if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
     return;
   }
@@ -408,6 +413,11 @@ function refreshBubble() {
     if (!win || win.isDestroyed()) return;
     if (!win.isVisible()) win.showInactive();
   }).catch((err) => log('bubble error', err.message));
+}
+
+function restoreBubbleMenuBounds() {
+  if (preMenuBounds && bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.setBounds(preMenuBounds);
+  preMenuBounds = null;
 }
 
 function toggleBubble(show) {
@@ -925,6 +935,7 @@ async function ensureTranslateWindow() {
     refreshBubble();
   });
   await translateWin.loadFile(path.join(RENDERER, 'translate.html'));
+  broadcastTheme();
   return translateWin;
 }
 
@@ -1182,6 +1193,7 @@ async function ensureResultWindow() {
   watchUserResultResize();
 
   await resultWin.loadFile(path.join(RENDERER, 'result.html'));
+  broadcastTheme();
   return resultWin;
 }
 
@@ -2105,6 +2117,7 @@ ipcMain.on('bubble:expand', () => { if (bubbleEdge) setBubbleMode('expanded', bu
 ipcMain.on('bubble:collapse', () => { if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge); });
 ipcMain.on('bubble:hide', () => {
   store.save({ showBubble: false });
+  restoreBubbleMenuBounds();
   if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
   refreshTray();
 });
