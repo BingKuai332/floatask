@@ -139,11 +139,11 @@ test('selection guard treats a broken renderer reply as a refusal', async () => 
 
 test('result window CSS carries no pre-migration hardcoded colors or stray sizes', () => {
  const css = fs.readFileSync(path.join(__dirname, '..', 'src', 'renderer', 'result.css'), 'utf8');
- for (const banned of ['rgba(11, 17, 25', '125, 211, 252', '251, 113, 133', 'rgba(3, 7, 12', '148, 178, 208']) {
+ for (const banned of ['rgba(11, 17, 25', '125, 211, 252', '251, 113, 133', 'rgba(3, 7, 12', 'rgba(3, 6, 10', '148, 178, 208']) {
   assert.ok(!css.includes(banned), `result.css still contains ${banned}`);
  }
- for (const size of ['7.5px', '8.5px', '9.5px']) {
-  assert.ok(!css.includes(`font-size: ${size}`), `result.css still hardcodes font-size ${size}`);
+ for (const match of css.matchAll(/font-size:\s*([0-9]+(?:\.[0-9]+)?)px/g)) {
+  assert.ok(parseFloat(match[1]) >= 10, `result.css hardcodes sub-auxiliary ${match[0].trim()}`);
  }
  for (const radius of ['border-radius: 5px', 'border-radius: 7px', 'border-radius: 9px']) {
   assert.ok(!css.includes(radius), `result.css still hardcodes ${radius}`);

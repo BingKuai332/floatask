@@ -420,12 +420,15 @@ server.listen(0,'127.0.0.1',()=>{
    const titlebarProbe=await js(result,`(() => {
      const bar=getComputedStyle(document.querySelector('.titlebar'));
      const active=getComputedStyle(document.getElementById('pinBtn'));
-     const token=getComputedStyle(document.documentElement).getPropertyValue('--fa-accent').trim();
-     return {barBg:bar.backgroundColor,activeColor:active.color,token};
+     const probe=document.createElement('span');
+     probe.style.color='var(--fa-accent)';
+     document.body.appendChild(probe);
+     const accent=getComputedStyle(probe).color;
+     probe.remove();
+     return {barBg:bar.backgroundColor,activeColor:active.color,accent};
    })()`);
    assert.equal(titlebarProbe.barBg,'rgba(0, 0, 0, 0)','light titlebar is flush with the card surface');
-   const hexToRgbAccent=h=>{const n=parseInt(h.slice(1),16);return 'rgb('+[(n>>16)&255,(n>>8)&255,n&255].join(', ')+')';};
-   assert.equal(titlebarProbe.activeColor,hexToRgbAccent(titlebarProbe.token),'the pinned button follows the accent token in the light theme');
+   assert.equal(titlebarProbe.activeColor,titlebarProbe.accent,'the pinned button follows the accent token in the light theme');
    await screenshot(result,'task4-compact-light');
    await js(settings,"window.floatask.saveSettings({theme:'dark'})");
    await waitFor(()=>js(result,"document.documentElement.dataset.theme==='dark'"),'result returns to dark theme');
@@ -433,11 +436,15 @@ server.listen(0,'127.0.0.1',()=>{
    const darkTitlebar=await js(result,`(() => {
      const bar=getComputedStyle(document.querySelector('.titlebar'));
      const active=getComputedStyle(document.getElementById('pinBtn'));
-     const token=getComputedStyle(document.documentElement).getPropertyValue('--fa-accent').trim();
-     return {barBg:bar.backgroundColor,activeColor:active.color,token};
+     const probe=document.createElement('span');
+     probe.style.color='var(--fa-accent)';
+     document.body.appendChild(probe);
+     const accent=getComputedStyle(probe).color;
+     probe.remove();
+     return {barBg:bar.backgroundColor,activeColor:active.color,accent};
    })()`);
    assert.equal(darkTitlebar.barBg,'rgba(0, 0, 0, 0)','dark titlebar is flush with the card surface');
-   assert.equal(darkTitlebar.activeColor,hexToRgbAccent(darkTitlebar.token),'the pinned button follows the accent token in the dark theme');
+   assert.equal(darkTitlebar.activeColor,darkTitlebar.accent,'the pinned button follows the accent token in the dark theme');
    await js(result,"window.floatask.setLanguage('zh-CN')");
    await waitFor(()=>js(result,"document.documentElement.lang==='zh-CN'"),'switch back');
    assert.equal(await js(result,"document.getElementById('sendBtn').title"),'发送');

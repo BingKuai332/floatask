@@ -40,6 +40,7 @@
   --fa-size-aux: 10px;
   --fa-size-kicker: 7.5px;
   --fa-size-micro: 8.5px;
+  --fa-size-nano: 9px;
   --fa-size-caption: 9.5px;
   /* motion */
   --fa-motion-theme-color: 120ms;
@@ -184,6 +185,7 @@
     --fa-border-floating: CanvasText;
     --fa-border-control: CanvasText;
     --fa-border-active: Highlight;
+    --fa-border-danger: CanvasText;
     --fa-shadow-floating: none;
     --fa-shadow-toolbar: none;
   }

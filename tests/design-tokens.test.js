@@ -22,10 +22,10 @@ function runBuild(args) {
   return spawnSync(process.execPath, [buildScript, ...args], { cwd: repoRoot, windowsHide: true, encoding: 'utf8' });
 }
 
-test('design tokens parse with version 1.4.2 and light/dark/system theme ids', () => {
+test('design tokens parse with a 1.4.x version and light/dark/system theme ids', () => {
   const { loadTokens } = loadBuildTheme();
   const tokens = loadTokens(tokensPath);
-  assert.equal(tokens.version, '1.4.2');
+  assert.match(tokens.version, /^1\.4\.\d+$/, 'patch versions evolve without pinning the suite');
   assert.deepEqual(Object.keys(tokens.themeIds).sort(), ['dark', 'light', 'system']);
   assert.ok(tokens.themes.dark && tokens.themes.light, 'both themes present');
 });
@@ -51,6 +51,19 @@ test('radius scale emits 16/12/10/8 px and pill variables', () => {
   assert.match(css, /--fa-radius-control:\s*10px/);
   assert.match(css, /--fa-radius-small:\s*8px/);
   assert.match(css, /--fa-radius-pill:\s*999px/);
+});
+
+test('registered micro sizes and dense radii emit as variables', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  for (const variable of ['--fa-size-kicker: 7.5px', '--fa-size-micro: 8.5px', '--fa-size-nano: 9px', '--fa-size-caption: 9.5px']) {
+    assert.ok(css.includes(variable), `${variable} defined`);
+  }
+  for (const variable of ['--fa-radius-media: 9px', '--fa-radius-compact: 7px', '--fa-radius-mini: 5px']) {
+    assert.ok(css.includes(variable), `${variable} defined`);
+  }
+  assert.match(css, /--fa-border-danger:\s*#E1A0A84D/);
+  assert.match(css, /--fa-border-danger:\s*#A14D584D/);
 });
 
 test('keyboard focus outline uses 2px active outline with 2px offset', () => {
@@ -104,6 +117,7 @@ test('forced-colors media block hands palette to system colors', () => {
   assert.match(body, /--fa-surface:\s*Canvas\b/);
   assert.match(body, /--fa-text:\s*CanvasText\b/);
   assert.match(body, /--fa-accent:\s*LinkText\b/);
+  assert.match(body, /--fa-border-danger:\s*CanvasText\b/);
   assert.match(body, /--fa-shadow-floating:\s*none/);
   assert.match(body, /--fa-shadow-toolbar:\s*none/);
 });

@@ -91,7 +91,7 @@ typography:
   answerBodyLarge: {size: 14, lineHeight: 1.55}
   control: {size: 11, lineHeight: 1.5}
   auxiliaryMin: 10
-  microText: {kicker: 7.5, micro: 8.5, caption: 9.5}
+  microText: {kicker: 7.5, micro: 8.5, nano: 9, caption: 9.5}
   microTextRule: 仅用于全大写装饰性 kicker、微型注记与辅助标签；正文与控件文字不小于 auxiliaryMin。
   answerSizes: [12, 14, 16]
   defaultAnswerSize: 14

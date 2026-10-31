@@ -14,7 +14,22 @@ const DEFAULT_TOKENS_PATH = path.join(REPO_ROOT, 'design-mockups', 'graphite-sys
 const DEFAULT_OUT_PATH = path.join(REPO_ROOT, 'src', 'renderer', 'theme.css');
 
 function loadTokens(tokensPath = DEFAULT_TOKENS_PATH) {
-  return YAML.parse(fs.readFileSync(tokensPath, 'utf8'));
+  const tokens = YAML.parse(fs.readFileSync(tokensPath, 'utf8'));
+  // Fail loudly on a malformed token source instead of emitting `undefinedpx`.
+  const numericPaths = [
+    ['radius', 'window'], ['radius', 'container'], ['radius', 'control'], ['radius', 'small'],
+    ['radius', 'media'], ['radius', 'compact'], ['radius', 'mini'],
+    ['typography', 'microText', 'kicker'], ['typography', 'microText', 'micro'],
+    ['typography', 'microText', 'nano'], ['typography', 'microText', 'caption']
+  ];
+  for (const segments of numericPaths) {
+    let node = tokens;
+    for (const key of segments) node = node?.[key];
+    if (!Number.isFinite(node)) {
+      throw new Error(`design-tokens.yaml: ${segments.join('.')} must be a finite number`);
+    }
+  }
+  return tokens;
 }
 
 function kebab(name) {
@@ -97,6 +112,7 @@ function systemMedia() {
     --fa-border-floating: CanvasText;
     --fa-border-control: CanvasText;
     --fa-border-active: Highlight;
+    --fa-border-danger: CanvasText;
     --fa-shadow-floating: none;
     --fa-shadow-toolbar: none;
   }
@@ -158,6 +174,7 @@ function renderTheme(tokens) {
   --fa-size-aux: ${t.auxiliaryMin}px;
   --fa-size-kicker: ${t.microText.kicker}px;
   --fa-size-micro: ${t.microText.micro}px;
+  --fa-size-nano: ${t.microText.nano}px;
   --fa-size-caption: ${t.microText.caption}px;
   /* motion */
   --fa-motion-theme-color: ${m.themeColorDuration}ms;
