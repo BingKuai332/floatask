@@ -1,0 +1,1278 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 27
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 空态与异常恢复
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1100
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保留当前截图与 OCR 上下文；错误色只用于需要处理的问题，每种状态都有明确恢复动作
+- elementId: asahi-empty-ocr
+  elementType: shape
+  bounds:
+  - 64
+  - 170
+  - 900
+  - 500
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 900
+  - 500
+  path: M 16,0 H 884 Q 900,0 900,16 V 484 Q 900,500 884,500 H 16 Q 0,500 0,484 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#141B2E14'
+- elementId: asahi-empty-ocr-heading
+  elementType: text
+  bounds:
+  - 88
+  - 192
+  - 400
+  - 28
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 01 · 无 OCR 结果
+    bold: true
+- elementId: asahi-empty-ocr-badge
+  elementType: shape
+  bounds:
+  - 806
+  - 192
+  - 134
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 134
+  - 26
+  path: M 8,0 H 126 Q 134,0 134,8 V 18 Q 134,26 126,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+- elementId: asahi-empty-ocr-badge-icon
+  elementType: icon
+  bounds:
+  - 820
+  - 199
+  - 12
+  - 12
+  iconName: fas:image
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-empty-ocr-badge-text
+  elementType: text
+  bounds:
+  - 840
+  - 192
+  - 86
+  - 26
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 截图仍保留
+    align:
+    - left
+    - middle
+- elementId: asahi-empty-ocr-title
+  elementType: text
+  bounds:
+  - 440
+  - 250
+  - 400
+  - 32
+  content:
+    fontSize: 18
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 没有识别到可用文字
+    bold: true
+- elementId: asahi-empty-ocr-body
+  elementType: text
+  bounds:
+  - 440
+  - 298
+  - 456
+  - 62
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 文字可能过小、对比度不足，或当前区域主要包含图像。可以调整框选范围，也可以直接使用视觉模型。
+- elementId: asahi-empty-ocr-tip-icon
+  elementType: icon
+  bounds:
+  - 440
+  - 374
+  - 13
+  - 13
+  iconName: fas:lightbulb
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-empty-ocr-tip
+  elementType: text
+  bounds:
+  - 464
+  - 368
+  - 420
+  - 26
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 尽量放大目标文字，减少无关背景
+- elementId: asahi-empty-ocr-reselect
+  elementType: shape
+  bounds:
+  - 440
+  - 420
+  - 124
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 124
+  - 38
+  path: M 10,0 H 114 Q 124,0 124,10 V 28 Q 124,38 114,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: asahi-empty-ocr-reselect-icon
+  elementType: icon
+  bounds:
+  - 454
+  - 432
+  - 13
+  - 13
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#F5F7FA'
+- elementId: asahi-empty-ocr-reselect-text
+  elementType: text
+  bounds:
+  - 476
+  - 420
+  - 74
+  - 38
+  content:
+    fontSize: 11
+    color: '#F5F7FA'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重新框选
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: asahi-empty-ocr-manual
+  elementType: shape
+  bounds:
+  - 576
+  - 420
+  - 124
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 124
+  - 38
+  path: M 10,0 H 114 Q 124,0 124,10 V 28 Q 124,38 114,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: asahi-empty-ocr-manual-icon
+  elementType: icon
+  bounds:
+  - 590
+  - 432
+  - 13
+  - 13
+  iconName: fas:keyboard
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-empty-ocr-manual-text
+  elementType: text
+  bounds:
+  - 612
+  - 420
+  - 74
+  - 38
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 手动输入
+    align:
+    - left
+    - middle
+- elementId: asahi-empty-ocr-vision-icon
+  elementType: icon
+  bounds:
+  - 440
+  - 482
+  - 14
+  - 14
+  iconName: fas:eye
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-empty-ocr-vision
+  elementType: text
+  bounds:
+  - 464
+  - 476
+  - 360
+  - 26
+  content:
+    fontSize: 11
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 使用截图理解 · 需已配置视觉模型
+    bold: true
+- elementId: asahi-empty-ocr-rule
+  elementType: shape
+  bounds:
+  - 88
+  - 534
+  - 852
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-empty-ocr-privacy-icon
+  elementType: icon
+  bounds:
+  - 88
+  - 566
+  - 14
+  - 14
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: asahi-empty-ocr-privacy
+  elementType: text
+  bounds:
+  - 114
+  - 560
+  - 640
+  - 26
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: OCR 空结果不会触发文字上传；只有主动使用截图理解时才发送压缩截图。
+- elementId: asahi-empty-ocr-caption
+  elementType: text
+  bounds:
+  - 88
+  - 606
+  - 600
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选来源 VS Code · transformer.py
+- elementId: asahi-capture-fail
+  elementType: shape
+  bounds:
+  - 996
+  - 170
+  - 540
+  - 500
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 540
+  - 500
+  path: M 16,0 H 524 Q 540,0 540,16 V 484 Q 540,500 524,500 H 16 Q 0,500 0,484 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: asahi-capture-fail-heading
+  elementType: text
+  bounds:
+  - 1020
+  - 192
+  - 360
+  - 28
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 02 · 截图失败
+    bold: true
+- elementId: asahi-capture-fail-symbol
+  elementType: shape
+  bounds:
+  - 1020
+  - 250
+  - 40
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F7E8EA'
+  viewBox:
+  - 40
+  - 40
+  path: M 8,0 H 32 Q 40,0 40,8 V 32 Q 40,40 32,40 H 8 Q 0,40 0,32 V 8 Q 0,0 8,0 Z
+- elementId: asahi-capture-fail-icon
+  elementType: icon
+  bounds:
+  - 1031
+  - 261
+  - 18
+  - 18
+  iconName: fas:triangle-exclamation
+  fill:
+    type: solid
+    color: '#A14D58'
+- elementId: asahi-capture-fail-title
+  elementType: text
+  bounds:
+  - 1076
+  - 252
+  - 400
+  - 30
+  content:
+    fontSize: 16
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 无法获取框选图像
+    bold: true
+- elementId: asahi-capture-fail-body
+  elementType: text
+  bounds:
+  - 1020
+  - 316
+  - 468
+  - 56
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: Windows 未能返回屏幕截图。当前窗口上下文仍保留，可直接重试，不需要重新开始提问。
+- elementId: asahi-capture-fail-cause
+  elementType: shape
+  bounds:
+  - 1020
+  - 392
+  - 492
+  - 92
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 492
+  - 92
+  path: M 12,0 H 480 Q 492,0 492,12 V 80 Q 492,92 480,92 H 12 Q 0,92 0,80 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: asahi-capture-fail-cause-title
+  elementType: text
+  bounds:
+  - 1038
+  - 406
+  - 200
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 常见原因
+    bold: true
+- elementId: asahi-capture-fail-cause-copy
+  elementType: text
+  bounds:
+  - 1038
+  - 434
+  - 450
+  - 36
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: DRM 受保护内容 · 部分独占全屏游戏 · 捕获权限或显示状态变化
+- elementId: asahi-capture-fail-retry
+  elementType: shape
+  bounds:
+  - 1020
+  - 512
+  - 112
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 112
+  - 38
+  path: M 10,0 H 102 Q 112,0 112,10 V 28 Q 112,38 102,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: asahi-capture-fail-retry-icon
+  elementType: icon
+  bounds:
+  - 1034
+  - 524
+  - 13
+  - 13
+  iconName: fas:rotate
+  fill:
+    type: solid
+    color: '#F5F7FA'
+- elementId: asahi-capture-fail-retry-text
+  elementType: text
+  bounds:
+  - 1056
+  - 512
+  - 60
+  - 38
+  content:
+    fontSize: 11
+    color: '#F5F7FA'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重试截图
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: asahi-capture-fail-help
+  elementType: shape
+  bounds:
+  - 1144
+  - 512
+  - 132
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 132
+  - 38
+  path: M 10,0 H 122 Q 132,0 132,10 V 28 Q 132,38 122,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: asahi-capture-fail-help-text
+  elementType: text
+  bounds:
+  - 1144
+  - 512
+  - 132
+  - 38
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 查看捕获帮助
+    align:
+    - center
+    - middle
+- elementId: asahi-capture-fail-detail
+  elementType: text
+  bounds:
+  - 1390
+  - 512
+  - 100
+  - 38
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 错误详情
+    align:
+    - right
+    - middle
+- elementId: asahi-capture-fail-rule
+  elementType: shape
+  bounds:
+  - 1020
+  - 580
+  - 492
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-capture-fail-shield
+  elementType: icon
+  bounds:
+  - 1020
+  - 608
+  - 14
+  - 14
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: asahi-capture-fail-privacy
+  elementType: text
+  bounds:
+  - 1046
+  - 602
+  - 420
+  - 26
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 截图未生成，不会上传任何图像
+- elementId: asahi-empty-ocr-thumb
+  elementType: shape
+  bounds:
+  - 88
+  - 250
+  - 320
+  - 180
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 320
+  - 180
+  path: M 8,0 H 312 Q 320,0 320,8 V 172 Q 320,180 312,180 H 8 Q 0,180 0,172 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: asahi-empty-ocr-thumb-sidebar
+  elementType: shape
+  bounds:
+  - 89
+  - 251
+  - 70
+  - 178
+  shapeName: custom
+  viewBox:
+  - 70
+  - 178
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  path: M 7,0 H 70 V 178 H 7 Q 0,178 0,171 V 7 Q 0,0 7,0 Z
+- elementId: asahi-empty-ocr-thumb-topbar
+  elementType: shape
+  bounds:
+  - 89
+  - 251
+  - 318
+  - 31
+  shapeName: custom
+  viewBox:
+  - 318
+  - 31
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  path: M 7,0 H 311 Q 318,0 318,7 V 31 H 0 V 7 Q 0,0 7,0 Z
+- elementId: asahi-empty-ocr-thumb-dot
+  elementType: shape
+  bounds:
+  - 97
+  - 264
+  - 4
+  - 4
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-empty-ocr-thumb-tab
+  elementType: shape
+  bounds:
+  - 166
+  - 254
+  - 89.60000000000001
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 89.60000000000001
+  - 24
+  path: M 8,0 H 81.60000000000001 Q 89.60000000000001,0 89.60000000000001,8 V 16 Q 89.60000000000001,24 81.60000000000001,24 H 8 Q 0,24 0,16 V 8 Q 0,0 8,0 Z
+- elementId: asahi-empty-ocr-thumb-tree-0
+  elementType: shape
+  bounds:
+  - 97
+  - 291
+  - 36.4
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 36.4
+  - 3
+  path: M 1.5,0 H 34.9 Q 36.4,0 36.4,1.5 V 1.5 Q 36.4,3 34.9,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-tree-1
+  elementType: shape
+  bounds:
+  - 97
+  - 313
+  - 26.6
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 26.6
+  - 3
+  path: M 1.5,0 H 25.1 Q 26.6,0 26.6,1.5 V 1.5 Q 26.6,3 25.1,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-tree-2
+  elementType: shape
+  bounds:
+  - 97
+  - 335
+  - 32.2
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 32.2
+  - 3
+  path: M 1.5,0 H 30.700000000000003 Q 32.2,0 32.2,1.5 V 1.5 Q 32.2,3 30.700000000000003,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-tree-3
+  elementType: shape
+  bounds:
+  - 97
+  - 357
+  - 21.7
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 21.7
+  - 3
+  path: M 1.5,0 H 20.2 Q 21.7,0 21.7,1.5 V 1.5 Q 21.7,3 20.2,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-code-0
+  elementType: shape
+  bounds:
+  - 170
+  - 293
+  - 161.28
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 161.28
+  - 3
+  path: M 1.5,0 H 159.78 Q 161.28,0 161.28,1.5 V 1.5 Q 161.28,3 159.78,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-code-1
+  elementType: shape
+  bounds:
+  - 170
+  - 314
+  - 107.52
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 107.52
+  - 3
+  path: M 1.5,0 H 106.02 Q 107.52,0 107.52,1.5 V 1.5 Q 107.52,3 106.02,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-code-2
+  elementType: shape
+  bounds:
+  - 178
+  - 335
+  - 183.67999999999998
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 183.67999999999998
+  - 3
+  path: M 1.5,0 H 182.17999999999998 Q 183.67999999999998,0 183.67999999999998,1.5 V 1.5 Q 183.67999999999998,3 182.17999999999998,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-code-3
+  elementType: shape
+  bounds:
+  - 178
+  - 356
+  - 143.36
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 143.36
+  - 3
+  path: M 1.5,0 H 141.86 Q 143.36,0 143.36,1.5 V 1.5 Q 143.36,3 141.86,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-code-4
+  elementType: shape
+  bounds:
+  - 178
+  - 377
+  - 170.24
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 170.24
+  - 3
+  path: M 1.5,0 H 168.74 Q 170.24,0 170.24,1.5 V 1.5 Q 170.24,3 168.74,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-code-5
+  elementType: shape
+  bounds:
+  - 170
+  - 398
+  - 94.08
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 94.08
+  - 3
+  path: M 1.5,0 H 92.58 Q 94.08,0 94.08,1.5 V 1.5 Q 94.08,3 92.58,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-empty-ocr-thumb-selection
+  elementType: shape
+  bounds:
+  - 166
+  - 308
+  - 201.6
+  - 68
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B9208'
+  border:
+    width: 1
+    color: '#506B92AA'
+- elementId: asahi-missing-key
+  elementType: shape
+  bounds:
+  - 64
+  - 694
+  - 472
+  - 242
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 472
+  - 242
+  path: M 16,0 H 456 Q 472,0 472,16 V 226 Q 472,242 456,242 H 16 Q 0,242 0,226 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: asahi-missing-key-symbol
+  elementType: shape
+  bounds:
+  - 88
+  - 716
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: asahi-missing-key-icon
+  elementType: icon
+  bounds:
+  - 97
+  - 725
+  - 16
+  - 16
+  iconName: fas:key
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-missing-key-title
+  elementType: text
+  bounds:
+  - 134
+  - 718
+  - 350
+  - 30
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 03 · 未配置模型服务
+    bold: true
+- elementId: asahi-missing-key-body
+  elementType: text
+  bounds:
+  - 88
+  - 770
+  - 424
+  - 52
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 截图与 OCR 结果已保留。完成 OpenAI 兼容服务配置后，可从当前上下文继续。
+- elementId: asahi-missing-key-action
+  elementType: shape
+  bounds:
+  - 88
+  - 834
+  - 112
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 112
+  - 36
+  path: M 10,0 H 102 Q 112,0 112,10 V 26 Q 112,36 102,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: asahi-missing-key-action-text
+  elementType: text
+  bounds:
+  - 88
+  - 834
+  - 112
+  - 36
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 打开设置
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-missing-key-secondary
+  elementType: text
+  bounds:
+  - 334
+  - 834
+  - 174
+  - 36
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 稍后再配置
+    align:
+    - right
+    - middle
+- elementId: asahi-missing-key-rule
+  elementType: shape
+  bounds:
+  - 88
+  - 884
+  - 424
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-missing-key-note
+  elementType: text
+  bounds:
+  - 88
+  - 898
+  - 424
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: API Key 使用 Windows DPAPI 加密
+- elementId: asahi-offline
+  elementType: shape
+  bounds:
+  - 564
+  - 694
+  - 472
+  - 242
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 472
+  - 242
+  path: M 16,0 H 456 Q 472,0 472,16 V 226 Q 472,242 456,242 H 16 Q 0,242 0,226 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: asahi-offline-symbol
+  elementType: shape
+  bounds:
+  - 588
+  - 716
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F7E8EA'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: asahi-offline-icon
+  elementType: icon
+  bounds:
+  - 597
+  - 725
+  - 16
+  - 16
+  iconName: fas:wifi
+  fill:
+    type: solid
+    color: '#A14D58'
+- elementId: asahi-offline-title
+  elementType: text
+  bounds:
+  - 634
+  - 718
+  - 350
+  - 30
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 04 · 网络连接不可用
+    bold: true
+- elementId: asahi-offline-body
+  elementType: text
+  bounds:
+  - 588
+  - 770
+  - 424
+  - 52
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 本次模型请求尚未发送。网络恢复后可从当前上下文重试，无需重新框选。
+- elementId: asahi-offline-action
+  elementType: shape
+  bounds:
+  - 588
+  - 834
+  - 112
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 112
+  - 36
+  path: M 10,0 H 102 Q 112,0 112,10 V 26 Q 112,36 102,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: asahi-offline-action-text
+  elementType: text
+  bounds:
+  - 588
+  - 834
+  - 112
+  - 36
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重试
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-offline-secondary
+  elementType: text
+  bounds:
+  - 834
+  - 834
+  - 174
+  - 36
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 查看 OCR 原文
+    align:
+    - right
+    - middle
+- elementId: asahi-offline-rule
+  elementType: shape
+  bounds:
+  - 588
+  - 884
+  - 424
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-offline-note
+  elementType: text
+  bounds:
+  - 588
+  - 898
+  - 424
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 恢复网络后保留当前问题与上下文
+- elementId: asahi-search-fail
+  elementType: shape
+  bounds:
+  - 1064
+  - 694
+  - 472
+  - 242
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 472
+  - 242
+  path: M 16,0 H 456 Q 472,0 472,16 V 226 Q 472,242 456,242 H 16 Q 0,242 0,226 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: asahi-search-fail-symbol
+  elementType: shape
+  bounds:
+  - 1088
+  - 716
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: asahi-search-fail-icon
+  elementType: icon
+  bounds:
+  - 1097
+  - 725
+  - 16
+  - 16
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-search-fail-title
+  elementType: text
+  bounds:
+  - 1134
+  - 718
+  - 350
+  - 30
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 05 · 联网检索失败
+    bold: true
+- elementId: asahi-search-fail-body
+  elementType: text
+  bounds:
+  - 1088
+  - 770
+  - 424
+  - 52
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 可基于截图与 OCR 直接回答；也可以保留当前问题，稍后重试检索。
+- elementId: asahi-search-fail-action
+  elementType: shape
+  bounds:
+  - 1088
+  - 834
+  - 156
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 156
+  - 36
+  path: M 10,0 H 146 Q 156,0 156,10 V 26 Q 156,36 146,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: asahi-search-fail-action-text
+  elementType: text
+  bounds:
+  - 1088
+  - 834
+  - 156
+  - 36
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 不联网，继续
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-search-fail-secondary
+  elementType: text
+  bounds:
+  - 1334
+  - 834
+  - 174
+  - 36
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重试检索
+    align:
+    - right
+    - middle
+- elementId: asahi-search-fail-rule
+  elementType: shape
+  bounds:
+  - 1088
+  - 884
+  - 424
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-search-fail-note
+  elementType: text
+  bounds:
+  - 1088
+  - 898
+  - 424
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 未使用联网资料时，不生成来源标注

@@ -1,0 +1,1693 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 14
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与收藏
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 搜索、筛选与收藏在同一工作台完成；重新打开恢复上下文，不自动重新请求
+- elementId: history-window
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 1472
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 1472
+  - 788
+  path: M 16,0 H 1456 Q 1472,0 1472,16 V 772 Q 1472,788 1456,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 40
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: history-sidebar
+  elementType: shape
+  bounds:
+  - 65
+  - 149
+  - 218
+  - 786
+  shapeName: custom
+  viewBox:
+  - 218
+  - 786
+  fill:
+    type: solid
+    color: '#1D2128'
+  path: M 15,0 H 218 V 786 H 15 Q 0,786 0,771 V 15 Q 0,0 15,0 Z
+- elementId: history-sidebar-line
+  elementType: shape
+  bounds:
+  - 283
+  - 149
+  - 1
+  - 786
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: history-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 170
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: history-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 178
+  - 18
+  - 18
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: history-brand
+  elementType: text
+  bounds:
+  - 134
+  - 168
+  - 120
+  - 28
+  content:
+    fontSize: 18
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与收藏
+    bold: true
+- elementId: history-brand-sub
+  elementType: text
+  bounds:
+  - 134
+  - 197
+  - 120
+  - 16
+  content:
+    fontSize: 8
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: history-nav-label
+  elementType: text
+  bounds:
+  - 90
+  - 260
+  - 120
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 记录
+    bold: true
+- elementId: history-nav-active
+  elementType: shape
+  bounds:
+  - 78
+  - 294
+  - 190
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 190
+  - 42
+  path: M 10,0 H 180 Q 190,0 190,10 V 32 Q 190,42 180,42 H 10 Q 0,42 0,32 V 10 Q 0,0 10,0 Z
+- elementId: history-nav-all-icon
+  elementType: icon
+  bounds:
+  - 94
+  - 307
+  - 15
+  - 15
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: history-nav-all
+  elementType: text
+  bounds:
+  - 122
+  - 294
+  - 90
+  - 42
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 全部记录
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: history-nav-all-count
+  elementType: text
+  bounds:
+  - 214
+  - 294
+  - 38
+  - 42
+  content:
+    fontSize: 10
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '128'
+    align:
+    - right
+    - middle
+- elementId: history-nav-fav-icon
+  elementType: icon
+  bounds:
+  - 94
+  - 359
+  - 15
+  - 15
+  iconName: fas:star
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-nav-fav
+  elementType: text
+  bounds:
+  - 122
+  - 346
+  - 90
+  - 42
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 已收藏
+    align:
+    - left
+    - middle
+- elementId: history-nav-fav-count
+  elementType: text
+  bounds:
+  - 214
+  - 346
+  - 38
+  - 42
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '12'
+    align:
+    - right
+    - middle
+- elementId: history-sidebar-rule
+  elementType: shape
+  bounds:
+  - 88
+  - 428
+  - 170
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: history-storage-title
+  elementType: text
+  bounds:
+  - 90
+  - 456
+  - 150
+  - 24
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 本机存储
+    bold: true
+- elementId: history-storage-copy
+  elementType: text
+  bounds:
+  - 90
+  - 490
+  - 164
+  - 66
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 截图、OCR 修正与对话记录仅保存在本机。卸载前请确认是否需要备份。
+- elementId: history-storage-icon
+  elementType: icon
+  bounds:
+  - 90
+  - 864
+  - 14
+  - 14
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: history-storage-note
+  elementType: text
+  bounds:
+  - 114
+  - 858
+  - 140
+  - 26
+  content:
+    fontSize: 10
+    color: '#8DB9A4'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 无云端同步
+- elementId: history-title
+  elementType: text
+  bounds:
+  - 314
+  - 172
+  - 300
+  - 34
+  content:
+    fontSize: 23
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 全部记录
+    bold: true
+- elementId: history-subtitle
+  elementType: text
+  bounds:
+  - 314
+  - 212
+  - 600
+  - 22
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 搜索问题、OCR 原文、回答内容或来源窗口
+- elementId: history-close
+  elementType: icon
+  bounds:
+  - 1490
+  - 176
+  - 16
+  - 16
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-search
+  elementType: shape
+  bounds:
+  - 314
+  - 226
+  - 1198
+  - 44
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 1198
+  - 44
+  path: M 10,0 H 1188 Q 1198,0 1198,10 V 34 Q 1198,44 1188,44 H 10 Q 0,44 0,34 V 10 Q 0,0 10,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: history-search-icon
+  elementType: icon
+  bounds:
+  - 332
+  - 240
+  - 15
+  - 15
+  iconName: fas:magnifying-glass
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-search-placeholder
+  elementType: text
+  bounds:
+  - 360
+  - 232
+  - 620
+  - 32
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 搜索历史记录…
+    align:
+    - left
+    - middle
+- elementId: history-search-key
+  elementType: shape
+  bounds:
+  - 1436
+  - 235
+  - 54
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 54
+  - 26
+  path: M 8,0 H 46 Q 54,0 54,8 V 18 Q 54,26 46,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+- elementId: history-search-key-text
+  elementType: text
+  bounds:
+  - 1436
+  - 235
+  - 54
+  - 26
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Ctrl F
+    align:
+    - center
+    - middle
+- elementId: history-filter-0
+  elementType: shape
+  bounds:
+  - 314
+  - 290
+  - 64
+  - 30
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 64
+  - 30
+  path: M 8,0 H 56 Q 64,0 64,8 V 22 Q 64,30 56,30 H 8 Q 0,30 0,22 V 8 Q 0,0 8,0 Z
+  border: &id003
+    width: 1
+    color: '#8FA6C999'
+- elementId: history-filter-text-0
+  elementType: text
+  bounds:
+  - 314
+  - 290
+  - 64
+  - 30
+  content:
+    fontSize: 10
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 全部
+    align:
+    - center
+    - middle
+- elementId: history-filter-1
+  elementType: shape
+  bounds:
+  - 386
+  - 290
+  - 94
+  - 30
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 94
+  - 30
+  path: M 8,0 H 86 Q 94,0 94,8 V 22 Q 94,30 86,30 H 8 Q 0,30 0,22 V 8 Q 0,0 8,0 Z
+- elementId: history-filter-text-1
+  elementType: text
+  bounds:
+  - 386
+  - 290
+  - 94
+  - 30
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 截图理解
+    align:
+    - center
+    - middle
+- elementId: history-filter-2
+  elementType: shape
+  bounds:
+  - 488
+  - 290
+  - 76
+  - 30
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 76
+  - 30
+  path: M 8,0 H 68 Q 76,0 76,8 V 22 Q 76,30 68,30 H 8 Q 0,30 0,22 V 8 Q 0,0 8,0 Z
+- elementId: history-filter-text-2
+  elementType: text
+  bounds:
+  - 488
+  - 290
+  - 76
+  - 30
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 纯文本
+    align:
+    - center
+    - middle
+- elementId: history-filter-3
+  elementType: shape
+  bounds:
+  - 572
+  - 290
+  - 88
+  - 30
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 88
+  - 30
+  path: M 8,0 H 80 Q 88,0 88,8 V 22 Q 88,30 80,30 H 8 Q 0,30 0,22 V 8 Q 0,0 8,0 Z
+- elementId: history-filter-text-3
+  elementType: text
+  bounds:
+  - 572
+  - 290
+  - 88
+  - 30
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网回答
+    align:
+    - center
+    - middle
+- elementId: history-result-count
+  elementType: text
+  bounds:
+  - 714
+  - 290
+  - 200
+  - 30
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 128 条结果
+    align:
+    - left
+    - middle
+- elementId: history-sort-icon
+  elementType: icon
+  bounds:
+  - 1144
+  - 299
+  - 12
+  - 12
+  iconName: fas:arrow-down-wide-short
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-sort
+  elementType: text
+  bounds:
+  - 1166
+  - 290
+  - 170
+  - 30
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 最近优先
+    align:
+    - right
+    - middle
+- elementId: history-sort-chevron
+  elementType: icon
+  bounds:
+  - 1348
+  - 299
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-detail
+  elementType: shape
+  bounds:
+  - 942
+  - 336
+  - 570
+  - 580
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 570
+  - 580
+  path: M 12,0 H 558 Q 570,0 570,12 V 568 Q 570,580 558,580 H 12 Q 0,580 0,568 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: history-detail-label
+  elementType: text
+  bounds:
+  - 966
+  - 356
+  - 200
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 对话详情
+    bold: true
+- elementId: history-detail-rounds
+  elementType: text
+  bounds:
+  - 1224
+  - 356
+  - 200
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 6 轮对话
+    align:
+    - right
+    - top
+- elementId: history-detail-more
+  elementType: icon
+  bounds:
+  - 1472
+  - 360
+  - 14
+  - 14
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-detail-title
+  elementType: text
+  bounds:
+  - 1214
+  - 400
+  - 260
+  - 48
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.35
+    wrap: true
+    text: 'Transformer
+
+      自注意力机制'
+    bold: true
+- elementId: history-detail-source
+  elementType: text
+  bounds:
+  - 1214
+  - 458
+  - 260
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: VS Code · 今天 10:24
+- elementId: history-detail-context
+  elementType: text
+  bounds:
+  - 1214
+  - 488
+  - 280
+  - 22
+  content:
+    fontSize: 9
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 视觉模型 · 联网检索 · OCR 已修正
+- elementId: history-detail-rule
+  elementType: shape
+  bounds:
+  - 966
+  - 534
+  - 522
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: history-answer-label
+  elementType: text
+  bounds:
+  - 966
+  - 556
+  - 200
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 首次解释
+    bold: true
+- elementId: history-answer
+  elementType: text
+  bounds:
+  - 966
+  - 588
+  - 500
+  - 66
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: Transformer 是一种基于自注意力机制的神经网络架构。它让模型读取整句话，再判断每个词应该关注谁。
+- elementId: history-sources
+  elementType: text
+  bounds:
+  - 966
+  - 668
+  - 400
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 2 个来源 · 3 次追问 · 最后更新于 10:31
+- elementId: history-model-chip
+  elementType: shape
+  bounds:
+  - 966
+  - 706
+  - 100
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 100
+  - 28
+  path: M 8,0 H 92 Q 100,0 100,8 V 20 Q 100,28 92,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: history-model-chip-text
+  elementType: text
+  bounds:
+  - 966
+  - 706
+  - 100
+  - 28
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - center
+    - middle
+- elementId: history-vision-chip
+  elementType: shape
+  bounds:
+  - 1076
+  - 706
+  - 100
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 100
+  - 28
+  path: M 8,0 H 92 Q 100,0 100,8 V 20 Q 100,28 92,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: history-vision-chip-text
+  elementType: text
+  bounds:
+  - 1076
+  - 706
+  - 100
+  - 28
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 截图理解
+    align:
+    - center
+    - middle
+- elementId: history-web-chip
+  elementType: shape
+  bounds:
+  - 1186
+  - 706
+  - 100
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 100
+  - 28
+  path: M 8,0 H 92 Q 100,0 100,8 V 20 Q 100,28 92,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: history-web-chip-text
+  elementType: text
+  bounds:
+  - 1186
+  - 706
+  - 100
+  - 28
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网资料
+    align:
+    - center
+    - middle
+- elementId: history-reopen-note
+  elementType: text
+  bounds:
+  - 966
+  - 762
+  - 500
+  - 44
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: '重新打开将恢复消息、模型、OCR 修正与来源。
+
+      仅恢复本机记录，不会自动重新发送请求。'
+- elementId: history-reopen
+  elementType: shape
+  bounds:
+  - 966
+  - 838
+  - 164
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 164
+  - 40
+  path: M 10,0 H 154 Q 164,0 164,10 V 30 Q 164,40 154,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: history-reopen-icon
+  elementType: icon
+  bounds:
+  - 982
+  - 851
+  - 14
+  - 14
+  iconName: fas:arrow-up-right-from-square
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: history-reopen-text
+  elementType: text
+  bounds:
+  - 1006
+  - 838
+  - 106
+  - 40
+  content:
+    fontSize: 11
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重新打开对话
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: history-unfavorite
+  elementType: shape
+  bounds:
+  - 1144
+  - 838
+  - 128
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 128
+  - 40
+  path: M 10,0 H 118 Q 128,0 128,10 V 30 Q 128,40 118,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: history-unfavorite-icon
+  elementType: icon
+  bounds:
+  - 1160
+  - 851
+  - 14
+  - 14
+  iconName: fas:star
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: history-unfavorite-text
+  elementType: text
+  bounds:
+  - 1184
+  - 838
+  - 74
+  - 40
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 取消收藏
+    align:
+    - left
+    - middle
+- elementId: history-detail-hint
+  elementType: text
+  bounds:
+  - 1304
+  - 838
+  - 160
+  - 40
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Esc 关闭详情
+    align:
+    - right
+    - middle
+- elementId: history-thumb
+  elementType: shape
+  bounds:
+  - 966
+  - 398
+  - 224
+  - 126
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 224
+  - 126
+  path: M 8,0 H 216 Q 224,0 224,8 V 118 Q 224,126 216,126 H 8 Q 0,126 0,118 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: history-thumb-sidebar
+  elementType: shape
+  bounds:
+  - 967
+  - 399
+  - 49
+  - 124
+  shapeName: custom
+  viewBox:
+  - 49
+  - 124
+  fill:
+    type: solid
+    color: '#1D2128'
+  path: M 7,0 H 49 V 124 H 7 Q 0,124 0,117 V 7 Q 0,0 7,0 Z
+- elementId: history-thumb-topbar
+  elementType: shape
+  bounds:
+  - 967
+  - 399
+  - 222
+  - 21
+  shapeName: custom
+  viewBox:
+  - 222
+  - 21
+  fill:
+    type: solid
+    color: '#242931'
+  path: M 7,0 H 215 Q 222,0 222,7 V 21 H 0 V 7 Q 0,0 7,0 Z
+- elementId: history-thumb-dot
+  elementType: shape
+  bounds:
+  - 975
+  - 406
+  - 4
+  - 4
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-thumb-tab
+  elementType: shape
+  bounds:
+  - 1023
+  - 402
+  - 62.720000000000006
+  - 14
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 62.720000000000006
+  - 14
+  path: M 7.0,0 H 55.720000000000006 Q 62.720000000000006,0 62.720000000000006,7.0 V 7.0 Q 62.720000000000006,14 55.720000000000006,14 H 7.0 Q 0,14 0,7.0 V 7.0 Q 0,0 7.0,0 Z
+- elementId: history-thumb-tree-0
+  elementType: shape
+  bounds:
+  - 975
+  - 429
+  - 25.48
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 25.48
+  - 3
+  path: M 1.5,0 H 23.98 Q 25.48,0 25.48,1.5 V 1.5 Q 25.48,3 23.98,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-tree-1
+  elementType: shape
+  bounds:
+  - 975
+  - 444
+  - 18.62
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 18.62
+  - 3
+  path: M 1.5,0 H 17.12 Q 18.62,0 18.62,1.5 V 1.5 Q 18.62,3 17.12,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-tree-2
+  elementType: shape
+  bounds:
+  - 975
+  - 459
+  - 22.540000000000003
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 22.540000000000003
+  - 3
+  path: M 1.5,0 H 21.040000000000003 Q 22.540000000000003,0 22.540000000000003,1.5 V 1.5 Q 22.540000000000003,3 21.040000000000003,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-tree-3
+  elementType: shape
+  bounds:
+  - 975
+  - 474
+  - 15.19
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 15.19
+  - 3
+  path: M 1.5,0 H 13.69 Q 15.19,0 15.19,1.5 V 1.5 Q 15.19,3 13.69,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-code-0
+  elementType: shape
+  bounds:
+  - 1027
+  - 431
+  - 107.28
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 107.28
+  - 3
+  path: M 1.5,0 H 105.78 Q 107.28,0 107.28,1.5 V 1.5 Q 107.28,3 105.78,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-code-1
+  elementType: shape
+  bounds:
+  - 1027
+  - 445
+  - 71.52
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 71.52
+  - 3
+  path: M 1.5,0 H 70.02 Q 71.52,0 71.52,1.5 V 1.5 Q 71.52,3 70.02,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-code-2
+  elementType: shape
+  bounds:
+  - 1035
+  - 459
+  - 122.17999999999999
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 122.17999999999999
+  - 3
+  path: M 1.5,0 H 120.67999999999999 Q 122.17999999999999,0 122.17999999999999,1.5 V 1.5 Q 122.17999999999999,3 120.67999999999999,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-code-3
+  elementType: shape
+  bounds:
+  - 1035
+  - 473
+  - 95.36
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 95.36
+  - 3
+  path: M 1.5,0 H 93.86 Q 95.36,0 95.36,1.5 V 1.5 Q 95.36,3 93.86,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-code-4
+  elementType: shape
+  bounds:
+  - 1035
+  - 487
+  - 113.24
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 113.24
+  - 3
+  path: M 1.5,0 H 111.74 Q 113.24,0 113.24,1.5 V 1.5 Q 113.24,3 111.74,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-code-5
+  elementType: shape
+  bounds:
+  - 1027
+  - 501
+  - 62.58
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 62.58
+  - 3
+  path: M 1.5,0 H 61.08 Q 62.58,0 62.58,1.5 V 1.5 Q 62.58,3 61.08,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: history-thumb-selection
+  elementType: shape
+  bounds:
+  - 1023
+  - 439
+  - 134.1
+  - 47
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#8FA6C908'
+  border:
+    width: 1
+    color: '#8FA6C9AA'
+- elementId: history-record-0
+  elementType: shape
+  bounds:
+  - 314
+  - 388
+  - 600
+  - 96
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 600
+  - 96
+  path: M 12,0 H 588 Q 600,0 600,12 V 84 Q 600,96 588,96 H 12 Q 0,96 0,84 V 12 Q 0,0 12,0 Z
+  border: *id003
+- elementId: history-record-0-title
+  elementType: text
+  bounds:
+  - 330
+  - 400
+  - 450
+  - 22
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer 自注意力机制
+    bold: true
+- elementId: history-record-0-favorite
+  elementType: icon
+  bounds:
+  - 878
+  - 403
+  - 14
+  - 14
+  iconName: fas:star
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: history-record-0-snippet
+  elementType: text
+  bounds:
+  - 330
+  - 428
+  - 540
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 它让模型读取整句话，再决定每个词应该关注谁…
+- elementId: history-record-0-meta
+  elementType: text
+  bounds:
+  - 330
+  - 456
+  - 360
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: VS Code · 今天 10:24
+- elementId: history-record-0-badges
+  elementType: text
+  bounds:
+  - 724
+  - 456
+  - 156
+  - 18
+  content:
+    fontSize: 9
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 视觉 · 联网
+    align:
+    - right
+    - top
+- elementId: history-record-1
+  elementType: shape
+  bounds:
+  - 314
+  - 496
+  - 600
+  - 96
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 600
+  - 96
+  path: M 12,0 H 588 Q 600,0 600,12 V 84 Q 600,96 588,96 H 12 Q 0,96 0,84 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: history-record-1-title
+  elementType: text
+  bounds:
+  - 330
+  - 508
+  - 450
+  - 22
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 'TypeError: Cannot read properties…'
+    bold: true
+- elementId: history-record-1-favorite
+  elementType: icon
+  bounds:
+  - 878
+  - 511
+  - 14
+  - 14
+  iconName: far:star
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-record-1-snippet
+  elementType: text
+  bounds:
+  - 330
+  - 536
+  - 540
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 这个报错表示代码正在读取 undefined 上的属性…
+- elementId: history-record-1-meta
+  elementType: text
+  bounds:
+  - 330
+  - 564
+  - 360
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: IDE 报错 · 今天 09:51
+- elementId: history-record-1-badges
+  elementType: text
+  bounds:
+  - 724
+  - 564
+  - 156
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: OCR
+    align:
+    - right
+    - top
+- elementId: history-record-2
+  elementType: shape
+  bounds:
+  - 314
+  - 604
+  - 600
+  - 96
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 600
+  - 96
+  path: M 12,0 H 588 Q 600,0 600,12 V 84 Q 600,96 588,96 H 12 Q 0,96 0,84 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: history-record-2-title
+  elementType: text
+  bounds:
+  - 330
+  - 616
+  - 450
+  - 22
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 如何理解这段注意力代码
+    bold: true
+- elementId: history-record-2-favorite
+  elementType: icon
+  bounds:
+  - 878
+  - 619
+  - 14
+  - 14
+  iconName: fas:star
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: history-record-2-snippet
+  elementType: text
+  bounds:
+  - 330
+  - 644
+  - 540
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 可以把 query 看作当前问题，key 用来匹配相关信息…
+- elementId: history-record-2-meta
+  elementType: text
+  bounds:
+  - 330
+  - 672
+  - 360
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: VS Code · 昨天 21:16
+- elementId: history-record-2-badges
+  elementType: text
+  bounds:
+  - 724
+  - 672
+  - 156
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 视觉
+    align:
+    - right
+    - top
+- elementId: history-record-3
+  elementType: shape
+  bounds:
+  - 314
+  - 712
+  - 600
+  - 96
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 600
+  - 96
+  path: M 12,0 H 588 Q 600,0 600,12 V 84 Q 600,96 588,96 H 12 Q 0,96 0,84 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: history-record-3-title
+  elementType: text
+  bounds:
+  - 330
+  - 724
+  - 450
+  - 22
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Windows DPAPI 是什么
+    bold: true
+- elementId: history-record-3-favorite
+  elementType: icon
+  bounds:
+  - 878
+  - 727
+  - 14
+  - 14
+  iconName: far:star
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-record-3-snippet
+  elementType: text
+  bounds:
+  - 330
+  - 752
+  - 540
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DPAPI 使用当前 Windows 用户的凭据保护本地数据…
+- elementId: history-record-3-meta
+  elementType: text
+  bounds:
+  - 330
+  - 780
+  - 360
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 设置页 · 昨天 18:42
+- elementId: history-record-3-badges
+  elementType: text
+  bounds:
+  - 724
+  - 780
+  - 156
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网
+    align:
+    - right
+    - top
+- elementId: history-record-4
+  elementType: shape
+  bounds:
+  - 314
+  - 820
+  - 600
+  - 96
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 600
+  - 96
+  path: M 12,0 H 588 Q 600,0 600,12 V 84 Q 600,96 588,96 H 12 Q 0,96 0,84 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: history-record-4-title
+  elementType: text
+  bounds:
+  - 330
+  - 832
+  - 450
+  - 22
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 视频字幕：latent space
+    bold: true
+- elementId: history-record-4-favorite
+  elementType: icon
+  bounds:
+  - 878
+  - 835
+  - 14
+  - 14
+  iconName: far:star
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: history-record-4-snippet
+  elementType: text
+  bounds:
+  - 330
+  - 860
+  - 540
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Latent space 是模型压缩信息后形成的内部表示空间…
+- elementId: history-record-4-meta
+  elementType: text
+  bounds:
+  - 330
+  - 888
+  - 360
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 视频播放器 · 周二
+- elementId: history-record-4-badges
+  elementType: text
+  bounds:
+  - 724
+  - 888
+  - 156
+  - 18
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 视觉
+    align:
+    - right
+    - top

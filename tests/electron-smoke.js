@@ -96,6 +96,36 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'3','wizard reaches the ready step');
    assert.equal(await js(settings,"document.querySelectorAll('#onboarding .btn.primary:not([hidden])').length"),1,'ready step has exactly one primary action');
    assert.ok(await js(settings,"Boolean(document.getElementById('obStart') && document.getElementById('obFullSettings'))"),'start capture and full settings entries exist');
+   // Onboarding autosave (review fix 1): typing a key persists it without
+   // clicking any button; reopening resumes at the unfinished step with the
+   // saved key still in effect.
+   await js(settings,"document.getElementById('obBack').click();true");
+   await js(settings,"document.getElementById('obBack').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'1','autosave fixture returns to step 1');
+   await js(settings,"document.querySelector('[data-ob-provider=deepseek]').click();true");
+   await js(settings,"const k=document.getElementById('obKey');k.value='autosave-fixture-key';k.dispatchEvent(new Event('input'));k.dispatchEvent(new Event('change'));true");
+   await pause(900);
+   assert.equal(require('../src/main/store').getConfig().apiKey,'autosave-fixture-key','typing a key autosaves it without clicking next');
+   assert.equal(await js(settings,"(async()=>(await window.floatask.getSettings()).onboardingStep)()"),1,'the unfinished step is persisted while typing');
+   settings.webContents.reload();
+   await waitFor(()=>js(settings,"document.getElementById('providerGrid') && document.getElementById('providerGrid').children.length === 6"),'settings ready after autosave reload');
+   await waitFor(()=>js(settings,"document.getElementById('onboarding') && !document.getElementById('onboarding').hidden"),'wizard shows after autosave reload');
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'1','wizard resumes at the autosaved step');
+   const resumedKey=await js(settings,"(async()=>{const s=await window.floatask.getSettings();return {saved:s.hasApiKey,placeholder:document.getElementById('obKey').placeholder,label:window.FloatAskI18n.t('ob.keyPlaceholderSaved')}})()");
+   assert.equal(resumedKey.saved,true,'the typed key survives closing the window');
+   assert.equal(resumedKey.placeholder,resumedKey.label,'the key field says the saved key is kept');
+   // Close path: typing without blur, then the titlebar X must still flush.
+   await js(settings,"const k=document.getElementById('obKey');k.value='autosave-second-key';k.dispatchEvent(new Event('input'));true");
+   await js(settings,"document.getElementById('closeBtn').click();true");
+   await pause(800);
+   assert.equal(require('../src/main/store').getConfig().apiKey,'autosave-second-key','typing then closing the window flushes the draft');
+   settings.show();
+   await js(settings,"document.getElementById('obKey').value='';true");
+   await js(settings,"document.getElementById('obNext').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'2','a saved key satisfies the step-1 validation');
+   await js(settings,"document.getElementById('obNext').click();true");
+   assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'3','autosave fixture returns to the ready step');
+   await js(settings,"window.floatask.saveSettings({clearApiKey:true,keepOnboarding:true});true");
    await js(settings,"document.getElementById('obBack').click();true");
    await js(settings,"document.getElementById('obLater').click();true");
    assert.equal(await js(settings,"document.getElementById('onboarding').hidden"),true,'later hides the wizard');

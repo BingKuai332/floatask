@@ -1,0 +1,1689 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 33
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 外观与阅读
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 主题、字体与阅读密度共用实时预览；朝日控件中仍保留真实的近月主题小样
+- elementId: appearance-window
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 1472
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 1472
+  - 788
+  path: M 16,0 H 1456 Q 1472,0 1472,16 V 772 Q 1472,788 1456,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+  shadow:
+    blur: 40
+    color: '#26314726'
+    offset:
+    - 0
+    - 14
+- elementId: appearance-sidebar
+  elementType: shape
+  bounds:
+  - 65
+  - 149
+  - 218
+  - 786
+  shapeName: custom
+  viewBox:
+  - 218
+  - 786
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  path: M 15,0 H 218 V 786 H 15 Q 0,786 0,771 V 15 Q 0,0 15,0 Z
+- elementId: appearance-sidebar-line
+  elementType: shape
+  bounds:
+  - 283
+  - 149
+  - 1
+  - 786
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: appearance-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 170
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: appearance-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 178
+  - 18
+  - 18
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: appearance-brand
+  elementType: text
+  bounds:
+  - 134
+  - 168
+  - 100
+  - 28
+  content:
+    fontSize: 18
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问设置
+    bold: true
+- elementId: appearance-brand-sub
+  elementType: text
+  bounds:
+  - 134
+  - 197
+  - 120
+  - 16
+  content:
+    fontSize: 8
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: appearance-nav-icon-0
+  elementType: icon
+  bounds:
+  - 94
+  - 260
+  - 15
+  - 15
+  iconName: fas:sliders
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-nav-text-0
+  elementType: text
+  bounds:
+  - 122
+  - 256
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 模型服务
+- elementId: appearance-nav-icon-1
+  elementType: icon
+  bounds:
+  - 94
+  - 312
+  - 15
+  - 15
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-nav-text-1
+  elementType: text
+  bounds:
+  - 122
+  - 308
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 联网检索
+- elementId: appearance-nav-icon-2
+  elementType: icon
+  bounds:
+  - 94
+  - 364
+  - 15
+  - 15
+  iconName: fas:keyboard
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-nav-text-2
+  elementType: text
+  bounds:
+  - 122
+  - 360
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 通用与快捷键
+- elementId: appearance-nav-icon-3
+  elementType: icon
+  bounds:
+  - 94
+  - 416
+  - 15
+  - 15
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-nav-text-3
+  elementType: text
+  bounds:
+  - 122
+  - 412
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与隐私
+- elementId: appearance-nav-active
+  elementType: shape
+  bounds:
+  - 78
+  - 457
+  - 190
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 190
+  - 40
+  path: M 10,0 H 180 Q 190,0 190,10 V 30 Q 190,40 180,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: appearance-nav-icon-4
+  elementType: icon
+  bounds:
+  - 94
+  - 468
+  - 15
+  - 15
+  iconName: fas:font
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: appearance-nav-text-4
+  elementType: text
+  bounds:
+  - 122
+  - 464
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 外观与阅读
+- elementId: appearance-nav-icon-5
+  elementType: icon
+  bounds:
+  - 94
+  - 520
+  - 15
+  - 15
+  iconName: fas:rotate
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-nav-text-5
+  elementType: text
+  bounds:
+  - 122
+  - 516
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 更新与关于
+- elementId: appearance-nav-note
+  elementType: text
+  bounds:
+  - 90
+  - 866
+  - 170
+  - 40
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: '配置仅保存在本机
+
+      保存后立即应用'
+- elementId: appearance-close
+  elementType: icon
+  bounds:
+  - 1490
+  - 174
+  - 16
+  - 16
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-title
+  elementType: text
+  bounds:
+  - 322
+  - 178
+  - 400
+  - 34
+  content:
+    fontSize: 23
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 外观与阅读
+    bold: true
+- elementId: appearance-desc
+  elementType: text
+  bounds:
+  - 322
+  - 220
+  - 790
+  - 24
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 调整主题、字体和阅读版式。所有变化即时预览，保存后跨窗口保持一致。
+- elementId: appearance-save
+  elementType: shape
+  bounds:
+  - 1370
+  - 176
+  - 118
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 118
+  - 40
+  path: M 10,0 H 108 Q 118,0 118,10 V 30 Q 118,40 108,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: appearance-save-text
+  elementType: text
+  bounds:
+  - 1370
+  - 176
+  - 118
+  - 40
+  content:
+    fontSize: 12
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 保存更改
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: appearance-theme-section
+  elementType: text
+  bounds:
+  - 322
+  - 280
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 界面主题
+    bold: true
+- elementId: appearance-theme-card
+  elementType: shape
+  bounds:
+  - 322
+  - 316
+  - 720
+  - 250
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 720
+  - 250
+  path: M 12,0 H 708 Q 720,0 720,12 V 238 Q 720,250 708,250 H 12 Q 0,250 0,238 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-type-title
+  elementType: text
+  bounds:
+  - 322
+  - 598
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 字体与阅读密度
+    bold: true
+- elementId: appearance-type-card
+  elementType: shape
+  bounds:
+  - 322
+  - 634
+  - 720
+  - 262
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 720
+  - 262
+  path: M 12,0 H 708 Q 720,0 720,12 V 250 Q 720,262 708,262 H 12 Q 0,262 0,250 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-font-label
+  elementType: text
+  bounds:
+  - 346
+  - 654
+  - 220
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 界面与正文字体
+    bold: true
+- elementId: appearance-font-select
+  elementType: shape
+  bounds:
+  - 346
+  - 682
+  - 470
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 470
+  - 40
+  path: M 10,0 H 460 Q 470,0 470,10 V 30 Q 470,40 460,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-font-value
+  elementType: text
+  bounds:
+  - 362
+  - 682
+  - 330
+  - 40
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: MiSans · 系统默认
+    align:
+    - left
+    - middle
+- elementId: appearance-font-chevron
+  elementType: icon
+  bounds:
+  - 782
+  - 696
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-font-import
+  elementType: shape
+  bounds:
+  - 830
+  - 682
+  - 188
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 188
+  - 40
+  path: M 10,0 H 178 Q 188,0 188,10 V 30 Q 188,40 178,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: appearance-font-import-icon
+  elementType: icon
+  bounds:
+  - 848
+  - 695
+  - 14
+  - 14
+  iconName: fas:arrow-up-from-bracket
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-font-import-text
+  elementType: text
+  bounds:
+  - 872
+  - 682
+  - 128
+  - 40
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 导入自定义字体
+    align:
+    - left
+    - middle
+- elementId: appearance-size-label
+  elementType: text
+  bounds:
+  - 346
+  - 752
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 正文字号
+    bold: true
+- elementId: appearance-size-value
+  elementType: text
+  bounds:
+  - 942
+  - 750
+  - 76
+  - 24
+  content:
+    fontSize: 11
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 14 px
+    bold: true
+    align:
+    - right
+    - top
+- elementId: appearance-size-track
+  elementType: shape
+  bounds:
+  - 478
+  - 762
+  - 420
+  - 4
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 420
+  - 4
+  path: M 2.0,0 H 418.0 Q 420,0 420,2.0 V 2.0 Q 420,4 418.0,4 H 2.0 Q 0,4 0,2.0 V 2.0 Q 0,0 2.0,0 Z
+- elementId: appearance-size-progress
+  elementType: shape
+  bounds:
+  - 478
+  - 762
+  - 210
+  - 4
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 210
+  - 4
+  path: M 2.0,0 H 208.0 Q 210,0 210,2.0 V 2.0 Q 210,4 208.0,4 H 2.0 Q 0,4 0,2.0 V 2.0 Q 0,0 2.0,0 Z
+- elementId: appearance-size-thumb
+  elementType: shape
+  bounds:
+  - 680
+  - 755
+  - 18
+  - 18
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-size-min
+  elementType: text
+  bounds:
+  - 468
+  - 782
+  - 40
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '12'
+- elementId: appearance-size-mid
+  elementType: text
+  bounds:
+  - 670
+  - 782
+  - 40
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '14'
+    align:
+    - center
+    - top
+- elementId: appearance-size-max
+  elementType: text
+  bounds:
+  - 858
+  - 782
+  - 40
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '16'
+    align:
+    - right
+    - top
+- elementId: appearance-density-label
+  elementType: text
+  bounds:
+  - 346
+  - 822
+  - 160
+  - 24
+  content:
+    fontSize: 11
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 阅读密度
+    bold: true
+- elementId: appearance-density-control
+  elementType: shape
+  bounds:
+  - 478
+  - 814
+  - 540
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 540
+  - 42
+  path: M 10,0 H 530 Q 540,0 540,10 V 32 Q 540,42 530,42 H 10 Q 0,42 0,32 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-density-active
+  elementType: shape
+  bounds:
+  - 658
+  - 818
+  - 174
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 174
+  - 34
+  path: M 8,0 H 166 Q 174,0 174,8 V 26 Q 174,34 166,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: appearance-density-compact
+  elementType: text
+  bounds:
+  - 482
+  - 818
+  - 170
+  - 34
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 紧凑
+    align:
+    - center
+    - middle
+- elementId: appearance-density-standard
+  elementType: text
+  bounds:
+  - 658
+  - 818
+  - 174
+  - 34
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 标准
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: appearance-density-loose
+  elementType: text
+  bounds:
+  - 838
+  - 818
+  - 174
+  - 34
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 宽松
+    align:
+    - center
+    - middle
+- elementId: appearance-preview-section
+  elementType: text
+  bounds:
+  - 1066
+  - 280
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 阅读预览
+    bold: true
+- elementId: appearance-preview-card
+  elementType: shape
+  bounds:
+  - 1066
+  - 316
+  - 446
+  - 320
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 446
+  - 320
+  path: M 12,0 H 434 Q 446,0 446,12 V 308 Q 446,320 434,320 H 12 Q 0,320 0,308 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-preview-label
+  elementType: text
+  bounds:
+  - 1090
+  - 338
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 标准密度
+    bold: true
+- elementId: appearance-preview-size
+  elementType: text
+  bounds:
+  - 1340
+  - 338
+  - 148
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 14 px / 1.55
+    align:
+    - right
+    - top
+- elementId: appearance-preview-window
+  elementType: shape
+  bounds:
+  - 1090
+  - 374
+  - 398
+  - 230
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 398
+  - 230
+  path: M 12,0 H 386 Q 398,0 398,12 V 218 Q 398,230 386,230 H 12 Q 0,230 0,218 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-preview-avatar
+  elementType: shape
+  bounds:
+  - 1110
+  - 394
+  - 28
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 28
+  - 28
+  path: M 8,0 H 20 Q 28,0 28,8 V 20 Q 28,28 20,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: appearance-preview-logo
+  elementType: icon
+  bounds:
+  - 1116
+  - 400
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: appearance-preview-name
+  elementType: text
+  bounds:
+  - 1150
+  - 396
+  - 160
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 刚刚
+- elementId: appearance-preview-heading
+  elementType: text
+  bounds:
+  - 1110
+  - 440
+  - 280
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 它解决什么问题
+    bold: true
+- elementId: appearance-preview-body
+  elementType: text
+  bounds:
+  - 1110
+  - 474
+  - 332
+  - 62
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.55
+    wrap: true
+    text: Transformer 会让每个词同时关注句子里的其他词，再计算彼此的重要程度，因此更适合理解长距离上下文。
+- elementId: appearance-preview-rule
+  elementType: shape
+  bounds:
+  - 1110
+  - 552
+  - 3
+  - 30
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 3
+  - 30
+  path: M 1.5,0 H 1.5 Q 3,0 3,1.5 V 28.5 Q 3,30 1.5,30 H 1.5 Q 0,30 0,28.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: appearance-preview-summary
+  elementType: text
+  bounds:
+  - 1124
+  - 548
+  - 310
+  - 40
+  content:
+    fontSize: 10
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: 一句话记住：看整句话，再决定每个词该关注谁。
+- elementId: appearance-behavior-section
+  elementType: text
+  bounds:
+  - 1066
+  - 668
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 阅读与动态行为
+    bold: true
+- elementId: appearance-behavior-card
+  elementType: shape
+  bounds:
+  - 1066
+  - 704
+  - 446
+  - 192
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 446
+  - 192
+  path: M 12,0 H 434 Q 446,0 446,12 V 180 Q 446,192 434,192 H 12 Q 0,192 0,180 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-follow-title
+  elementType: text
+  bounds:
+  - 1090
+  - 722
+  - 250
+  - 24
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 流式回答自动跟随
+    bold: true
+- elementId: appearance-follow-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 748
+  - 310
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 向上阅读时仍会自动暂停
+- elementId: appearance-wrap-title
+  elementType: text
+  bounds:
+  - 1090
+  - 782
+  - 250
+  - 24
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 代码块默认自动换行
+    bold: true
+- elementId: appearance-motion-title
+  elementType: text
+  bounds:
+  - 1090
+  - 838
+  - 250
+  - 24
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 减少动态效果
+    bold: true
+- elementId: appearance-motion-note
+  elementType: text
+  bounds:
+  - 1090
+  - 864
+  - 300
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 开启后主题与窗口状态立即切换
+- elementId: appearance-footer
+  elementType: text
+  bounds:
+  - 322
+  - 906
+  - 980
+  - 20
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 自定义字体只影响界面与阅读；代码继续使用等宽字体，OCR 识别不受字体设置影响。
+- elementId: appearance-theme-option-0
+  elementType: shape
+  bounds:
+  - 346
+  - 354
+  - 213
+  - 140
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 213
+  - 140
+  path: M 12,0 H 201 Q 213,0 213,12 V 128 Q 213,140 201,140 H 12 Q 0,140 0,128 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#506B9299'
+- elementId: appearance-theme-preview-0
+  elementType: shape
+  bounds:
+  - 358
+  - 366
+  - 189
+  - 72
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 189
+  - 72
+  path: M 8,0 H 181 Q 189,0 189,8 V 64 Q 189,72 181,72 H 8 Q 0,72 0,64 V 8 Q 0,0 8,0 Z
+- elementId: appearance-theme-label-0
+  elementType: text
+  bounds:
+  - 362
+  - 450
+  - 120
+  - 22
+  content:
+    fontSize: 11
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 跟随系统
+    bold: true
+- elementId: appearance-theme-sub-0
+  elementType: text
+  bounds:
+  - 362
+  - 472
+  - 140
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 当前为朝日
+- elementId: appearance-system-light
+  elementType: shape
+  bounds:
+  - 370
+  - 378
+  - 76
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 76
+  - 48
+  path: M 8,0 H 68 Q 76,0 76,8 V 40 Q 76,48 68,48 H 8 Q 0,48 0,40 V 8 Q 0,0 8,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-system-dark
+  elementType: shape
+  bounds:
+  - 458
+  - 378
+  - 76
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 76
+  - 48
+  path: M 8,0 H 68 Q 76,0 76,8 V 40 Q 76,48 68,48 H 8 Q 0,48 0,40 V 8 Q 0,0 8,0 Z
+  border: &id001
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: appearance-system-sun
+  elementType: icon
+  bounds:
+  - 398
+  - 392
+  - 16
+  - 16
+  iconName: far:sun
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: appearance-system-moon
+  elementType: icon
+  bounds:
+  - 488
+  - 392
+  - 16
+  - 16
+  iconName: far:moon
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: appearance-theme-selected
+  elementType: shape
+  bounds:
+  - 512
+  - 452
+  - 28
+  - 22
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 28
+  - 22
+  path: M 8,0 H 20 Q 28,0 28,8 V 14 Q 28,22 20,22 H 8 Q 0,22 0,14 V 8 Q 0,0 8,0 Z
+- elementId: appearance-theme-check
+  elementType: icon
+  bounds:
+  - 520
+  - 457
+  - 12
+  - 12
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: appearance-theme-option-1
+  elementType: shape
+  bounds:
+  - 575
+  - 354
+  - 213
+  - 140
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 213
+  - 140
+  path: M 12,0 H 201 Q 213,0 213,12 V 128 Q 213,140 201,140 H 12 Q 0,140 0,128 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-theme-preview-1
+  elementType: shape
+  bounds:
+  - 587
+  - 366
+  - 189
+  - 72
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E7E7DF'
+  viewBox:
+  - 189
+  - 72
+  path: M 8,0 H 181 Q 189,0 189,8 V 64 Q 189,72 181,72 H 8 Q 0,72 0,64 V 8 Q 0,0 8,0 Z
+- elementId: appearance-theme-label-1
+  elementType: text
+  bounds:
+  - 591
+  - 450
+  - 120
+  - 22
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 白天
+- elementId: appearance-theme-sub-1
+  elementType: text
+  bounds:
+  - 591
+  - 472
+  - 140
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 柔和暖白
+- elementId: appearance-theme-mini-window-1
+  elementType: shape
+  bounds:
+  - 607
+  - 378
+  - 150
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 150
+  - 48
+  path: M 8,0 H 142 Q 150,0 150,8 V 40 Q 150,48 142,48 H 8 Q 0,48 0,40 V 8 Q 0,0 8,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-theme-mini-logo-1
+  elementType: shape
+  bounds:
+  - 617
+  - 388
+  - 12
+  - 12
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 12
+  - 12
+  path: M 6.0,0 H 6.0 Q 12,0 12,6.0 V 6.0 Q 12,12 6.0,12 H 6.0 Q 0,12 0,6.0 V 6.0 Q 0,0 6.0,0 Z
+- elementId: appearance-theme-mini-line-1-1
+  elementType: shape
+  bounds:
+  - 639
+  - 388
+  - 88
+  - 5
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#20242B'
+  viewBox:
+  - 88
+  - 5
+  path: M 2.5,0 H 85.5 Q 88,0 88,2.5 V 2.5 Q 88,5 85.5,5 H 2.5 Q 0,5 0,2.5 V 2.5 Q 0,0 2.5,0 Z
+- elementId: appearance-theme-mini-line-2-1
+  elementType: shape
+  bounds:
+  - 617
+  - 408
+  - 118
+  - 4
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 118
+  - 4
+  path: M 2.0,0 H 116.0 Q 118,0 118,2.0 V 2.0 Q 118,4 116.0,4 H 2.0 Q 0,4 0,2.0 V 2.0 Q 0,0 2.0,0 Z
+- elementId: appearance-theme-option-2
+  elementType: shape
+  bounds:
+  - 804
+  - 354
+  - 213
+  - 140
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 213
+  - 140
+  path: M 12,0 H 201 Q 213,0 213,12 V 128 Q 213,140 201,140 H 12 Q 0,140 0,128 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: appearance-theme-preview-2
+  elementType: shape
+  bounds:
+  - 816
+  - 366
+  - 189
+  - 72
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#0C0E12'
+  viewBox:
+  - 189
+  - 72
+  path: M 8,0 H 181 Q 189,0 189,8 V 64 Q 189,72 181,72 H 8 Q 0,72 0,64 V 8 Q 0,0 8,0 Z
+- elementId: appearance-theme-label-2
+  elementType: text
+  bounds:
+  - 820
+  - 450
+  - 120
+  - 22
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 近月 · 深夜
+- elementId: appearance-theme-sub-2
+  elementType: text
+  bounds:
+  - 820
+  - 472
+  - 140
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 安静暗色
+- elementId: appearance-theme-mini-window-2
+  elementType: shape
+  bounds:
+  - 836
+  - 378
+  - 150
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 150
+  - 48
+  path: M 8,0 H 142 Q 150,0 150,8 V 40 Q 150,48 142,48 H 8 Q 0,48 0,40 V 8 Q 0,0 8,0 Z
+  border: *id001
+- elementId: appearance-theme-mini-logo-2
+  elementType: shape
+  bounds:
+  - 846
+  - 388
+  - 12
+  - 12
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 12
+  - 12
+  path: M 6.0,0 H 6.0 Q 12,0 12,6.0 V 6.0 Q 12,12 6.0,12 H 6.0 Q 0,12 0,6.0 V 6.0 Q 0,0 6.0,0 Z
+- elementId: appearance-theme-mini-line-1-2
+  elementType: shape
+  bounds:
+  - 868
+  - 388
+  - 88
+  - 5
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 88
+  - 5
+  path: M 2.5,0 H 85.5 Q 88,0 88,2.5 V 2.5 Q 88,5 85.5,5 H 2.5 Q 0,5 0,2.5 V 2.5 Q 0,0 2.5,0 Z
+- elementId: appearance-theme-mini-line-2-2
+  elementType: shape
+  bounds:
+  - 846
+  - 408
+  - 118
+  - 4
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 118
+  - 4
+  path: M 2.0,0 H 116.0 Q 118,0 118,2.0 V 2.0 Q 118,4 116.0,4 H 2.0 Q 0,4 0,2.0 V 2.0 Q 0,0 2.0,0 Z
+- elementId: appearance-theme-note
+  elementType: text
+  bounds:
+  - 346
+  - 520
+  - 660
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 跟随系统会监听 Windows 深浅色变化；手动选择后不再自动切换。
+- elementId: appearance-follow-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 724
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: appearance-follow-toggle-knob
+  elementType: shape
+  bounds:
+  - 1471
+  - 727
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#F5F7FA'
+- elementId: appearance-wrap-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 784
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: appearance-wrap-toggle-knob
+  elementType: shape
+  bounds:
+  - 1457
+  - 787
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: appearance-motion-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 840
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: appearance-motion-toggle-knob
+  elementType: shape
+  bounds:
+  - 1457
+  - 843
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'

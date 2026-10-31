@@ -55,6 +55,10 @@ let currentProvider = 'deepseek';
 let savedHasKey = false;
 let pendingClearKey = false;
 let toastTimer = null;
+// Set by the first-run wizard while it is live: closing the settings window
+// (titlebar X or Escape) must flush a partially typed draft first, because
+// the window is only hidden and hidden renderers throttle timers.
+let wizardFlush = null;
 
 function findPreset(id) {
   return (settings?.presets || []).find((item) => item.id === id) || null;
@@ -375,9 +379,15 @@ els.cancelBtn.addEventListener('click', () => {
   applyAppearancePreview();
   api.closeSettings();
 });
-els.closeBtn.addEventListener('click', () => api.closeSettings());
+els.closeBtn.addEventListener('click', () => {
+  if (wizardFlush) void wizardFlush();
+  api.closeSettings();
+});
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && !window.FloatAskAdvanced.recording) api.closeSettings();
+  if (event.key === 'Escape' && !window.FloatAskAdvanced.recording) {
+    if (wizardFlush) void wizardFlush();
+    api.closeSettings();
+  }
 });
 
 api.onFontUpdated((font) => updateFontDisplay(font));
@@ -528,18 +538,25 @@ function initWizard(current) {
   let provider = ['deepseek', 'openai', 'ollama'].includes(current.provider) ? current.provider : 'deepseek';
   let providerDirty = false;
   let dismissed = false;
+  // A key already persisted (autosaved or saved earlier) satisfies step-1
+  // validation and is never echoed back into the DOM for security.
+  let savedKey = Boolean(current.hasApiKey);
 
   const preset = (id) => (current.presets || []).find(p => p.id === id) || {};
   const isLocal = () => /^(https?:\/\/)?(127\.0\.0\.1|localhost)/i.test(preset(provider).baseUrl || '');
 
-  function draft(extra = {}) {
+  function draft(extra = {}, conservative = false) {
     // Never clobber an existing configuration with preset defaults the user
-    // never touched: carry provider/baseUrl/model only after an explicit pick.
+    // never touched: carry provider/baseUrl/model only after an explicit
+    // pick. Autosave passes conservative=true so that typing a key can never
+    // silently retarget an existing custom endpoint — only an explicit
+    // provider click (providerDirty) carries the trio then.
     const p = preset(provider);
     const key = keyInput && keyInput.value.trim() || '';
     const touched = providerDirty || Boolean(key);
+    const carryProvider = touched && (!conservative || providerDirty);
     return {
-      ...(touched ? { provider, baseUrl: p.baseUrl || '', model: p.model || '' } : {}),
+      ...(carryProvider ? { provider, baseUrl: p.baseUrl || '', model: p.model || '' } : {}),
       ...(key ? { apiKey: key } : {}),
       ...(hiddenHotkey ? { hotkey: hiddenHotkey.value } : {}),
       onboardingStep: step,
@@ -567,6 +584,11 @@ function initWizard(current) {
   }
 
   async function saveDraft(extra) {
+    // An explicit wizard action supersedes any pending debounced autosave,
+    // so its snapshot can never land after this one and roll state back.
+    clearTimeout(autosaveTimer);
+    autosaveTimer = null;
+    autosaveDirty = false;
     const result = await api.saveSettings(draft(extra));
     if (!result.ok) {
       if (error) error.textContent = result.message || '';
@@ -575,17 +597,61 @@ function initWizard(current) {
     return result;
   }
 
+  // Spec: back/close/later must never lose filled content. Debounced
+  // autosave persists every edit while typing; the 'change' flush covers
+  // blur-to-close within the debounce window, and 'pagehide' is the
+  // best-effort net for window destruction. Saves are quiet: validation
+  // errors still surface only through the explicit wizard actions.
+  let autosaveTimer = null;
+  let autosaveDirty = false;
+  function markAutosaveDirty() {
+    autosaveDirty = true;
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(() => { void flushAutosave(); }, 500);
+  }
+  async function flushAutosave() {
+    clearTimeout(autosaveTimer);
+    autosaveTimer = null;
+    if (!autosaveDirty) return;
+    autosaveDirty = false;
+    const result = await api.saveSettings(draft({ onboardingStep: step }, true));
+    if (!result || !result.ok) autosaveDirty = true;
+    else if (keyInput && keyInput.value.trim()) savedKey = true;
+  }
+  wizardFlush = () => flushAutosave();
+  if (keyInput) {
+    keyInput.addEventListener('input', markAutosaveDirty);
+    keyInput.addEventListener('change', () => { void flushAutosave(); });
+  }
+  if (hiddenHotkey) hiddenHotkey.addEventListener('input', markAutosaveDirty);
+  // The settings window is only hidden on close, so pagehide never fires for
+  // the titlebar-X path; flush while the close events and the visibility
+  // change are still being dispatched instead of relying on throttled timers.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') void flushAutosave();
+  });
+  window.addEventListener('pagehide', () => {
+    if (autosaveDirty) api.saveSettings(draft({ onboardingStep: step }, true)).catch(() => {});
+  });
+
   for (const btn of providerBtns) {
-    btn.addEventListener('click', () => { provider = btn.dataset.obProvider; providerDirty = true; syncProviderUi(); });
+    btn.addEventListener('click', () => {
+      provider = btn.dataset.obProvider;
+      providerDirty = true;
+      syncProviderUi();
+      markAutosaveDirty();
+      void flushAutosave();
+    });
   }
 
   if (nextBtn) nextBtn.addEventListener('click', async () => {
     if (step === 1) {
-      if (!isLocal() && !(keyInput && keyInput.value.trim())) {
+      if (!isLocal() && !(keyInput && keyInput.value.trim()) && !savedKey) {
         if (error) error.textContent = tt('settings.validateKey');
         return;
       }
       if (!await saveDraft({ onboardingStep: 2 })) return;
+      if (keyInput && keyInput.value.trim()) savedKey = true;
       show(2);
     } else if (step === 2) {
       if (!await saveDraft({ onboardingStep: 3 })) return;
@@ -636,6 +702,16 @@ function initWizard(current) {
   }
 
   syncProviderUi();
+  if (keyInput && savedKey && !keyInput.value) {
+    // i18n-client re-applies data-i18n-ph asynchronously and on every
+    // language change, so take the placeholder away from it for good.
+    keyInput.dataset.keySaved = '1';
+    keyInput.removeAttribute('data-i18n-ph');
+    keyInput.placeholder = tt('ob.keyPlaceholderSaved');
+  }
+  document.addEventListener('floatask:language', () => {
+    if (keyInput && keyInput.dataset.keySaved === '1' && !keyInput.value) keyInput.placeholder = tt('ob.keyPlaceholderSaved');
+  });
   if (hotkeyLabel) hotkeyLabel.textContent = current.actualHotkey || current.hotkey || 'Alt+Q';
   if (current.firstRun) {
     show(Number(current.onboardingStep) >= 1 && Number(current.onboardingStep) <= 3 ? Number(current.onboardingStep) : 1);

@@ -1,0 +1,1251 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 17
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与隐私
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 本机保存边界清晰可见；不可撤销的清除操作使用就地确认并保留收藏
+- elementId: privacy-window
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 1472
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 1472
+  - 788
+  path: M 16,0 H 1456 Q 1472,0 1472,16 V 772 Q 1472,788 1456,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 40
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: privacy-sidebar
+  elementType: shape
+  bounds:
+  - 65
+  - 149
+  - 218
+  - 786
+  shapeName: custom
+  viewBox:
+  - 218
+  - 786
+  fill:
+    type: solid
+    color: '#1D2128'
+  path: M 15,0 H 218 V 786 H 15 Q 0,786 0,771 V 15 Q 0,0 15,0 Z
+- elementId: privacy-sidebar-line
+  elementType: shape
+  bounds:
+  - 283
+  - 149
+  - 1
+  - 786
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: privacy-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 170
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: privacy-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 178
+  - 18
+  - 18
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: privacy-brand
+  elementType: text
+  bounds:
+  - 134
+  - 168
+  - 100
+  - 28
+  content:
+    fontSize: 18
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问设置
+    bold: true
+- elementId: privacy-brand-sub
+  elementType: text
+  bounds:
+  - 134
+  - 197
+  - 120
+  - 16
+  content:
+    fontSize: 8
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: privacy-nav-icon-0
+  elementType: icon
+  bounds:
+  - 94
+  - 260
+  - 15
+  - 15
+  iconName: fas:sliders
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: privacy-nav-text-0
+  elementType: text
+  bounds:
+  - 122
+  - 256
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 模型服务
+- elementId: privacy-nav-icon-1
+  elementType: icon
+  bounds:
+  - 94
+  - 312
+  - 15
+  - 15
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: privacy-nav-text-1
+  elementType: text
+  bounds:
+  - 122
+  - 308
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网检索
+- elementId: privacy-nav-icon-2
+  elementType: icon
+  bounds:
+  - 94
+  - 364
+  - 15
+  - 15
+  iconName: fas:keyboard
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: privacy-nav-text-2
+  elementType: text
+  bounds:
+  - 122
+  - 360
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 通用与快捷键
+- elementId: privacy-nav-active
+  elementType: shape
+  bounds:
+  - 78
+  - 405
+  - 190
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 190
+  - 40
+  path: M 10,0 H 180 Q 190,0 190,10 V 30 Q 190,40 180,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: privacy-nav-icon-3
+  elementType: icon
+  bounds:
+  - 94
+  - 416
+  - 15
+  - 15
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: privacy-nav-text-3
+  elementType: text
+  bounds:
+  - 122
+  - 412
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与隐私
+- elementId: privacy-nav-icon-4
+  elementType: icon
+  bounds:
+  - 94
+  - 468
+  - 15
+  - 15
+  iconName: fas:font
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: privacy-nav-text-4
+  elementType: text
+  bounds:
+  - 122
+  - 464
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 外观与阅读
+- elementId: privacy-nav-icon-5
+  elementType: icon
+  bounds:
+  - 94
+  - 520
+  - 15
+  - 15
+  iconName: fas:rotate
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: privacy-nav-text-5
+  elementType: text
+  bounds:
+  - 122
+  - 516
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更新与关于
+- elementId: privacy-nav-note
+  elementType: text
+  bounds:
+  - 90
+  - 866
+  - 170
+  - 40
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: '配置仅保存在本机
+
+      保存后立即应用'
+- elementId: privacy-close
+  elementType: icon
+  bounds:
+  - 1490
+  - 174
+  - 16
+  - 16
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: privacy-title
+  elementType: text
+  bounds:
+  - 322
+  - 178
+  - 400
+  - 34
+  content:
+    fontSize: 23
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与隐私
+    bold: true
+- elementId: privacy-desc
+  elementType: text
+  bounds:
+  - 322
+  - 220
+  - 790
+  - 24
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 控制本机记录内容与保留期限。清除历史不会改动模型配置或 API Key。
+- elementId: privacy-save
+  elementType: shape
+  bounds:
+  - 1370
+  - 176
+  - 118
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 118
+  - 40
+  path: M 10,0 H 108 Q 118,0 118,10 V 30 Q 118,40 108,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: privacy-save-text
+  elementType: text
+  bounds:
+  - 1370
+  - 176
+  - 118
+  - 40
+  content:
+    fontSize: 12
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保存更改
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: privacy-local-section
+  elementType: text
+  bounds:
+  - 322
+  - 280
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 本机记录
+    bold: true
+- elementId: privacy-local-card
+  elementType: shape
+  bounds:
+  - 322
+  - 316
+  - 720
+  - 344
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 720
+  - 344
+  path: M 12,0 H 708 Q 720,0 720,12 V 332 Q 720,344 708,344 H 12 Q 0,344 0,332 V 12 Q 0,0 12,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: privacy-history-title
+  elementType: text
+  bounds:
+  - 346
+  - 338
+  - 250
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保存历史记录
+    bold: true
+- elementId: privacy-history-sub
+  elementType: text
+  bounds:
+  - 346
+  - 366
+  - 470
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保存问题、OCR 修正、模型回答与来源，供搜索和重新打开
+- elementId: privacy-local-rule-1
+  elementType: shape
+  bounds:
+  - 346
+  - 402
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: privacy-thumb-title
+  elementType: text
+  bounds:
+  - 346
+  - 426
+  - 250
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保存截图缩略图
+    bold: true
+- elementId: privacy-thumb-sub
+  elementType: text
+  bounds:
+  - 346
+  - 454
+  - 470
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 关闭后仍保存文字对话，但历史列表不显示画面预览
+- elementId: privacy-local-rule-2
+  elementType: shape
+  bounds:
+  - 346
+  - 490
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: privacy-retention-title
+  elementType: text
+  bounds:
+  - 346
+  - 516
+  - 260
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 记录保留期限
+    bold: true
+- elementId: privacy-retention-sub
+  elementType: text
+  bounds:
+  - 346
+  - 544
+  - 360
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 到期后自动清理未收藏记录
+- elementId: privacy-retention-select
+  elementType: shape
+  bounds:
+  - 846
+  - 512
+  - 172
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 172
+  - 40
+  path: M 10,0 H 162 Q 172,0 172,10 V 30 Q 172,40 162,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: privacy-retention-value
+  elementType: text
+  bounds:
+  - 862
+  - 512
+  - 110
+  - 40
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保留 90 天
+    align:
+    - left
+    - middle
+- elementId: privacy-retention-chevron
+  elementType: icon
+  bounds:
+  - 986
+  - 526
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: privacy-favorite-note
+  elementType: shape
+  bounds:
+  - 346
+  - 586
+  - 672
+  - 50
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 672
+  - 50
+  path: M 10,0 H 662 Q 672,0 672,10 V 40 Q 672,50 662,50 H 10 Q 0,50 0,40 V 10 Q 0,0 10,0 Z
+- elementId: privacy-favorite-icon
+  elementType: icon
+  bounds:
+  - 364
+  - 603
+  - 14
+  - 14
+  iconName: fas:star
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: privacy-favorite-text
+  elementType: text
+  bounds:
+  - 392
+  - 594
+  - 600
+  - 34
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 收藏记录不会因保留期限到期而自动删除。
+    align:
+    - left
+    - middle
+- elementId: privacy-security-section
+  elementType: text
+  bounds:
+  - 322
+  - 692
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 本机安全边界
+    bold: true
+- elementId: privacy-security-card
+  elementType: shape
+  bounds:
+  - 322
+  - 728
+  - 720
+  - 168
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 720
+  - 168
+  path: M 12,0 H 708 Q 720,0 720,12 V 156 Q 720,168 708,168 H 12 Q 0,168 0,156 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: privacy-key-icon
+  elementType: icon
+  bounds:
+  - 348
+  - 750
+  - 16
+  - 16
+  iconName: fas:key
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: privacy-key-title
+  elementType: text
+  bounds:
+  - 380
+  - 742
+  - 180
+  - 24
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: API Key
+    bold: true
+- elementId: privacy-key-copy
+  elementType: text
+  bounds:
+  - 526
+  - 742
+  - 460
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 使用 Windows DPAPI 加密保存
+- elementId: privacy-ocr-icon
+  elementType: icon
+  bounds:
+  - 348
+  - 798
+  - 16
+  - 16
+  iconName: fas:font
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: privacy-ocr-title
+  elementType: text
+  bounds:
+  - 380
+  - 790
+  - 180
+  - 24
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: OCR 识别
+    bold: true
+- elementId: privacy-ocr-copy
+  elementType: text
+  bounds:
+  - 526
+  - 790
+  - 460
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 默认在本机完成，不依赖云端 OCR
+- elementId: privacy-cloud-icon
+  elementType: icon
+  bounds:
+  - 348
+  - 846
+  - 16
+  - 16
+  iconName: fas:cloud
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: privacy-cloud-title
+  elementType: text
+  bounds:
+  - 380
+  - 838
+  - 180
+  - 24
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史同步
+    bold: true
+- elementId: privacy-cloud-copy
+  elementType: text
+  bounds:
+  - 526
+  - 838
+  - 460
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 无自建服务器、无云端同步、无遥测
+- elementId: privacy-clear-section
+  elementType: text
+  bounds:
+  - 1066
+  - 280
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 清除本机数据
+    bold: true
+- elementId: privacy-clear-card
+  elementType: shape
+  bounds:
+  - 1066
+  - 316
+  - 446
+  - 580
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 446
+  - 580
+  path: M 12,0 H 434 Q 446,0 446,12 V 568 Q 446,580 434,580 H 12 Q 0,580 0,568 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: privacy-clear-title
+  elementType: text
+  bounds:
+  - 1090
+  - 338
+  - 250
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 清除历史记录
+    bold: true
+- elementId: privacy-clear-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 366
+  - 380
+  - 40
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 先显示影响范围，再要求确认；收藏与设置独立保留。
+- elementId: privacy-stats
+  elementType: shape
+  bounds:
+  - 1090
+  - 426
+  - 398
+  - 94
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 398
+  - 94
+  path: M 12,0 H 386 Q 398,0 398,12 V 82 Q 398,94 386,94 H 12 Q 0,94 0,82 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: privacy-total-count
+  elementType: text
+  bounds:
+  - 1110
+  - 442
+  - 90
+  - 30
+  content:
+    fontSize: 20
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '128'
+    bold: true
+- elementId: privacy-total-label
+  elementType: text
+  bounds:
+  - 1110
+  - 478
+  - 100
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 全部记录
+- elementId: privacy-fav-count
+  elementType: text
+  bounds:
+  - 1240
+  - 442
+  - 90
+  - 30
+  content:
+    fontSize: 20
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '12'
+    bold: true
+- elementId: privacy-fav-label
+  elementType: text
+  bounds:
+  - 1240
+  - 478
+  - 100
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保留收藏
+- elementId: privacy-delete-count
+  elementType: text
+  bounds:
+  - 1370
+  - 442
+  - 90
+  - 30
+  content:
+    fontSize: 20
+    color: '#E1A0A8'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '116'
+    bold: true
+- elementId: privacy-delete-label
+  elementType: text
+  bounds:
+  - 1370
+  - 478
+  - 100
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 将被删除
+- elementId: privacy-scope-title
+  elementType: text
+  bounds:
+  - 1090
+  - 546
+  - 180
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 清理范围
+    bold: true
+- elementId: privacy-scope-check-1
+  elementType: icon
+  bounds:
+  - 1092
+  - 582
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: privacy-scope-copy-1
+  elementType: text
+  bounds:
+  - 1116
+  - 576
+  - 350
+  - 24
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保留 12 条收藏、API Key 与应用设置
+- elementId: privacy-scope-check-2
+  elementType: icon
+  bounds:
+  - 1092
+  - 614
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: privacy-scope-copy-2
+  elementType: text
+  bounds:
+  - 1116
+  - 608
+  - 350
+  - 24
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 删除未收藏对话及其本机缩略图
+- elementId: privacy-confirm
+  elementType: shape
+  bounds:
+  - 1090
+  - 654
+  - 398
+  - 194
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 398
+  - 194
+  path: M 12,0 H 386 Q 398,0 398,12 V 182 Q 398,194 386,194 H 12 Q 0,194 0,182 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#E1A0A866'
+- elementId: privacy-warning-icon-bg
+  elementType: shape
+  bounds:
+  - 1108
+  - 672
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: privacy-warning-icon
+  elementType: icon
+  bounds:
+  - 1117
+  - 681
+  - 14
+  - 14
+  iconName: fas:triangle-exclamation
+  fill:
+    type: solid
+    color: '#E1A0A8'
+- elementId: privacy-confirm-title
+  elementType: text
+  bounds:
+  - 1154
+  - 672
+  - 304
+  - 26
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 确认删除 116 条记录？
+    bold: true
+- elementId: privacy-confirm-copy
+  elementType: text
+  bounds:
+  - 1154
+  - 702
+  - 292
+  - 40
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 此操作不可撤销。收藏、模型配置与 API Key 会保留。
+- elementId: privacy-cancel
+  elementType: shape
+  bounds:
+  - 1108
+  - 784
+  - 112
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 112
+  - 40
+  path: M 10,0 H 102 Q 112,0 112,10 V 30 Q 112,40 102,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: privacy-cancel-text
+  elementType: text
+  bounds:
+  - 1108
+  - 784
+  - 112
+  - 40
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 取消
+    align:
+    - center
+    - middle
+- elementId: privacy-delete
+  elementType: shape
+  bounds:
+  - 1322
+  - 784
+  - 148
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 148
+  - 40
+  path: M 10,0 H 138 Q 148,0 148,10 V 30 Q 148,40 138,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#E1A0A899'
+- elementId: privacy-delete-icon
+  elementType: icon
+  bounds:
+  - 1340
+  - 797
+  - 14
+  - 14
+  iconName: fas:trash-can
+  fill:
+    type: solid
+    color: '#E1A0A8'
+- elementId: privacy-delete-text
+  elementType: text
+  bounds:
+  - 1364
+  - 784
+  - 92
+  - 40
+  content:
+    fontSize: 11
+    color: '#E1A0A8'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 确认删除
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: privacy-clear-note
+  elementType: text
+  bounds:
+  - 1090
+  - 864
+  - 390
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 示例数量仅用于展示清除前的确认状态
+- elementId: privacy-footer
+  elementType: text
+  bounds:
+  - 322
+  - 906
+  - 960
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 清除操作只影响本机历史；已发送给模型或搜索引擎的数据无法通过此操作撤回。
+- elementId: privacy-history-toggle
+  elementType: shape
+  bounds:
+  - 960
+  - 340
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: privacy-history-toggle-knob
+  elementType: shape
+  bounds:
+  - 977
+  - 343
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: privacy-thumb-toggle
+  elementType: shape
+  bounds:
+  - 960
+  - 428
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: privacy-thumb-toggle-knob
+  elementType: shape
+  bounds:
+  - 977
+  - 431
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'

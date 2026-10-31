@@ -1,0 +1,673 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 37
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更新 · 失败与恢复
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 区分下载前、校验后与安装阶段；任何失败都不破坏当前可用版本
+- elementId: update-offline
+  elementType: shape
+  bounds:
+  - 64
+  - 202
+  - 472
+  - 420
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 472
+  - 420
+  path: M 16,0 H 456 Q 472,0 472,16 V 404 Q 472,420 456,420 H 16 Q 0,420 0,404 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF26'
+- elementId: update-offline-icon-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 226
+  - 42
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 42
+  - 42
+  path: M 8,0 H 34 Q 42,0 42,8 V 34 Q 42,42 34,42 H 8 Q 0,42 0,34 V 8 Q 0,0 8,0 Z
+- elementId: update-offline-icon
+  elementType: icon
+  bounds:
+  - 99
+  - 237
+  - 20
+  - 20
+  iconName: fas:wifi
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: update-offline-title
+  elementType: text
+  bounds:
+  - 146
+  - 227
+  - 364
+  - 26
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 无法检查更新
+    bold: true
+- elementId: update-offline-stage
+  elementType: text
+  bounds:
+  - 146
+  - 259
+  - 364
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 当前版本 v0.3.1 仍可继续使用
+- elementId: update-offline-line
+  elementType: shape
+  bounds:
+  - 88
+  - 296
+  - 424
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: update-offline-body
+  elementType: text
+  bounds:
+  - 88
+  - 320
+  - 424
+  - 84
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: 网络连接不可用，尚未下载更新包。恢复网络后可重新检查，无需重启应用。
+- elementId: update-offline-detail-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 420
+  - 424
+  - 68
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 424
+  - 68
+  path: M 12,0 H 412 Q 424,0 424,12 V 56 Q 424,68 412,68 H 12 Q 0,68 0,56 V 12 Q 0,0 12,0 Z
+- elementId: update-offline-detail
+  elementType: text
+  bounds:
+  - 104
+  - 432
+  - 392
+  - 46
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 未发起安装，当前配置和回答不受影响。
+- elementId: update-offline-secondary
+  elementType: shape
+  bounds:
+  - 88
+  - 544
+  - 206.0
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 206.0
+  - 40
+  path: M 10,0 H 196.0 Q 206.0,0 206.0,10 V 30 Q 206.0,40 196.0,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: &id003
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: update-offline-secondary-label
+  elementType: text
+  bounds:
+  - 88
+  - 544
+  - 206.0
+  - 40
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 稍后
+    align:
+    - center
+    - middle
+- elementId: update-offline-primary
+  elementType: shape
+  bounds:
+  - 306.0
+  - 544
+  - 206.0
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 206.0
+  - 40
+  path: M 10,0 H 196.0 Q 206.0,0 206.0,10 V 30 Q 206.0,40 196.0,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: update-offline-primary-label
+  elementType: text
+  bounds:
+  - 306.0
+  - 544
+  - 206.0
+  - 40
+  content:
+    fontSize: 12
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重新检查
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: update-hash
+  elementType: shape
+  bounds:
+  - 564
+  - 202
+  - 472
+  - 420
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 472
+  - 420
+  path: M 16,0 H 456 Q 472,0 472,16 V 404 Q 472,420 456,420 H 16 Q 0,420 0,404 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: update-hash-icon-bg
+  elementType: shape
+  bounds:
+  - 588
+  - 226
+  - 42
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#2C2025'
+  viewBox:
+  - 42
+  - 42
+  path: M 8,0 H 34 Q 42,0 42,8 V 34 Q 42,42 34,42 H 8 Q 0,42 0,34 V 8 Q 0,0 8,0 Z
+- elementId: update-hash-icon
+  elementType: icon
+  bounds:
+  - 599
+  - 237
+  - 20
+  - 20
+  iconName: fas:triangle-exclamation
+  fill:
+    type: solid
+    color: '#E1A0A8'
+- elementId: update-hash-title
+  elementType: text
+  bounds:
+  - 646
+  - 227
+  - 364
+  - 26
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更新包校验失败
+    bold: true
+- elementId: update-hash-stage
+  elementType: text
+  bounds:
+  - 646
+  - 259
+  - 364
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 当前版本 v0.3.1 仍可继续使用
+- elementId: update-hash-line
+  elementType: shape
+  bounds:
+  - 588
+  - 296
+  - 424
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: update-hash-body
+  elementType: text
+  bounds:
+  - 588
+  - 320
+  - 424
+  - 84
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: SHA-256 与发布信息不一致，已阻止安装并删除下载文件。请重新从发布页获取。
+- elementId: update-hash-detail-bg
+  elementType: shape
+  bounds:
+  - 588
+  - 420
+  - 424
+  - 68
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 424
+  - 68
+  path: M 12,0 H 412 Q 424,0 424,12 V 56 Q 424,68 412,68 H 12 Q 0,68 0,56 V 12 Q 0,0 12,0 Z
+- elementId: update-hash-detail
+  elementType: text
+  bounds:
+  - 604
+  - 432
+  - 392
+  - 46
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 校验失败时不显示“重启并安装”，也不复用旧安装包。
+- elementId: update-hash-secondary
+  elementType: shape
+  bounds:
+  - 588
+  - 544
+  - 206.0
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 206.0
+  - 40
+  path: M 10,0 H 196.0 Q 206.0,0 206.0,10 V 30 Q 206.0,40 196.0,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id003
+- elementId: update-hash-secondary-label
+  elementType: text
+  bounds:
+  - 588
+  - 544
+  - 206.0
+  - 40
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 查看发布页
+    align:
+    - center
+    - middle
+- elementId: update-hash-primary
+  elementType: shape
+  bounds:
+  - 806.0
+  - 544
+  - 206.0
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 206.0
+  - 40
+  path: M 10,0 H 196.0 Q 206.0,0 206.0,10 V 30 Q 206.0,40 196.0,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: update-hash-primary-label
+  elementType: text
+  bounds:
+  - 806.0
+  - 544
+  - 206.0
+  - 40
+  content:
+    fontSize: 12
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重新下载
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: update-install-fail
+  elementType: shape
+  bounds:
+  - 1064
+  - 202
+  - 472
+  - 420
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 472
+  - 420
+  path: M 16,0 H 456 Q 472,0 472,16 V 404 Q 472,420 456,420 H 16 Q 0,420 0,404 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: update-install-fail-icon-bg
+  elementType: shape
+  bounds:
+  - 1088
+  - 226
+  - 42
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#2C2025'
+  viewBox:
+  - 42
+  - 42
+  path: M 8,0 H 34 Q 42,0 42,8 V 34 Q 42,42 34,42 H 8 Q 0,42 0,34 V 8 Q 0,0 8,0 Z
+- elementId: update-install-fail-icon
+  elementType: icon
+  bounds:
+  - 1099
+  - 237
+  - 20
+  - 20
+  iconName: fas:triangle-exclamation
+  fill:
+    type: solid
+    color: '#E1A0A8'
+- elementId: update-install-fail-title
+  elementType: text
+  bounds:
+  - 1146
+  - 227
+  - 364
+  - 26
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 安装未能完成
+    bold: true
+- elementId: update-install-fail-stage
+  elementType: text
+  bounds:
+  - 1146
+  - 259
+  - 364
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 当前版本 v0.3.1 仍可继续使用
+- elementId: update-install-fail-line
+  elementType: shape
+  bounds:
+  - 1088
+  - 296
+  - 424
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: update-install-fail-body
+  elementType: text
+  bounds:
+  - 1088
+  - 320
+  - 424
+  - 84
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: 安装程序已退出，浮问仍运行在原版本。可稍后重试，或打开发布页手动安装。
+- elementId: update-install-fail-detail-bg
+  elementType: shape
+  bounds:
+  - 1088
+  - 420
+  - 424
+  - 68
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 424
+  - 68
+  path: M 12,0 H 412 Q 424,0 424,12 V 56 Q 424,68 412,68 H 12 Q 0,68 0,56 V 12 Q 0,0 12,0 Z
+- elementId: update-install-fail-detail
+  elementType: text
+  bounds:
+  - 1104
+  - 432
+  - 392
+  - 46
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 保留已验证安装包；重试前再次确认未保存的回答。
+- elementId: update-install-fail-secondary
+  elementType: shape
+  bounds:
+  - 1088
+  - 544
+  - 206.0
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 206.0
+  - 40
+  path: M 10,0 H 196.0 Q 206.0,0 206.0,10 V 30 Q 206.0,40 196.0,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id003
+- elementId: update-install-fail-secondary-label
+  elementType: text
+  bounds:
+  - 1088
+  - 544
+  - 206.0
+  - 40
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 发布页
+    align:
+    - center
+    - middle
+- elementId: update-install-fail-primary
+  elementType: shape
+  bounds:
+  - 1306.0
+  - 544
+  - 206.0
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 206.0
+  - 40
+  path: M 10,0 H 196.0 Q 206.0,0 206.0,10 V 30 Q 206.0,40 196.0,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: update-install-fail-primary-label
+  elementType: text
+  bounds:
+  - 1306.0
+  - 544
+  - 206.0
+  - 40
+  content:
+    fontSize: 12
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重试安装
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: update-recovery-rule
+  elementType: shape
+  bounds:
+  - 64
+  - 676
+  - 1472
+  - 170
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 1472
+  - 170
+  path: M 12,0 H 1460 Q 1472,0 1472,12 V 158 Q 1472,170 1460,170 H 12 Q 0,170 0,158 V 12 Q 0,0 12,0 Z
+  border: *id003
+- elementId: update-recovery-rule-title
+  elementType: text
+  bounds:
+  - 92
+  - 700
+  - 420
+  - 26
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 统一恢复原则
+    bold: true
+- elementId: update-recovery-rule-body
+  elementType: text
+  bounds:
+  - 92
+  - 744
+  - 1380
+  - 64
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.7
+    wrap: true
+    text: 说明当前阶段、安装包是否保留、当前版本是否可用，并给出主要恢复动作。错误只作用于状态图标与必要文案，不使用整窗红色；诊断信息不得包含 API Key、OCR 原文或截图。

@@ -1,0 +1,74 @@
+version: v2
+title: FloatAsk 朝日／近月全状态设计板
+size:
+- 1600
+- 1000
+customFonts:
+- family: Liter
+  src: https://statics.kimi.ai/neo-design-static/p-font/Liter.ttf
+- family: MiSans
+  src: https://statics.kimi.ai/neo-design-static/p-font/MiSans.ttf
+theme:
+  colors:
+    accent: '#8FA6C9'
+    text: '#E8EBF0'
+    secondary: '#9299A6'
+  textStyles:
+    body:
+      fontSize: 14
+      color: $text
+      fontFamily:
+        latin: Liter
+        ea: MiSans
+      lineHeight: 1.55
+pages:
+- pages/1-long-answer.page
+- pages/2-result-states.page
+- pages/3-settings.page
+- pages/4-selection-bubble.page
+- pages/5-radius-border.page
+- pages/6-floating-toolbar.page
+- pages/7-more-menu.page
+- pages/8-toolbar-motion.page
+- pages/9-compact-answer.page
+- pages/10-long-scroll.page
+- pages/11-stream-follow.page
+- pages/12-capture-context.page
+- pages/13-recovery-states.page
+- pages/14-history.page
+- pages/15-general-settings.page
+- pages/16-search-settings.page
+- pages/17-privacy-settings.page
+- pages/18-appearance-settings.page
+- pages/19-theme-system.page
+- pages/20-asahi-light-answer.page
+- pages/21-asahi-settings.page
+- pages/22-asahi-history.page
+- pages/23-asahi-toolbar-menu.page
+- pages/24-asahi-selection.page
+- pages/25-asahi-compact-answer.page
+- pages/26-asahi-stream-follow.page
+- pages/27-asahi-recovery.page
+- pages/28-asahi-long-scroll.page
+- pages/29-asahi-capture-context.page
+- pages/30-asahi-general-settings.page
+- pages/31-asahi-search-settings.page
+- pages/32-asahi-privacy-settings.page
+- pages/33-asahi-appearance-settings.page
+- pages/34-onboarding-model.page
+- pages/35-onboarding-ready.page
+- pages/36-update-flow.page
+- pages/37-update-recovery.page
+- pages/38-about.page
+- pages/39-asahi-onboarding-model.page
+- pages/40-asahi-onboarding-ready.page
+- pages/41-asahi-update-flow.page
+- pages/42-asahi-about.page
+- pages/43-windows-displays.page
+- pages/44-windows-dpi.page
+- pages/45-keyboard-focus.page
+- pages/46-accessibility.page
+- pages/47-asahi-windows-displays.page
+- pages/48-asahi-windows-dpi.page
+- pages/49-asahi-keyboard-focus.page
+- pages/50-asahi-accessibility.page

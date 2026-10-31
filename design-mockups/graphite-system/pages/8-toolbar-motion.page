@@ -1,0 +1,1038 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 08
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 展开与收起过渡
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 以屏幕边缘为锚点，先淡出次级内容，再收拢宽度；Logo 保持连续
+- elementId: motion-frame-0
+  elementType: shape
+  bounds:
+  - 64
+  - 182
+  - 440
+  - 382
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#12161C'
+  viewBox:
+  - 440
+  - 382
+  path: M 16,0 H 424 Q 440,0 440,16 V 366 Q 440,382 424,382 H 16 Q 0,382 0,366 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: motion-title-0
+  elementType: text
+  bounds:
+  - 84
+  - 206
+  - 400
+  - 28
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 0 ms · 完整展开
+    bold: true
+- elementId: motion-anchor-0
+  elementType: shape
+  bounds:
+  - 496
+  - 270
+  - 1
+  - 180
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: motion-frame-1
+  elementType: shape
+  bounds:
+  - 564
+  - 182
+  - 440
+  - 382
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#12161C'
+  viewBox:
+  - 440
+  - 382
+  path: M 16,0 H 424 Q 440,0 440,16 V 366 Q 440,382 424,382 H 16 Q 0,382 0,366 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: motion-title-1
+  elementType: text
+  bounds:
+  - 584
+  - 206
+  - 400
+  - 28
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 80 ms · 内容淡出
+    bold: true
+- elementId: motion-anchor-1
+  elementType: shape
+  bounds:
+  - 996
+  - 270
+  - 1
+  - 180
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: motion-frame-2
+  elementType: shape
+  bounds:
+  - 1064
+  - 182
+  - 472
+  - 382
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#12161C'
+  viewBox:
+  - 472
+  - 382
+  path: M 16,0 H 456 Q 472,0 472,16 V 366 Q 472,382 456,382 H 16 Q 0,382 0,366 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: motion-title-2
+  elementType: text
+  bounds:
+  - 1084
+  - 206
+  - 432
+  - 28
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 180 ms · 半胶囊
+    bold: true
+- elementId: motion-anchor-2
+  elementType: shape
+  bounds:
+  - 1528
+  - 270
+  - 1
+  - 180
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: motion-start
+  elementType: shape
+  bounds:
+  - 168
+  - 330
+  - 328
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 328
+  - 52
+  path: M 26.0,0 H 302.0 Q 328,0 328,26.0 V 26.0 Q 328,52 302.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: &id003
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 26
+    color: '#00000077'
+    offset:
+    - 0
+    - 10
+- elementId: motion-start-logo-bg
+  elementType: shape
+  bounds:
+  - 173
+  - 335
+  - 40
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 40
+  - 42
+  path: M 20.0,0 H 20.0 Q 40,0 40,20.0 V 22.0 Q 40,42 20.0,42 H 20.0 Q 0,42 0,22.0 V 20.0 Q 0,0 20.0,0 Z
+- elementId: motion-start-logo
+  elementType: text
+  bounds:
+  - 173
+  - 335
+  - 40
+  - 42
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: motion-start-primary
+  elementType: shape
+  bounds:
+  - 218
+  - 335
+  - 142
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 142
+  - 42
+  path: M 21,0 H 121 Q 142,0 142,21 V 21 Q 142,42 121,42 H 21 Q 0,42 0,21 V 21 Q 0,0 21,0 Z
+- elementId: motion-start-primary-icon
+  elementType: icon
+  bounds:
+  - 232
+  - 348
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: motion-start-primary-text
+  elementType: text
+  bounds:
+  - 254
+  - 341
+  - 38
+  - 30
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: motion-start-key
+  elementType: shape
+  bounds:
+  - 296
+  - 344
+  - 52
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 52
+  - 24
+  path: M 8,0 H 44 Q 52,0 52,8 V 16 Q 52,24 44,24 H 8 Q 0,24 0,16 V 8 Q 0,0 8,0 Z
+- elementId: motion-start-key-text
+  elementType: text
+  bounds:
+  - 296
+  - 344
+  - 52
+  - 24
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Alt Q
+    align:
+    - center
+    - middle
+- elementId: motion-start-clipboard
+  elementType: icon
+  bounds:
+  - 379
+  - 348
+  - 16
+  - 16
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: motion-start-history
+  elementType: icon
+  bounds:
+  - 419
+  - 348
+  - 16
+  - 16
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: motion-start-more
+  elementType: icon
+  bounds:
+  - 459
+  - 348
+  - 16
+  - 16
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: motion-mid-outer
+  elementType: shape
+  bounds:
+  - 796
+  - 330
+  - 200
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 200
+  - 52
+  path: M 26.0,0 H 174.0 Q 200,0 200,26.0 V 26.0 Q 200,52 174.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: *id003
+- elementId: motion-mid-primary
+  elementType: shape
+  bounds:
+  - 846
+  - 335
+  - 142
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 142
+  - 42
+  path: M 21.0,0 H 121.0 Q 142,0 142,21.0 V 21.0 Q 142,42 121.0,42 H 21.0 Q 0,42 0,21.0 V 21.0 Q 0,0 21.0,0 Z
+  opacity: 0.25
+- elementId: motion-mid-logo
+  elementType: shape
+  bounds:
+  - 920
+  - 340
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: motion-mid-icon
+  elementType: text
+  bounds:
+  - 920
+  - 340
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: motion-arrow-1
+  elementType: icon
+  bounds:
+  - 522
+  - 344
+  - 20
+  - 20
+  iconName: fas:arrow-right
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: motion-arrow-2
+  elementType: icon
+  bounds:
+  - 1024
+  - 344
+  - 20
+  - 20
+  iconName: fas:arrow-right
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: motion-start-copy
+  elementType: text
+  bounds:
+  - 88
+  - 444
+  - 380
+  - 54
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '宽度 328 px
+
+      所有功能完整可见'
+- elementId: motion-mid-copy
+  elementType: text
+  bounds:
+  - 588
+  - 444
+  - 380
+  - 54
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '次级内容先淡出
+
+      浮问字标保持 14 px'
+- elementId: motion-end-copy
+  elementType: text
+  bounds:
+  - 1088
+  - 444
+  - 400
+  - 54
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '宽度收至 44 px
+
+      边缘贴合，等待再次展开'
+- elementId: motion-start-note
+  elementType: text
+  bounds:
+  - 88
+  - 522
+  - 340
+  - 22
+  content:
+    fontSize: 10
+    color: '#8A9099'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 右侧边缘为位置锚点
+- elementId: motion-mid-note
+  elementType: text
+  bounds:
+  - 588
+  - 522
+  - 340
+  - 22
+  content:
+    fontSize: 10
+    color: '#8A9099'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 避免整栏同时淡入淡出
+- elementId: motion-end-note
+  elementType: text
+  bounds:
+  - 1088
+  - 522
+  - 340
+  - 22
+  content:
+    fontSize: 10
+    color: '#8A9099'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 收起动画总计 180 ms
+- elementId: reverse-card
+  elementType: shape
+  bounds:
+  - 64
+  - 596
+  - 960
+  - 340
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 960
+  - 340
+  path: M 16,0 H 944 Q 960,0 960,16 V 324 Q 960,340 944,340 H 16 Q 0,340 0,324 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: reverse-title
+  elementType: text
+  bounds:
+  - 88
+  - 620
+  - 400
+  - 28
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 反向展开
+    bold: true
+- elementId: reverse-subtitle
+  elementType: text
+  bounds:
+  - 88
+  - 654
+  - 500
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 悬停 120 ms 或点击半胶囊
+- elementId: reverse-arrow
+  elementType: icon
+  bounds:
+  - 220
+  - 712
+  - 20
+  - 20
+  iconName: fas:arrow-right
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: reverse-copy
+  elementType: text
+  bounds:
+  - 680
+  - 704
+  - 280
+  - 62
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '宽度先展开
+
+      次级内容随后淡入'
+- elementId: reverse-note
+  elementType: text
+  bounds:
+  - 88
+  - 846
+  - 700
+  - 44
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 展开过程同样为 180 ms；Logo 连续移动，功能图标在末段恢复。
+- elementId: motion-spec-card
+  elementType: shape
+  bounds:
+  - 1056
+  - 596
+  - 480
+  - 340
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 480
+  - 340
+  path: M 16,0 H 464 Q 480,0 480,16 V 324 Q 480,340 464,340 H 16 Q 0,340 0,324 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: motion-spec-title
+  elementType: text
+  bounds:
+  - 1080
+  - 620
+  - 360
+  - 28
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 动效约束
+    bold: true
+- elementId: motion-end
+  elementType: shape
+  bounds:
+  - 1492
+  - 324
+  - 44
+  - 64
+  shapeName: custom
+  viewBox:
+  - 44
+  - 64
+  fill:
+    type: solid
+    color: '#171A20'
+  path: M 22,0 H 44 V 64 H 22 Q 0,64 0,42 V 22 Q 0,0 22,0 Z
+  border: *id003
+  shadow:
+    blur: 22
+    color: '#00000066'
+    offset:
+    - 0
+    - 8
+- elementId: motion-end-logo-bg
+  elementType: shape
+  bounds:
+  - 1498
+  - 340
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: motion-end-logo
+  elementType: text
+  bounds:
+  - 1498
+  - 340
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: reverse-start
+  elementType: shape
+  bounds:
+  - 96
+  - 696
+  - 44
+  - 64
+  shapeName: custom
+  viewBox:
+  - 44
+  - 64
+  fill:
+    type: solid
+    color: '#171A20'
+  path: M 0,0 H 22 Q 44,0 44,22 V 42 Q 44,64 22,64 H 0 Z
+  border: *id003
+  shadow:
+    blur: 22
+    color: '#00000066'
+    offset:
+    - 0
+    - 8
+- elementId: reverse-start-logo-bg
+  elementType: shape
+  bounds:
+  - 102
+  - 712
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: reverse-start-logo
+  elementType: text
+  bounds:
+  - 102
+  - 712
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: reverse-end
+  elementType: shape
+  bounds:
+  - 300
+  - 692
+  - 328
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 328
+  - 52
+  path: M 26.0,0 H 302.0 Q 328,0 328,26.0 V 26.0 Q 328,52 302.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: *id003
+  shadow:
+    blur: 26
+    color: '#00000077'
+    offset:
+    - 0
+    - 10
+- elementId: reverse-end-logo-bg
+  elementType: shape
+  bounds:
+  - 305
+  - 697
+  - 40
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 40
+  - 42
+  path: M 20.0,0 H 20.0 Q 40,0 40,20.0 V 22.0 Q 40,42 20.0,42 H 20.0 Q 0,42 0,22.0 V 20.0 Q 0,0 20.0,0 Z
+- elementId: reverse-end-logo
+  elementType: text
+  bounds:
+  - 305
+  - 697
+  - 40
+  - 42
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: reverse-end-primary
+  elementType: shape
+  bounds:
+  - 350
+  - 697
+  - 142
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 142
+  - 42
+  path: M 21,0 H 121 Q 142,0 142,21 V 21 Q 142,42 121,42 H 21 Q 0,42 0,21 V 21 Q 0,0 21,0 Z
+- elementId: reverse-end-primary-icon
+  elementType: icon
+  bounds:
+  - 364
+  - 710
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: reverse-end-primary-text
+  elementType: text
+  bounds:
+  - 386
+  - 703
+  - 38
+  - 30
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: reverse-end-key
+  elementType: shape
+  bounds:
+  - 428
+  - 706
+  - 52
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 52
+  - 24
+  path: M 8,0 H 44 Q 52,0 52,8 V 16 Q 52,24 44,24 H 8 Q 0,24 0,16 V 8 Q 0,0 8,0 Z
+- elementId: reverse-end-key-text
+  elementType: text
+  bounds:
+  - 428
+  - 706
+  - 52
+  - 24
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Alt Q
+    align:
+    - center
+    - middle
+- elementId: reverse-end-clipboard
+  elementType: icon
+  bounds:
+  - 511
+  - 710
+  - 16
+  - 16
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: reverse-end-history
+  elementType: icon
+  bounds:
+  - 551
+  - 710
+  - 16
+  - 16
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: reverse-end-more
+  elementType: icon
+  bounds:
+  - 591
+  - 710
+  - 16
+  - 16
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: motion-spec-icon-0
+  elementType: icon
+  bounds:
+  - 1080
+  - 671
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: motion-spec-text-0
+  elementType: text
+  bounds:
+  - 1106
+  - 668
+  - 390
+  - 26
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 宽度：180 ms ease-out
+- elementId: motion-spec-icon-1
+  elementType: icon
+  bounds:
+  - 1080
+  - 719
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: motion-spec-text-1
+  elementType: text
+  bounds:
+  - 1106
+  - 716
+  - 390
+  - 26
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 收起：次级内容前 80 ms 淡出
+- elementId: motion-spec-icon-2
+  elementType: icon
+  bounds:
+  - 1080
+  - 767
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: motion-spec-text-2
+  elementType: text
+  bounds:
+  - 1106
+  - 764
+  - 390
+  - 26
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 展开：次级内容延迟 60 ms 淡入
+- elementId: motion-spec-icon-3
+  elementType: icon
+  bounds:
+  - 1080
+  - 815
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: motion-spec-text-3
+  elementType: text
+  bounds:
+  - 1106
+  - 812
+  - 390
+  - 26
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 菜单打开或拖动时禁止收起
+- elementId: motion-spec-icon-4
+  elementType: icon
+  bounds:
+  - 1080
+  - 863
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: motion-spec-text-4
+  elementType: text
+  bounds:
+  - 1106
+  - 860
+  - 390
+  - 26
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 减少动态效果：立即切换最终状态

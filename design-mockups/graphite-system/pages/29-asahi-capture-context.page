@@ -1,0 +1,1774 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 29
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 截图与识别上下文
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浅色截图摘要、OCR 展开修正与视觉附件共用同一套边界；发送范围与本机保留内容清晰可见
+- elementId: capture-summary
+  elementType: shape
+  bounds:
+  - 64
+  - 170
+  - 600
+  - 342
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 600
+  - 342
+  path: M 16,0 H 584 Q 600,0 600,16 V 326 Q 600,342 584,342 H 16 Q 0,342 0,326 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: capture-summary-title
+  elementType: text
+  bounds:
+  - 88
+  - 192
+  - 300
+  - 28
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 01 · 截图摘要
+    bold: true
+- elementId: capture-local-badge
+  elementType: shape
+  bounds:
+  - 522
+  - 192
+  - 118
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 118
+  - 26
+  path: M 8,0 H 110 Q 118,0 118,8 V 18 Q 118,26 110,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+- elementId: capture-local-icon
+  elementType: icon
+  bounds:
+  - 534
+  - 199
+  - 12
+  - 12
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: capture-local-text
+  elementType: text
+  bounds:
+  - 554
+  - 192
+  - 72
+  - 26
+  content:
+    fontSize: 10
+    color: '#3E7561'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 本机 OCR
+    align:
+    - left
+    - middle
+- elementId: capture-source
+  elementType: text
+  bounds:
+  - 376
+  - 246
+  - 238
+  - 24
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: VS Code · transformer.py
+    bold: true
+- elementId: capture-size
+  elementType: text
+  bounds:
+  - 376
+  - 278
+  - 220
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 框选区域 · 1280 × 720
+- elementId: capture-engine
+  elementType: text
+  bounds:
+  - 376
+  - 302
+  - 230
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: Windows.Media.Ocr · 中文 / English
+- elementId: capture-expand
+  elementType: shape
+  bounds:
+  - 376
+  - 340
+  - 112
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 112
+  - 36
+  path: M 10,0 H 102 Q 112,0 112,10 V 26 Q 112,36 102,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: capture-expand-text
+  elementType: text
+  bounds:
+  - 376
+  - 340
+  - 112
+  - 36
+  content:
+    fontSize: 11
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 展开原文
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: capture-reselect
+  elementType: shape
+  bounds:
+  - 500
+  - 340
+  - 116
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 116
+  - 36
+  path: M 10,0 H 106 Q 116,0 116,10 V 26 Q 116,36 106,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: capture-reselect-icon
+  elementType: icon
+  bounds:
+  - 514
+  - 351
+  - 13
+  - 13
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: capture-reselect-text
+  elementType: text
+  bounds:
+  - 536
+  - 340
+  - 68
+  - 36
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 重新框选
+    align:
+    - left
+    - middle
+- elementId: capture-summary-rule
+  elementType: shape
+  bounds:
+  - 88
+  - 408
+  - 552
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: capture-ocr-label
+  elementType: text
+  bounds:
+  - 88
+  - 426
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: OCR 原文 · 86 字
+    bold: true
+- elementId: capture-ocr-preview
+  elementType: text
+  bounds:
+  - 88
+  - 454
+  - 520
+  - 38
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: 'class MultiHeadAttention(nn.Module):  def forward(self, query, key, value)…'
+- elementId: ocr-editor
+  elementType: shape
+  bounds:
+  - 696
+  - 170
+  - 840
+  - 766
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 840
+  - 766
+  path: M 16,0 H 824 Q 840,0 840,16 V 750 Q 840,766 824,766 H 16 Q 0,766 0,750 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: ocr-editor-title
+  elementType: text
+  bounds:
+  - 720
+  - 192
+  - 400
+  - 28
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 02 · OCR 原文展开／修正
+    bold: true
+- elementId: ocr-dirty-badge
+  elementType: shape
+  bounds:
+  - 1364
+  - 192
+  - 148
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 148
+  - 26
+  path: M 8,0 H 140 Q 148,0 148,8 V 18 Q 148,26 140,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+- elementId: ocr-dirty-dot
+  elementType: shape
+  bounds:
+  - 1378
+  - 202
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: ocr-dirty-text
+  elementType: text
+  bounds:
+  - 1392
+  - 192
+  - 104
+  - 26
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 有未保存修正
+    align:
+    - left
+    - middle
+- elementId: ocr-editor-subtitle
+  elementType: text
+  bounds:
+  - 720
+  - 232
+  - 740
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 修正只改变文字上下文；原始截图保持不变，已有回答不会被自动覆盖。
+- elementId: ocr-source-title
+  elementType: text
+  bounds:
+  - 888
+  - 282
+  - 300
+  - 24
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 原始识别结果
+    bold: true
+- elementId: ocr-source-meta
+  elementType: text
+  bounds:
+  - 888
+  - 314
+  - 460
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 来源 Windows.Media.Ocr · 原始结果已保留
+- elementId: ocr-source-note
+  elementType: text
+  bounds:
+  - 888
+  - 340
+  - 500
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 可直接修改术语、空格与识别错误的字符
+- elementId: ocr-textarea
+  elementType: shape
+  bounds:
+  - 720
+  - 390
+  - 792
+  - 300
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 792
+  - 300
+  path: M 12,0 H 780 Q 792,0 792,12 V 288 Q 792,300 780,300 H 12 Q 0,300 0,288 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#506B9299'
+- elementId: ocr-textarea-label
+  elementType: text
+  bounds:
+  - 740
+  - 408
+  - 200
+  - 22
+  content:
+    fontSize: 9
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: OCR TEXT · 编辑中
+    bold: true
+    letterSpacing: 1.1
+- elementId: ocr-char-count
+  elementType: text
+  bounds:
+  - 1310
+  - 408
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 218 字
+    align:
+    - right
+    - top
+- elementId: ocr-textarea-rule
+  elementType: shape
+  bounds:
+  - 740
+  - 440
+  - 752
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: ocr-textarea-content
+  elementType: text
+  bounds:
+  - 740
+  - 460
+  - 728
+  - 156
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.55
+    wrap: true
+    text: "class MultiHeadAttention(nn.Module):\n    def forward(self, query, key, value):\n        scores = query @ key.transpose(-2, -1)\n        weights = torch.softmax(scores, dim=-1)\n        return weights @ value\n\n# Each token learns which other tokens to attend to"
+- elementId: ocr-diff-bg
+  elementType: shape
+  bounds:
+  - 740
+  - 630
+  - 420
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 420
+  - 38
+  path: M 8,0 H 412 Q 420,0 420,8 V 30 Q 420,38 412,38 H 8 Q 0,38 0,30 V 8 Q 0,0 8,0 Z
+- elementId: ocr-diff-icon
+  elementType: icon
+  bounds:
+  - 754
+  - 642
+  - 13
+  - 13
+  iconName: fas:pen
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: ocr-diff-text
+  elementType: text
+  bounds:
+  - 778
+  - 630
+  - 360
+  - 38
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 已修正 1 处：<s>soft max</s> → <span style="color:#506B92">softmax</span>
+    align:
+    - left
+    - middle
+- elementId: ocr-retry
+  elementType: shape
+  bounds:
+  - 720
+  - 726
+  - 124
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 124
+  - 38
+  path: M 10,0 H 114 Q 124,0 124,10 V 28 Q 124,38 114,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: ocr-retry-icon
+  elementType: icon
+  bounds:
+  - 736
+  - 738
+  - 13
+  - 13
+  iconName: fas:rotate
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: ocr-retry-text
+  elementType: text
+  bounds:
+  - 758
+  - 726
+  - 70
+  - 38
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 重新识别
+    align:
+    - left
+    - middle
+- elementId: ocr-restore
+  elementType: shape
+  bounds:
+  - 1198
+  - 726
+  - 112
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 112
+  - 38
+  path: M 10,0 H 102 Q 112,0 112,10 V 28 Q 112,38 102,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: ocr-restore-text
+  elementType: text
+  bounds:
+  - 1198
+  - 726
+  - 112
+  - 38
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 还原原文
+    align:
+    - center
+    - middle
+- elementId: ocr-save
+  elementType: shape
+  bounds:
+  - 1322
+  - 726
+  - 190
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 190
+  - 38
+  path: M 10,0 H 180 Q 190,0 190,10 V 28 Q 190,38 180,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: ocr-save-text
+  elementType: text
+  bounds:
+  - 1322
+  - 726
+  - 190
+  - 38
+  content:
+    fontSize: 11
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 完成修正
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: ocr-save-note
+  elementType: text
+  bounds:
+  - 720
+  - 790
+  - 760
+  - 44
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.6
+    wrap: true
+    text: '完成后用于后续追问；需要更新答案时，再由用户主动点击“重新解释”。
+
+      重新识别会覆盖当前编辑，因此执行前需要确认。'
+- elementId: ocr-editor-rule
+  elementType: shape
+  bounds:
+  - 720
+  - 852
+  - 792
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: ocr-original-check
+  elementType: icon
+  bounds:
+  - 720
+  - 878
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: ocr-original-note
+  elementType: text
+  bounds:
+  - 746
+  - 872
+  - 280
+  - 26
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 原始截图与原始 OCR 均可还原
+- elementId: ocr-history-check
+  elementType: icon
+  bounds:
+  - 1110
+  - 878
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: ocr-history-note
+  elementType: text
+  bounds:
+  - 1136
+  - 872
+  - 330
+  - 26
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 历史记录保留修正后的文字上下文
+- elementId: vision-card
+  elementType: shape
+  bounds:
+  - 64
+  - 536
+  - 600
+  - 400
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 600
+  - 400
+  path: M 16,0 H 584 Q 600,0 600,16 V 384 Q 600,400 584,400 H 16 Q 0,400 0,384 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: vision-title
+  elementType: text
+  bounds:
+  - 88
+  - 558
+  - 340
+  - 28
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 03 · 视觉模型上下文
+    bold: true
+- elementId: vision-subtitle
+  elementType: text
+  bounds:
+  - 88
+  - 596
+  - 400
+  - 24
+  content:
+    fontSize: 11
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 截图理解已开启 · 发送前可见
+- elementId: vision-attachment
+  elementType: shape
+  bounds:
+  - 88
+  - 632
+  - 552
+  - 122
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 552
+  - 122
+  path: M 12,0 H 540 Q 552,0 552,12 V 110 Q 552,122 540,122 H 12 Q 0,122 0,110 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: vision-attachment-title
+  elementType: text
+  bounds:
+  - 256
+  - 650
+  - 220
+  - 24
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 本次框选截图
+    bold: true
+- elementId: vision-attachment-meta
+  elementType: text
+  bounds:
+  - 256
+  - 680
+  - 268
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 压缩后随问题发送 · 768 × 432 · 62 KB
+- elementId: vision-attachment-model
+  elementType: text
+  bounds:
+  - 256
+  - 710
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 视觉模型 · 已连接
+- elementId: vision-detach
+  elementType: text
+  bounds:
+  - 520
+  - 650
+  - 88
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 本次不发送
+    align:
+    - right
+    - top
+- elementId: vision-privacy-icon
+  elementType: icon
+  bounds:
+  - 88
+  - 786
+  - 14
+  - 14
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: vision-privacy-title
+  elementType: text
+  bounds:
+  - 114
+  - 780
+  - 210
+  - 26
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 原始截图仅本机保留
+    bold: true
+- elementId: vision-privacy-copy
+  elementType: text
+  bounds:
+  - 330
+  - 780
+  - 280
+  - 26
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 发送的是压缩副本
+    align:
+    - right
+    - top
+- elementId: vision-rule
+  elementType: shape
+  bounds:
+  - 88
+  - 822
+  - 552
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: vision-text-icon
+  elementType: icon
+  bounds:
+  - 88
+  - 850
+  - 14
+  - 14
+  iconName: fas:font
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: vision-text-title
+  elementType: text
+  bounds:
+  - 114
+  - 844
+  - 220
+  - 26
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: OCR 识别在本机完成
+- elementId: vision-text-copy
+  elementType: text
+  bounds:
+  - 348
+  - 844
+  - 262
+  - 26
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 文字仍随模型请求发送
+    align:
+    - right
+    - top
+- elementId: vision-note
+  elementType: text
+  bounds:
+  - 88
+  - 892
+  - 520
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 关闭截图理解后，仅使用 OCR 文本与窗口上下文。
+- elementId: vision-context-toggle
+  elementType: shape
+  bounds:
+  - 606
+  - 562
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: vision-context-toggle-knob
+  elementType: shape
+  bounds:
+  - 623
+  - 565
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#F5F7FA'
+- elementId: capture-thumb
+  elementType: shape
+  bounds:
+  - 88
+  - 246
+  - 264
+  - 148
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 264
+  - 148
+  path: M 8,0 H 256 Q 264,0 264,8 V 140 Q 264,148 256,148 H 8 Q 0,148 0,140 V 8 Q 0,0 8,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: capture-thumb-sidebar
+  elementType: shape
+  bounds:
+  - 89
+  - 247
+  - 58
+  - 146
+  shapeName: custom
+  viewBox:
+  - 58
+  - 146
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  path: M 7,0 H 58 V 146 H 7 Q 0,146 0,139 V 7 Q 0,0 7,0 Z
+- elementId: capture-thumb-topbar
+  elementType: shape
+  bounds:
+  - 89
+  - 247
+  - 262
+  - 25
+  shapeName: custom
+  viewBox:
+  - 262
+  - 25
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  path: M 7,0 H 255 Q 262,0 262,7 V 25 H 0 V 7 Q 0,0 7,0 Z
+- elementId: capture-thumb-dot
+  elementType: shape
+  bounds:
+  - 97
+  - 256
+  - 4
+  - 4
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: capture-thumb-tab
+  elementType: shape
+  bounds:
+  - 154
+  - 250
+  - 73.92
+  - 18
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 73.92
+  - 18
+  path: M 8,0 H 65.92 Q 73.92,0 73.92,8 V 10 Q 73.92,18 65.92,18 H 8 Q 0,18 0,10 V 8 Q 0,0 8,0 Z
+- elementId: capture-thumb-tree-0
+  elementType: shape
+  bounds:
+  - 97
+  - 281
+  - 30.16
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 30.16
+  - 3
+  path: M 1.5,0 H 28.66 Q 30.16,0 30.16,1.5 V 1.5 Q 30.16,3 28.66,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-tree-1
+  elementType: shape
+  bounds:
+  - 97
+  - 299
+  - 22.04
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 22.04
+  - 3
+  path: M 1.5,0 H 20.54 Q 22.04,0 22.04,1.5 V 1.5 Q 22.04,3 20.54,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-tree-2
+  elementType: shape
+  bounds:
+  - 97
+  - 317
+  - 26.68
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 26.68
+  - 3
+  path: M 1.5,0 H 25.18 Q 26.68,0 26.68,1.5 V 1.5 Q 26.68,3 25.18,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-tree-3
+  elementType: shape
+  bounds:
+  - 97
+  - 335
+  - 17.98
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 17.98
+  - 3
+  path: M 1.5,0 H 16.48 Q 17.98,0 17.98,1.5 V 1.5 Q 17.98,3 16.48,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-code-0
+  elementType: shape
+  bounds:
+  - 158
+  - 283
+  - 129.6
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 129.6
+  - 3
+  path: M 1.5,0 H 128.1 Q 129.6,0 129.6,1.5 V 1.5 Q 129.6,3 128.1,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-code-1
+  elementType: shape
+  bounds:
+  - 158
+  - 300
+  - 86.39999999999999
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 86.39999999999999
+  - 3
+  path: M 1.5,0 H 84.89999999999999 Q 86.39999999999999,0 86.39999999999999,1.5 V 1.5 Q 86.39999999999999,3 84.89999999999999,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-code-2
+  elementType: shape
+  bounds:
+  - 166
+  - 317
+  - 147.6
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 147.6
+  - 3
+  path: M 1.5,0 H 146.1 Q 147.6,0 147.6,1.5 V 1.5 Q 147.6,3 146.1,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-code-3
+  elementType: shape
+  bounds:
+  - 166
+  - 334
+  - 115.2
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 115.2
+  - 3
+  path: M 1.5,0 H 113.7 Q 115.2,0 115.2,1.5 V 1.5 Q 115.2,3 113.7,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-code-4
+  elementType: shape
+  bounds:
+  - 166
+  - 351
+  - 136.8
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 136.8
+  - 3
+  path: M 1.5,0 H 135.3 Q 136.8,0 136.8,1.5 V 1.5 Q 136.8,3 135.3,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-code-5
+  elementType: shape
+  bounds:
+  - 158
+  - 368
+  - 75.6
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 75.6
+  - 3
+  path: M 1.5,0 H 74.1 Q 75.6,0 75.6,1.5 V 1.5 Q 75.6,3 74.1,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: capture-thumb-selection
+  elementType: shape
+  bounds:
+  - 154
+  - 294
+  - 162.0
+  - 56
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B9208'
+  border:
+    width: 1
+    color: '#506B92AA'
+- elementId: ocr-thumb
+  elementType: shape
+  bounds:
+  - 720
+  - 282
+  - 144
+  - 81
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 144
+  - 81
+  path: M 8,0 H 136 Q 144,0 144,8 V 73 Q 144,81 136,81 H 8 Q 0,81 0,73 V 8 Q 0,0 8,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: ocr-thumb-sidebar
+  elementType: shape
+  bounds:
+  - 721
+  - 283
+  - 32
+  - 79
+  shapeName: custom
+  viewBox:
+  - 32
+  - 79
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  path: M 7,0 H 32 V 79 H 7 Q 0,79 0,72 V 7 Q 0,0 7,0 Z
+- elementId: ocr-thumb-topbar
+  elementType: shape
+  bounds:
+  - 721
+  - 283
+  - 142
+  - 14
+  shapeName: custom
+  viewBox:
+  - 142
+  - 14
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  path: M 7,0 H 135 Q 142,0 142,7 V 14 H 0 V 7 Q 0,0 7,0 Z
+- elementId: ocr-thumb-dot
+  elementType: shape
+  bounds:
+  - 729
+  - 287
+  - 4
+  - 4
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: ocr-thumb-tab
+  elementType: shape
+  bounds:
+  - 760
+  - 286
+  - 40.32000000000001
+  - 7
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 40.32000000000001
+  - 7
+  path: M 3.5,0 H 36.82000000000001 Q 40.32000000000001,0 40.32000000000001,3.5 V 3.5 Q 40.32000000000001,7 36.82000000000001,7 H 3.5 Q 0,7 0,3.5 V 3.5 Q 0,0 3.5,0 Z
+- elementId: ocr-thumb-tree-0
+  elementType: shape
+  bounds:
+  - 729
+  - 306
+  - 16.64
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 16.64
+  - 3
+  path: M 1.5,0 H 15.14 Q 16.64,0 16.64,1.5 V 1.5 Q 16.64,3 15.14,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-tree-1
+  elementType: shape
+  bounds:
+  - 729
+  - 316
+  - 12.16
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 12.16
+  - 3
+  path: M 1.5,0 H 10.66 Q 12.16,0 12.16,1.5 V 1.5 Q 12.16,3 10.66,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-tree-2
+  elementType: shape
+  bounds:
+  - 729
+  - 326
+  - 14.72
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 14.72
+  - 3
+  path: M 1.5,0 H 13.22 Q 14.72,0 14.72,1.5 V 1.5 Q 14.72,3 13.22,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-tree-3
+  elementType: shape
+  bounds:
+  - 729
+  - 336
+  - 9.92
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 9.92
+  - 3
+  path: M 1.5,0 H 8.42 Q 9.92,0 9.92,1.5 V 1.5 Q 9.92,3 8.42,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-code-0
+  elementType: shape
+  bounds:
+  - 764
+  - 308
+  - 61.919999999999995
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 61.919999999999995
+  - 3
+  path: M 1.5,0 H 60.419999999999995 Q 61.919999999999995,0 61.919999999999995,1.5 V 1.5 Q 61.919999999999995,3 60.419999999999995,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-code-1
+  elementType: shape
+  bounds:
+  - 764
+  - 319
+  - 41.28
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 41.28
+  - 3
+  path: M 1.5,0 H 39.78 Q 41.28,0 41.28,1.5 V 1.5 Q 41.28,3 39.78,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-code-2
+  elementType: shape
+  bounds:
+  - 772
+  - 330
+  - 70.52
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 70.52
+  - 3
+  path: M 1.5,0 H 69.02 Q 70.52,0 70.52,1.5 V 1.5 Q 70.52,3 69.02,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-code-3
+  elementType: shape
+  bounds:
+  - 772
+  - 341
+  - 55.04
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 55.04
+  - 3
+  path: M 1.5,0 H 53.54 Q 55.04,0 55.04,1.5 V 1.5 Q 55.04,3 53.54,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-code-4
+  elementType: shape
+  bounds:
+  - 772
+  - 352
+  - 65.36
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 65.36
+  - 3
+  path: M 1.5,0 H 63.86 Q 65.36,0 65.36,1.5 V 1.5 Q 65.36,3 63.86,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-code-5
+  elementType: shape
+  bounds:
+  - 764
+  - 363
+  - 36.12
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 36.12
+  - 3
+  path: M 1.5,0 H 34.62 Q 36.12,0 36.12,1.5 V 1.5 Q 36.12,3 34.62,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: ocr-thumb-selection
+  elementType: shape
+  bounds:
+  - 760
+  - 313
+  - 77.4
+  - 38
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B9208'
+  border:
+    width: 1
+    color: '#506B92AA'
+- elementId: vision-thumb
+  elementType: shape
+  bounds:
+  - 104
+  - 656
+  - 128
+  - 72
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 128
+  - 72
+  path: M 8,0 H 120 Q 128,0 128,8 V 64 Q 128,72 120,72 H 8 Q 0,72 0,64 V 8 Q 0,0 8,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: vision-thumb-sidebar
+  elementType: shape
+  bounds:
+  - 105
+  - 657
+  - 28
+  - 70
+  shapeName: custom
+  viewBox:
+  - 28
+  - 70
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  path: M 7,0 H 28 V 70 H 7 Q 0,70 0,63 V 7 Q 0,0 7,0 Z
+- elementId: vision-thumb-topbar
+  elementType: shape
+  bounds:
+  - 105
+  - 657
+  - 126
+  - 12
+  shapeName: custom
+  viewBox:
+  - 126
+  - 12
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  path: M 6.0,0 H 120.0 Q 126,0 126,6.0 V 12 H 0 V 6.0 Q 0,0 6.0,0 Z
+- elementId: vision-thumb-dot
+  elementType: shape
+  bounds:
+  - 113
+  - 660
+  - 4
+  - 4
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: vision-thumb-tab
+  elementType: shape
+  bounds:
+  - 140
+  - 660
+  - 35.84
+  - 5
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 35.84
+  - 5
+  path: M 2.5,0 H 33.34 Q 35.84,0 35.84,2.5 V 2.5 Q 35.84,5 33.34,5 H 2.5 Q 0,5 0,2.5 V 2.5 Q 0,0 2.5,0 Z
+- elementId: vision-thumb-tree-0
+  elementType: shape
+  bounds:
+  - 113
+  - 678
+  - 14.56
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 14.56
+  - 3
+  path: M 1.5,0 H 13.06 Q 14.56,0 14.56,1.5 V 1.5 Q 14.56,3 13.06,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-tree-1
+  elementType: shape
+  bounds:
+  - 113
+  - 688
+  - 10.64
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 10.64
+  - 3
+  path: M 1.5,0 H 9.14 Q 10.64,0 10.64,1.5 V 1.5 Q 10.64,3 9.14,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-tree-2
+  elementType: shape
+  bounds:
+  - 113
+  - 698
+  - 12.88
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 12.88
+  - 3
+  path: M 1.5,0 H 11.38 Q 12.88,0 12.88,1.5 V 1.5 Q 12.88,3 11.38,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-tree-3
+  elementType: shape
+  bounds:
+  - 113
+  - 708
+  - 8.68
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 8.68
+  - 3
+  path: M 1.5,0 H 7.18 Q 8.68,0 8.68,1.5 V 1.5 Q 8.68,3 7.18,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-code-0
+  elementType: shape
+  bounds:
+  - 144
+  - 680
+  - 53.28
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 53.28
+  - 3
+  path: M 1.5,0 H 51.78 Q 53.28,0 53.28,1.5 V 1.5 Q 53.28,3 51.78,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-code-1
+  elementType: shape
+  bounds:
+  - 144
+  - 691
+  - 35.519999999999996
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 35.519999999999996
+  - 3
+  path: M 1.5,0 H 34.019999999999996 Q 35.519999999999996,0 35.519999999999996,1.5 V 1.5 Q 35.519999999999996,3 34.019999999999996,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-code-2
+  elementType: shape
+  bounds:
+  - 152
+  - 702
+  - 60.68
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 60.68
+  - 3
+  path: M 1.5,0 H 59.18 Q 60.68,0 60.68,1.5 V 1.5 Q 60.68,3 59.18,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-code-3
+  elementType: shape
+  bounds:
+  - 152
+  - 713
+  - 47.36
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 47.36
+  - 3
+  path: M 1.5,0 H 45.86 Q 47.36,0 47.36,1.5 V 1.5 Q 47.36,3 45.86,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-code-4
+  elementType: shape
+  bounds:
+  - 152
+  - 724
+  - 56.24
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 56.24
+  - 3
+  path: M 1.5,0 H 54.74 Q 56.24,0 56.24,1.5 V 1.5 Q 56.24,3 54.74,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-code-5
+  elementType: shape
+  bounds:
+  - 144
+  - 735
+  - 31.08
+  - 3
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#66707C'
+  viewBox:
+  - 31.08
+  - 3
+  path: M 1.5,0 H 29.58 Q 31.08,0 31.08,1.5 V 1.5 Q 31.08,3 29.58,3 H 1.5 Q 0,3 0,1.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: vision-thumb-selection
+  elementType: shape
+  bounds:
+  - 140
+  - 685
+  - 66.60000000000001
+  - 38
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B9208'
+  border:
+    width: 1
+    color: '#506B92AA'

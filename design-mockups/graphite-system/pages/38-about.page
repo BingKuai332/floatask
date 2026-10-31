@@ -1,0 +1,707 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 38
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 关于 · 版本与开放许可
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 产品身份、更新入口、开源许可和隐私边界集中在一处；诊断信息由用户主动复制
+- elementId: about-window
+  elementType: shape
+  bounds:
+  - 64
+  - 174
+  - 1050
+  - 730
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 1050
+  - 730
+  path: M 16,0 H 1034 Q 1050,0 1050,16 V 714 Q 1050,730 1034,730 H 16 Q 0,730 0,714 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 38
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: about-sidebar
+  elementType: shape
+  bounds:
+  - 65
+  - 175
+  - 214
+  - 728
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 214
+  - 728
+  path: M 16,0 H 198 Q 214,0 214,16 V 712 Q 214,728 198,728 H 16 Q 0,728 0,712 V 16 Q 0,0 16,0 Z
+- elementId: about-settings
+  elementType: text
+  bounds:
+  - 90
+  - 204
+  - 150
+  - 28
+  content:
+    fontSize: 20
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 设置
+    bold: true
+- elementId: about-nav-0
+  elementType: text
+  bounds:
+  - 96
+  - 274
+  - 150
+  - 40
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 模型服务
+    align:
+    - left
+    - middle
+- elementId: about-nav-1
+  elementType: text
+  bounds:
+  - 96
+  - 326
+  - 150
+  - 40
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网检索
+    align:
+    - left
+    - middle
+- elementId: about-nav-2
+  elementType: text
+  bounds:
+  - 96
+  - 378
+  - 150
+  - 40
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 通用与快捷键
+    align:
+    - left
+    - middle
+- elementId: about-nav-3
+  elementType: text
+  bounds:
+  - 96
+  - 430
+  - 150
+  - 40
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与隐私
+    align:
+    - left
+    - middle
+- elementId: about-nav-4
+  elementType: text
+  bounds:
+  - 96
+  - 482
+  - 150
+  - 40
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 外观与阅读
+    align:
+    - left
+    - middle
+- elementId: about-nav-bg-5
+  elementType: shape
+  bounds:
+  - 80
+  - 534
+  - 182
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 182
+  - 40
+  path: M 10,0 H 172 Q 182,0 182,10 V 30 Q 182,40 172,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: about-nav-5
+  elementType: text
+  bounds:
+  - 96
+  - 534
+  - 150
+  - 40
+  content:
+    fontSize: 12
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更新与关于
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: about-heading
+  elementType: text
+  bounds:
+  - 310
+  - 204
+  - 400
+  - 32
+  content:
+    fontSize: 22
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更新与关于
+    bold: true
+- elementId: about-identity
+  elementType: shape
+  bounds:
+  - 310
+  - 262
+  - 772
+  - 158
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 772
+  - 158
+  path: M 12,0 H 760 Q 772,0 772,12 V 146 Q 772,158 760,158 H 12 Q 0,158 0,146 V 12 Q 0,0 12,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: about-logo-bg
+  elementType: shape
+  bounds:
+  - 334
+  - 290
+  - 72
+  - 72
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 72
+  - 72
+  path: M 16,0 H 56 Q 72,0 72,16 V 56 Q 72,72 56,72 H 16 Q 0,72 0,56 V 16 Q 0,0 16,0 Z
+- elementId: about-logo
+  elementType: text
+  bounds:
+  - 334
+  - 290
+  - 72
+  - 72
+  content:
+    fontSize: 31
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: about-name
+  elementType: text
+  bounds:
+  - 430
+  - 285
+  - 300
+  - 32
+  content:
+    fontSize: 21
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FloatAsk 浮问
+    bold: true
+- elementId: about-version
+  elementType: text
+  bounds:
+  - 430
+  - 324
+  - 300
+  - 22
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: v0.3.1 · Windows x64
+- elementId: about-tagline
+  elementType: text
+  bounds:
+  - 430
+  - 354
+  - 300
+  - 24
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框一下，就懂了。
+- elementId: about-latest
+  elementType: shape
+  bounds:
+  - 814
+  - 290
+  - 218
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 218
+  - 34
+  path: M 8,0 H 210 Q 218,0 218,8 V 26 Q 218,34 210,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: about-latest-text
+  elementType: text
+  bounds:
+  - 814
+  - 290
+  - 218
+  - 34
+  content:
+    fontSize: 10
+    color: '#8DB9A4'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: ✓ 当前已是最新版本
+    align:
+    - center
+    - middle
+- elementId: about-check-time
+  elementType: text
+  bounds:
+  - 814
+  - 336
+  - 218
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 上次检查：今天 19:36
+    align:
+    - center
+    - top
+- elementId: about-divider-1
+  elementType: shape
+  bounds:
+  - 310
+  - 452
+  - 772
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: about-open-title
+  elementType: text
+  bounds:
+  - 310
+  - 478
+  - 400
+  - 26
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 开源与发布
+    bold: true
+- elementId: about-github
+  elementType: icon
+  bounds:
+  - 310
+  - 526
+  - 17
+  - 17
+  iconName: fab:github
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: about-repo
+  elementType: text
+  bounds:
+  - 340
+  - 519
+  - 450
+  - 30
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: GitHub 仓库与问题反馈
+    align:
+    - left
+    - middle
+- elementId: about-release-icon
+  elementType: icon
+  bounds:
+  - 310
+  - 576
+  - 17
+  - 17
+  iconName: fas:file-lines
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: about-release
+  elementType: text
+  bounds:
+  - 340
+  - 569
+  - 450
+  - 30
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 版本发布说明
+    align:
+    - left
+    - middle
+- elementId: about-license-icon
+  elementType: icon
+  bounds:
+  - 310
+  - 626
+  - 17
+  - 17
+  iconName: fas:scale-balanced
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: about-license
+  elementType: text
+  bounds:
+  - 340
+  - 619
+  - 450
+  - 30
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: MIT 许可与第三方组件许可
+    align:
+    - left
+    - middle
+- elementId: about-privacy
+  elementType: shape
+  bounds:
+  - 310
+  - 682
+  - 772
+  - 82
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 772
+  - 82
+  path: M 12,0 H 760 Q 772,0 772,12 V 70 Q 772,82 760,82 H 12 Q 0,82 0,70 V 12 Q 0,0 12,0 Z
+- elementId: about-privacy-icon
+  elementType: icon
+  bounds:
+  - 330
+  - 706
+  - 18
+  - 18
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: about-privacy-text
+  elementType: text
+  bounds:
+  - 362
+  - 694
+  - 690
+  - 52
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 无自建服务器、无遥测。API Key 使用 DPAPI 加密；截图与历史仅保存在本机，模型与检索的数据流向以设置为准。
+- elementId: about-footer-line
+  elementType: shape
+  bounds:
+  - 310
+  - 800
+  - 772
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: about-copyright
+  elementType: text
+  bounds:
+  - 310
+  - 826
+  - 430
+  - 26
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: © FloatAsk contributors · MIT License
+    align:
+    - left
+    - middle
+- elementId: about-diagnostics
+  elementType: shape
+  bounds:
+  - 732
+  - 820
+  - 142
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 142
+  - 40
+  path: M 10,0 H 132 Q 142,0 142,10 V 30 Q 142,40 132,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: about-diagnostics-label
+  elementType: text
+  bounds:
+  - 732
+  - 820
+  - 142
+  - 40
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 复制诊断信息
+    align:
+    - center
+    - middle
+- elementId: about-check
+  elementType: shape
+  bounds:
+  - 888
+  - 820
+  - 164
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 164
+  - 40
+  path: M 10,0 H 154 Q 164,0 164,10 V 30 Q 164,40 154,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: about-check-label
+  elementType: text
+  bounds:
+  - 888
+  - 820
+  - 164
+  - 40
+  content:
+    fontSize: 12
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 检查更新
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: about-note-title
+  elementType: text
+  bounds:
+  - 1180
+  - 220
+  - 350
+  - 26
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 诊断信息边界
+    bold: true
+- elementId: about-note-line
+  elementType: shape
+  bounds:
+  - 1180
+  - 258
+  - 350
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: about-note-body
+  elementType: text
+  bounds:
+  - 1180
+  - 274
+  - 350
+  - 56
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.75
+    wrap: true
+    text: '仅包含版本、系统版本、DPI、显示配置和可脱敏错误码。
+
+      复制前显示内容预览；不得包含密钥、OCR 原文、截图或完整对话。'
+- elementId: about-note-2-title
+  elementType: text
+  bounds:
+  - 1180
+  - 478
+  - 350
+  - 26
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 外部链接
+    bold: true
+- elementId: about-note-2-line
+  elementType: shape
+  bounds:
+  - 1180
+  - 516
+  - 350
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: about-note-2-body
+  elementType: text
+  bounds:
+  - 1180
+  - 532
+  - 350
+  - 28
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.75
+    wrap: true
+    text: GitHub、发布说明与许可使用系统默认浏览器打开；离开应用前有清晰外链图标，不在浮窗内嵌网页。

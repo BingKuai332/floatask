@@ -1,0 +1,1091 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 39
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 首次配置与模型服务
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 三步配置、连接反馈与 DPAPI 说明完整保留；浅色主操作与选中态沿用同一语义层级
+- elementId: onboard-model
+  elementType: shape
+  bounds:
+  - 64
+  - 176
+  - 1090
+  - 734
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 1090
+  - 734
+  path: M 16,0 H 1074 Q 1090,0 1090,16 V 718 Q 1090,734 1074,734 H 16 Q 0,734 0,718 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+  shadow:
+    blur: 38
+    color: '#26314726'
+    offset:
+    - 0
+    - 14
+- elementId: onboard-model-logo-bg
+  elementType: shape
+  bounds:
+  - 92
+  - 200
+  - 40
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 40
+  - 40
+  path: M 8,0 H 32 Q 40,0 40,8 V 32 Q 40,40 32,40 H 8 Q 0,40 0,32 V 8 Q 0,0 8,0 Z
+- elementId: onboard-model-logo
+  elementType: text
+  bounds:
+  - 92
+  - 200
+  - 40
+  - 40
+  content:
+    fontSize: 18
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-model-brand
+  elementType: text
+  bounds:
+  - 146
+  - 200
+  - 160
+  - 26
+  content:
+    fontSize: 18
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 FloatAsk
+    bold: true
+- elementId: onboard-model-tagline
+  elementType: text
+  bounds:
+  - 146
+  - 227
+  - 180
+  - 18
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 框一下，就懂了
+- elementId: onboard-model-close
+  elementType: icon
+  bounds:
+  - 1108
+  - 210
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: onboard-model-head-line
+  elementType: shape
+  bounds:
+  - 64
+  - 263
+  - 1090
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-model-steps-dot-1
+  elementType: shape
+  bounds:
+  - 94
+  - 286
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: onboard-model-steps-number-1
+  elementType: text
+  bounds:
+  - 94
+  - 286
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '1'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-model-steps-label-1
+  elementType: text
+  bounds:
+  - 128
+  - 286
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 模型服务
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: onboard-model-steps-line-1
+  elementType: shape
+  bounds:
+  - 233
+  - 298
+  - 26
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-model-steps-dot-2
+  elementType: shape
+  bounds:
+  - 268
+  - 286
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E9EBE4'
+- elementId: onboard-model-steps-number-2
+  elementType: text
+  bounds:
+  - 268
+  - 286
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '2'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-model-steps-label-2
+  elementType: text
+  bounds:
+  - 302
+  - 286
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 快捷键与隐私
+    align:
+    - left
+    - middle
+- elementId: onboard-model-steps-line-2
+  elementType: shape
+  bounds:
+  - 407
+  - 298
+  - 26
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-model-steps-dot-3
+  elementType: shape
+  bounds:
+  - 442
+  - 286
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E9EBE4'
+- elementId: onboard-model-steps-number-3
+  elementType: text
+  bounds:
+  - 442
+  - 286
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '3'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-model-steps-label-3
+  elementType: text
+  bounds:
+  - 476
+  - 286
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 开始使用
+    align:
+    - left
+    - middle
+- elementId: onboard-model-title
+  elementType: text
+  bounds:
+  - 94
+  - 336
+  - 600
+  - 34
+  content:
+    fontSize: 23
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 先连接一个模型服务
+    bold: true
+- elementId: onboard-model-subtitle
+  elementType: text
+  bounds:
+  - 94
+  - 376
+  - 770
+  - 44
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: 使用任意 OpenAI 兼容接口。首次解释、追问和截图理解稍后可以在设置中分别配置。
+- elementId: onboard-provider-0
+  elementType: shape
+  bounds:
+  - 94
+  - 440
+  - 318
+  - 82
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 318
+  - 82
+  path: M 10,0 H 308 Q 318,0 318,10 V 72 Q 318,82 308,82 H 10 Q 0,82 0,72 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#506B9299'
+- elementId: onboard-provider-icon-0
+  elementType: icon
+  bounds:
+  - 112
+  - 460
+  - 19
+  - 19
+  iconName: fas:bolt
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: onboard-provider-name-0
+  elementType: text
+  bounds:
+  - 146
+  - 452
+  - 230
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    bold: true
+- elementId: onboard-provider-desc-0
+  elementType: text
+  bounds:
+  - 146
+  - 480
+  - 240
+  - 20
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 推荐 · 国内可直连
+- elementId: onboard-provider-check-0
+  elementType: icon
+  bounds:
+  - 374
+  - 458
+  - 16
+  - 16
+  iconName: fas:circle-check
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: onboard-provider-1
+  elementType: shape
+  bounds:
+  - 432
+  - 440
+  - 318
+  - 82
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 318
+  - 82
+  path: M 10,0 H 308 Q 318,0 318,10 V 72 Q 318,82 308,82 H 10 Q 0,82 0,72 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: onboard-provider-icon-1
+  elementType: icon
+  bounds:
+  - 450
+  - 460
+  - 19
+  - 19
+  iconName: fas:server
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: onboard-provider-name-1
+  elementType: text
+  bounds:
+  - 484
+  - 452
+  - 230
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: OpenAI 兼容
+- elementId: onboard-provider-desc-1
+  elementType: text
+  bounds:
+  - 484
+  - 480
+  - 240
+  - 20
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 自建或第三方服务
+- elementId: onboard-provider-2
+  elementType: shape
+  bounds:
+  - 770
+  - 440
+  - 318
+  - 82
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 318
+  - 82
+  path: M 10,0 H 308 Q 318,0 318,10 V 72 Q 318,82 308,82 H 10 Q 0,82 0,72 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: onboard-provider-icon-2
+  elementType: icon
+  bounds:
+  - 788
+  - 460
+  - 19
+  - 19
+  iconName: fas:computer
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: onboard-provider-name-2
+  elementType: text
+  bounds:
+  - 822
+  - 452
+  - 230
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 本地 Ollama
+- elementId: onboard-provider-desc-2
+  elementType: text
+  bounds:
+  - 822
+  - 480
+  - 240
+  - 20
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 模型留在本机
+- elementId: onboard-endpoint-label
+  elementType: text
+  bounds:
+  - 94
+  - 552
+  - 500
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 接口地址
+- elementId: onboard-endpoint-box
+  elementType: shape
+  bounds:
+  - 94
+  - 578
+  - 500
+  - 44
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 500
+  - 44
+  path: M 10,0 H 490 Q 500,0 500,10 V 34 Q 500,44 490,44 H 10 Q 0,44 0,34 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: onboard-endpoint-value
+  elementType: text
+  bounds:
+  - 108
+  - 578
+  - 446
+  - 44
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: https://api.deepseek.com/v1
+    align:
+    - left
+    - middle
+- elementId: onboard-key-label
+  elementType: text
+  bounds:
+  - 618
+  - 552
+  - 506
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: API Key · 使用 Windows DPAPI 加密
+- elementId: onboard-key-box
+  elementType: shape
+  bounds:
+  - 618
+  - 578
+  - 506
+  - 44
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 506
+  - 44
+  path: M 10,0 H 496 Q 506,0 506,10 V 34 Q 506,44 496,44 H 10 Q 0,44 0,34 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: onboard-key-value
+  elementType: text
+  bounds:
+  - 632
+  - 578
+  - 452
+  - 44
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: ••••••••••••••••
+    align:
+    - left
+    - middle
+- elementId: onboard-key-eye
+  elementType: icon
+  bounds:
+  - 1090
+  - 592
+  - 15
+  - 15
+  iconName: far:eye
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: onboard-name-label
+  elementType: text
+  bounds:
+  - 94
+  - 666
+  - 500
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 模型名称
+- elementId: onboard-name-box
+  elementType: shape
+  bounds:
+  - 94
+  - 692
+  - 500
+  - 44
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 500
+  - 44
+  path: M 10,0 H 490 Q 500,0 500,10 V 34 Q 500,44 490,44 H 10 Q 0,44 0,34 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: onboard-name-value
+  elementType: text
+  bounds:
+  - 108
+  - 692
+  - 446
+  - 44
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: deepseek-chat
+    align:
+    - left
+    - middle
+- elementId: onboard-name-status-dot
+  elementType: shape
+  bounds:
+  - 94
+  - 750
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: onboard-name-status
+  elementType: text
+  bounds:
+  - 108
+  - 743
+  - 486
+  - 20
+  content:
+    fontSize: 10
+    color: '#3E7561'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 连接成功 · 已读取模型，延迟 684 ms（界面示例）
+- elementId: onboard-privacy-icon-bg
+  elementType: shape
+  bounds:
+  - 618
+  - 676
+  - 38
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 38
+  - 38
+  path: M 8,0 H 30 Q 38,0 38,8 V 30 Q 38,38 30,38 H 8 Q 0,38 0,30 V 8 Q 0,0 8,0 Z
+- elementId: onboard-privacy-icon
+  elementType: icon
+  bounds:
+  - 629
+  - 687
+  - 16
+  - 16
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: onboard-privacy-title
+  elementType: text
+  bounds:
+  - 670
+  - 672
+  - 420
+  - 22
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 密钥不会写入明文配置
+    bold: true
+- elementId: onboard-privacy-copy
+  elementType: text
+  bounds:
+  - 670
+  - 699
+  - 430
+  - 40
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: 测试连接只向当前服务发送必要请求；浮问无自建服务器与遥测。
+- elementId: onboard-footer-line
+  elementType: shape
+  bounds:
+  - 64
+  - 827
+  - 1090
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-skip
+  elementType: text
+  bounds:
+  - 94
+  - 850
+  - 180
+  - 30
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 稍后配置
+    align:
+    - left
+    - middle
+- elementId: onboard-footnote
+  elementType: text
+  bounds:
+  - 284
+  - 850
+  - 460
+  - 30
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 跳过后，首次提问时会引导返回此页
+    align:
+    - left
+    - middle
+- elementId: onboard-test
+  elementType: shape
+  bounds:
+  - 812
+  - 845
+  - 138
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 138
+  - 40
+  path: M 10,0 H 128 Q 138,0 138,10 V 30 Q 138,40 128,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: onboard-test-label
+  elementType: text
+  bounds:
+  - 812
+  - 845
+  - 138
+  - 40
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 测试连接
+    align:
+    - center
+    - middle
+- elementId: onboard-next
+  elementType: shape
+  bounds:
+  - 964
+  - 845
+  - 160
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 160
+  - 40
+  path: M 10,0 H 150 Q 160,0 160,10 V 30 Q 160,40 150,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: onboard-next-label
+  elementType: text
+  bounds:
+  - 964
+  - 845
+  - 160
+  - 40
+  content:
+    fontSize: 12
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 下一步
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-note-1-title
+  elementType: text
+  bounds:
+  - 1210
+  - 202
+  - 320
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 最小必填项
+    bold: true
+- elementId: onboard-note-1-line
+  elementType: shape
+  bounds:
+  - 1210
+  - 240
+  - 320
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-note-1-body
+  elementType: text
+  bounds:
+  - 1210
+  - 256
+  - 320
+  - 84
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: '• 接口地址、API Key、模型名称
+
+      • Ollama 可不要求 API Key
+
+      • 测试失败时保留全部输入'
+- elementId: onboard-note-2-title
+  elementType: text
+  bounds:
+  - 1210
+  - 386
+  - 320
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 配置可恢复
+    bold: true
+- elementId: onboard-note-2-line
+  elementType: shape
+  bounds:
+  - 1210
+  - 424
+  - 320
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-note-2-body
+  elementType: text
+  bounds:
+  - 1210
+  - 440
+  - 320
+  - 84
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: '• 上一步不丢失已填内容
+
+      • 关闭窗口等同“稍后配置”
+
+      • 再次进入从未完成步骤继续'
+- elementId: onboard-note-3-title
+  elementType: text
+  bounds:
+  - 1210
+  - 570
+  - 320
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 安全边界
+    bold: true
+- elementId: onboard-note-3-line
+  elementType: shape
+  bounds:
+  - 1210
+  - 608
+  - 320
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-note-3-body
+  elementType: text
+  bounds:
+  - 1210
+  - 624
+  - 320
+  - 84
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: '• API Key 使用 DPAPI 加密
+
+      • 不在日志或诊断信息中显示密钥
+
+      • 截图默认仅在本机执行 OCR'

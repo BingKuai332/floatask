@@ -1,0 +1,663 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 48
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · DPI 与窗口迁移
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 100%／125%／150% 使用同一逻辑尺寸；浅色描边和文字在目标屏上重新对齐
+- elementId: dpi-100
+  elementType: shape
+  bounds:
+  - 64
+  - 198
+  - 472
+  - 496
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 472
+  - 496
+  path: M 16,0 H 456 Q 472,0 472,16 V 480 Q 472,496 456,496 H 16 Q 0,496 0,480 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: dpi-100-scale
+  elementType: text
+  bounds:
+  - 88
+  - 222
+  - 424
+  - 32
+  content:
+    fontSize: 20
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 100% 缩放
+    bold: true
+- elementId: dpi-100-physical
+  elementType: text
+  bounds:
+  - 88
+  - 260
+  - 424
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 物理像素 480 × 360
+- elementId: dpi-100-stage
+  elementType: shape
+  bounds:
+  - 88
+  - 308
+  - 424
+  - 230
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 424
+  - 230
+  path: M 12,0 H 412 Q 424,0 424,12 V 218 Q 424,230 412,230 H 12 Q 0,230 0,218 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: dpi-100-window
+  elementType: shape
+  bounds:
+  - 112
+  - 338
+  - 376
+  - 156
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 376
+  - 156
+  path: M 16,0 H 360 Q 376,0 376,16 V 140 Q 376,156 360,156 H 16 Q 0,156 0,140 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: dpi-100-head
+  elementType: shape
+  bounds:
+  - 112
+  - 338
+  - 376
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 376
+  - 32
+  path: M 10,0 H 366 Q 376,0 376,10 V 22 Q 376,32 366,32 H 10 Q 0,32 0,22 V 10 Q 0,0 10,0 Z
+- elementId: dpi-100-title
+  elementType: text
+  bounds:
+  - 126
+  - 338
+  - 348
+  - 32
+  content:
+    fontSize: 10
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 紧凑答案窗
+    align:
+    - left
+    - middle
+- elementId: dpi-100-body
+  elementType: text
+  bounds:
+  - 128
+  - 390
+  - 344
+  - 44
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: '同一逻辑尺寸 480 × 360 DIP
+
+      文字与圆角不随物理像素改写'
+- elementId: dpi-100-stroke
+  elementType: shape
+  bounds:
+  - 128
+  - 454
+  - 344
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: dpi-100-stroke-text
+  elementType: text
+  bounds:
+  - 128
+  - 466
+  - 344
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 1 DIP 描边 · 对齐物理像素网格
+- elementId: dpi-100-rule
+  elementType: text
+  bounds:
+  - 88
+  - 570
+  - 424
+  - 70
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.65
+    wrap: true
+    text: 布局、字号、点击区域使用 DIP；渲染时由系统缩放，不对 CSS 再乘一次 DPI。
+- elementId: dpi-125
+  elementType: shape
+  bounds:
+  - 564
+  - 198
+  - 472
+  - 496
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 472
+  - 496
+  path: M 16,0 H 456 Q 472,0 472,16 V 480 Q 472,496 456,496 H 16 Q 0,496 0,480 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#506B9299'
+- elementId: dpi-125-scale
+  elementType: text
+  bounds:
+  - 588
+  - 222
+  - 424
+  - 32
+  content:
+    fontSize: 20
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 125% 缩放
+    bold: true
+- elementId: dpi-125-physical
+  elementType: text
+  bounds:
+  - 588
+  - 260
+  - 424
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 物理像素 600 × 450
+- elementId: dpi-125-stage
+  elementType: shape
+  bounds:
+  - 588
+  - 308
+  - 424
+  - 230
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 424
+  - 230
+  path: M 12,0 H 412 Q 424,0 424,12 V 218 Q 424,230 412,230 H 12 Q 0,230 0,218 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: dpi-125-window
+  elementType: shape
+  bounds:
+  - 612
+  - 338
+  - 376
+  - 156
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 376
+  - 156
+  path: M 16,0 H 360 Q 376,0 376,16 V 140 Q 376,156 360,156 H 16 Q 0,156 0,140 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: dpi-125-head
+  elementType: shape
+  bounds:
+  - 612
+  - 338
+  - 376
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 376
+  - 32
+  path: M 10,0 H 366 Q 376,0 376,10 V 22 Q 376,32 366,32 H 10 Q 0,32 0,22 V 10 Q 0,0 10,0 Z
+- elementId: dpi-125-title
+  elementType: text
+  bounds:
+  - 626
+  - 338
+  - 348
+  - 32
+  content:
+    fontSize: 10
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 紧凑答案窗
+    align:
+    - left
+    - middle
+- elementId: dpi-125-body
+  elementType: text
+  bounds:
+  - 628
+  - 390
+  - 344
+  - 44
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: '同一逻辑尺寸 480 × 360 DIP
+
+      文字与圆角不随物理像素改写'
+- elementId: dpi-125-stroke
+  elementType: shape
+  bounds:
+  - 628
+  - 454
+  - 344
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: dpi-125-stroke-text
+  elementType: text
+  bounds:
+  - 628
+  - 466
+  - 344
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 1 DIP 描边 · 对齐物理像素网格
+- elementId: dpi-125-rule
+  elementType: text
+  bounds:
+  - 588
+  - 570
+  - 424
+  - 70
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.65
+    wrap: true
+    text: 布局、字号、点击区域使用 DIP；渲染时由系统缩放，不对 CSS 再乘一次 DPI。
+- elementId: dpi-150
+  elementType: shape
+  bounds:
+  - 1064
+  - 198
+  - 472
+  - 496
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 472
+  - 496
+  path: M 16,0 H 456 Q 472,0 472,16 V 480 Q 472,496 456,496 H 16 Q 0,496 0,480 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: dpi-150-scale
+  elementType: text
+  bounds:
+  - 1088
+  - 222
+  - 424
+  - 32
+  content:
+    fontSize: 20
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 150% 缩放
+    bold: true
+- elementId: dpi-150-physical
+  elementType: text
+  bounds:
+  - 1088
+  - 260
+  - 424
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 物理像素 720 × 540
+- elementId: dpi-150-stage
+  elementType: shape
+  bounds:
+  - 1088
+  - 308
+  - 424
+  - 230
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 424
+  - 230
+  path: M 12,0 H 412 Q 424,0 424,12 V 218 Q 424,230 412,230 H 12 Q 0,230 0,218 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: dpi-150-window
+  elementType: shape
+  bounds:
+  - 1112
+  - 338
+  - 376
+  - 156
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 376
+  - 156
+  path: M 16,0 H 360 Q 376,0 376,16 V 140 Q 376,156 360,156 H 16 Q 0,156 0,140 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: dpi-150-head
+  elementType: shape
+  bounds:
+  - 1112
+  - 338
+  - 376
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 376
+  - 32
+  path: M 10,0 H 366 Q 376,0 376,10 V 22 Q 376,32 366,32 H 10 Q 0,32 0,22 V 10 Q 0,0 10,0 Z
+- elementId: dpi-150-title
+  elementType: text
+  bounds:
+  - 1126
+  - 338
+  - 348
+  - 32
+  content:
+    fontSize: 10
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 紧凑答案窗
+    align:
+    - left
+    - middle
+- elementId: dpi-150-body
+  elementType: text
+  bounds:
+  - 1128
+  - 390
+  - 344
+  - 44
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: '同一逻辑尺寸 480 × 360 DIP
+
+      文字与圆角不随物理像素改写'
+- elementId: dpi-150-stroke
+  elementType: shape
+  bounds:
+  - 1128
+  - 454
+  - 344
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: dpi-150-stroke-text
+  elementType: text
+  bounds:
+  - 1128
+  - 466
+  - 344
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 1 DIP 描边 · 对齐物理像素网格
+- elementId: dpi-150-rule
+  elementType: text
+  bounds:
+  - 1088
+  - 570
+  - 424
+  - 70
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.65
+    wrap: true
+    text: 布局、字号、点击区域使用 DIP；渲染时由系统缩放，不对 CSS 再乘一次 DPI。
+- elementId: dpi-migration
+  elementType: shape
+  bounds:
+  - 64
+  - 742
+  - 1472
+  - 136
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 1472
+  - 136
+  path: M 12,0 H 1460 Q 1472,0 1472,12 V 124 Q 1472,136 1460,136 H 12 Q 0,136 0,124 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: dpi-migration-icon
+  elementType: icon
+  bounds:
+  - 92
+  - 774
+  - 22
+  - 22
+  iconName: fas:arrow-right
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: dpi-migration-title
+  elementType: text
+  bounds:
+  - 132
+  - 760
+  - 350
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 迁移到另一块显示器
+    bold: true
+- elementId: dpi-migration-copy
+  elementType: text
+  bounds:
+  - 132
+  - 798
+  - 1340
+  - 48
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: 保留窗口在目标工作区内的相对中心，重新读取 DPI 并夹紧边界；若空间不足，优先保证标题栏、回答视口和输入区完整可见。禁止用目标屏缩放比例再次缩放已经由系统处理的界面。

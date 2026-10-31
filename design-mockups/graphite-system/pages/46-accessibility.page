@@ -1,0 +1,506 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 46
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 可访问性 · 高对比度与减少动态
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 系统高对比度优先于主题色板；减少动态不改变功能，屏幕阅读器只接收有意义的状态
+- elementId: access-contrast
+  elementType: shape
+  bounds:
+  - 64
+  - 190
+  - 714
+  - 650
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 714
+  - 650
+  path: M 16,0 H 698 Q 714,0 714,16 V 634 Q 714,650 698,650 H 16 Q 0,650 0,634 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF26'
+- elementId: access-contrast-title
+  elementType: text
+  bounds:
+  - 94
+  - 218
+  - 500
+  - 28
+  content:
+    fontSize: 18
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Windows 高对比度
+    bold: true
+- elementId: access-contrast-copy
+  elementType: text
+  bounds:
+  - 94
+  - 258
+  - 610
+  - 48
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 检测到系统高对比度后，使用系统前景、背景、链接与按钮文字角色；不强行套用朝日或近月颜色。
+- elementId: access-system-badge
+  elementType: shape
+  bounds:
+  - 94
+  - 310
+  - 244
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 244
+  - 20
+  path: M 8,0 H 236 Q 244,0 244,8 V 12 Q 244,20 236,20 H 8 Q 0,20 0,12 V 8 Q 0,0 8,0 Z
+- elementId: access-system-badge-text
+  elementType: text
+  bounds:
+  - 104
+  - 310
+  - 224
+  - 20
+  content:
+    fontSize: 9
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 系统接管配色 · 非朝日／近月主题色
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: hc-preview
+  elementType: shape
+  bounds:
+  - 94
+  - 334
+  - 654
+  - 270
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#000000'
+  viewBox:
+  - 654
+  - 270
+  path: M 12,0 H 642 Q 654,0 654,12 V 258 Q 654,270 642,270 H 12 Q 0,270 0,258 V 12 Q 0,0 12,0 Z
+  border:
+    style: solid
+    width: 1
+    color: '#FFFFFF'
+- elementId: hc-preview-title
+  elementType: text
+  bounds:
+  - 120
+  - 358
+  - 420
+  - 30
+  content:
+    fontSize: 15
+    color: '#FFFFFF'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 系统高对比度示意
+    bold: true
+- elementId: hc-preview-focus
+  elementType: shape
+  bounds:
+  - 120
+  - 414
+  - 380
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#000000'
+  viewBox:
+  - 380
+  - 52
+  path: M 10,0 H 370 Q 380,0 380,10 V 42 Q 380,52 370,52 H 10 Q 0,52 0,42 V 10 Q 0,0 10,0 Z
+  border:
+    style: solid
+    width: 2
+    color: '#FFFF00'
+- elementId: hc-preview-input
+  elementType: text
+  bounds:
+  - 140
+  - 414
+  - 340
+  - 52
+  content:
+    fontSize: 12
+    color: '#FFFFFF'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 继续追问…
+    align:
+    - left
+    - middle
+- elementId: hc-preview-button
+  elementType: shape
+  bounds:
+  - 520
+  - 414
+  - 198
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#000000'
+  viewBox:
+  - 198
+  - 52
+  path: M 10,0 H 188 Q 198,0 198,10 V 42 Q 198,52 188,52 H 10 Q 0,52 0,42 V 10 Q 0,0 10,0 Z
+  border:
+    style: solid
+    width: 1
+    color: '#FFFFFF'
+- elementId: hc-preview-button-text
+  elementType: text
+  bounds:
+  - 520
+  - 414
+  - 198
+  - 52
+  content:
+    fontSize: 12
+    color: '#FFFFFF'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 发送
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: hc-preview-note
+  elementType: text
+  bounds:
+  - 120
+  - 504
+  - 560
+  - 54
+  content:
+    fontSize: 11
+    color: '#FFFFFF'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 焦点、边框和文字不能仅靠阴影或浅灰区分；示例中的系统黄仅用于高对比度焦点。
+- elementId: access-contrast-rule
+  elementType: shape
+  bounds:
+  - 94
+  - 640
+  - 654
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: access-contrast-rule-text
+  elementType: text
+  bounds:
+  - 94
+  - 666
+  - 624
+  - 88
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: 保留 1 DIP 控件边界与 2 DIP 焦点外描边；图标提供文本名称。禁用状态除颜色外，同时使用文案与不可交互行为表达。
+- elementId: access-motion
+  elementType: shape
+  bounds:
+  - 812
+  - 190
+  - 724
+  - 650
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 724
+  - 650
+  path: M 16,0 H 708 Q 724,0 724,16 V 634 Q 724,650 708,650 H 16 Q 0,650 0,634 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: access-motion-title
+  elementType: text
+  bounds:
+  - 842
+  - 218
+  - 500
+  - 28
+  content:
+    fontSize: 18
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 减少动态与辅助播报
+    bold: true
+- elementId: access-motion-normal
+  elementType: text
+  bounds:
+  - 842
+  - 278
+  - 220
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 标准动态
+    bold: true
+- elementId: access-motion-track-1
+  elementType: shape
+  bounds:
+  - 842
+  - 320
+  - 620
+  - 12
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 620
+  - 12
+  path: M 6.0,0 H 614.0 Q 620,0 620,6.0 V 6.0 Q 620,12 614.0,12 H 6.0 Q 0,12 0,6.0 V 6.0 Q 0,0 6.0,0 Z
+- elementId: access-motion-bar-1
+  elementType: shape
+  bounds:
+  - 842
+  - 320
+  - 420
+  - 12
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 420
+  - 12
+  path: M 6.0,0 H 414.0 Q 420,0 420,6.0 V 6.0 Q 420,12 414.0,12 H 6.0 Q 0,12 0,6.0 V 6.0 Q 0,0 6.0,0 Z
+- elementId: access-motion-normal-copy
+  elementType: text
+  bounds:
+  - 842
+  - 346
+  - 620
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 胶囊收放 180 ms · 次级内容错峰淡入淡出
+- elementId: access-motion-reduced
+  elementType: text
+  bounds:
+  - 842
+  - 404
+  - 260
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 减少动态效果
+    bold: true
+- elementId: access-motion-track-2
+  elementType: shape
+  bounds:
+  - 842
+  - 446
+  - 620
+  - 12
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 620
+  - 12
+  path: M 6.0,0 H 614.0 Q 620,0 620,6.0 V 6.0 Q 620,12 614.0,12 H 6.0 Q 0,12 0,6.0 V 6.0 Q 0,0 6.0,0 Z
+- elementId: access-motion-bar-2
+  elementType: shape
+  bounds:
+  - 842
+  - 446
+  - 620
+  - 12
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 620
+  - 12
+  path: M 6.0,0 H 614.0 Q 620,0 620,6.0 V 6.0 Q 620,12 614.0,12 H 6.0 Q 0,12 0,6.0 V 6.0 Q 0,0 6.0,0 Z
+- elementId: access-motion-reduced-copy
+  elementType: text
+  bounds:
+  - 842
+  - 472
+  - 620
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 立即切换最终状态 · 无位移、缩放或闪烁
+- elementId: access-motion-divider
+  elementType: shape
+  bounds:
+  - 842
+  - 526
+  - 620
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: access-reader-icon
+  elementType: icon
+  bounds:
+  - 842
+  - 558
+  - 18
+  - 18
+  iconName: fas:volume-high
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: access-reader-title
+  elementType: text
+  bounds:
+  - 876
+  - 550
+  - 460
+  - 26
+  content:
+    fontSize: 13
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 屏幕阅读器播报
+    bold: true
+- elementId: access-reader-copy
+  elementType: text
+  bounds:
+  - 842
+  - 596
+  - 620
+  - 94
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: 流式生成期间不逐字播报；完成后播报“回答已生成”，错误时播报状态与恢复动作。OCR 原文、来源与按钮使用可读标签，装饰图标隐藏。
+- elementId: access-motion-note
+  elementType: shape
+  bounds:
+  - 842
+  - 718
+  - 620
+  - 76
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 620
+  - 76
+  path: M 12,0 H 608 Q 620,0 620,12 V 64 Q 620,76 608,76 H 12 Q 0,76 0,64 V 12 Q 0,0 12,0 Z
+- elementId: access-motion-note-text
+  elementType: text
+  bounds:
+  - 862
+  - 732
+  - 580
+  - 48
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 减少动态不删除进度、状态或焦点反馈，只移除非必要运动。
