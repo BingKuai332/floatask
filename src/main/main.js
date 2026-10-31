@@ -334,6 +334,9 @@ async function ensureBubble() {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: false,
     movable: true,
     minimizable: false,
@@ -490,6 +493,9 @@ async function startSelection(mode = 'single') {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: false,
     movable: false,
     minimizable: false,
@@ -886,6 +892,9 @@ async function ensureTranslateWindow() {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     movable: true,
     minimizable: false,
@@ -1078,6 +1087,9 @@ async function ensureResultWindow() {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     movable: true,
     minimizable: false,
@@ -1757,6 +1769,9 @@ async function openFontWindow() {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     minimizable: false,
     maximizable: false,
@@ -1815,6 +1830,9 @@ async function openHistory(recordId = '') {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     minimizable: true,
     maximizable: true,
@@ -1880,6 +1898,9 @@ async function openSettings(firstRun = false) {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     minimizable: false,
     maximizable: false,

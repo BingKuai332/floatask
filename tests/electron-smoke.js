@@ -467,6 +467,13 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(titlebarProbe.barBg,'rgba(0, 0, 0, 0)','light titlebar is flush with the card surface');
    assert.equal(titlebarProbe.cardBg,titlebarProbe.surface,'the light card face is the uniform surface token');
    assert.equal(titlebarProbe.activeColor,titlebarProbe.accent,'the pinned button follows the accent token in the light theme');
+   await screenshot(settings,'settings-light');
+   // capturePage can hang on a window that has been left occluded; bring
+   // the history window forward for its capture, the flow does not depend
+   // on its z-order afterwards.
+   win.show();
+   win.focus();
+   await screenshot(win,'history-light');
    await screenshot(result,'task4-compact-light');
    await js(settings,"window.floatask.saveSettings({theme:'dark'})");
    await waitFor(()=>js(result,"document.documentElement.dataset.theme==='dark'"),'result returns to dark theme');
@@ -699,4 +706,6 @@ server.listen(0,'127.0.0.1',()=>{
   } catch(err) { console.error(err.stack); console.error('Renderer errors:',errors); app.exit(1); }
  }).catch(err=>{console.error(err);app.exit(1);});
 });
-setTimeout(()=>{console.error('Smoke test timed out');app.exit(1);},45000);
+// Hang guard only: a full pass takes ~40s, and each verification capture
+// (FLOATASK_TEST_SHOTS) adds real capture time, so a shots run needs ~2min.
+setTimeout(()=>{console.error('Smoke test timed out');app.exit(1);},180000);
