@@ -153,7 +153,7 @@
 ## 14. 登记常量与派生（1.4.3）
 
 - microText 字号（kicker 7.5 / micro 8.5 / caption 9.5）仅用于全大写装饰性 kicker、微型注记与辅助标签；正文与控件文字不小于 auxiliaryMin 10。
-- radius 增补 media 9 / compact 7 / mini 5：分别用于浮层媒体（灯箱图片）、紧凑控件（27–31 px 高按钮、手动输入框）与消息行内小动作；其余圆角继续沿用 window/container/control/small/pill。
+- radius 增补 media 9 / compact 7 / mini 5：media 用于浮层媒体（灯箱图片）；compact 用于 23–31 px 高的紧凑文字按钮、分段控件与输入框；mini 用于消息行内小动作；其余圆角继续沿用 window/container/control/small/pill；图标按钮（30 px 方形命中区）沿用 control 10。
 - 新增语义描边 border-danger（近月 #E1A0A84D／朝日 #A14D584D），仅用于破坏性悬停与错误提示边框；选中态描边统一用 border-active，不再使用旧青蓝／玫红硬编码。
 - 答案窗标题栏与卡片同面（transparent + 分隔线），双主题一致；窗口外圈不留任何主题色底板。
 

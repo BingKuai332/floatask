@@ -553,7 +553,7 @@ server.listen(0,'127.0.0.1',()=>{
    })()`);
    assert.equal(fontProbe.radius,'16px','font window card uses the window radius token');
    assert.equal(fontProbe.clip,'none','font window card is rounded, not clipped');
-   assert.equal(fontProbe.importRadius,'10px','the import action uses the control radius token');
+   assert.equal(fontProbe.importRadius,'7px','the import action uses the compact radius token for its 29px height');
    assert.notEqual(fontProbe.importStyle,'dashed','the import action is a quiet solid control, not a dashed banner');
    assert.equal(fontProbe.activeColor,fontProbe.accent,'the selected font follows the accent token');
    await screenshot(font,'font-zh');
