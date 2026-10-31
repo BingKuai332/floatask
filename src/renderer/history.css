@@ -1,5 +1,5 @@
 html,body { height:100%; overflow:hidden; }
-.history-shell { height:calc(100vh - 16px); margin:8px; background:var(--panel); border:1px solid var(--line-strong); display:flex; flex-direction:column; }
+.history-shell { height:calc(100vh - 16px); margin:8px; background:var(--panel); border:1px solid var(--line-strong); border-radius: var(--fa-radius-window); box-shadow: var(--fa-shadow-floating); overflow: hidden; display:flex; flex-direction:column; }
 .history-header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid var(--line); }
 h1 { font-size:17px; margin:0; } small { font-family:var(--mono); color:var(--muted); font-size:10px; }
 .history-toolbar { display:flex; gap:8px; padding:12px; border-bottom:1px solid var(--line); }

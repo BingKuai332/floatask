@@ -482,9 +482,10 @@ server.listen(0,'127.0.0.1',()=>{
      document.body.appendChild(probe);
      const surface=getComputedStyle(probe).backgroundColor;
      probe.remove();
-     return {shellBg:shell.backgroundColor,surface};
+     return {shellBg:shell.backgroundColor,surface,radius:shell.borderRadius};
    })()`);
    assert.equal(historyLightProbe.shellBg,historyLightProbe.surface,'the history window face follows the light theme');
+   assert.equal(historyLightProbe.radius,'16px','the history window card uses the window radius token');
    await js(result,"window.floatask.closeResult();true");
    await js(settings,"window.floatask.saveSettings({showBubble:true})");
    const bubbleLight=await waitFor(()=>page('bubble'),'bubble in light theme');
