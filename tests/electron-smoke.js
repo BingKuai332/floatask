@@ -451,14 +451,21 @@ server.listen(0,'127.0.0.1',()=>{
    const titlebarProbe=await js(result,`(() => {
      const bar=getComputedStyle(document.querySelector('.titlebar'));
      const active=getComputedStyle(document.getElementById('pinBtn'));
+     const card=getComputedStyle(document.querySelector('.card'));
+     const surfaceProbe=document.createElement('span');
+     surfaceProbe.style.background='var(--fa-surface)';
+     document.body.appendChild(surfaceProbe);
+     const surface=getComputedStyle(surfaceProbe).backgroundColor;
+     surfaceProbe.remove();
      const probe=document.createElement('span');
      probe.style.color='var(--fa-accent)';
      document.body.appendChild(probe);
      const accent=getComputedStyle(probe).color;
      probe.remove();
-     return {barBg:bar.backgroundColor,activeColor:active.color,accent};
+     return {barBg:bar.backgroundColor,activeColor:active.color,cardBg:card.backgroundColor,surface,accent};
    })()`);
    assert.equal(titlebarProbe.barBg,'rgba(0, 0, 0, 0)','light titlebar is flush with the card surface');
+   assert.equal(titlebarProbe.cardBg,titlebarProbe.surface,'the light card face is the uniform surface token');
    assert.equal(titlebarProbe.activeColor,titlebarProbe.accent,'the pinned button follows the accent token in the light theme');
    await screenshot(result,'task4-compact-light');
    await js(settings,"window.floatask.saveSettings({theme:'dark'})");
@@ -467,14 +474,21 @@ server.listen(0,'127.0.0.1',()=>{
    const darkTitlebar=await js(result,`(() => {
      const bar=getComputedStyle(document.querySelector('.titlebar'));
      const active=getComputedStyle(document.getElementById('pinBtn'));
+     const card=getComputedStyle(document.querySelector('.card'));
+     const surfaceProbe=document.createElement('span');
+     surfaceProbe.style.background='var(--fa-surface)';
+     document.body.appendChild(surfaceProbe);
+     const surface=getComputedStyle(surfaceProbe).backgroundColor;
+     surfaceProbe.remove();
      const probe=document.createElement('span');
      probe.style.color='var(--fa-accent)';
      document.body.appendChild(probe);
      const accent=getComputedStyle(probe).color;
      probe.remove();
-     return {barBg:bar.backgroundColor,activeColor:active.color,accent};
+     return {barBg:bar.backgroundColor,activeColor:active.color,cardBg:card.backgroundColor,surface,accent};
    })()`);
    assert.equal(darkTitlebar.barBg,'rgba(0, 0, 0, 0)','dark titlebar is flush with the card surface');
+   assert.equal(darkTitlebar.cardBg,darkTitlebar.surface,'the dark card face is the uniform surface token');
    assert.equal(darkTitlebar.activeColor,darkTitlebar.accent,'the pinned button follows the accent token in the dark theme');
    await js(result,"window.floatask.setLanguage('zh-CN')");
    await waitFor(()=>js(result,"document.documentElement.lang==='zh-CN'"),'switch back');

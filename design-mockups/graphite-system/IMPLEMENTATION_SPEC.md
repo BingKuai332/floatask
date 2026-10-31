@@ -157,6 +157,7 @@
 - 新增语义描边 border-danger（近月 #E1A0A84D／朝日 #A14D584D），仅用于破坏性悬停与错误提示边框；选中态描边统一用 border-active，不再使用旧青蓝／玫红硬编码。
 - 答案窗标题栏与卡片同面（transparent + 分隔线），双主题一致；窗口外圈不留任何主题色底板。
 - 组件几何唯一来源：答案窗 compact/expanded 尺寸、工具栏展开/收起尺寸与半径（含收起外半径 22、主半径 21）、阅读密度系数（compact 0.92／relaxed 1.12）登记于 token 源；主进程经 src/main/design-constants.js 读取，渲染进程使用生成的 --fa-* 变量；window-geometry.js 保持 vm 纯函数，其字面量由单测对账守卫。
+- 答案窗卡片表面统一为 surface（设计稿 page-1/9/25 整卡同面、divider 分隔）；bg 仅作更底层底色，不用于卡片面。
 
 ## 15. 上游演进与新功能扩展
 

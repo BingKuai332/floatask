@@ -25,7 +25,7 @@ html, body {
   overflow: hidden;
   border-radius: var(--fa-radius-window);
   border: 1px solid var(--fa-border-floating);
-  background: var(--fa-bg);
+  background: var(--fa-surface);
   box-shadow: var(--fa-shadow-floating);
 }
 
