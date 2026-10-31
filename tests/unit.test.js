@@ -183,14 +183,19 @@ test('fenced code blocks render a copy action at the top right', () => {
 });
 
 test('main-process design constants mirror the token source', () => {
+ // The module ships as literals (the packaged app excludes the YAML
+ // toolchain), so this test is the runtime reconciliation against the
+ // token source on every development run.
+ const { loadTokens, DEFAULT_TOKENS_PATH } = require('../scripts/build-theme');
+ const tokens = loadTokens(DEFAULT_TOKENS_PATH);
  const constants = require('../src/main/design-constants');
- assert.deepEqual(constants.ANSWER_EXPANDED_SIZE, [560, 640], 'expanded answer size comes from the tokens');
- assert.deepEqual(constants.ANSWER_COMPACT_SIZE, [480, 360], 'compact answer size comes from the tokens');
- assert.deepEqual(constants.CAPSULE_EXPANDED, [328, 52], 'toolbar expanded size comes from the tokens');
- assert.equal(constants.TOOLBAR_PRIMARY_RADIUS, 21, 'capsule primary radius comes from the tokens');
- assert.equal(constants.TOOLBAR_COLLAPSED_RADIUS, 22, 'capsule collapsed radius comes from the tokens');
- assert.equal(constants.DENSITY.compact, 0.92, 'compact density factor comes from the tokens');
- assert.equal(constants.DENSITY.relaxed, 1.12, 'relaxed density factor comes from the tokens');
+ assert.deepEqual(constants.ANSWER_EXPANDED_SIZE, [...tokens.components.answerWindow.expandedSize], 'expanded answer size comes from the tokens');
+ assert.deepEqual(constants.ANSWER_COMPACT_SIZE, [...tokens.components.answerWindow.compactSize], 'compact answer size comes from the tokens');
+ assert.deepEqual(constants.CAPSULE_EXPANDED, [...tokens.components.toolbar.expandedSize], 'toolbar expanded size comes from the tokens');
+ assert.equal(constants.TOOLBAR_PRIMARY_RADIUS, tokens.components.toolbar.primaryRadius, 'capsule primary radius comes from the tokens');
+ assert.equal(constants.TOOLBAR_COLLAPSED_RADIUS, tokens.components.toolbar.collapsedOuterRadius, 'capsule collapsed radius comes from the tokens');
+ assert.equal(constants.DENSITY.compact, tokens.readingDensity.compact, 'compact density factor comes from the tokens');
+ assert.equal(constants.DENSITY.relaxed, tokens.readingDensity.relaxed, 'relaxed density factor comes from the tokens');
  // window-geometry stays vm-pure for its own suite; these guards keep its
  // literals honest against the token source.
  const geometry = require('../src/main/window-geometry');
