@@ -125,6 +125,9 @@ function renderTheme(tokens) {
   --fa-radius-container: ${tokens.radius.container}px;
   --fa-radius-control: ${tokens.radius.control}px;
   --fa-radius-small: ${tokens.radius.small}px;
+  --fa-radius-media: ${tokens.radius.media}px;
+  --fa-radius-compact: ${tokens.radius.compact}px;
+  --fa-radius-mini: ${tokens.radius.mini}px;
   --fa-radius-pill: 999px;
   /* spacing */
   --fa-space-unit: ${tokens.spacing.unit}px;
@@ -153,6 +156,9 @@ function renderTheme(tokens) {
   --fa-size-control: ${t.control.size}px;
   --fa-line-height-control: ${t.control.lineHeight};
   --fa-size-aux: ${t.auxiliaryMin}px;
+  --fa-size-kicker: ${t.microText.kicker}px;
+  --fa-size-micro: ${t.microText.micro}px;
+  --fa-size-caption: ${t.microText.caption}px;
   /* motion */
   --fa-motion-theme-color: ${m.themeColorDuration}ms;
   --fa-motion-toolbar: ${m.toolbarDuration}ms;
@@ -280,7 +286,7 @@ button { cursor: pointer; }
   background: var(--fa-surface-2);
   color: var(--fa-muted);
   font-family: var(--fa-font-code);
-  font-size: 9.5px;
+  font-size: var(--fa-size-caption);
   letter-spacing: 0.05em;
 }
 

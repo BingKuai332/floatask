@@ -416,9 +416,28 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(announcement,await js(result,"window.FloatAskI18n.t('result.announceDone')"),'live region announces completion, not tokens');
    await js(settings,"window.floatask.saveSettings({theme:'light'})");
    await waitFor(()=>js(result,"document.documentElement.dataset.theme==='light'"),'result follows light theme');
+   await pause(300); // theme color transition (120 ms) must settle before sampling colors
+   const titlebarProbe=await js(result,`(() => {
+     const bar=getComputedStyle(document.querySelector('.titlebar'));
+     const active=getComputedStyle(document.getElementById('pinBtn'));
+     const token=getComputedStyle(document.documentElement).getPropertyValue('--fa-accent').trim();
+     return {barBg:bar.backgroundColor,activeColor:active.color,token};
+   })()`);
+   assert.equal(titlebarProbe.barBg,'rgba(0, 0, 0, 0)','light titlebar is flush with the card surface');
+   const hexToRgbAccent=h=>{const n=parseInt(h.slice(1),16);return 'rgb('+[(n>>16)&255,(n>>8)&255,n&255].join(', ')+')';};
+   assert.equal(titlebarProbe.activeColor,hexToRgbAccent(titlebarProbe.token),'the pinned button follows the accent token in the light theme');
    await screenshot(result,'task4-compact-light');
    await js(settings,"window.floatask.saveSettings({theme:'dark'})");
    await waitFor(()=>js(result,"document.documentElement.dataset.theme==='dark'"),'result returns to dark theme');
+   await pause(300); // let the theme color transition settle before sampling
+   const darkTitlebar=await js(result,`(() => {
+     const bar=getComputedStyle(document.querySelector('.titlebar'));
+     const active=getComputedStyle(document.getElementById('pinBtn'));
+     const token=getComputedStyle(document.documentElement).getPropertyValue('--fa-accent').trim();
+     return {barBg:bar.backgroundColor,activeColor:active.color,token};
+   })()`);
+   assert.equal(darkTitlebar.barBg,'rgba(0, 0, 0, 0)','dark titlebar is flush with the card surface');
+   assert.equal(darkTitlebar.activeColor,hexToRgbAccent(darkTitlebar.token),'the pinned button follows the accent token in the dark theme');
    await js(result,"window.floatask.setLanguage('zh-CN')");
    await waitFor(()=>js(result,"document.documentElement.lang==='zh-CN'"),'switch back');
    assert.equal(await js(result,"document.getElementById('sendBtn').title"),'发送');

@@ -1,5 +1,5 @@
-version: 1.4.2
-updated: 2026-10-30
+version: 1.4.3
+updated: 2026-10-31
 owner: FloatAsk design system
 usage: 唯一机器可读设计 token 源；实现与设计生成脚本均不得另建平行色板。
 themeIds:
@@ -15,6 +15,9 @@ radius:
   container: 12
   control: 10
   small: 8
+  media: 9
+  compact: 7
+  mini: 5
   pill: pill
 spacing:
   unit: 4
@@ -48,6 +51,7 @@ themes:
       floating: {width: 1, color: "#FFFFFF26"}
       control: {width: 1, color: "#FFFFFF1A"}
       active: {width: 1, color: "#8FA6C999"}
+      danger: {width: 1, color: "#E1A0A84D"}
     shadows:
       floating: {blur: 38, color: "#00000066", offset: [0, 14]}
       toolbar: {blur: 26, color: "#00000077", offset: [0, 10]}
@@ -75,6 +79,7 @@ themes:
       floating: {width: 1, color: "#141B2E1F"}
       control: {width: 1, color: "#141B2E14"}
       active: {width: 1, color: "#506B9299"}
+      danger: {width: 1, color: "#A14D584D"}
     shadows:
       floating: {blur: 38, color: "#26314726", offset: [0, 14]}
       toolbar: {blur: 26, color: "#2631472E", offset: [0, 10]}
@@ -86,6 +91,8 @@ typography:
   answerBodyLarge: {size: 14, lineHeight: 1.55}
   control: {size: 11, lineHeight: 1.5}
   auxiliaryMin: 10
+  microText: {kicker: 7.5, micro: 8.5, caption: 9.5}
+  microTextRule: 仅用于全大写装饰性 kicker、微型注记与辅助标签；正文与控件文字不小于 auxiliaryMin。
   answerSizes: [12, 14, 16]
   defaultAnswerSize: 14
 components:
