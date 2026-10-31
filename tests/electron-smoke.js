@@ -62,8 +62,13 @@ const js=(w,code)=>w.webContents.executeJavaScript(code);
 async function screenshot(win,name) {
  if (!process.env.FLOATASK_TEST_SHOTS) return;
  await pause(300); // Wait for transitions and the compositor to paint.
+ // The windows are transparent; flatten each capture onto a neutral
+ // backdrop so rounded cards read instead of floating on black.
+ await js(win, "document.documentElement.style.background='#4b5563';document.body.style.background='#4b5563';true");
+ const png=(await win.webContents.capturePage()).toPNG();
+ await js(win, "document.documentElement.style.background='';document.body.style.background='';true");
  fs.mkdirSync(process.env.FLOATASK_TEST_SHOTS,{recursive:true});
- fs.writeFileSync(path.join(process.env.FLOATASK_TEST_SHOTS,name+'.png'),(await win.webContents.capturePage()).toPNG());
+ fs.writeFileSync(path.join(process.env.FLOATASK_TEST_SHOTS,name+'.png'),png);
 }
 app.on('web-contents-created', (_event,wc)=> {
  wc.on('console-message', event=>{if(event.level==='error' || event.level===3)errors.push(event.message);});
