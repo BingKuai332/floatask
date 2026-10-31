@@ -11,6 +11,7 @@ const os = require('os');
 const store = require('./store');
 const { buildDiagnostics } = require('./diagnostics');
 const { createSelectionGuard } = require('./selection-guard');
+const designConstants = require('./design-constants');
 const {
   CAPSULE_EXPANDED,
   HALF_CAPSULE_VERTICAL,
@@ -1062,8 +1063,8 @@ async function searchTranslation(rawText) {
 /* Result window                                                       */
 /* ------------------------------------------------------------------ */
 
-const RESULT_COMPACT_SIZE = [480, 360];
-const RESULT_EXPANDED_SIZE = [560, 640];
+const RESULT_COMPACT_SIZE = designConstants.ANSWER_COMPACT_SIZE;
+const RESULT_EXPANDED_SIZE = designConstants.ANSWER_EXPANDED_SIZE;
 
 async function ensureResultWindow() {
   if (resultWin && !resultWin.isDestroyed()) return resultWin;

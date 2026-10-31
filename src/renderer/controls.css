@@ -96,8 +96,7 @@
 }
 
 /* Reading density only changes rhythm, never control geometry.
-   Density factors 0.92/1/1.12 are implementation constants (no numeric token exists). */
+   The compact/relaxed factors are generated from design-tokens.yaml
+   (readingDensity) into theme.css; the standard factor stays here. */
 :root { --fa-density-factor: 1; }
-[data-density='compact'] { --fa-density-factor: 0.92; }
-[data-density='relaxed'] { --fa-density-factor: 1.12; }
 .md-body { line-height: calc(var(--reading-line, 1.55) * var(--fa-density-factor)); }

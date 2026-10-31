@@ -66,6 +66,17 @@ test('registered micro sizes and dense radii emit as variables', () => {
   assert.match(css, /--fa-border-danger:\s*#A14D584D/);
 });
 
+test('component geometry constants emit from the token source', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  assert.match(css, /--fa-answer-expanded-width:\s*560px/);
+  assert.match(css, /--fa-answer-expanded-height:\s*640px/);
+  assert.match(css, /--fa-toolbar-primary-radius:\s*21px/);
+  assert.match(css, /--fa-toolbar-collapsed-radius:\s*22px/);
+  assert.match(css, /\[data-density='compact'\]\s*\{\s*--fa-density-factor:\s*0\.92;?\s*\}/);
+  assert.match(css, /\[data-density='relaxed'\]\s*\{\s*--fa-density-factor:\s*1\.12;?\s*\}/);
+});
+
 test('keyboard focus outline uses 2px active outline with 2px offset', () => {
   const { loadTokens, renderTheme } = loadBuildTheme();
   const css = renderTheme(loadTokens(tokensPath));

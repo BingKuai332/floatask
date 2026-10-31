@@ -20,13 +20,20 @@ function loadTokens(tokensPath = DEFAULT_TOKENS_PATH) {
     ['radius', 'window'], ['radius', 'container'], ['radius', 'control'], ['radius', 'small'],
     ['radius', 'media'], ['radius', 'compact'], ['radius', 'mini'],
     ['typography', 'microText', 'kicker'], ['typography', 'microText', 'micro'],
-    ['typography', 'microText', 'nano'], ['typography', 'microText', 'caption']
+    ['typography', 'microText', 'nano'], ['typography', 'microText', 'caption'],
+    ['components', 'answerWindow', 'compactSize'], ['components', 'answerWindow', 'expandedSize'],
+    ['components', 'toolbar', 'expandedSize'], ['components', 'toolbar', 'collapsedVertical'],
+    ['components', 'toolbar', 'collapsedHorizontal'], ['components', 'toolbar', 'outerRadius'],
+    ['components', 'toolbar', 'collapsedOuterRadius'], ['components', 'toolbar', 'primaryRadius'],
+    ['components', 'toolbar', 'padding'],
+    ['readingDensity', 'compact'], ['readingDensity', 'relaxed'], ['readingDensity', 'standard']
   ];
   for (const segments of numericPaths) {
     let node = tokens;
     for (const key of segments) node = node?.[key];
-    if (!Number.isFinite(node)) {
-      throw new Error(`design-tokens.yaml: ${segments.join('.')} must be a finite number`);
+    const values = Array.isArray(node) ? node : [node];
+    if (!values.length || !values.every((value) => Number.isFinite(value))) {
+      throw new Error(`design-tokens.yaml: ${segments.join('.')} must be a finite number or an array of finite numbers`);
     }
   }
   return tokens;
@@ -190,10 +197,14 @@ function renderTheme(tokens) {
   /* component geometry */
   --fa-answer-compact-width: ${c.answerWindow.compactSize[0]}px;
   --fa-answer-compact-height: ${c.answerWindow.compactSize[1]}px;
+  --fa-answer-expanded-width: ${c.answerWindow.expandedSize[0]}px;
+  --fa-answer-expanded-height: ${c.answerWindow.expandedSize[1]}px;
   --fa-settings-sidebar-width: ${c.settingsWindow.sidebarWidth}px;
   --fa-toolbar-width: ${c.toolbar.expandedSize[0]}px;
   --fa-toolbar-height: ${c.toolbar.expandedSize[1]}px;
   --fa-toolbar-radius: ${c.toolbar.outerRadius}px;
+  --fa-toolbar-collapsed-radius: ${c.toolbar.collapsedOuterRadius}px;
+  --fa-toolbar-primary-radius: ${c.toolbar.primaryRadius}px;
   --fa-toolbar-padding: ${c.toolbar.padding}px;
   --fa-more-menu-width: ${c.moreMenu.size[0]}px;
   --fa-more-menu-height: ${c.moreMenu.size[1]}px;
@@ -242,6 +253,9 @@ button, input, textarea, select { font-family: inherit; color: inherit; }
 button { cursor: pointer; }
 
 ::selection { background: var(--fa-accent-soft); color: var(--fa-text); }
+
+[data-density='compact'] { --fa-density-factor: ${tokens.readingDensity.compact}; }
+[data-density='relaxed'] { --fa-density-factor: ${tokens.readingDensity.relaxed}; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

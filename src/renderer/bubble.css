@@ -38,7 +38,7 @@ body {
   flex: 0 0 40px;
   width: 40px;
   height: 42px;
-  border-radius: 21px;
+  border-radius: var(--fa-toolbar-primary-radius);
   cursor: grab;
   color: var(--fa-accent);
   background: var(--fa-accent-soft);
@@ -60,7 +60,7 @@ body {
   justify-content: center;
   gap: 6px;
   padding: 0 12px;
-  border-radius: 21px;
+  border-radius: var(--fa-toolbar-primary-radius);
   border: 1px solid var(--fa-border-control);
   background: var(--fa-surface-2);
   color: var(--fa-text);
@@ -102,9 +102,9 @@ body[data-mode='bottom'] .bubble-secondary { opacity: 0; pointer-events: none; }
 
 /* Edge half-capsules: collapsed outer radius is 22 px (design constant). */
 body[data-mode='left'] .bubble,
-body[data-mode='right'] .bubble { flex-direction: column; justify-content: center; border-radius: 22px; }
+body[data-mode='right'] .bubble { flex-direction: column; justify-content: center; border-radius: var(--fa-toolbar-collapsed-radius); }
 body[data-mode='top'] .bubble,
-body[data-mode='bottom'] .bubble { justify-content: center; border-radius: 22px; }
+body[data-mode='bottom'] .bubble { justify-content: center; border-radius: var(--fa-toolbar-collapsed-radius); }
 body[data-mode='left'] .bubble .brand,
 body[data-mode='right'] .bubble .brand,
 body[data-mode='top'] .bubble .brand,

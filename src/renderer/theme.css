@@ -56,10 +56,14 @@
   /* component geometry */
   --fa-answer-compact-width: 480px;
   --fa-answer-compact-height: 360px;
+  --fa-answer-expanded-width: 560px;
+  --fa-answer-expanded-height: 640px;
   --fa-settings-sidebar-width: 218px;
   --fa-toolbar-width: 328px;
   --fa-toolbar-height: 52px;
   --fa-toolbar-radius: 26px;
+  --fa-toolbar-collapsed-radius: 22px;
+  --fa-toolbar-primary-radius: 21px;
   --fa-toolbar-padding: 5px;
   --fa-more-menu-width: 224px;
   --fa-more-menu-height: 152px;
@@ -237,6 +241,9 @@ button, input, textarea, select { font-family: inherit; color: inherit; }
 button { cursor: pointer; }
 
 ::selection { background: var(--fa-accent-soft); color: var(--fa-text); }
+
+[data-density='compact'] { --fa-density-factor: 0.92; }
+[data-density='relaxed'] { --fa-density-factor: 1.12; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

@@ -99,6 +99,7 @@ components:
   answerWindow:
     radius: 16
     compactSize: [480, 360]
+    expandedSize: [560, 640]
     header: fixed
     context: fixed
     composer: fixed
@@ -114,6 +115,7 @@ components:
     collapsedVertical: [44, 64]
     collapsedHorizontal: [64, 44]
     outerRadius: 26
+    collapsedOuterRadius: 22
     padding: 5
     primaryRadius: 21
     brandSize: [40, 42]
@@ -142,6 +144,11 @@ motion:
   leaveCollapseDelay: 300
   easing: ease-out
   reducedMotion: immediate
+readingDensity:
+  compact: 0.92
+  relaxed: 1.12
+  standard: 1
+  rule: 紧凑/宽松阅读密度只缩放注记与间距系数，不缩小正文字号；正文不小于 auxiliaryMin。
 accessibility:
   minimumTextContrast: 4.5
   lightOnSurface:
