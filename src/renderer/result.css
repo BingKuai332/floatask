@@ -364,7 +364,7 @@ html, body {
   font-size: calc(var(--reading-size) * 0.86);
   color: var(--fa-accent);
 }
-.md-body pre {
+.md-body pre, .code-block pre {
   margin: 0;
   padding: 10px 11px;
   overflow-x: auto;
@@ -405,7 +405,7 @@ html, body {
 }
 .code-copy:hover { color: var(--fa-accent); background: var(--fa-accent-soft); }
 .code-copy.copied { color: var(--fa-green); }
-.md-body pre code {
+.md-body pre code, .code-block pre code {
   padding: 0;
   border: none;
   background: transparent;

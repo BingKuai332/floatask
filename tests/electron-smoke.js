@@ -394,6 +394,7 @@ server.listen(0,'127.0.0.1',()=>{
      const md=${JSON.stringify('```js\n'+codeFixture+'\n```')};
      const wrap=document.createElement('div');
      wrap.className='md-body';
+     wrap.id='codeCopyFixture';
      wrap.innerHTML=window.FloatAskMarkdown.render(md);
      document.getElementById('messages').appendChild(wrap);
      const block=wrap.querySelector('.code-block');
@@ -408,10 +409,10 @@ server.listen(0,'127.0.0.1',()=>{
    assert.ok(blockProbe.topRight,'the copy button sits at the code block top right');
    assert.equal(blockProbe.code,codeFixture,'the block exposes the code text');
    const clipBackup=await Promise.resolve(clipboard.readText());
-   await js(result,"(() => { const b=document.querySelector('#messages .code-copy'); if (b) b.click(); return true; })()");
+   await js(result,"(() => { const b=document.querySelector('#codeCopyFixture .code-copy'); if (b) b.click(); return true; })()");
    await waitFor(async () => (await Promise.resolve(clipboard.readText())) === codeFixture,'copy button writes the code to the clipboard');
    await Promise.resolve(clipboard.writeText(clipBackup));
-   await js(result,"(() => { const w=[...document.querySelectorAll('#messages .md-body')].pop(); if (w) w.remove(); return true; })()");
+   await js(result,"(() => { const w=document.getElementById('codeCopyFixture'); if (w) w.remove(); return true; })()");
    await js(result,"document.getElementById('expandBtn').click()");
    assert.equal(await js(result,"document.body.dataset.mode"),'expanded','expand switches the window mode');
    assert.deepEqual(result.getSize(),[560,640],'expanded state resizes the window');

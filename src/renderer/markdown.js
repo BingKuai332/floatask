@@ -199,7 +199,7 @@
       const button = event.target && typeof event.target.closest === 'function'
         ? event.target.closest('.code-copy')
         : null;
-      if (!button) return;
+      if (!button || button.classList.contains('copied')) return;
       const block = typeof button.closest === 'function' ? button.closest('.code-block') : null;
       const code = block && block.querySelector('pre code');
       if (!code || typeof window === 'undefined' || !window.floatask) return;
