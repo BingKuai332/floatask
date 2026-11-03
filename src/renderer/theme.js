@@ -5,7 +5,7 @@
 // changes the saved preference or the data-theme attribute.
 (function (global) {
   function resolveTheme(preference, systemDark) {
-    if (preference === 'light' || preference === 'dark') return preference;
+    if (preference === 'light' || preference === 'dark' || preference === 'industrial') return preference;
     return systemDark ? 'dark' : 'light';
   }
 

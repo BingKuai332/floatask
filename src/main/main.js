@@ -54,6 +54,7 @@ const { normalizeLocale } = require('../shared/i18n');
 const history = require('./history');
 const { resolveModel, TASKS } = require('./model-config');
 const { normalizeHotkey } = require('../shared/hotkeys');
+const { THEME_PREFERENCES, normalizeThemePreference, nativeThemeSource, resolveThemeId } = require('./theme-preference');
 const { createUpdater } = require('./updater');
 let updater = null;
 let recordingTimer = null;
@@ -1923,18 +1924,14 @@ function broadcastFont() {
   }
 }
 
-function resolvedTheme() {
-  return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
-}
-
 let themePreviewPreference = null;
 
 /** Sync nativeTheme with the active preference and push the resolved theme to every live renderer. */
 function broadcastTheme() {
-  const preference = themePreviewPreference ?? store.getConfig().theme;
-  const source = ['light', 'dark'].includes(preference) ? preference : 'system';
+  const preference = normalizeThemePreference(themePreviewPreference ?? store.getConfig().theme);
+  const source = nativeThemeSource(preference);
   if (nativeTheme.themeSource !== source) nativeTheme.themeSource = source;
-  const payload = { theme: resolvedTheme(), preference };
+  const payload = { theme: resolveThemeId(preference, nativeTheme.shouldUseDarkColors), preference };
   for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin, translateWin]) {
     if (win && !win.isDestroyed()) win.webContents.send('theme:update', payload);
   }
@@ -2545,7 +2542,7 @@ ipcMain.handle('settings:test-profile', async (_event, { task, patch } = {}) => 
 });
 ipcMain.handle('settings:get', () => settingsPayload());
 ipcMain.on('settings:preview-theme', (_event, preference) => {
-  themePreviewPreference = ['system', 'light', 'dark'].includes(preference) ? preference : null;
+  themePreviewPreference = THEME_PREFERENCES.includes(preference) ? preference : null;
   broadcastTheme();
 });
 ipcMain.handle('settings:save', (_event, patch) => {

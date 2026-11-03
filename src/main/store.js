@@ -9,6 +9,7 @@ const { normalizeLocale } = require('../shared/i18n');
 const { normalizeHotkey } = require('../shared/hotkeys');
 const { TASKS } = require('./model-config');
 const { sanitizeDock } = require('./window-geometry');
+const { normalizeThemePreference } = require('./theme-preference');
 
 function defaultLanguage() {
   try {
@@ -112,7 +113,7 @@ function sanitize(patch, current) {
   if (patch.fontScope === 'all' || patch.fontScope === 'reading') next.fontScope = patch.fontScope;
   if (!['all', 'reading'].includes(next.fontScope)) next.fontScope = 'all';
   if (typeof patch.theme === 'string') next.theme = patch.theme;
-  if (!['system', 'light', 'dark'].includes(next.theme)) next.theme = 'system';
+  next.theme = normalizeThemePreference(next.theme);
   if (patch.onboardingStep === 1 || patch.onboardingStep === 2 || patch.onboardingStep === 3) next.onboardingStep = patch.onboardingStep;
   if (typeof patch.historyRetentionDays !== 'undefined') {
     next.historyRetentionDays = Math.round(clampNumber(patch.historyRetentionDays, current.historyRetentionDays, 0, 365));
