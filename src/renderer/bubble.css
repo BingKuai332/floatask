@@ -169,6 +169,9 @@ body[data-mode][data-direction='up'] .bubble { margin-top: auto; }
 body[data-mode][data-direction='down'] .bubble { margin-top: 0; }
 body[data-mode][data-direction='left'] .bubble { margin-left: auto; }
 body[data-mode][data-direction='right'] .bubble { margin-left: 0; }
+/* While collapsing, shrink toward the docked edge so the end frame matches the dock. */
+body[data-edge='right']:not([data-mode='expanded']) .bubble { margin-left: auto; }
+body[data-edge='bottom']:not([data-mode='expanded']) .bubble { margin-top: auto; }
 
 /* Edge half-capsules: collapsed outer radius is 22 px (design constant). */
 body[data-mode='left'] .bubble,

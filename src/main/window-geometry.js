@@ -125,6 +125,7 @@ function sanitizeDock(dock) {
   if (!dock || !DOCK_EDGES.includes(dock.edge)) return null;
   const a = dock.anchor || {};
   if (![a.x, a.y, a.width, a.height].every(Number.isFinite)) return null;
+  if (!(a.width > 0) || !(a.height > 0)) return null;
   return { edge: dock.edge, anchor: { x: Math.round(a.x), y: Math.round(a.y), width: Math.round(a.width), height: Math.round(a.height) } };
 }
 

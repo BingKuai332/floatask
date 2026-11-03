@@ -21,6 +21,7 @@ api.onBubbleMode(payload => {
   document.body.dataset.mode = mode;
   document.body.dataset.axis = payload?.axis || 'horizontal';
   document.body.dataset.direction = payload?.direction || 'right';
+  document.body.dataset.edge = originEdge || '';
   dragging = false;
 });
 

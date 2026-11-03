@@ -168,4 +168,13 @@ test('sanitizeDock accepts only a known edge with a finite anchor', () => {
   assert.equal(geometry.sanitizeDock({ edge: 'middle', anchor: { x: 0, y: 0, width: 1, height: 1 } }), null);
   assert.equal(geometry.sanitizeDock({ edge: 'top', anchor: { x: 'a', y: 0, width: 1, height: 1 } }), null);
   assert.equal(geometry.sanitizeDock(null), null);
+  assert.equal(geometry.sanitizeDock({ edge: 'left', anchor: { x: 0, y: 0, width: 0, height: 52 } }), null);
+});
+
+test('expansion respects a work area that is not at the origin', () => {
+  const SECOND = { x: 1920, y: 0, width: 1920, height: 1040 };
+  assert.deepEqual(
+    geometry.expansionPlacement('right', { x: 3796, y: 100, width: 44, height: 52 }, SECOND, 10),
+    { axis: 'vertical', direction: 'down', bounds: { x: 3770, y: 90, width: 72, height: 348 } }
+  );
 });
