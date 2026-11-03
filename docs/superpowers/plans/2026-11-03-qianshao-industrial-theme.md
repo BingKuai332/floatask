@@ -1131,7 +1131,7 @@ node -e "const fs=require('fs');for(const p of ['bubble','font','history','resul
   padding: 0 5px;
   border: 1px solid var(--fa-border-floating);
   border-bottom-width: 2px;
-  border-radius: 0 3px 0 3px;
+  border-radius: 0 var(--fa-radius-mini) 0 var(--fa-radius-mini);
   background: var(--fa-surface-2);
   color: var(--fa-body);
   font-family: var(--fa-font-label);

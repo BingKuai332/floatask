@@ -255,6 +255,8 @@ function renderTheme(tokens) {
 
 * { box-sizing: border-box; }
 *, *::before, *::after { corner-shape: var(--fa-corner-shape, round); }
+/* Vendor pseudo-elements are not matched by *; kept separate so an unknown selector cannot void the rule above. */
+::-webkit-slider-thumb, ::-webkit-scrollbar-thumb { corner-shape: var(--fa-corner-shape, round); }
 
 [hidden] { display: none !important; }
 
