@@ -22,7 +22,7 @@ test('constants match the design tokens', () => {
   assert.equal(SNAP_DISTANCE, 24);
   assert.equal(EXPANDED_EDGE_GAP, 8);
   assert.deepEqual(CAPSULE_EXPANDED, [328, 52]);
-  assert.deepEqual(HALF_CAPSULE_VERTICAL, [44, 64]);
+  assert.deepEqual(HALF_CAPSULE_VERTICAL, [44, 52]);
   assert.deepEqual(HALF_CAPSULE_HORIZONTAL, [64, 44]);
 });
 
@@ -86,4 +86,63 @@ test('edgeGapPosition floats the expanded capsule 8 DIP off its edge', () => {
 
   const bottom = edgeGapPosition('bottom', SIZE, { x: 700, y: 900 }, AREA);
   assert.equal(bottom.y, AREA.y + AREA.height - EXPANDED_EDGE_GAP - SIZE.height);
+});
+
+test('left and right edges expand vertically with the available direction', () => {
+  const top = geometry.expansionPlacement('left', { x: 0, y: 100 }, AREA);
+  assert.deepEqual(top, {
+    axis: 'vertical', direction: 'down',
+    bounds: { x: -2, y: 90, width: 72, height: 348 }
+  });
+  const bottom = geometry.expansionPlacement('right', { x: 1800, y: 800 }, AREA);
+  assert.deepEqual(bottom, {
+    axis: 'vertical', direction: 'up',
+    bounds: { x: 1840, y: 724, width: 72, height: 348 }
+  });
+});
+
+test('top and bottom edges expand horizontally away from the screen center', () => {
+  const topLeft = geometry.expansionPlacement('top', { x: 200, y: 0 }, AREA);
+  assert.deepEqual(topLeft, {
+    axis: 'horizontal', direction: 'right',
+    bounds: { x: 190, y: -2, width: 348, height: 72 }
+  });
+  const bottomRight = geometry.expansionPlacement('bottom', { x: 1600, y: 900 }, AREA);
+  assert.deepEqual(bottomRight, {
+    axis: 'horizontal', direction: 'left',
+    bounds: { x: 1564, y: 1000, width: 348, height: 72 }
+  });
+});
+
+test('collapse keeps the edge associated with its expansion direction anchored', () => {
+  assert.deepEqual(
+    geometry.collapseStartBounds({ x: 1856, y: 300, width: 64, height: 72 }, 'horizontal', 'left'),
+    { x: 1572, y: 300, width: 348, height: 72 }
+  );
+  assert.deepEqual(
+    geometry.collapseStartBounds({ x: 100, y: 724, width: 72, height: 72 }, 'vertical', 'up'),
+    { x: 100, y: 448, width: 72, height: 348 }
+  );
+  assert.deepEqual(
+    geometry.collapseStartBounds({ x: 100, y: 100, width: 72, height: 72 }, 'vertical', 'down'),
+    { x: 100, y: 100, width: 72, height: 348 }
+  );
+});
+
+test('vertical expansion only goes upward when there is insufficient space below', () => {
+  assert.equal(geometry.expansionPlacement('right', { x: 1800, y: 560 }, AREA).direction, 'down');
+  assert.equal(geometry.expansionPlacement('right', { x: 1800, y: 800 }, AREA).direction, 'up');
+});
+
+test('collapsed capsule drag clamps with its actual size rather than expanded width', () => {
+  const collapsed = { x: 1866, y: 300, width: 64, height: 84 };
+  assert.deepEqual(
+    geometry.translateDragBounds(collapsed, { x: -2, y: 0 }, AREA, 10),
+    { x: 1864, y: 300, width: 64, height: 84 }
+  );
+  const expanded = { x: 1572, y: 300, width: 348, height: 72 };
+  assert.deepEqual(
+    geometry.translateDragBounds(expanded, { x: -2, y: 0 }, AREA),
+    { x: 1570, y: 300, width: 348, height: 72 }
+  );
 });

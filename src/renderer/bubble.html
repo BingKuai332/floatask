@@ -8,7 +8,7 @@
 </head>
 <body data-mode="expanded">
   <div class="bubble" id="bubble">
-    <div class="brand drag" id="grip" title="拖动调整位置" data-i18n-title="font.drag">
+    <div class="brand drag-handle" id="grip" title="拖动调整位置" data-i18n-title="font.drag" role="button" tabindex="0">
       <span class="brand-mark" aria-hidden="true">浮</span>
     </div>
     <button id="askBtn" class="ask no-drag" title="框选屏幕内容" data-i18n-title="bubble.button">
@@ -32,7 +32,7 @@
         <path d="M12 7.5V12l3 2"></path>
       </svg>
     </button>
-    <button id="moreBtn" class="mini bubble-secondary no-drag" type="button" title="设置" data-i18n-title="bubble.more">⋯</button>
+    <button id="moreBtn" class="mini bubble-secondary no-drag drag-handle" type="button" title="设置" data-i18n-title="bubble.more">⋯</button>
   </div>
   <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="theme.js"></script><script src="focus.js"></script>
   <script src="bubble.js"></script>

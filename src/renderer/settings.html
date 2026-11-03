@@ -254,35 +254,51 @@
 
           <div class="appearance-grid">
             <div class="field">
-              <span class="field-label" data-i18n="theme.label">主题</span>
-              <div class="segmented" id="themeControl" role="radiogroup" aria-label="主题">
-                <button type="button" class="segmented-option" id="themeOption-system" data-theme-value="system" data-i18n="theme.system">跟随系统</button>
-                <button type="button" class="segmented-option" id="themeOption-light" data-theme-value="light" data-i18n="theme.light">朝日 · 白天</button>
-                <button type="button" class="segmented-option" id="themeOption-dark" data-theme-value="dark" data-i18n="theme.dark">近月 · 深夜</button>
+              <span class="field-label" data-i18n="theme.label">界面主题</span>
+              <div class="theme-options" id="themeControl" role="radiogroup" aria-label="主题">
+                <button type="button" class="theme-option segmented-option" id="themeOption-system" data-theme-value="system" role="radio" aria-checked="false">
+                  <span class="theme-preview theme-preview-system" aria-hidden="true">
+                    <span class="theme-system-half" data-theme="light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"></path></svg></span>
+                    <span class="theme-system-half" data-theme="dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z"></path></svg></span>
+                  </span>
+                  <span class="theme-option-copy"><b data-i18n="theme.system">跟随系统</b><small data-i18n="theme.systemHint">自动切换</small></span>
+                  <span class="theme-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 12 4 4 8-9"></path></svg></span>
+                </button>
+                <button type="button" class="theme-option segmented-option" id="themeOption-light" data-theme-value="light" role="radio" aria-checked="false">
+                  <span class="theme-preview" data-theme="light" aria-hidden="true"><span class="theme-mini-window"><i></i><span><b></b><em></em><em></em></span></span></span>
+                  <span class="theme-option-copy"><b data-i18n="theme.light">朝日</b><small data-i18n="theme.lightHint">浅色主题</small></span>
+                  <span class="theme-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 12 4 4 8-9"></path></svg></span>
+                </button>
+                <button type="button" class="theme-option segmented-option" id="themeOption-dark" data-theme-value="dark" role="radio" aria-checked="false">
+                  <span class="theme-preview" data-theme="dark" aria-hidden="true"><span class="theme-mini-window"><i></i><span><b></b><em></em><em></em></span></span></span>
+                  <span class="theme-option-copy"><b data-i18n="theme.dark">近月</b><small data-i18n="theme.darkHint">深色主题</small></span>
+                  <span class="theme-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 12 4 4 8-9"></path></svg></span>
+                </button>
               </div>
             </div>
-            <div class="field">
-              <span class="field-label" data-i18n="settings.sizeLabel">正文字号</span>
-              <div class="segmented" id="sizeControl" aria-label="正文字号">
-                <button type="button" class="segmented-option" data-size-value="12">12</button>
-                <button type="button" class="segmented-option" data-size-value="14">14</button>
-                <button type="button" class="segmented-option" data-size-value="16">16</button>
+            <div class="appearance-controls">
+              <div class="field">
+                <div class="field-label-row"><label class="field-label" for="fontSizeControl" data-i18n="settings.sizeLabel">正文字号</label><output id="fontSizeValue" for="fontSizeControl">14 px</output></div>
+                <input id="fontSizeControl" class="font-size-control" type="range" min="12" max="16" step="0.1" value="14" aria-valuetext="14 px">
+                <div class="slider-ticks" aria-hidden="true"><span>12</span><span>14</span><span>16</span></div>
               </div>
-            </div>
-            <div class="field">
-              <span class="field-label" data-i18n="settings.densityLabel">阅读密度</span>
-              <div class="segmented" id="densityControl" aria-label="阅读密度">
-                <button type="button" class="segmented-option" id="densityOption-compact" data-density-value="compact" data-i18n="settings.densityCompact">紧凑</button>
-                <button type="button" class="segmented-option" id="densityOption-standard" data-density-value="standard" data-i18n="settings.densityStandard">标准</button>
-                <button type="button" class="segmented-option" id="densityOption-relaxed" data-density-value="relaxed" data-i18n="settings.densityRelaxed">宽松</button>
+              <div class="field">
+                <span class="field-label" data-i18n="settings.densityLabel">阅读密度</span>
+                <div class="segmented" id="densityControl" aria-label="阅读密度">
+                  <button type="button" class="segmented-option" id="densityOption-compact" data-density-value="compact" data-i18n="settings.densityCompact">紧凑</button>
+                  <button type="button" class="segmented-option" id="densityOption-standard" data-density-value="standard" data-i18n="settings.densityStandard">标准</button>
+                  <button type="button" class="segmented-option" id="densityOption-relaxed" data-density-value="relaxed" data-i18n="settings.densityRelaxed">宽松</button>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="reading-preview-wrap">
-            <span class="field-label" data-i18n="settings.previewTitle">阅读预览</span>
+            <div class="reading-preview-meta"><span id="readingPreviewTheme" class="field-label">阅读预览</span><span id="readingPreviewMeta">14 px / 1.72</span></div>
             <div id="readingPreview" class="reading-preview" data-density="standard">
-              <span data-i18n-html="settings.previewSample"><b>Transformer</b> 是一种基于自注意力机制的神经网络架构，用来处理长上下文。</span>
+              <div class="reading-preview-brand"><img src="../../resources/icon.png" alt=""><span data-i18n="settings.previewBrand">浮问 · 阅读</span></div>
+              <div class="reading-preview-sample" data-i18n-html="settings.previewSample"><b>Transformer</b> 是一种基于自注意力机制的神经网络架构，用来处理长上下文。</div>
+              <div class="reading-preview-summary" data-i18n="settings.previewSummary">一句话总结：用自己的话复述，再决定是否需要深入阅读。</div>
             </div>
           </div>
         </section>

@@ -14,30 +14,77 @@ let mode = 'expanded';
 let originEdge = null;
 let menuOpen = false;
 let dragging = false;
-let expandTimer = null;
-let collapseTimer = null;
-
-const reducedMotion = () => {
-  try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { return false; }
-};
-
-function clearTimers() {
-  clearTimeout(expandTimer);
-  clearTimeout(collapseTimer);
-}
 
 api.onBubbleMode(payload => {
   mode = payload?.mode || 'expanded';
   originEdge = payload?.edge || null;
   document.body.dataset.mode = mode;
+  document.body.dataset.axis = payload?.axis || 'horizontal';
+  document.body.dataset.direction = payload?.direction || 'right';
   dragging = false;
-  clearTimers();
 });
 
-// While the brand zone is held, never collapse under the user's cursor.
 const grip = document.getElementById('grip');
-grip.addEventListener('mousedown', () => { dragging = true; });
-window.addEventListener('mouseup', () => { dragging = false; });
+
+let dragCandidate = null;
+let suppressClick = false;
+
+function bindDragHandle(target) {
+  target.classList.add('drag-handle');
+  target.addEventListener('pointerdown', event => {
+    if (event.button !== 0) return;
+    dragging = true;
+    dragCandidate = {
+      target,
+      pointerId: event.pointerId,
+      startX: event.screenX,
+      startY: event.screenY,
+      active: false
+    };
+    target.setPointerCapture(event.pointerId);
+  });
+  target.addEventListener('pointermove', event => {
+    const current = dragCandidate;
+    if (!current || current.target !== target || current.pointerId !== event.pointerId) return;
+    const delta = { x: event.screenX - current.startX, y: event.screenY - current.startY };
+    if (!current.active && Math.hypot(delta.x, delta.y) < 4) return;
+    if (!current.active) {
+      current.active = true;
+      api.beginBubbleDrag();
+    }
+    api.moveBubbleDrag(delta);
+  });
+  const finish = event => {
+    const current = dragCandidate;
+    if (!current || current.target !== target || current.pointerId !== event.pointerId) return;
+    dragCandidate = null;
+    dragging = false;
+    if (current.active) {
+      suppressClick = true;
+      api.endBubbleDrag();
+      setTimeout(() => { suppressClick = false; }, 0);
+    }
+    if (target.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId);
+  };
+  target.addEventListener('pointerup', finish);
+  target.addEventListener('pointercancel', finish);
+  target.addEventListener('lostpointercapture', finish);
+  target.addEventListener('keydown', event => {
+    const deltas = {
+      ArrowLeft: { x: -15, y: 0 }, ArrowRight: { x: 15, y: 0 },
+      ArrowUp: { x: 0, y: -15 }, ArrowDown: { x: 0, y: 15 }
+    };
+    const delta = deltas[event.key];
+    if (!delta) return;
+    event.preventDefault();
+    api.beginBubbleDrag();
+    api.moveBubbleDrag(delta);
+    api.endBubbleDrag();
+  });
+}
+
+bindDragHandle(grip);
+bindDragHandle(moreBtn);
 
 askBtn.addEventListener('click', () => api.startSelection());
 multiBtn.addEventListener('click', () => api.startMultiSelection());
@@ -49,33 +96,19 @@ document.addEventListener('contextmenu', (event) => {
   api.bubbleMenu();
 });
 
-/* Expand/collapse discipline: hover 120 ms or click expands a half capsule;
-   leaving collapses back after 300 ms unless a menu is open. */
 function requestExpand() {
-  if (mode === 'expanded') return;
+  if (mode === 'expanded' || dragging) return;
   api.expandBubble();
 }
 
-function requestCollapse() {
-  if (mode !== 'expanded' || !originEdge || menuOpen || dragging) return;
-  api.collapseBubble();
-}
-
-bubble.addEventListener('mouseenter', () => {
-  clearTimers();
-  if (mode !== 'expanded') expandTimer = setTimeout(requestExpand, reducedMotion() ? 0 : 120);
-});
-bubble.addEventListener('mouseleave', () => {
-  clearTimers();
-  if (mode === 'expanded' && originEdge) collapseTimer = setTimeout(requestCollapse, reducedMotion() ? 0 : 300);
-});
 bubble.addEventListener('click', () => {
-  if (mode !== 'expanded') { clearTimers(); requestExpand(); }
+  if (suppressClick) return;
+  if (mode !== 'expanded') requestExpand();
 });
 
-// Review round 4: the rightmost action jumps straight to settings instead
-// of growing the toolbar to host a menu (hide/quit stay on the tray menu).
+// A click opens settings; a drag moves the capsule without triggering the click.
 moreBtn.addEventListener('click', () => {
+  if (suppressClick) return;
   menuOpen = false;
   api.openSettings();
 });

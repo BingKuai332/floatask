@@ -2,7 +2,7 @@
 
 const {
   app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, nativeImage,
-  screen, shell, clipboard, Notification, protocol, dialog, nativeTheme
+  screen, shell, clipboard, Notification, protocol, dialog, nativeTheme, systemPreferences
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -18,14 +18,28 @@ const {
   HALF_CAPSULE_HORIZONTAL,
   clampToWorkArea,
   snapToolbar,
-  edgeGapPosition
+  expansionPlacement,
+  collapseStartBounds,
+  translateDragBounds
 } = require('./window-geometry');
+const { updateHover, suppressHover } = require('./hover-state');
+const { shouldDeferBounds } = require('./mode-presentation');
 
 const BUBBLE_PADDING = 10;
 const CAPSULE = { width: CAPSULE_EXPANDED[0], height: CAPSULE_EXPANDED[1] };
 const BUBBLE_WINDOW_EXPANDED = [CAPSULE.width + BUBBLE_PADDING * 2, CAPSULE.height + BUBBLE_PADDING * 2];
 let bubbleMode = 'expanded';
 let bubbleEdge = null;
+let bubbleAxis = 'horizontal';
+let bubbleDirection = 'right';
+let bubbleDragBounds = null;
+let bubbleModeTimer = null;
+let bubblePendingBounds = null;
+let bubbleHoverPoll = null;
+let bubbleHoverInside = null;
+let bubbleHoverState = { suppressed: false };
+let bubbleExpandTimer = null;
+let bubbleCollapseTimer = null;
 let preMenuBounds = null;
 const { PRESETS } = require('../shared/presets');
 const { t } = require('./i18n');
@@ -271,8 +285,81 @@ function capsuleBounds(winX, winY) {
 
 function sendBubbleMode() {
   if (bubbleWin && !bubbleWin.isDestroyed()) {
-    bubbleWin.webContents.send('bubble:mode', { mode: bubbleMode, edge: bubbleEdge });
+    bubbleWin.webContents.send('bubble:mode', {
+      mode: bubbleMode,
+      edge: bubbleEdge,
+      axis: bubbleAxis,
+      direction: bubbleDirection
+    });
   }
+}
+
+function clearBubbleHoverTimers() {
+  clearTimeout(bubbleExpandTimer);
+  clearTimeout(bubbleCollapseTimer);
+}
+
+function setBubbleHover(inside) {
+  if (inside === bubbleHoverInside) return;
+  bubbleHoverInside = inside;
+  clearBubbleHoverTimers();
+  if (bubbleDragBounds) {
+    if (!inside) bubbleHoverState = { suppressed: false };
+    return;
+  }
+  bubbleHoverState = updateHover(bubbleHoverState, inside, bubbleMode === 'expanded');
+  const reduced = systemPreferences.getAnimationSettings?.().prefersReducedMotion;
+  if (bubbleHoverState.action === 'expand' && bubbleEdge) {
+    bubbleExpandTimer = setTimeout(() => {
+      if (bubbleHoverInside && !bubbleHoverState.suppressed && bubbleEdge && bubbleMode !== 'expanded') {
+        setBubbleMode('expanded', bubbleEdge);
+      }
+    }, reduced ? 0 : 120);
+  } else if (bubbleHoverState.action === 'collapse' && bubbleEdge) {
+    bubbleCollapseTimer = setTimeout(() => {
+      if (!bubbleHoverInside && bubbleEdge && bubbleMode === 'expanded') setBubbleMode(bubbleEdge, bubbleEdge);
+    }, reduced ? 0 : 300);
+  }
+}
+
+function startBubbleHover() {
+  clearInterval(bubbleHoverPoll);
+  bubbleHoverInside = null;
+  bubbleHoverState = { suppressed: false };
+  const poll = () => {
+    if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleWin.isVisible()) return;
+    const point = screen.getCursorScreenPoint();
+    const bounds = bubbleWin.getBounds();
+    setBubbleHover(
+      point.x >= bounds.x && point.x < bounds.x + bounds.width &&
+      point.y >= bounds.y && point.y < bounds.y + bounds.height
+    );
+  };
+  poll();
+  bubbleHoverPoll = setInterval(poll, 50);
+  bubbleHoverPoll.unref();
+}
+
+function presentBubbleBounds(target, mode) {
+  clearTimeout(bubbleModeTimer);
+  bubbleModeTimer = null;
+  bubblePendingBounds = null;
+  const reduced = systemPreferences.getAnimationSettings?.().prefersReducedMotion;
+  if (!shouldDeferBounds(mode, reduced)) {
+    bubbleWin.setBounds(target);
+    sendBubbleMode();
+    return;
+  }
+  bubbleWin.setBounds(collapseStartBounds(target, bubbleAxis, bubbleDirection));
+  bubblePendingBounds = target;
+  sendBubbleMode();
+  bubbleModeTimer = setTimeout(() => {
+    if (!bubbleWin || bubbleWin.isDestroyed() || !bubblePendingBounds) return;
+    const bounds = bubblePendingBounds;
+    bubblePendingBounds = null;
+    bubbleModeTimer = null;
+    bubbleWin.setBounds(bounds);
+  }, 180);
 }
 
 /** Resize/position the bubble window for the given capsule mode. */
@@ -284,14 +371,21 @@ function setBubbleMode(mode, edge) {
   const cap = capsuleBounds(bounds.x, bounds.y);
   const display = screen.getDisplayNearestPoint({ x: cap.x + cap.width / 2, y: cap.y + cap.height / 2 });
   const area = display.workArea;
-  if (mode === 'expanded') {
-    const next = bubbleEdge ? edgeGapPosition(bubbleEdge, CAPSULE, cap, area) : cap;
-    bubbleWin.setBounds({
-      x: next.x - BUBBLE_PADDING,
-      y: next.y - BUBBLE_PADDING,
+  let target;
+  if (mode === 'expanded' && bubbleEdge) {
+    const placement = expansionPlacement(bubbleEdge, cap, area);
+    bubbleAxis = placement.axis;
+    bubbleDirection = placement.direction;
+    target = placement.bounds;
+  } else if (mode === 'expanded') {
+    bubbleAxis = 'horizontal';
+    bubbleDirection = 'right';
+    target = {
+      x: cap.x - BUBBLE_PADDING,
+      y: cap.y - BUBBLE_PADDING,
       width: BUBBLE_WINDOW_EXPANDED[0],
       height: BUBBLE_WINDOW_EXPANDED[1]
-    });
+    };
   } else {
     const vertical = mode === 'left' || mode === 'right';
     const size = vertical ? { width: HALF_CAPSULE_VERTICAL[0], height: HALF_CAPSULE_VERTICAL[1] }
@@ -303,14 +397,14 @@ function setBubbleMode(mode, edge) {
       bottom: { x: cap.x, y: area.y + area.height - size.height }
     };
     const docked = clampToWorkArea({ ...anchors[mode], ...size }, area);
-    bubbleWin.setBounds({
+    target = {
       x: docked.x - BUBBLE_PADDING,
       y: docked.y - BUBBLE_PADDING,
       width: docked.width + BUBBLE_PADDING * 2,
       height: docked.height + BUBBLE_PADDING * 2
-    });
+    };
   }
-  sendBubbleMode();
+  presentBubbleBounds(target, mode);
 }
 
 /** After a drag ends, snap to an edge half-capsule or stay floating expanded. */
@@ -369,21 +463,28 @@ async function ensureBubble() {
   bubbleWin.setPosition(pos.x, pos.y, false);
 
   bubbleWin.on('moved', () => {
-    if (!bubbleWin || bubbleWin.isDestroyed()) return;
+    if (!bubbleWin || bubbleWin.isDestroyed() || bubbleModeTimer) return;
     clearTimeout(bubbleMoveTimer);
     bubbleMoveTimer = setTimeout(() => {
       if (!bubbleWin || bubbleWin.isDestroyed()) return;
       const [x, y] = bubbleWin.getPosition();
       store.setBubblePosition(x, y);
-      finalizeBubbleDock(x, y);
+      if (!bubbleDragBounds) finalizeBubbleDock(x, y);
     }, 400);
   });
 
-  bubbleWin.on('closed', () => { bubbleWin = null; });
+  bubbleWin.on('closed', () => {
+    clearInterval(bubbleHoverPoll);
+    clearBubbleHoverTimers();
+    clearTimeout(bubbleModeTimer);
+    bubblePendingBounds = null;
+    bubbleWin = null;
+  });
 
   await bubbleWin.loadFile(path.join(RENDERER, 'bubble.html'));
   sendBubbleMode();
   bubbleWin.showInactive();
+  startBubbleHover();
   // A fresh renderer resolves its own theme via getSettings + matchMedia;
   // push the authoritative theme too so it never sits on the wrong default.
   broadcastTheme();
@@ -1791,9 +1892,11 @@ function resolvedTheme() {
   return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
 }
 
-/** Sync nativeTheme with the saved preference and push the resolved theme to every live renderer. */
+let themePreviewPreference = null;
+
+/** Sync nativeTheme with the active preference and push the resolved theme to every live renderer. */
 function broadcastTheme() {
-  const preference = store.getConfig().theme;
+  const preference = themePreviewPreference ?? store.getConfig().theme;
   const source = ['light', 'dark'].includes(preference) ? preference : 'system';
   if (nativeTheme.themeSource !== source) nativeTheme.themeSource = source;
   const payload = { theme: resolvedTheme(), preference };
@@ -1931,6 +2034,7 @@ async function openHistory(recordId = '') {
   historyWin.on('closed', () => { historyWin = null; });
 
   await historyWin.loadFile(path.join(RENDERER, 'history.html'));
+  broadcastTheme();
   historyWin.show();
   historyWin.focus();
   if (recordId) {
@@ -2115,6 +2219,32 @@ ipcMain.on('app:settings', () => openSettings(false));
 ipcMain.on('app:clipboard-explain', () => askClipboard());
 ipcMain.on('bubble:expand', () => { if (bubbleEdge) setBubbleMode('expanded', bubbleEdge); });
 ipcMain.on('bubble:collapse', () => { if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge); });
+ipcMain.on('bubble:drag-start', () => {
+  if (!bubbleWin || bubbleWin.isDestroyed()) return;
+  clearTimeout(bubbleMoveTimer);
+  clearBubbleHoverTimers();
+  bubbleHoverState = suppressHover(bubbleHoverState);
+  clearTimeout(bubbleModeTimer);
+  bubbleModeTimer = null;
+  bubblePendingBounds = null;
+  bubbleDragBounds = bubbleWin.getBounds();
+});
+ipcMain.on('bubble:drag-move', (_event, delta) => {
+  if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleDragBounds) return;
+  const x = bubbleDragBounds.x + Math.round(Number(delta?.x) || 0);
+  const y = bubbleDragBounds.y + Math.round(Number(delta?.y) || 0);
+  const display = screen.getDisplayNearestPoint({ x, y });
+  const position = translateDragBounds(bubbleDragBounds, delta, display.workArea, BUBBLE_PADDING);
+  bubbleWin.setPosition(position.x, position.y, false);
+});
+ipcMain.on('bubble:drag-end', () => {
+  if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleDragBounds) return;
+  bubbleDragBounds = null;
+  clearTimeout(bubbleMoveTimer);
+  const [x, y] = bubbleWin.getPosition();
+  store.setBubblePosition(x, y);
+  finalizeBubbleDock(x, y);
+});
 ipcMain.on('bubble:hide', () => {
   store.save({ showBubble: false });
   restoreBubbleMenuBounds();
@@ -2367,6 +2497,10 @@ ipcMain.handle('settings:test-profile', async (_event, { task, patch } = {}) => 
   catch (error) { return { ok: false, message: error.message, hint: error.hint }; }
 });
 ipcMain.handle('settings:get', () => settingsPayload());
+ipcMain.on('settings:preview-theme', (_event, preference) => {
+  themePreviewPreference = ['system', 'light', 'dark'].includes(preference) ? preference : null;
+  broadcastTheme();
+});
 ipcMain.handle('settings:save', (_event, patch) => {
   try {
     stopHotkeyRecording();
@@ -2395,13 +2529,14 @@ ipcMain.handle('settings:save', (_event, patch) => {
     const prevLanguage = store.getConfig().language;
     const keepOnboarding = patch && patch.keepOnboarding === true;
     const saved = store.save(patch && typeof patch === 'object' ? patch : {});
+    themePreviewPreference = null;
     if (!keepOnboarding) {
       store.markOnboarded();
       settingsFirstRun = false;
     }
     applySettings();
     if (store.getConfig().language !== prevLanguage) broadcastLanguage();
-    if ('theme' in (patch || {})) broadcastTheme();
+    broadcastTheme();
     return { ok: true, settings: { ...saved, hotkeyOk, actualHotkey: hotkey } };
   } catch (err) {
     return { ok: false, message: err.message };
@@ -2429,6 +2564,8 @@ ipcMain.handle('settings:test', async (_event, patch) => {
   }
 });
 ipcMain.on('settings:close', () => {
+  themePreviewPreference = null;
+  broadcastTheme();
   if (settingsWin && !settingsWin.isDestroyed()) settingsWin.hide();
   refreshBubble();
 });

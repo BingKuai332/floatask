@@ -13,7 +13,7 @@ module.exports = Object.freeze({
   ANSWER_COMPACT_SIZE: Object.freeze([800, 1425]),
   ANSWER_EXPANDED_SIZE: Object.freeze([960, 1600]),
   CAPSULE_EXPANDED: Object.freeze([328, 52]),
-  CAPSULE_COLLAPSED_VERTICAL: Object.freeze([44, 64]),
+  CAPSULE_COLLAPSED_VERTICAL: Object.freeze([44, 52]),
   CAPSULE_COLLAPSED_HORIZONTAL: Object.freeze([64, 44]),
   TOOLBAR_OUTER_RADIUS: 26,
   TOOLBAR_COLLAPSED_RADIUS: 22,

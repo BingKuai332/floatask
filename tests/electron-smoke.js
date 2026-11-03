@@ -188,6 +188,12 @@ server.listen(0,'127.0.0.1',()=>{
    const navItems=await js(settings,"[...document.querySelectorAll('.settings-nav-item')].map(b=>b.textContent)");
    assert.deepEqual(navItems,['模型服务','联网检索','通用与快捷键','历史与隐私','外观与阅读','更新与关于'],'six fixed nav entries in design order');
    assert.equal(await js(settings,"document.querySelector('.settings-nav-item.active')?.dataset.panel"),'model','model section starts active');
+   await js(settings,"document.querySelector('.settings-nav').dispatchEvent(new WheelEvent('wheel',{deltaY:120,bubbles:true,cancelable:true}));true");
+   assert.equal(await js(settings,"document.querySelector('.settings-nav-item.active')?.dataset.panel"),'web','wheel down over the sidebar selects the next section');
+   await js(settings,"document.querySelector('.settings-nav').dispatchEvent(new WheelEvent('wheel',{deltaY:-120,bubbles:true,cancelable:true}));true");
+   assert.equal(await js(settings,"document.querySelector('.settings-nav-item.active')?.dataset.panel"),'model','wheel up over the sidebar selects the previous section');
+   await js(settings,"document.querySelector('.scroll-body').dispatchEvent(new WheelEvent('wheel',{deltaY:120,bubbles:true,cancelable:true}));true");
+   assert.equal(await js(settings,"document.querySelector('.settings-nav-item.active')?.dataset.panel"),'model','wheel outside the sidebar does not change sections');
    await js(settings,"document.querySelector('.settings-nav-item[data-panel=appearance]').click();true");
    const panelVisibility=await js(settings,`(() => {
     const vis=name=>{const s=document.querySelector('[data-panel-section="'+name+'"]');return Boolean(s&&s.offsetParent!==null);};
@@ -195,9 +201,29 @@ server.listen(0,'127.0.0.1',()=>{
    })()`);
    assert.ok(panelVisibility.appearance,'appearance panel shows after nav click');
    assert.ok(!panelVisibility.model && !panelVisibility.web,'other panels hide');
+   const densityGap=await js(settings,"(()=>{const c=document.getElementById('densityControl');const last=c.lastElementChild;return c.getBoundingClientRect().right-last.getBoundingClientRect().right-5})()");
+   assert.ok(Math.abs(densityGap)<1,'density options fill the available width without a blank tail');
+   assert.equal(await js(settings,"document.querySelectorAll('#themeControl .theme-option .theme-preview').length"),3,'theme choices show the three miniature previews from the design');
+   assert.equal(await js(settings,"window.FloatAskI18n.t('theme.light')"),'朝日','light theme uses the short product name');
+   assert.equal(await js(settings,"window.FloatAskI18n.t('theme.dark')"),'近月','dark theme uses the short product name');
+   assert.equal(await js(settings,"document.getElementById('fontSizeControl')?.type"),'range','font size uses the native design slider');
+   const configuredFontSize=await js(settings,"(async()=>(await window.floatask.getSettings()).fontSize)()");
+   assert.equal(await js(settings,"collectDraft().fontSize"),configuredFontSize,'the slider preserves an untouched saved font size');
+   await js(settings,"const s=document.getElementById('fontSizeControl');s.value='16';s.dispatchEvent(new Event('input',{bubbles:true}));true");
+   assert.equal(await js(settings,"document.getElementById('fontSizeValue').textContent"),'16 px','slider exposes its current value');
+   assert.equal(await js(settings,"document.getElementById('readingPreview').style.getPropertyValue('--preview-size')"),'16px','slider changes the actual reading preview');
    await js(settings,"document.getElementById('themeOption-light').click();true");
    assert.equal(await js(settings,"document.documentElement.dataset.theme"),'light','theme preview applies before saving');
+   assert.equal(await js(settings,"document.getElementById('themeOption-light').getAttribute('aria-checked')"),'true','selected theme card exposes its radio state');
    await pause(250); // theme color transition (120 ms) must settle before sampling colors
+   const miniatureThemes=await js(settings,`(() => {
+    const dark=document.querySelector('.theme-preview[data-theme="dark"]');
+    const halves=[...document.querySelectorAll('.theme-system-half')].map(el=>getComputedStyle(el).backgroundColor);
+    return {dark:getComputedStyle(dark).backgroundColor,halves};
+   })()`);
+   assert.equal(miniatureThemes.dark,'rgb(12, 14, 18)','the near-moon miniature keeps its dark palette inside the light settings page');
+   assert.deepEqual(miniatureThemes.halves,['rgb(231, 231, 223)','rgb(12, 14, 18)'],'the system miniature shows real light and dark halves');
+   await screenshot(settings,'appearance-light');
    await js(settings,"document.getElementById('densityOption-compact').click();true");
    assert.equal(await js(settings,"document.getElementById('readingPreview').dataset.density"),'compact','density preview applies to the reading preview');
    const hexToRgb=h=>{const n=parseInt(h.slice(1),16);return 'rgb('+[(n>>16)&255,(n>>8)&255,n&255].join(', ')+')';};
@@ -268,7 +294,25 @@ server.listen(0,'127.0.0.1',()=>{
    await js(win,"document.querySelector('.detail-actions button').click()");
    await waitFor(()=>history.get(record.id).favorite,'favorite');
    await screenshot(win,'history-en');
-   // Theme runtime: saving a theme broadcasts it to every open window without restart.
+   // Theme runtime: selecting a theme applies and remembers it immediately, including after close/reopen.
+   await js(settings,"document.getElementById('themeOption-dark').click();true");
+   await js(settings,"window.floatask.saveSettings({theme:'dark',showBubble:true})");
+   const previewBubble=await waitFor(()=>page('bubble'),'capsule for theme preview');
+   await waitFor(()=>js(win,"document.documentElement.dataset.theme==='dark'"),'history starts from the saved dark theme');
+   await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='dark'"),'capsule starts from the saved dark theme');
+   await js(settings,"document.getElementById('themeOption-light').click();true");
+   await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'history follows the selected light theme');
+   await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'capsule follows the selected light theme');
+   await waitFor(()=>require('../src/main/store').getConfig().theme==='light','theme selection is remembered immediately');
+   await js(settings,"document.getElementById('closeBtn').click();true");
+   await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'closing settings keeps the selected history theme');
+   await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'closing settings keeps the selected capsule theme');
+   assert.equal(require('../src/main/store').getConfig().theme,'light','close does not roll back the remembered theme');
+   await js(settings,"window.floatask.openSettings();true");
+   await waitFor(()=>js(settings,"document.getElementById('themeOption-light')?.getAttribute('aria-checked')==='true'"),'reopened settings shows the remembered selection');
+   await js(settings,"window.floatask.saveSettings({showBubble:false})");
+   await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'other setting saves preserve the selected theme');
+   // Saving a theme broadcasts it to every open window without restart.
    const themeSaved=await js(settings,"window.floatask.saveSettings({theme:'light'})");
    assert.equal(themeSaved.settings.theme,'light');
    assert.equal(nativeTheme.themeSource,'light','nativeTheme follows the saved theme');

@@ -112,7 +112,7 @@ components:
     sidebarRadius: 15
   toolbar:
     expandedSize: [328, 52]
-    collapsedVertical: [44, 64]
+    collapsedVertical: [44, 52]
     collapsedHorizontal: [64, 44]
     outerRadius: 26
     collapsedOuterRadius: 22

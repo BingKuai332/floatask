@@ -6,7 +6,7 @@ const SNAP_DISTANCE = 24;
 const EXPANDED_EDGE_GAP = 8;
 
 const CAPSULE_EXPANDED = [328, 52];
-const HALF_CAPSULE_VERTICAL = [44, 64];
+const HALF_CAPSULE_VERTICAL = [44, 52];
 const HALF_CAPSULE_HORIZONTAL = [64, 44];
 
 function clamp(value, min, max) {
@@ -56,6 +56,64 @@ function edgeGapPosition(edge, size, position, workArea) {
   return clampToWorkArea({ ...next, width: size.width, height: size.height }, workArea);
 }
 
+function expansionPlacement(edge, position, workArea) {
+  const vertical = edge === 'left' || edge === 'right';
+  const axis = vertical ? 'vertical' : 'horizontal';
+  const direction = vertical
+    ? (position.y + 328 + EXPANDED_EDGE_GAP > workArea.y + workArea.height ? 'up' : 'down')
+    : (position.x + 328 + EXPANDED_EDGE_GAP > workArea.x + workArea.width ? 'left' : 'right');
+  const width = vertical ? 72 : 348;
+  const height = vertical ? 348 : 72;
+  let x = position.x - 10;
+  let y = position.y - 10;
+  if (vertical) {
+    x = edge === 'left' ? workArea.x + EXPANDED_EDGE_GAP - 10 : workArea.x + workArea.width - EXPANDED_EDGE_GAP - width;
+    if (direction === 'up') y = workArea.y + workArea.height - EXPANDED_EDGE_GAP - height;
+  } else {
+    if (direction === 'left') x = workArea.x + workArea.width - EXPANDED_EDGE_GAP - width;
+    if (edge === 'top') y = workArea.y + EXPANDED_EDGE_GAP - 10;
+    if (edge === 'bottom') y = workArea.y + workArea.height - EXPANDED_EDGE_GAP - height;
+  }
+  const paddedArea = {
+    x: workArea.x - 10,
+    y: workArea.y - 10,
+    width: workArea.width + 20,
+    height: workArea.height + 20
+  };
+  return {
+    axis,
+    direction,
+    bounds: clampToWorkArea({ x, y, width, height }, paddedArea)
+  };
+}
+
+function collapseStartBounds(target, axis, direction) {
+  const start = { ...target };
+  if (axis === 'vertical') {
+    start.height = 348;
+    if (direction === 'up') start.y -= 276;
+  } else {
+    start.width = 348;
+    if (direction === 'left') start.x -= 284;
+  }
+  return start;
+}
+
+function translateDragBounds(start, delta, workArea, shadowPadding = 0) {
+  const paddedArea = {
+    x: workArea.x - shadowPadding,
+    y: workArea.y - shadowPadding,
+    width: workArea.width + shadowPadding * 2,
+    height: workArea.height + shadowPadding * 2
+  };
+  return clampToWorkArea({
+    x: start.x + Math.round(Number(delta?.x) || 0),
+    y: start.y + Math.round(Number(delta?.y) || 0),
+    width: start.width,
+    height: start.height
+  }, paddedArea);
+}
+
 /** DIP size to physical pixels for a display scale factor (100/125/150% → 1/1.25/1.5). */
 function physicalSize(dipSize, scaleFactor) {
   const scale = Number(scaleFactor) > 0 ? Number(scaleFactor) : 1;
@@ -71,5 +129,8 @@ module.exports = {
   clampToWorkArea,
   snapToolbar,
   edgeGapPosition,
+  expansionPlacement,
+  collapseStartBounds,
+  translateDragBounds,
   physicalSize
 };
