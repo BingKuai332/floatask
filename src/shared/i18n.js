@@ -508,6 +508,7 @@ const LOCALES = {
     // ---- history window ----
     'history.title': '历史记录',
     'history.subtitle': 'FLOATASK · 会话历史与收藏',
+    'history.termCount': '{count} 条',
     'history.searchPlaceholder': '搜索标题、内容或来源窗口…',
     'history.filterAll': '全部',
     'history.filterFav': '收藏',
@@ -1040,6 +1041,7 @@ const LOCALES = {
     // ---- history window ----
     'history.title': 'History',
     'history.subtitle': 'FLOATASK · SESSIONS & FAVORITES',
+    'history.termCount': '{count} records',
     'history.searchPlaceholder': 'Search titles, content or source windows…',
     'history.filterAll': 'All',
     'history.filterFav': 'Favorites',

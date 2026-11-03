@@ -105,8 +105,8 @@
 [data-theme="industrial"] .md-body { counter-reset: fa-heading; }
 [data-theme="industrial"] .md-body h1,
 [data-theme="industrial"] .md-body h2,
-[data-theme="industrial"] .md-body h3,
-[data-theme="industrial"] .md-body h4 { color: var(--fa-accent); counter-increment: fa-heading; }
+[data-theme="industrial"] .md-body h3 { color: var(--fa-accent); counter-increment: fa-heading; }
+[data-theme="industrial"] .md-body h4 { color: var(--fa-accent); }
 [data-theme="industrial"] .md-body h1::before,
 [data-theme="industrial"] .md-body h2::before,
 [data-theme="industrial"] .md-body h3::before {
@@ -139,7 +139,8 @@
 [data-theme="industrial"] .quick-chip { border-color: var(--fa-border-accent-line); }
 [data-theme="industrial"] .input-shell { border-color: var(--fa-border-accent-line); }
 [data-theme="industrial"] .input-shell:focus-within { border-color: var(--fa-accent); }
-[data-theme="industrial"] .composer-hint b {
+[data-theme="industrial"] .composer-hint b,
+[data-theme="industrial"] .hint .kbd {
   display: inline-flex;
   align-items: center;
   height: 17px;
@@ -222,13 +223,34 @@
 }
 [data-theme="industrial"] .switch i { border-radius: 0; }
 [data-theme="industrial"] .switch i::after { border-radius: 0; }
-[data-theme="industrial"] .theme-preview[data-theme="industrial"] {
+[data-theme="industrial"].theme-preview {
   background-image: var(--fa-hazard);
   background-size: 5px 100%;
   background-repeat: no-repeat;
 }
 
+/* Window label under the settings brand (settings page only). */
+[data-theme="industrial"] .brand-sub:has([data-i18n="settings.subtitle"])::after {
+  content: "fa.term // settings";
+  display: block;
+  margin-top: 2px;
+  font-family: var(--fa-font-label);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--fa-accent);
+}
+
 /* ---------- history ---------- */
+/* Window label with the record count (history.js keeps data-term-count current). */
+[data-theme="industrial"] .history-header small[data-term-count]::after {
+  content: "fa.term // history · " attr(data-term-count);
+  display: block;
+  margin-top: 2px;
+  font-family: var(--fa-font-label);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--fa-accent);
+}
 [data-theme="industrial"] .record.selected { box-shadow: inset 3px 0 0 var(--fa-accent); }
 [data-theme="industrial"] .record-hash {
   display: inline;
@@ -263,10 +285,34 @@
 }
 
 /* ---------- toolbar capsule ---------- */
-[data-theme="industrial"] .brand { color: var(--fa-accent); }
-[data-theme="industrial"] .ask {
+[data-theme="industrial"] .bubble .brand { color: var(--fa-accent); }
+[data-theme="industrial"] .ask,
+[data-theme="industrial"] .bubble .ask:hover {
   background: var(--fa-primary-button);
   color: var(--fa-on-primary);
   border-color: var(--fa-primary-button);
 }
 [data-theme="industrial"] .ask svg { color: var(--fa-on-primary); }
+
+/* ---------- Windows high contrast ---------- */
+/* The system palette takes over: drop brackets, hazard, grid and the conveyor,
+   and let the real app icon show instead of the painted brand block. */
+@media (forced-colors: active) {
+  [data-theme="industrial"] .card::before,
+  [data-theme="industrial"] .card::after,
+  [data-theme="industrial"] .history-shell::before,
+  [data-theme="industrial"] .history-shell::after,
+  [data-theme="industrial"] .provider-card.active::after,
+  [data-theme="industrial"] .theme-option.segmented-option.active::after,
+  [data-theme="industrial"] .titlebar:has(.status-pill.working)::after { content: none; display: none; }
+  [data-theme="industrial"] .titlebar,
+  [data-theme="industrial"] .history-header,
+  [data-theme="industrial"] .messages,
+  [data-theme="industrial"] .settings-nav,
+  [data-theme="industrial"] #stage,
+  [data-theme="industrial"] .error-card,
+  [data-theme="industrial"] .clear-scope,
+  [data-theme="industrial"].theme-preview { background-image: none; }
+  [data-theme="industrial"] .titlebar .brand-logo,
+  [data-theme="industrial"] .brand .brand-logo { object-position: initial; background: none; }
+}

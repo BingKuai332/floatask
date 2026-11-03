@@ -245,7 +245,7 @@ function updateTermLabels() {
   els.termLabel.textContent = `fa.term // node-${String(Math.max(1, turns)).padStart(2, '0')}`;
   els.sessionHash.textContent = window.FloatAskShortHash.shortHash(state.historyId);
   const process = state.windowInfo?.process || '';
-  const chars = state.selectionText ? state.selectionText.replace(/s+/g, '').length : 0;
+  const chars = state.selectionText ? state.selectionText.replace(/\s+/g, '').length : 0;
   const latency = Number.isFinite(state.latencyMs) ? `${(state.latencyMs / 1000).toFixed(2)}s` : '--';
   els.termMeta.textContent = [process && `src: ${process}`, `ocr ${chars} ch`, `lat ${latency}`].filter(Boolean).join(' | ');
 }
@@ -504,6 +504,8 @@ function showManual(message) {
 }
 
 function reset(payload) {
+  state.historyId = null;
+  state.latencyMs = null;
   state.selectionText = payload?.selectionText || '';
   state.ocrRaw = payload?.selectionText || '';
   state.ocrCorrected = null;
@@ -1051,6 +1053,7 @@ api.onResultEvent((payload) => {
       state.windowInfo = { title: tt('result.manualInputTitle'), process: '' };
       updateContext();
       showLoading(tt('result.organizing'));
+      refreshSessionMeta();
       break;
     default:
       break;

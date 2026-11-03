@@ -24,6 +24,7 @@ function typeOf(row) {
 }
 function renderList() {
  list.replaceChildren();
+ document.querySelector('.history-header small')?.setAttribute('data-term-count',tt('history.termCount',{count:records.length}));
  const rows=records.filter(r=>(!favorites || r.favorite) && (typeFilter==='all' || typeOf(r)===typeFilter) && (!query || texts.get(r.id)?.includes(query)));
  if(!rows.length) { const el=document.createElement('p'); el.className='empty'; el.textContent=tt(query?'history.emptySearch':favorites?'history.emptyFav':'history.empty'); list.append(el); }
  for(const row of rows) {

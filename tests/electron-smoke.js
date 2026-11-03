@@ -782,6 +782,8 @@ server.listen(0,'127.0.0.1',()=>{
    assert.match(await js(result,"document.getElementById('sessionHash').textContent"),/^0x[0-9A-F]{4}$/,'a fresh answer session carries its short hash');
    const termMeta=await js(result,"document.getElementById('termMeta').textContent");
    assert.ok(termMeta.includes('ocr ')&&termMeta.includes('lat '),'the term readout shows OCR length and first-token latency');
+   const ocrChars=racedState.init.selectionText.replace(/\s+/g,'').length;
+   assert.ok(/\s/.test(racedState.init.selectionText)&&termMeta.includes(`ocr ${ocrChars} ch`),`the OCR count is the whitespace-stripped selection length (${ocrChars}): ${termMeta}`);
    await js(settings,"window.floatask.setLanguage('en')");
    await waitFor(()=>js(font,"document.getElementById('importBtn').textContent==='＋ Import font file…'"),'font translated');
    await js(result,"document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");

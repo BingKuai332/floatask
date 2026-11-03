@@ -79,14 +79,14 @@ function sourceOf(session) {
   return 'selection';
 }
 
-/**
- * Upsert the in-flight session into history. Called after each completed
- * (or partially completed) answer.
- */
 function newHistoryId() {
   return `h-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+/**
+ * Upsert the in-flight session into history. Called after each completed
+ * (or partially completed) answer.
+ */
 function record(session, meta = {}) {
   load();
   const messages = clampMessages(session.history || []);
