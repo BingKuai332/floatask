@@ -304,6 +304,22 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'history follows the selected light theme');
    await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'capsule follows the selected light theme');
    await waitFor(()=>require('../src/main/store').getConfig().theme==='light','theme selection is remembered immediately');
+   // The industrial card applies in settings and reaches the other open windows; then restore the previous theme.
+   const themeBeforeIndustrial=await js(settings,"document.querySelector('#themeControl .theme-option[aria-checked=\"true\"]')?.id || ''");
+   await js(settings,"document.getElementById('themeOption-industrial').click();true");
+   await waitFor(()=>js(settings,"document.documentElement.dataset.theme==='industrial'"),'industrial card applies the industrial theme in settings');
+   await waitFor(async()=>{
+    for (const w of BrowserWindow.getAllWindows()) {
+     if (w.isDestroyed() || w===settings) continue;
+     if (await js(w,"document.documentElement.dataset.theme==='industrial'").catch(()=>false)) return true;
+    }
+    return false;
+   },'industrial theme reaches another open window');
+   assert.equal(themeBeforeIndustrial,'themeOption-light','the light card was active before the industrial check');
+   await js(settings,`document.getElementById(${JSON.stringify(themeBeforeIndustrial)}).click();true`);
+   await waitFor(()=>require('../src/main/store').getConfig().theme==='light','the previous theme is saved again after the industrial check');
+   await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'history returns to light after the industrial check');
+   await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'capsule returns to light after the industrial check');
    await js(settings,"document.getElementById('closeBtn').click();true");
    await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'closing settings keeps the selected history theme');
    await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'closing settings keeps the selected capsule theme');
