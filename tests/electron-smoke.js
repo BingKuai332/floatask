@@ -203,7 +203,7 @@ server.listen(0,'127.0.0.1',()=>{
    assert.ok(!panelVisibility.model && !panelVisibility.web,'other panels hide');
    const densityGap=await js(settings,"(()=>{const c=document.getElementById('densityControl');const last=c.lastElementChild;return c.getBoundingClientRect().right-last.getBoundingClientRect().right-5})()");
    assert.ok(Math.abs(densityGap)<1,'density options fill the available width without a blank tail');
-   assert.equal(await js(settings,"document.querySelectorAll('#themeControl .theme-option .theme-preview').length"),3,'theme choices show the three miniature previews from the design');
+   assert.equal(await js(settings,"document.querySelectorAll('#themeControl .theme-option .theme-preview').length"),4,'theme choices show the four miniature previews from the design');
    assert.equal(await js(settings,"window.FloatAskI18n.t('theme.light')"),'朝日','light theme uses the short product name');
    assert.equal(await js(settings,"window.FloatAskI18n.t('theme.dark')"),'近月','dark theme uses the short product name');
    assert.equal(await js(settings,"document.getElementById('fontSizeControl')?.type"),'range','font size uses the native design slider');
