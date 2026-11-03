@@ -2250,7 +2250,14 @@ ipcMain.on('bubble:drag-start', () => {
   bubbleHoverState = suppressHover(bubbleHoverState);
   clearTimeout(bubbleModeTimer);
   bubbleModeTimer = null;
+  // A drag during a pending collapse finishes it first, so the window and the
+  // renderer's collapsing flag never stay half-way.
+  const pending = bubblePendingBounds;
   bubblePendingBounds = null;
+  if (pending) {
+    bubbleWin.setBounds(pending);
+    sendBubbleMode();
+  }
   bubbleDragBounds = bubbleWin.getBounds();
   bubbleDragOrigin = bubbleDock ? { dock: bubbleDock, expanded: bubbleMode === 'expanded' } : null;
 });
