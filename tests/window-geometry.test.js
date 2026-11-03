@@ -201,22 +201,44 @@ test('snapDock prefers the previous edge on a distance tie', () => {
   assert.equal(geometry.snapDock({ x: 5, y: 20 }, { width: 64, height: 44 }, AREA, 'top').edge, 'left');
 });
 
-test('dragSnapCapsule uses the half-capsule size when the drag started docked', () => {
-  const dock = { edge: 'bottom', anchor: { x: 1800, y: 1036, width: 64, height: 44 } };
+test('dragSnapCapsule snaps a floating drag with the expanded capsule', () => {
   assert.deepEqual(
-    geometry.dragSnapCapsule({ x: 1790, y: 1026, width: 84, height: 64 }, PAD, dock, false),
-    { capsule: { x: 1800, y: 1036, width: 64, height: 44 }, preferredEdge: 'bottom' }
-  );
-  // Expanded from the dock: snap with the expanded capsule, still preferring the dock edge.
-  assert.deepEqual(
-    geometry.dragSnapCapsule({ x: 1500, y: 1010, width: 348, height: 72 }, PAD, dock, true),
-    { capsule: { x: 1510, y: 1020, width: 328, height: 52 }, preferredEdge: 'bottom' }
-  );
-  // Floating: full capsule, no preference.
-  assert.deepEqual(
-    geometry.dragSnapCapsule({ x: 700, y: 400, width: 348, height: 72 }, PAD, null, true),
+    geometry.dragSnapCapsule({ x: 700, y: 400, width: 348, height: 72 }, PAD),
     { capsule: { x: 710, y: 410, width: 328, height: 52 }, preferredEdge: null }
   );
+});
+
+test('dockDragResult keeps an expanded bottom dock on its edge, moving the anchor by the delta', () => {
+  // Anchor at the bottom-right corner expands leftward; a tiny drag must not hop to the right edge.
+  const dock = { edge: 'bottom', anchor: { x: 1856, y: 1036, width: 64, height: 44 } };
+  assert.deepEqual(
+    geometry.dockDragResult(dock, { x: -3, y: -2 }, AREA),
+    { edge: 'bottom', anchor: { x: 1853, y: 1036, width: 64, height: 44 } }
+  );
+});
+
+test('dockDragResult keeps an expanded right dock in place, moving the anchor by the delta', () => {
+  // Anchor near the bottom expands upward; the expanded capsule's top must not become the anchor.
+  const dock = { edge: 'right', anchor: { x: 1876, y: 1000, width: 44, height: 52 } };
+  assert.deepEqual(
+    geometry.dockDragResult(dock, { x: -3, y: -2 }, AREA),
+    { edge: 'right', anchor: { x: 1876, y: 998, width: 44, height: 52 } }
+  );
+});
+
+test('dockDragResult slides a dock along its edge', () => {
+  const dock = { edge: 'left', anchor: { x: 0, y: 400, width: 44, height: 52 } };
+  assert.deepEqual(
+    geometry.dockDragResult(dock, { x: 5, y: 120 }, AREA),
+    { edge: 'left', anchor: { x: 0, y: 520, width: 44, height: 52 } }
+  );
+});
+
+test('dockDragResult undocks when pulled more than SNAP_DISTANCE off the edge', () => {
+  const dock = { edge: 'bottom', anchor: { x: 900, y: 1036, width: 64, height: 44 } };
+  assert.deepEqual(geometry.dockDragResult(dock, { x: 0, y: -(SNAP_DISTANCE + 1) }, AREA), { edge: null });
+  // Exactly at the snap distance it still docks.
+  assert.equal(geometry.dockDragResult(dock, { x: 0, y: -SNAP_DISTANCE }, AREA).edge, 'bottom');
 });
 
 test('padArea grows a work area by the shadow padding on every side', () => {

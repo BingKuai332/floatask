@@ -137,19 +137,34 @@ function sanitizeDock(dock) {
 }
 
 /**
- * The visible capsule to snap when a drag ends. A drag that started from a
- * docked half-capsule snaps with the half-capsule's own size (the full 328 DIP
- * width would tie a top/bottom dock with the right/left edge); otherwise the
- * expanded capsule is used. Either way the previous dock edge wins ties.
+ * The visible capsule to snap when a floating drag ends: the expanded capsule
+ * inside the window's shadow padding, with no preferred edge.
  */
-function dragSnapCapsule(windowBounds, padding, startDock, startedExpanded) {
-  const size = startDock && !startedExpanded
-    ? halfCapsuleSize(startDock.edge)
-    : { width: CAPSULE_EXPANDED[0], height: CAPSULE_EXPANDED[1] };
+function dragSnapCapsule(windowBounds, padding) {
   return {
-    capsule: { x: windowBounds.x + padding, y: windowBounds.y + padding, ...size },
-    preferredEdge: startDock ? startDock.edge : null
+    capsule: { x: windowBounds.x + padding, y: windowBounds.y + padding, width: CAPSULE_EXPANDED[0], height: CAPSULE_EXPANDED[1] },
+    preferredEdge: null
   };
+}
+
+/**
+ * Result of a drag that started from a dock (collapsed or hover-expanded):
+ * the original anchor moved by the window's drag delta, snapped with its own
+ * size and the previous edge preferred. Using the anchor rather than the
+ * expanded capsule keeps a corner dock that expanded up/left on its edge.
+ * Returns { edge, anchor }, or { edge: null } when the drag undocks it.
+ */
+function dockDragResult(startDock, delta, workArea) {
+  const anchor = startDock.anchor;
+  const candidate = {
+    ...anchor,
+    x: anchor.x + Math.round(Number(delta?.x) || 0),
+    y: anchor.y + Math.round(Number(delta?.y) || 0)
+  };
+  const size = { width: candidate.width, height: candidate.height };
+  const { edge } = snapDock(candidate, size, workArea, startDock.edge);
+  if (!edge) return { edge: null };
+  return { edge, anchor: dockAnchor(edge, candidate, workArea) };
 }
 
 /** A work area grown by the transparent shadow padding, so only padding may overhang. */
@@ -194,6 +209,7 @@ module.exports = {
   snapToolbar,
   snapDock,
   dragSnapCapsule,
+  dockDragResult,
   padArea,
   edgeGapPosition,
   dockAnchor,

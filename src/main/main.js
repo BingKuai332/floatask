@@ -17,6 +17,7 @@ const {
   clampToWorkArea,
   snapDock,
   dragSnapCapsule,
+  dockDragResult,
   padArea,
   dockAnchor,
   dockedWindowBounds,
@@ -416,9 +417,19 @@ function setBubbleMode(mode, edge) {
 /** After a drag ends, snap to an edge half-capsule or stay floating expanded. */
 function finalizeBubbleDock(winX, winY, origin = null) {
   if (!bubbleWin || bubbleWin.isDestroyed()) return;
-  const { capsule: cap, preferredEdge } = dragSnapCapsule(
-    { x: winX, y: winY }, BUBBLE_PADDING, origin?.dock || null, origin ? origin.expanded : true
-  );
+  if (origin?.dock) {
+    // Started docked (collapsed or hover-expanded): move the original anchor by the drag delta.
+    const delta = { x: winX - origin.start.x, y: winY - origin.start.y };
+    const moved = { ...origin.dock.anchor, x: origin.dock.anchor.x + delta.x, y: origin.dock.anchor.y + delta.y };
+    const result = dockDragResult(origin.dock, delta, bubbleWorkArea(moved));
+    if (result.edge) {
+      bubbleDock = { edge: result.edge, anchor: result.anchor };
+      store.setBubbleDock(bubbleDock);
+      setBubbleMode(result.edge, result.edge);
+      return;
+    }
+  }
+  const { capsule: cap, preferredEdge } = dragSnapCapsule({ x: winX, y: winY }, BUBBLE_PADDING);
   const area = bubbleWorkArea(cap);
   const { edge } = snapDock(cap, cap, area, preferredEdge);
   bubbleDock = edge ? { edge, anchor: dockAnchor(edge, cap, area) } : null;
@@ -2259,7 +2270,9 @@ ipcMain.on('bubble:drag-start', () => {
     sendBubbleMode();
   }
   bubbleDragBounds = bubbleWin.getBounds();
-  bubbleDragOrigin = bubbleDock ? { dock: bubbleDock, expanded: bubbleMode === 'expanded' } : null;
+  bubbleDragOrigin = bubbleDock
+    ? { dock: bubbleDock, start: { x: bubbleDragBounds.x, y: bubbleDragBounds.y } }
+    : null;
 });
 ipcMain.on('bubble:drag-move', (_event, delta) => {
   if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleDragBounds) return;
