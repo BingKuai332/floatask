@@ -198,7 +198,7 @@ body[data-mode='bottom'] .bubble .brand {
   flex: 0 0 32px;
   width: 32px;
   height: 32px;
-  border-radius: 16px;
+  border-radius: var(--fa-toolbar-logo-radius);
 }
 body[data-mode='left'] .bubble .brand-mark,
 body[data-mode='right'] .bubble .brand-mark,
