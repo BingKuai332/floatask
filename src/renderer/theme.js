@@ -1,5 +1,5 @@
 'use strict';
-// Theme runtime: resolves the saved preference (system/light/dark) against the
+// Theme runtime: resolves the saved preference (system/light/dark/industrial; system resolves only to light/dark) against the
 // OS appearance and pins the concrete variant on <html data-theme="...">.
 // Windows high contrast is handled by generated CSS (forced-colors); it never
 // changes the saved preference or the data-theme attribute.
