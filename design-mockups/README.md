@@ -7,13 +7,14 @@
 - 当前主设计板共 **50 页**：第 1–18 页以 **近月 · 深夜** 展示核心产品状态，第 19 页为双主题对照，第 20–33 页为 **朝日 · 白天** 对应界面，第 34–42 页为首次配置、更新与关于及朝日关键页面，第 43–50 页为 Windows 专项与双主题验收。
 - **朝日 · 白天** 使用柔和暖白；答案窗、全部设置分区、历史与收藏、悬浮工具栏、框选与异常状态均已适配；首次配置、更新与关于、多显示器、DPI、键盘焦点和可访问性也已覆盖。
 - 双主题共用布局、尺寸、圆角、边框层级和组件结构；朝日单独定义表面色、文字色、描边与投影，不做简单反色。Windows 高对比度使用系统色板，优先于双主题。
-- 当前规范版本：**1.4.2**。唯一机器可读规范源：`graphite-system/design-tokens.yaml`；组件行为与验收规则：`graphite-system/IMPLEMENTATION_SPEC.md`。后续实现不得另建平行色板或静默偏离。
+- 当前规范版本：**1.5.0**。唯一机器可读规范源：`graphite-system/design-tokens.yaml`；组件行为与验收规则：`graphite-system/IMPLEMENTATION_SPEC.md`。后续实现不得另建平行色板或静默偏离。
 - 主设计板：`graphite-system/floatask-graphite-system.kanva.pptd`
 - 可重复生成脚本：`graphite-system/build_design.py`，直接读取同一份 token。
 - Code Agent 实施计划与启动提示词：`../docs/superpowers/plans/2026-10-30-floatask-ui-implementation.md`
 - 当前五十页总览：`graphite-preview/overview.png`
 - 单页预览：`graphite-preview/page-1.png` 至 `page-50.png`
 - 目前只改设计资产与实施文档，未修改 FloatAsk 产品源码。
+- 第三主题「前哨 · 工业」视觉基准：`industrial/qianshao-mockup.html`；规范 1.5.0。设计板补页在实现完成后进行。
 
 ## 文件结构
 
@@ -24,6 +25,7 @@
 | `../docs/superpowers/plans/2026-10-30-floatask-ui-implementation.md` | Code Agent 启动提示词、13 个实施任务与五十页验收矩阵 |
 | `graphite-system/` | 当前主设计板、五十页源文件与生成脚本 |
 | `graphite-preview/` | 当前主设计板的渲染图与五十页总览 |
+| `industrial/` | 第三主题「前哨 · 工业」的 HTML 视觉基准（`qianshao-mockup.html`），设计板补页前作为实现与验收依据 |
 | `light/`、`light-preview/` | 早期“雾白石墨”风格样张，仅保留作配色溯源 |
 | `dark/`、`dark-preview/` | 早期“深夜石墨”风格样张，仅保留作风格溯源 |
 | `review/annotation-1.png`、`annotation-2.png` | 用户对圆角与边框问题的原始标注 |
