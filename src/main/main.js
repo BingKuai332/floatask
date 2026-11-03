@@ -463,8 +463,11 @@ async function ensureBubble() {
       if (!bubbleWin || bubbleWin.isDestroyed()) return;
       const [x, y] = bubbleWin.getPosition();
       store.setBubblePosition(x, y);
-      // Expanding from a dock is a programmatic move, not a user placement.
-      if (!bubbleDragBounds && !(bubbleDock && bubbleMode === 'expanded')) finalizeBubbleDock(x, y);
+      // While docked (collapsed or expanded from the dock) every move is
+      // programmatic; user drags re-dock through bubble:drag-end. Re-snapping
+      // here would test the full capsule width and could flip a bottom dock
+      // near the right end onto the right edge.
+      if (!bubbleDragBounds && !bubbleDock) finalizeBubbleDock(x, y);
     }, 400);
   });
 
@@ -2662,7 +2665,13 @@ if (!gotLock) {
       const primaryArea = screen.getPrimaryDisplay().workArea;
       if (bubbleWin && !bubbleWin.isDestroyed()) {
         bubbleWin.setBounds(clampToWorkArea(bubbleWin.getBounds(), primaryArea));
-        if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge);
+        if (bubbleEdge) {
+          // The saved anchor may sit on the removed display: re-dock from the
+          // clamped bounds on the primary work area.
+          bubbleDock = null;
+          setBubbleMode(bubbleEdge, bubbleEdge);
+          store.setBubbleDock(bubbleDock);
+        }
       }
       if (resultWin && !resultWin.isDestroyed()) {
         resultWin.setBounds(clampToWorkArea(resultWin.getBounds(), primaryArea));
