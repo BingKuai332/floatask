@@ -61,3 +61,4 @@ input { flex:1; min-width:80px; background:var(--bg); border:1px solid var(--lin
 .clear-scope[hidden] { display: none; }
 .clear-scope .btn.danger { color: var(--fa-red); border-color: var(--fa-red); background: transparent; }
 .clear-scope .btn.danger:hover { background: var(--fa-red); color: var(--fa-on-primary); }
+.record-hash { display: none; }

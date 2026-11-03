@@ -32,9 +32,10 @@ function renderList() {
   star.addEventListener('click',(event)=>{event.stopPropagation();toggleFavorite(row);});
   star.addEventListener('keydown',(event)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();toggleFavorite(row);}});
   const title=document.createElement('strong'); title.textContent=row.title || tt('history.untitled');
+  const hash=document.createElement('span'); hash.className='record-hash'; hash.textContent=window.FloatAskShortHash.shortHash(row.id);
   const snippet=document.createElement('p'); snippet.textContent=row.snippet;
   const meta=document.createElement('small'); meta.textContent=date(row.updatedAt)+' · '+tt('history.msgCount',{n:row.messageCount});
-  el.append(star,title,snippet,meta); el.addEventListener('click',()=>select(row.id)); list.append(el);
+  el.append(star,title,hash,snippet,meta); el.addEventListener('click',()=>select(row.id)); list.append(el);
  }
 }
 async function toggleFavorite(row) {

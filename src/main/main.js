@@ -795,6 +795,7 @@ async function handleSelection(display, rect) {
   const config = store.getConfig();
   session = {
     id,
+    historyId: history.newHistoryId(),
     selectionText: '',
     ocrRawText: '',
     ocrCorrectedText: null,
@@ -1651,6 +1652,8 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
 
   let full = '';
   sendResult({ type: 'start', mode });
+  const startedAt = Date.now();
+  let latencySent = false;
   try {
     const result = await streamChat({
       config,
@@ -1658,6 +1661,10 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
       signal: controller.signal,
       onDelta: (delta) => {
         full += delta;
+        if (!latencySent && session && session.id === id && session.abort === controller) {
+          latencySent = true;
+          sendResult({ type: 'latency', ms: Date.now() - startedAt });
+        }
         if (session && session.id === id && session.abort === controller) sendResult({ type: 'delta', text: delta });
       }
     });
@@ -1778,6 +1785,7 @@ async function askClipboard() {
   const id = ++sessionCounter;
   session = {
     id,
+    historyId: history.newHistoryId(),
     selectionText: text,
     ocrRawText: text,
     ocrCorrectedText: null,
@@ -2377,6 +2385,7 @@ ipcMain.handle('session:state', () => ({
   busy: Boolean(session?.busy),
   pinned,
   webEnabled: Boolean(session?.webEnabled),
+  historyId: session?.historyId ?? null,
   ocrRaw: session?.ocrRawText ?? null,
   ocrCorrected: session?.ocrCorrectedText ?? null,
   visionAttachment: session ? {
@@ -2427,7 +2436,7 @@ ipcMain.on('session:manual', async (_event, text) => {
   // old OCR, search or stream callback before changing the shared session.
   const id = ++sessionCounter;
   session.id = id;
-  session.historyId = null;
+  session.historyId = history.newHistoryId();
   session.historyDeleted = false;
   session.abort = null;
   session.busy = false;
@@ -2663,7 +2672,9 @@ ipcMain.handle('history:delete', (_event, id) => {
   catch (err) { return { ok: false, message: err.message }; }
 });
 ipcMain.handle('history:clear', (_event, keepFavorites) => {
-  try { const removed = history.clear(keepFavorites !== false); if (session?.historyId && !history.get(session.historyId)) session.historyDeleted = true; broadcastHistory(); return { ok: true, removed }; }
+  // historyId is assigned when a session starts, before its first save, so only
+  // a record that existed before clearing counts as deleted.
+  try { const wasSaved = Boolean(session?.historyId && history.get(session.historyId)); const removed = history.clear(keepFavorites !== false); if (wasSaved && !history.get(session.historyId)) session.historyDeleted = true; broadcastHistory(); return { ok: true, removed }; }
   catch (err) { return { ok: false, message: err.message }; }
 });
 ipcMain.on('history:open', () => { openHistory(); });

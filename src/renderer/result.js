@@ -5,6 +5,9 @@ const tt = (key, params) => window.FloatAskI18n.t(key, params);
 
 const els = {
   messages: document.getElementById('messages'),
+  termLabel: document.getElementById('termLabel'),
+  sessionHash: document.getElementById('sessionHash'),
+  termMeta: document.getElementById('termMeta'),
   loadingCard: document.getElementById('loadingCard'),
   loadingText: document.getElementById('loadingText'),
   statusPill: document.getElementById('statusPill'),
@@ -59,6 +62,8 @@ function applyReadingFont(font) {
 }
 
 const state = {
+  historyId: null,
+  latencyMs: null,
   selectionText: '',
   ocrRaw: '',
   ocrCorrected: null,
@@ -232,6 +237,17 @@ function updateContext() {
   } else {
     els.windowInfo.textContent = tt('result.sourceScreen');
   }
+  updateTermLabels();
+}
+
+function updateTermLabels() {
+  const turns = els.messages.querySelectorAll('.message:not(.user)').length;
+  els.termLabel.textContent = `fa.term // node-${String(Math.max(1, turns)).padStart(2, '0')}`;
+  els.sessionHash.textContent = window.FloatAskShortHash.shortHash(state.historyId);
+  const process = state.windowInfo?.process || '';
+  const chars = state.selectionText ? state.selectionText.replace(/s+/g, '').length : 0;
+  const latency = Number.isFinite(state.latencyMs) ? `${(state.latencyMs / 1000).toFixed(2)}s` : '--';
+  els.termMeta.textContent = [process && `src: ${process}`, `ocr ${chars} ch`, `lat ${latency}`].filter(Boolean).join(' | ');
 }
 
 function setPreview(dataUrl) {
@@ -585,6 +601,7 @@ function reset(payload) {
 }
 
 function handleStart(mode) {
+  state.latencyMs = null;
   hideLoading();
   hidePhase();
   clearError();
@@ -597,6 +614,7 @@ function handleStart(mode) {
     state.current.content.innerHTML = '';
     state.current.content.classList.add('streaming');
     state.current.message.classList.add('streaming');
+    updateTermLabels();
     return;
   }
 
@@ -608,6 +626,7 @@ function handleStart(mode) {
   current.time.textContent = tt('result.answering');
   state.streaming = true;
   scrollToBottomIfPinned();
+  updateTermLabels();
 }
 
 function handleDelta(text) {
@@ -825,6 +844,8 @@ async function refreshSessionMeta() {
   try {
     const meta = await api.getResultState();
     if (!meta) return;
+    state.historyId = meta.historyId || null;
+    updateTermLabels();
     state.ocrRaw = meta.ocrRaw || state.ocrRaw || '';
     state.ocrCorrected = meta.ocrCorrected || null;
     els.ocrCorrectedBadge.hidden = !state.ocrCorrected;
@@ -988,6 +1009,10 @@ api.onResultEvent((payload) => {
       break;
     case 'start':
       handleStart(payload.mode);
+      break;
+    case 'latency':
+      state.latencyMs = Number(payload.ms);
+      updateTermLabels();
       break;
     case 'delta':
       handleDelta(payload.text || '');

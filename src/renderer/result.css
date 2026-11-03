@@ -916,3 +916,4 @@ html, body {
   .messages { scroll-behavior: auto; }
   .card * { transition: none; animation: none; }
 }
+.term-label, .session-hash, .term-meta { display: none; }

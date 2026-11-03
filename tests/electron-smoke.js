@@ -779,6 +779,9 @@ server.listen(0,'127.0.0.1',()=>{
    const racedState = await js(result,'window.floatask.getResultState()');
    assert(racedState.init.selectionText.includes('new-capture'),'slow earlier capture must not replace the newer session');
    assert(!calls.slice(beforeCaptureRace).some(call=>call.messages[0].content.includes('old-capture')),'stale capture must not start an AI request');
+   assert.match(await js(result,"document.getElementById('sessionHash').textContent"),/^0x[0-9A-F]{4}$/,'a fresh answer session carries its short hash');
+   const termMeta=await js(result,"document.getElementById('termMeta').textContent");
+   assert.ok(termMeta.includes('ocr ')&&termMeta.includes('lat '),'the term readout shows OCR length and first-token latency');
    await js(settings,"window.floatask.setLanguage('en')");
    await waitFor(()=>js(font,"document.getElementById('importBtn').textContent==='＋ Import font file…'"),'font translated');
    await js(result,"document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");

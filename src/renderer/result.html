@@ -16,10 +16,12 @@
             <div class="brand-line">
               <span class="brand-name" data-i18n="common.appName">浮问</span>
               <span class="brand-en">FLOATASK</span>
+              <span id="termLabel" class="term-label" aria-hidden="true"></span>
             </div>
             <div id="statusPill" class="status-pill idle">
               <span class="status-dot"></span>
               <span id="statusText">待命</span>
+              <span id="sessionHash" class="session-hash" aria-hidden="true"></span>
             </div>
           </div>
         </div>
@@ -64,6 +66,7 @@
           </span>
           <span id="contextTitle" class="context-title">正在读取屏幕…</span>
           <span id="contextMeta" class="context-meta"></span>
+          <span id="termMeta" class="term-meta" aria-hidden="true"></span>
           <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <path d="m8 10 4 4 4-4"></path>
           </svg>
@@ -169,7 +172,7 @@
       </div>
     </div>
   </div>
-  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="theme.js"></script><script src="focus.js"></script>
+  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="../shared/short-hash.js"></script><script src="theme.js"></script><script src="focus.js"></script>
   <script src="markdown.js"></script>
   <script src="result.js"></script>
 
