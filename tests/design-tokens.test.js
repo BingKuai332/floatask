@@ -22,12 +22,13 @@ function runBuild(args) {
   return spawnSync(process.execPath, [buildScript, ...args], { cwd: repoRoot, windowsHide: true, encoding: 'utf8' });
 }
 
-test('design tokens parse with a 1.4.x version and light/dark/system theme ids', () => {
+test('design tokens parse with a 1.5.x version and dark/industrial/light/system theme ids', () => {
   const { loadTokens } = loadBuildTheme();
   const tokens = loadTokens(tokensPath);
-  assert.match(tokens.version, /^1\.4\.\d+$/, 'patch versions evolve without pinning the suite');
-  assert.deepEqual(Object.keys(tokens.themeIds).sort(), ['dark', 'light', 'system']);
+  assert.match(tokens.version, /^1\.5\.\d+$/, 'patch versions evolve without pinning the suite');
+  assert.deepEqual(Object.keys(tokens.themeIds).sort(), ['dark', 'industrial', 'light', 'system']);
   assert.ok(tokens.themes.dark && tokens.themes.light, 'both themes present');
+  assert.ok(tokens.themes.industrial, 'industrial theme present');
 });
 
 test('generated CSS exposes dark surface #171A20 and light surface #F4F3ED under data-theme selectors', () => {
@@ -163,4 +164,40 @@ test('digit-suffixed roles emit dashed variable names', () => {
     assert.ok(css.includes(`${variable}:`), `${variable} defined`);
   }
   assert.ok(!css.includes('--fasurface2') && !/--fa-surface2\b/.test(css), 'no digit-suffixed variable names');
+});
+
+test('every theme block emits its corner shape and radius scale', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  const block = (id) => css.match(new RegExp(`\\[data-theme="${id}"\\]\\s*\\{([^}]*)\\}`))[1];
+  assert.match(block('dark'), /--fa-corner-shape:\s*round;/);
+  assert.match(block('light'), /--fa-corner-shape:\s*round;/);
+  assert.match(block('light'), /--fa-radius-window:\s*16px;/);
+  const industrial = block('industrial');
+  assert.match(industrial, /color-scheme:\s*dark;/);
+  assert.match(industrial, /--fa-corner-shape:\s*bevel;/);
+  assert.match(industrial, /--fa-radius-container:\s*10px;/);
+  assert.match(industrial, /--fa-radius-control:\s*7px;/);
+  assert.match(industrial, /--fa-accent:\s*#FFE400\b/);
+  assert.match(industrial, /--fa-border-accent-line:\s*#FFE40080\b/);
+  assert.match(industrial, /--fa-grid-line:\s*#FFFFFF14;/);
+  assert.match(industrial, /--fa-hazard:\s*repeating-linear-gradient\(45deg, #FFE400 0 4px, #141414 4px 8px\);/);
+  assert.match(industrial, /--fa-font-label:\s*var\(--fa-font-code\);/);
+  assert.match(css, /:root \{[^}]*--fa-corner-shape:\s*round;/);
+  assert.match(css, /--fa-toolbar-logo-radius:\s*16px;/);
+});
+
+test('forced colors cover the industrial theme and drop its ornaments', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  const block = css.match(/@media \(forced-colors: active\)\s*\{([\s\S]*?)\n\}/)[1];
+  assert.match(block, /\[data-theme="industrial"\]/);
+  assert.match(block, /--fa-hazard:\s*none;/);
+  assert.match(block, /--fa-grid-line:\s*transparent;/);
+});
+
+test('base layer applies the theme corner shape to every element', () => {
+  const { loadTokens, renderTheme } = loadBuildTheme();
+  const css = renderTheme(loadTokens(tokensPath));
+  assert.match(css, /\*, \*::before, \*::after \{ corner-shape: var\(--fa-corner-shape, round\); \}/);
 });

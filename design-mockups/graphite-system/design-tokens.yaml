@@ -1,11 +1,12 @@
-version: 1.4.3
-updated: 2026-10-31
+version: 1.5.0
+updated: 2026-11-03
 owner: FloatAsk design system
 usage: 唯一机器可读设计 token 源；实现与设计生成脚本均不得另建平行色板。
 themeIds:
   light: 朝日 · 白天
   dark: 近月 · 深夜
   system: 跟随系统
+  industrial: 前哨 · 工业
 fonts:
   latin: Liter
   cjk: MiSans
@@ -83,6 +84,45 @@ themes:
     shadows:
       floating: {blur: 6, color: "#26314726", offset: [0, 2]}
       toolbar: {blur: 6, color: "#2631472E", offset: [0, 2]}
+  industrial:
+    label: 前哨 · 工业
+    colorScheme: dark
+    colors:
+      bg: "#0F1012"
+      surface: "#17181A"
+      surface2: "#1F2023"
+      surface3: "#27292C"
+      divider: "#2E3034"
+      text: "#ECECE7"
+      body: "#CFCFC9"
+      muted: "#9C9D98"
+      faint: "#8E8F8A"
+      accent: "#FFE400"
+      accentSoft: "#2E2C17"
+      green: "#7FCB98"
+      red: "#FF6A55"
+      redSoft: "#2E1C1A"
+      primaryButton: "#FFE400"
+      onPrimary: "#141414"
+      overlay: "#050607C2"
+    borders:
+      floating: {width: 1, color: "#FFFFFF24"}
+      control: {width: 1, color: "#FFFFFF17"}
+      active: {width: 1, color: "#FFE400B3"}
+      danger: {width: 1, color: "#FF6A5566"}
+      accentLine: {width: 1, color: "#FFE40080"}
+    shadows:
+      floating: {blur: 6, color: "#00000080", offset: [0, 2]}
+      toolbar: {blur: 6, color: "#00000080", offset: [0, 2]}
+    shape:
+      cornerShape: bevel
+      radius: {window: 16, container: 10, control: 7, small: 5, media: 6, compact: 5, mini: 3}
+    ornaments:
+      gridLine: "#FFFFFF14"
+      gridSize: 14
+      overlayGridSize: 24
+      hazardA: "#FFE400"
+      hazardB: "#141414"
 typography:
   windowTitle: {size: 23, weight: 600}
   sectionTitle: {size: 15, weight: 600}
@@ -158,6 +198,12 @@ accessibility:
     accent: 4.89
   lightOnPrimary: 5.07
   lightAccentOnSoft: 4.54
+  industrialOnSurface:
+    text: 14.99
+    body: 11.35
+    muted: 6.51
+    accent: 13.83
+  industrialOnPrimary: 14.34
   keyboardFocus: visible
   keyboardFocusColorRole: accent
   keyboardFocusOutlineWidth: 2
@@ -170,7 +216,7 @@ accessibility:
   externalDisplayRemovalRule: 外接屏移除时迁回主屏工作区
   crossDisplayDpiRule: 跨屏后重新读取目标 DPI，不重复缩放
   lightSurfaceRule: 禁止纯白大面积表面；禁止黄色滤层与大面积绿色。
-  sharedGeometryRule: 双主题共享尺寸、圆角、布局与组件状态，仅替换语义颜色、描边和投影。
+  sharedGeometryRule: 所有主题共享尺寸、布局与组件状态；朝日／近月共享圆角，前哨通过 shape 覆盖圆角与切角形状。
 compatibility:
   changePolicy: additive
   tokenRenameRule: 已有 token 改名或删除前保留别名并记录弃用
