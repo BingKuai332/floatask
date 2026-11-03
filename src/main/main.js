@@ -492,6 +492,7 @@ async function ensureBubble() {
     bubbleMode = savedDock.edge;
     bubbleEdge = savedDock.edge;
     bubbleWin.setBounds(dockedWindowBounds(bubbleDock.anchor, BUBBLE_PADDING));
+    store.setBubbleDock(bubbleDock);
   }
 
   bubbleWin.on('moved', () => {

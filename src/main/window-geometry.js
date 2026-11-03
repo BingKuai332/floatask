@@ -114,12 +114,7 @@ function expansionPlacement(edge, anchor, workArea, padding = SHADOW_PADDING) {
     capsuleY = edge === 'top' ? workArea.y + EXPANDED_EDGE_GAP : areaBottom - EXPANDED_EDGE_GAP - thickness;
     capsuleX = direction === 'right' ? anchor.x : anchor.x + anchor.width - length;
   }
-  const paddedArea = {
-    x: workArea.x - padding,
-    y: workArea.y - padding,
-    width: workArea.width + padding * 2,
-    height: workArea.height + padding * 2
-  };
+  const paddedArea = padArea(workArea, padding);
   return {
     axis,
     direction,
@@ -178,12 +173,7 @@ function padArea(workArea, padding) {
 }
 
 function translateDragBounds(start, delta, workArea, shadowPadding = 0) {
-  const paddedArea = {
-    x: workArea.x - shadowPadding,
-    y: workArea.y - shadowPadding,
-    width: workArea.width + shadowPadding * 2,
-    height: workArea.height + shadowPadding * 2
-  };
+  const paddedArea = padArea(workArea, shadowPadding);
   return clampToWorkArea({
     x: start.x + Math.round(Number(delta?.x) || 0),
     y: start.y + Math.round(Number(delta?.y) || 0),

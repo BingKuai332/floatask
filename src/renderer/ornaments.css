@@ -59,7 +59,7 @@
 [data-theme="industrial"] .term-label { color: var(--fa-accent); }
 [data-theme="industrial"] .session-hash { color: var(--fa-faint); }
 
-/* Conveyor strip: only while the answer is streaming. */
+/* Conveyor strip: while the answer window is working (reading, searching, thinking, streaming). */
 [data-theme="industrial"] .titlebar:has(.status-pill.working)::after {
   content: "";
   position: absolute;
@@ -79,7 +79,15 @@
 
 /* Context row: the mono readout replaces title + meta; the toggle stays clickable. */
 [data-theme="industrial"] .context-toggle .context-title,
-[data-theme="industrial"] .context-toggle .context-meta { display: none; }
+[data-theme="industrial"] .context-toggle .context-meta {
+  /* Visually hidden, still read by screen readers (the mono readout is aria-hidden). */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 [data-theme="industrial"] .term-meta {
   display: inline;
   font-family: var(--fa-font-label);
