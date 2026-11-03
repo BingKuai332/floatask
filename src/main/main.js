@@ -15,7 +15,9 @@ const designConstants = require('./design-constants');
 const {
   CAPSULE_EXPANDED,
   clampToWorkArea,
-  snapToolbar,
+  snapDock,
+  dragSnapCapsule,
+  padArea,
   dockAnchor,
   dockedWindowBounds,
   expansionPlacement,
@@ -35,6 +37,8 @@ let bubbleDock = null;
 let bubbleAxis = 'horizontal';
 let bubbleDirection = 'right';
 let bubbleDragBounds = null;
+// Dock state captured at bubble:drag-start: { dock, expanded } or null.
+let bubbleDragOrigin = null;
 let bubbleModeTimer = null;
 let bubblePendingBounds = null;
 let bubbleHoverPoll = null;
@@ -291,7 +295,10 @@ function sendBubbleMode() {
       mode: bubbleMode,
       edge: bubbleEdge,
       axis: bubbleAxis,
-      direction: bubbleDirection
+      direction: bubbleDirection,
+      // True while a deferred collapse keeps the expanded bounds: the renderer
+      // shifts the shrinking capsule EXPANDED_EDGE_GAP onto the edge.
+      collapsing: Boolean(bubblePendingBounds)
     });
   }
 }
@@ -369,6 +376,7 @@ function presentBubbleBounds(target, mode) {
     bubblePendingBounds = null;
     bubbleModeTimer = null;
     bubbleWin.setBounds(bounds);
+    sendBubbleMode();
   }, 180);
 }
 
@@ -388,7 +396,13 @@ function setBubbleMode(mode, edge) {
     bubbleDock = null;
     bubbleAxis = 'horizontal';
     bubbleDirection = 'right';
-    target = { x: current.x, y: current.y, width: BUBBLE_WINDOW_EXPANDED[0], height: BUBBLE_WINDOW_EXPANDED[1] };
+    // Opening from a half-capsule window grows right/down; keep the capsule
+    // on screen (only the transparent padding may overhang the work area).
+    const cap = capsuleBounds(current.x, current.y);
+    target = clampToWorkArea(
+      { x: current.x, y: current.y, width: BUBBLE_WINDOW_EXPANDED[0], height: BUBBLE_WINDOW_EXPANDED[1] },
+      padArea(bubbleWorkArea(cap), BUBBLE_PADDING)
+    );
   } else {
     if (!bubbleDock || bubbleDock.edge !== mode) {
       const cap = capsuleBounds(current.x, current.y);
@@ -400,11 +414,13 @@ function setBubbleMode(mode, edge) {
 }
 
 /** After a drag ends, snap to an edge half-capsule or stay floating expanded. */
-function finalizeBubbleDock(winX, winY) {
+function finalizeBubbleDock(winX, winY, origin = null) {
   if (!bubbleWin || bubbleWin.isDestroyed()) return;
-  const cap = capsuleBounds(winX, winY);
+  const { capsule: cap, preferredEdge } = dragSnapCapsule(
+    { x: winX, y: winY }, BUBBLE_PADDING, origin?.dock || null, origin ? origin.expanded : true
+  );
   const area = bubbleWorkArea(cap);
-  const { edge } = snapToolbar(cap, CAPSULE, area);
+  const { edge } = snapDock(cap, cap, area, preferredEdge);
   bubbleDock = edge ? { edge, anchor: dockAnchor(edge, cap, area) } : null;
   store.setBubbleDock(bubbleDock);
   if (edge) setBubbleMode(edge, edge);
@@ -455,6 +471,16 @@ async function ensureBubble() {
     ? clampBubblePosition(saved.x, saved.y)
     : defaultBubblePosition();
   bubbleWin.setPosition(pos.x, pos.y, false);
+  const savedDock = sanitizeDock(config.bubbleDock);
+  if (savedDock) {
+    // Restore the dock before anything can observe a 'moved' from the
+    // setPosition above; re-snap to the current display so resolution or
+    // layout changes stay flush.
+    bubbleDock = { edge: savedDock.edge, anchor: dockAnchor(savedDock.edge, savedDock.anchor, bubbleWorkArea(savedDock.anchor)) };
+    bubbleMode = savedDock.edge;
+    bubbleEdge = savedDock.edge;
+    bubbleWin.setBounds(dockedWindowBounds(bubbleDock.anchor, BUBBLE_PADDING));
+  }
 
   bubbleWin.on('moved', () => {
     if (!bubbleWin || bubbleWin.isDestroyed() || bubbleModeTimer) return;
@@ -480,14 +506,6 @@ async function ensureBubble() {
   });
 
   await bubbleWin.loadFile(path.join(RENDERER, 'bubble.html'));
-  const savedDock = sanitizeDock(store.getConfig().bubbleDock);
-  if (savedDock) {
-    // Re-snap to the current display so resolution or layout changes stay flush.
-    bubbleDock = { edge: savedDock.edge, anchor: dockAnchor(savedDock.edge, savedDock.anchor, bubbleWorkArea(savedDock.anchor)) };
-    bubbleMode = savedDock.edge;
-    bubbleEdge = savedDock.edge;
-    bubbleWin.setBounds(dockedWindowBounds(bubbleDock.anchor, BUBBLE_PADDING));
-  }
   sendBubbleMode();
   bubbleWin.showInactive();
   startBubbleHover();
@@ -2234,6 +2252,7 @@ ipcMain.on('bubble:drag-start', () => {
   bubbleModeTimer = null;
   bubblePendingBounds = null;
   bubbleDragBounds = bubbleWin.getBounds();
+  bubbleDragOrigin = bubbleDock ? { dock: bubbleDock, expanded: bubbleMode === 'expanded' } : null;
 });
 ipcMain.on('bubble:drag-move', (_event, delta) => {
   if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleDragBounds) return;
@@ -2247,9 +2266,11 @@ ipcMain.on('bubble:drag-end', () => {
   if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleDragBounds) return;
   bubbleDragBounds = null;
   clearTimeout(bubbleMoveTimer);
+  const origin = bubbleDragOrigin;
+  bubbleDragOrigin = null;
   const [x, y] = bubbleWin.getPosition();
   store.setBubblePosition(x, y);
-  finalizeBubbleDock(x, y);
+  finalizeBubbleDock(x, y, origin);
 });
 ipcMain.on('bubble:hide', () => {
   store.save({ showBubble: false });
@@ -2665,11 +2686,14 @@ if (!gotLock) {
       const primaryArea = screen.getPrimaryDisplay().workArea;
       if (bubbleWin && !bubbleWin.isDestroyed()) {
         bubbleWin.setBounds(clampToWorkArea(bubbleWin.getBounds(), primaryArea));
-        if (bubbleEdge) {
-          // The saved anchor may sit on the removed display: re-dock from the
-          // clamped bounds on the primary work area.
-          bubbleDock = null;
-          setBubbleMode(bubbleEdge, bubbleEdge);
+        if (bubbleDock) {
+          // The anchor may sit on the removed display: re-snap it onto the
+          // work area that now contains it, keeping its edge and position.
+          bubbleDock = {
+            edge: bubbleDock.edge,
+            anchor: dockAnchor(bubbleDock.edge, bubbleDock.anchor, bubbleWorkArea(bubbleDock.anchor))
+          };
+          setBubbleMode(bubbleDock.edge, bubbleDock.edge);
           store.setBubbleDock(bubbleDock);
         }
       }

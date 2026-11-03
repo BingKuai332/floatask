@@ -172,6 +172,19 @@ body[data-mode][data-direction='right'] .bubble { margin-left: 0; }
 /* While collapsing, shrink toward the docked edge so the end frame matches the dock. */
 body[data-edge='right']:not([data-mode='expanded']) .bubble { margin-left: auto; }
 body[data-edge='bottom']:not([data-mode='expanded']) .bubble { margin-top: auto; }
+/* Deferred collapse: the window keeps its expanded bounds, whose capsule sits
+   8 DIP (EXPANDED_EDGE_GAP in src/main/window-geometry.js) off the edge. Slide
+   the shrinking capsule that far into the 10 DIP shadow padding so its last
+   frame lands flush where the dock window will be. Only during the collapse
+   does margin transition, so removing the attribute (as the window is resized
+   onto the dock) snaps the margin back to 0 in the same frame. */
+body[data-collapsing] .bubble {
+  transition: width var(--fa-motion-toolbar) var(--fa-easing), height var(--fa-motion-toolbar) var(--fa-easing), border-radius var(--fa-motion-toolbar) var(--fa-easing), background var(--fa-motion-theme-color) var(--fa-easing), margin var(--fa-motion-toolbar) var(--fa-easing);
+}
+body[data-collapsing][data-edge='left'] .bubble { margin-left: -8px; }
+body[data-collapsing][data-edge='right'] .bubble { margin-right: -8px; }
+body[data-collapsing][data-edge='top'] .bubble { margin-top: -8px; }
+body[data-collapsing][data-edge='bottom'] .bubble { margin-bottom: -8px; }
 
 /* Edge half-capsules: collapsed outer radius is 22 px (design constant). */
 body[data-mode='left'] .bubble,

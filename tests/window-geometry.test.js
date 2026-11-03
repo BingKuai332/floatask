@@ -169,6 +169,7 @@ test('sanitizeDock accepts only a known edge with a finite anchor', () => {
   assert.equal(geometry.sanitizeDock({ edge: 'top', anchor: { x: 'a', y: 0, width: 1, height: 1 } }), null);
   assert.equal(geometry.sanitizeDock(null), null);
   assert.equal(geometry.sanitizeDock({ edge: 'left', anchor: { x: 0, y: 0, width: 0, height: 52 } }), null);
+  assert.equal(geometry.sanitizeDock({ edge: 'left', anchor: { x: 0, y: 0, width: 44, height: -52 } }), null);
 });
 
 test('expansion respects a work area that is not at the origin', () => {
@@ -177,4 +178,50 @@ test('expansion respects a work area that is not at the origin', () => {
     geometry.expansionPlacement('right', { x: 3796, y: 100, width: 44, height: 52 }, SECOND, 10),
     { axis: 'vertical', direction: 'down', bounds: { x: 3770, y: 90, width: 72, height: 348 } }
   );
+});
+
+test('snapDock keeps a dragged bottom half-capsule on the bottom near the right end', () => {
+  const anchor = { x: 1800, y: 1036, width: 64, height: 44 };
+  const result = geometry.snapDock(anchor, { width: 64, height: 44 }, AREA, 'bottom');
+  assert.equal(result.edge, 'bottom');
+  assert.deepEqual(result.position, { x: 1800, y: 1036 });
+});
+
+test('snapDock prefers the previous edge on a distance tie', () => {
+  // Top anchor in the top-left corner: left and top distances are both 0.
+  const top = geometry.snapDock({ x: 0, y: 0 }, { width: 64, height: 44 }, AREA, 'top');
+  assert.equal(top.edge, 'top');
+  // Even with the full capsule width, a tie with the right edge keeps the bottom dock.
+  const bottom = geometry.snapDock({ x: 1800, y: 1036 }, SIZE, AREA, 'bottom');
+  assert.equal(bottom.edge, 'bottom');
+  // Without a preference, ties keep snapToolbar's original order.
+  assert.equal(geometry.snapDock({ x: 0, y: 0 }, { width: 64, height: 44 }, AREA).edge, 'left');
+  assert.deepEqual(geometry.snapDock({ x: 0, y: 0 }, SIZE, AREA), snapToolbar({ x: 0, y: 0 }, SIZE, AREA));
+  // A strictly nearer edge still wins over the preference.
+  assert.equal(geometry.snapDock({ x: 5, y: 20 }, { width: 64, height: 44 }, AREA, 'top').edge, 'left');
+});
+
+test('dragSnapCapsule uses the half-capsule size when the drag started docked', () => {
+  const dock = { edge: 'bottom', anchor: { x: 1800, y: 1036, width: 64, height: 44 } };
+  assert.deepEqual(
+    geometry.dragSnapCapsule({ x: 1790, y: 1026, width: 84, height: 64 }, PAD, dock, false),
+    { capsule: { x: 1800, y: 1036, width: 64, height: 44 }, preferredEdge: 'bottom' }
+  );
+  // Expanded from the dock: snap with the expanded capsule, still preferring the dock edge.
+  assert.deepEqual(
+    geometry.dragSnapCapsule({ x: 1500, y: 1010, width: 348, height: 72 }, PAD, dock, true),
+    { capsule: { x: 1510, y: 1020, width: 328, height: 52 }, preferredEdge: 'bottom' }
+  );
+  // Floating: full capsule, no preference.
+  assert.deepEqual(
+    geometry.dragSnapCapsule({ x: 700, y: 400, width: 348, height: 72 }, PAD, null, true),
+    { capsule: { x: 710, y: 410, width: 328, height: 52 }, preferredEdge: null }
+  );
+});
+
+test('padArea grows a work area by the shadow padding on every side', () => {
+  assert.deepEqual(geometry.padArea(AREA, PAD), { x: -10, y: -10, width: 1940, height: 1100 });
+  // A floating expanded window opened from a bottom-right half-capsule stays on screen.
+  const target = clampToWorkArea({ x: 1790, y: 1026, width: 348, height: 72 }, geometry.padArea(AREA, PAD));
+  assert.deepEqual(target, { x: 1582, y: 1018, width: 348, height: 72 });
 });

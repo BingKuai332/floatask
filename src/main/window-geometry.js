@@ -27,8 +27,10 @@ function clampToWorkArea(bounds, workArea) {
  * Snap a top-left position to the nearest work-area edge when it lands within
  * SNAP_DISTANCE of that edge. Returns the snapped position and the edge name
  * ('left' | 'right' | 'top' | 'bottom'), or edge null when floating.
+ * On a distance tie `preferredEdge` (the dock's previous edge) wins; without
+ * one, ties resolve in left, right, top, bottom order.
  */
-function snapToolbar(position, size, workArea) {
+function snapDock(position, size, workArea, preferredEdge = null) {
   const clamped = clampToWorkArea({ x: position.x, y: position.y, width: size.width, height: size.height }, workArea);
   const distances = [
     { edge: 'left', distance: clamped.x - workArea.x },
@@ -36,7 +38,8 @@ function snapToolbar(position, size, workArea) {
     { edge: 'top', distance: clamped.y - workArea.y },
     { edge: 'bottom', distance: workArea.y + workArea.height - (clamped.y + clamped.height) }
   ];
-  distances.sort((a, b) => a.distance - b.distance);
+  distances.sort((a, b) => (a.distance - b.distance) ||
+    ((b.edge === preferredEdge) - (a.edge === preferredEdge)));
   const nearest = distances[0];
   if (nearest.distance > SNAP_DISTANCE) return { position: { x: clamped.x, y: clamped.y }, edge: null };
   const snapped = { x: clamped.x, y: clamped.y };
@@ -45,6 +48,10 @@ function snapToolbar(position, size, workArea) {
   if (nearest.edge === 'top') snapped.y = workArea.y;
   if (nearest.edge === 'bottom') snapped.y = workArea.y + workArea.height - clamped.height;
   return { position: snapped, edge: nearest.edge };
+}
+
+function snapToolbar(position, size, workArea) {
+  return snapDock(position, size, workArea);
 }
 
 /** Where the expanded capsule floats when it belongs to a snapped edge: EXPANDED_EDGE_GAP DIP off the edge. */
@@ -129,6 +136,32 @@ function sanitizeDock(dock) {
   return { edge: dock.edge, anchor: { x: Math.round(a.x), y: Math.round(a.y), width: Math.round(a.width), height: Math.round(a.height) } };
 }
 
+/**
+ * The visible capsule to snap when a drag ends. A drag that started from a
+ * docked half-capsule snaps with the half-capsule's own size (the full 328 DIP
+ * width would tie a top/bottom dock with the right/left edge); otherwise the
+ * expanded capsule is used. Either way the previous dock edge wins ties.
+ */
+function dragSnapCapsule(windowBounds, padding, startDock, startedExpanded) {
+  const size = startDock && !startedExpanded
+    ? halfCapsuleSize(startDock.edge)
+    : { width: CAPSULE_EXPANDED[0], height: CAPSULE_EXPANDED[1] };
+  return {
+    capsule: { x: windowBounds.x + padding, y: windowBounds.y + padding, ...size },
+    preferredEdge: startDock ? startDock.edge : null
+  };
+}
+
+/** A work area grown by the transparent shadow padding, so only padding may overhang. */
+function padArea(workArea, padding) {
+  return {
+    x: workArea.x - padding,
+    y: workArea.y - padding,
+    width: workArea.width + padding * 2,
+    height: workArea.height + padding * 2
+  };
+}
+
 function translateDragBounds(start, delta, workArea, shadowPadding = 0) {
   const paddedArea = {
     x: workArea.x - shadowPadding,
@@ -159,6 +192,9 @@ module.exports = {
   HALF_CAPSULE_HORIZONTAL,
   clampToWorkArea,
   snapToolbar,
+  snapDock,
+  dragSnapCapsule,
+  padArea,
   edgeGapPosition,
   dockAnchor,
   dockedWindowBounds,

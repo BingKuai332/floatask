@@ -22,6 +22,10 @@ api.onBubbleMode(payload => {
   document.body.dataset.axis = payload?.axis || 'horizontal';
   document.body.dataset.direction = payload?.direction || 'right';
   document.body.dataset.edge = originEdge || '';
+  // Deferred collapse: the window still has its expanded bounds, which sit
+  // EXPANDED_EDGE_GAP off the edge; bubble.css shifts the capsule onto it.
+  if (payload?.collapsing) document.body.dataset.collapsing = 'true';
+  else delete document.body.dataset.collapsing;
   dragging = false;
 });
 
