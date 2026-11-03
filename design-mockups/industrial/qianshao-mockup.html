@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前哨 · 工业 视觉稿</title>
+<style>
+/* 前哨 · 工业 — HTML visual draft v0.1.
+   Variable names mirror the --fa-* tokens in src/renderer/theme.css so the
+   values can move into design-tokens.yaml unchanged once approved. */
+@font-face { font-family: 'Liter'; src: url('../../resources/fonts/Liter.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'MiSans'; src: url('../../resources/fonts/MiSans.ttf') format('truetype'); font-display: swap; }
+
+[data-theme="industrial"] {
+  color-scheme: dark;
+  --fa-bg: #0F1012;
+  --fa-surface: #17181A;
+  --fa-surface-2: #1F2023;
+  --fa-surface-3: #27292C;
+  --fa-divider: #2E3034;
+  --fa-text: #ECECE7;
+  --fa-body: #CFCFC9;
+  --fa-muted: #9C9D98;
+  --fa-faint: #8E8F8A;
+  --fa-accent: #FFE400;
+  --fa-accent-soft: #2E2C17;
+  --fa-green: #7FCB98;
+  --fa-red: #FF6A55;
+  --fa-red-soft: #2E1C1A;
+  --fa-primary-button: #FFE400;
+  --fa-on-primary: #141414;
+  --fa-overlay: #050607C2;
+  --fa-border-floating: #FFFFFF24;
+  --fa-border-control: #FFFFFF17;
+  --fa-border-active: #FFE400B3;
+  --fa-border-danger: #FF6A5566;
+  --fa-border-accent-line: #FFE40080;
+  --fa-shadow-floating: 0px 2px 6px #00000080;
+  /* shape: per-theme override of the shared radius scale + bevel corners */
+  --fa-corner-shape: bevel;
+  --fa-radius-window: 16px;
+  --fa-radius-container: 10px;
+  --fa-radius-control: 7px;
+  --fa-radius-small: 5px;
+  /* registered ornaments */
+  --fa-grid-line: #FFFFFF14;
+  --fa-grid-size: 14px;
+  --fa-hazard: repeating-linear-gradient(45deg, #FFE400 0 4px, #141414 4px 8px);
+  --fa-font-label: "Cascadia Mono", "Cascadia Code", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: #2A2B2E;
+  color: #ECECE7;
+  font: 13px/1.6 "Liter", "MiSans", "Segoe UI", "Microsoft YaHei UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.doc { max-width: 1240px; margin: 0 auto; padding: 40px 32px 80px; }
+.doc > h1 { margin: 0; font-size: 26px; font-weight: 600; }
+.doc > .lead { margin: 6px 0 0; color: #B7B8B3; max-width: 860px; }
+.board { margin-top: 44px; }
+.board-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.board-head .ix { font-family: var(--fa-font-label, Consolas); color: #FFE400; font-size: 13px; }
+.board-head h2 { margin: 0; font-size: 17px; font-weight: 600; }
+.board-head p { margin: 0; color: #A9AAA5; font-size: 12px; }
+.board-body { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+.notes { flex: 1 1 260px; min-width: 240px; margin: 0; padding: 0; list-style: none; font-size: 12px; color: #C2C3BE; }
+.notes li { padding: 7px 0; border-bottom: 1px solid #3A3C40; }
+.notes b { color: #ECECE7; font-weight: 600; }
+.notes code { font-family: Consolas, monospace; color: #FFE400; font-size: 11.5px; }
+
+/* ---------- shared themed primitives ---------- */
+.win {
+  position: relative;
+  display: flex; flex-direction: column;
+  background: var(--fa-surface);
+  color: var(--fa-text);
+  border: 1px solid var(--fa-border-floating);
+  border-radius: 0 var(--fa-radius-window) 0 var(--fa-radius-window);
+  corner-shape: var(--fa-corner-shape);
+  box-shadow: var(--fa-shadow-floating);
+  overflow: hidden;
+}
+/* registered ornament: yellow registration brackets on the two square corners */
+.win::before, .win::after {
+  content: ""; position: absolute; width: 10px; height: 10px; z-index: 5; pointer-events: none;
+  border: 0 solid var(--fa-accent);
+}
+.win::before { top: 5px; left: 5px; border-width: 1.5px 0 0 1.5px; }
+.win::after { bottom: 5px; right: 5px; border-width: 0 1.5px 1.5px 0; }
+
+.ico { width: 16px; height: 16px; flex: 0 0 auto; }
+.mono { font-family: var(--fa-font-label); }
+.icon-btn {
+  display: inline-grid; place-items: center; width: 30px; height: 30px; padding: 0;
+  border: 1px solid transparent; background: transparent; color: var(--fa-muted);
+  border-radius: 0 var(--fa-radius-control) 0 var(--fa-radius-control); corner-shape: var(--fa-corner-shape);
+}
+.icon-btn:hover { background: var(--fa-surface-3); color: var(--fa-text); border-color: var(--fa-border-control); }
+.icon-btn.on { color: var(--fa-accent); border-color: var(--fa-border-active); background: var(--fa-surface-2); }
+.kbd {
+  display: inline-flex; align-items: center; height: 18px; padding: 0 5px;
+  border: 1px solid var(--fa-border-floating); border-bottom-width: 2px;
+  border-radius: 0 3px 0 3px; corner-shape: var(--fa-corner-shape);
+  background: var(--fa-surface-2); color: var(--fa-body);
+  font-family: var(--fa-font-label); font-size: 10.5px; line-height: 1;
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  height: 34px; padding: 0 14px; font: inherit; font-size: 12px; font-weight: 550; letter-spacing: .04em;
+  color: var(--fa-text); background: var(--fa-surface-2); border: 1px solid var(--fa-border-control);
+  border-radius: 0 var(--fa-radius-control) 0 var(--fa-radius-control); corner-shape: var(--fa-corner-shape);
+}
+.btn.primary { background: var(--fa-primary-button); color: var(--fa-on-primary); border-color: var(--fa-primary-button); font-weight: 650; }
+.btn.danger { color: var(--fa-red); border-color: var(--fa-border-danger); background: var(--fa-red-soft); }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--fa-muted); }
+
+/* status light: square marker; yellow = in progress, green = done, red = error */
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--fa-muted); }
+.status i { width: 6px; height: 6px; background: var(--fa-accent); }
+.status.done i { background: var(--fa-green); }
+.status.error i { background: var(--fa-red); }
+.status .mono { color: var(--fa-faint); font-size: 10.5px; }
+
+/* conveyor strip: only while streaming or downloading */
+.conveyor {
+  height: 3px; flex: 0 0 3px;
+  background:
+    repeating-linear-gradient(-60deg, transparent 0 3px, var(--fa-accent) 3px 5px, transparent 5px 8px) 0 0 / 9.2px 3px,
+    var(--fa-divider);
+  animation: belt 1.1s linear infinite;
+}
+@keyframes belt { to { background-position: 9.2px 0, 0 0; } }
+@media (prefers-reduced-motion: reduce) { .conveyor { animation: none; } }
+
+/* ---------- answer window ---------- */
+.titlebar {
+  position: relative; display: flex; align-items: center; gap: 10px;
+  padding: 12px 12px 12px 24px;
+  background-image:
+    linear-gradient(var(--fa-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fa-grid-line) 1px, transparent 1px);
+  background-size: var(--fa-grid-size) var(--fa-grid-size);
+}
+.titlebar::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 7px; background: var(--fa-hazard); }
+.brand-block {
+  width: 30px; height: 30px; display: grid; place-items: center;
+  background: var(--fa-accent); color: var(--fa-on-primary);
+  border-radius: 0 6px 0 6px; corner-shape: var(--fa-corner-shape);
+}
+.brand-block .ico { width: 18px; height: 18px; }
+.brand-text b { display: flex; align-items: baseline; gap: 8px; font-size: 15px; font-weight: 600; line-height: 1.25; }
+.brand-text b .mono { font-size: 10.5px; font-weight: 400; color: var(--fa-accent); letter-spacing: .02em; }
+.titlebar .actions { margin-left: auto; display: flex; gap: 2px; }
+
+.context-strip {
+  display: flex; align-items: center; gap: 10px; padding: 7px 14px;
+  border-bottom: 1px solid var(--fa-divider);
+  font-family: var(--fa-font-label); font-size: 11px; color: var(--fa-accent);
+}
+.context-strip .sep { color: var(--fa-faint); }
+.context-strip .model-chip {
+  margin-left: auto; padding: 1px 7px; color: var(--fa-body);
+  border: 1px solid var(--fa-border-floating); border-radius: 0 4px 0 4px; corner-shape: var(--fa-corner-shape);
+}
+
+.viewport {
+  position: relative; flex: 1; overflow: hidden; padding: 16px 18px 8px;
+  background-image:
+    linear-gradient(var(--fa-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fa-grid-line) 1px, transparent 1px);
+  background-size: var(--fa-grid-size) var(--fa-grid-size);
+}
+.msg-user { display: flex; justify-content: flex-end; margin-bottom: 14px; }
+.msg-user span {
+  max-width: 70%; padding: 7px 12px; background: var(--fa-surface-3); color: var(--fa-text);
+  border: 1px solid var(--fa-border-control); border-radius: 0 8px 0 8px; corner-shape: var(--fa-corner-shape);
+}
+.msg-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: var(--fa-muted); }
+.msg-meta .mono { color: var(--fa-faint); }
+.md { color: var(--fa-body); font-size: 14px; line-height: 1.72; }
+.md h3 { margin: 12px 0 4px; color: var(--fa-accent); font-size: 14.5px; font-weight: 600; }
+.md h3 .mono { font-weight: 400; font-size: 12px; margin-right: 6px; }
+.md p { margin: 0 0 8px; }
+.md strong { color: var(--fa-text); font-weight: 600; }
+.md ul { margin: 0 0 8px; padding-left: 18px; list-style: none; }
+.md li { position: relative; }
+.md li::before { content: ""; position: absolute; left: -14px; top: .72em; width: 5px; height: 5px; background: var(--fa-accent); }
+.md .cite {
+  display: inline-block; padding: 0 3px; margin: 0 1px; font-family: var(--fa-font-label); font-size: 10.5px; line-height: 1.5;
+  color: var(--fa-accent); border: 1px solid var(--fa-border-accent-line); vertical-align: 1px;
+}
+.md blockquote {
+  margin: 10px 0; padding: 8px 12px; color: var(--fa-text); background: var(--fa-surface-2);
+  border-left: 3px solid var(--fa-accent);
+}
+.code {
+  margin: 10px 0; background: var(--fa-bg); border: 1px solid var(--fa-border-control);
+  border-radius: 0 var(--fa-radius-container) 0 var(--fa-radius-container); corner-shape: var(--fa-corner-shape);
+}
+.code-head {
+  display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 4px 12px;
+  border-bottom: 1px solid var(--fa-border-control); font-family: var(--fa-font-label); font-size: 10.5px; color: var(--fa-muted);
+}
+.code pre { margin: 0; padding: 10px 12px; font: 12px/1.6 var(--fa-font-label); color: var(--fa-body); overflow-x: auto; }
+.code pre .k { color: var(--fa-accent); }
+.code pre .c { color: var(--fa-faint); }
+.sources { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--fa-divider); }
+.sources .label { font-family: var(--fa-font-label); font-size: 10.5px; color: var(--fa-muted); margin-bottom: 6px; }
+.src { display: flex; gap: 8px; align-items: baseline; padding: 4px 0; font-size: 12px; color: var(--fa-body); }
+.src .n { font-family: var(--fa-font-label); color: var(--fa-accent); font-size: 11px; }
+.src .d { font-family: var(--fa-font-label); color: var(--fa-faint); font-size: 10.5px; margin-left: auto; }
+
+.composer-zone { padding: 10px 14px 10px; border-top: 1px solid var(--fa-divider); background: var(--fa-surface); }
+.chips { display: flex; gap: 6px; margin-bottom: 9px; flex-wrap: wrap; }
+.chip {
+  height: 26px; padding: 0 10px; display: inline-flex; align-items: center; font-size: 11.5px;
+  color: var(--fa-body); background: var(--fa-surface-2); border: 1px solid var(--fa-border-accent-line);
+  border-radius: 0 6px 0 6px; corner-shape: var(--fa-corner-shape);
+}
+.composer {
+  display: flex; align-items: center; gap: 10px; padding: 5px 5px 5px 12px;
+  background: var(--fa-surface-2); border: 1px solid var(--fa-border-accent-line);
+  border-radius: 0 var(--fa-radius-container) 0 var(--fa-radius-container); corner-shape: var(--fa-corner-shape);
+}
+.composer.focus { border-color: var(--fa-accent); }
+.composer .web { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--fa-muted); }
+.composer .ph { flex: 1; font-size: 13px; color: var(--fa-faint); }
+.send {
+  width: 34px; height: 34px; display: grid; place-items: center;
+  background: var(--fa-primary-button); color: var(--fa-on-primary);
+  border-radius: 0 8px 0 8px; corner-shape: var(--fa-corner-shape);
+}
+.send.stop { background: var(--fa-red-soft); color: var(--fa-red); border: 1px solid var(--fa-border-danger); }
+.send .ico { width: 17px; height: 17px; }
+.hints { display: flex; align-items: center; gap: 5px; margin-top: 8px; font-size: 11px; color: var(--fa-muted); }
+.hints .gap { width: 10px; }
+
+/* ---------- toolbar capsule ---------- */
+.desk {
+  position: relative; padding: 34px 40px; border-radius: 4px;
+  background: linear-gradient(135deg, #D9DCD6, #BFC4C0);
+}
+.desk.dark { background: linear-gradient(135deg, #2F3237, #1B1D21); }
+.capsule {
+  display: flex; align-items: center; gap: 2px; width: 328px; height: 52px; padding: 5px;
+  background: var(--fa-surface); border: 1px solid var(--fa-border-floating);
+  border-radius: 26px; corner-shape: var(--fa-corner-shape); box-shadow: var(--fa-shadow-floating);
+}
+.capsule .wordmark {
+  width: 40px; height: 42px; display: grid; place-items: center; color: var(--fa-accent);
+  font-weight: 700; font-size: 15px; background: var(--fa-surface-2);
+  border-radius: 21px 4px 4px 21px; corner-shape: var(--fa-corner-shape);
+}
+.capsule .ask {
+  height: 42px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px;
+  background: var(--fa-primary-button); color: var(--fa-on-primary); font-size: 12.5px; font-weight: 650;
+  border-radius: 4px; corner-shape: var(--fa-corner-shape);
+}
+.capsule .mini {
+  width: 34px; height: 42px; display: grid; place-items: center; color: var(--fa-muted); font-size: 12px; font-weight: 600;
+}
+.capsule .mini:last-child { border-radius: 4px 21px 21px 4px; corner-shape: var(--fa-corner-shape); }
+.dock-row { display: flex; gap: 36px; align-items: center; margin-top: 26px; }
+.dock-left {
+  width: 44px; height: 52px; display: grid; place-items: center; background: var(--fa-surface);
+  border: 1px solid var(--fa-border-floating); border-left: 0;
+  border-radius: 0 22px 22px 0; corner-shape: var(--fa-corner-shape); box-shadow: var(--fa-shadow-floating);
+}
+.dock-top {
+  width: 64px; height: 44px; display: grid; place-items: center; background: var(--fa-surface);
+  border: 1px solid var(--fa-border-floating); border-top: 0;
+  border-radius: 0 0 22px 22px; corner-shape: var(--fa-corner-shape); box-shadow: var(--fa-shadow-floating);
+}
+.dock-left b, .dock-top b {
+  width: 32px; height: 32px; display: grid; place-items: center; background: var(--fa-surface-2);
+  color: var(--fa-accent); font-size: 14px; border-radius: 16px; corner-shape: var(--fa-corner-shape);
+}
+.tooltip {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 6px 10px; font-size: 11.5px;
+  background: var(--fa-surface-2); color: var(--fa-text); border: 1px solid var(--fa-border-floating);
+  border-radius: 0 6px 0 6px; corner-shape: var(--fa-corner-shape);
+}
+
+/* ---------- selection overlay ---------- */
+.screen { position: relative; width: 700px; height: 330px; overflow: hidden; border-radius: 4px; background: #F4F4F1; color: #24272C; }
+.screen .page { padding: 26px 36px; font: 14px/1.75 "Segoe UI", "Microsoft YaHei UI", sans-serif; }
+.screen .page h4 { margin: 0 0 8px; font-size: 18px; }
+.dim {
+  position: absolute; inset: 0; pointer-events: none;
+  background-color: var(--fa-overlay);
+  background-image:
+    linear-gradient(var(--fa-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fa-grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  /* the selected rectangle stays clear */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, 36px 76px, 36px 220px, 470px 220px, 470px 76px, 36px 76px);
+}
+.sel { position: absolute; left: 36px; top: 76px; width: 434px; height: 144px; outline: 1px solid var(--fa-border-active); }
+.sel i { position: absolute; width: 16px; height: 16px; border: 0 solid var(--fa-accent); }
+.sel i:nth-child(1) { left: -3px; top: -3px; border-width: 3px 0 0 3px; }
+.sel i:nth-child(2) { right: -3px; top: -3px; border-width: 3px 3px 0 0; }
+.sel i:nth-child(3) { left: -3px; bottom: -3px; border-width: 0 0 3px 3px; }
+.sel i:nth-child(4) { right: -3px; bottom: -3px; border-width: 0 3px 3px 0; }
+.sel-size {
+  position: absolute; left: 36px; top: 228px; padding: 1px 7px; background: var(--fa-accent); color: var(--fa-on-primary);
+  font: 11px/1.6 var(--fa-font-label); border-radius: 0 4px 0 4px; corner-shape: var(--fa-corner-shape);
+}
+.sel-hint {
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px; font-size: 12px; white-space: nowrap; color: var(--fa-text); background: var(--fa-surface);
+  border: 1px solid var(--fa-border-floating); border-radius: 0 8px 0 8px; corner-shape: var(--fa-corner-shape);
+}
+
+/* ---------- settings ---------- */
+.settings { width: 900px; height: 600px; flex-direction: row; }
+.side { width: 218px; flex: 0 0 218px; padding: 20px 12px; background: var(--fa-bg); border-right: 1px solid var(--fa-divider); position: relative; }
+.side::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(var(--fa-grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--fa-grid-line) 1px, transparent 1px);
+  background-size: var(--fa-grid-size) var(--fa-grid-size);
+}
+.side > * { position: relative; }
+.side .s-brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 18px; }
+.side .s-brand .brand-block { width: 28px; height: 28px; }
+.side .s-brand b { display: block; font-size: 15px; }
+.side .s-brand small { font-family: var(--fa-font-label); font-size: 10px; color: var(--fa-accent); }
+.nav { display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; color: var(--fa-body); font-size: 13px; position: relative; }
+.nav .mono { color: var(--fa-faint); font-size: 11px; width: 16px; }
+.nav.active {
+  background: var(--fa-surface-3); color: var(--fa-text);
+  border-radius: 0 6px 0 6px; corner-shape: var(--fa-corner-shape);
+}
+.nav.active::before { content: ""; position: absolute; left: 0; top: 9px; bottom: 9px; width: 3px; background: var(--fa-accent); }
+.nav.active .mono { color: var(--fa-accent); }
+.side .foot { position: absolute; left: 22px; bottom: 18px; font-size: 11px; color: var(--fa-muted); line-height: 1.6; }
+.main { flex: 1; padding: 24px 28px; overflow: hidden; }
+.main-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+.main-head h3 { margin: 0; font-size: 21px; font-weight: 600; }
+.main-head p { margin: 4px 0 0; font-size: 12px; color: var(--fa-muted); }
+.sect-title { display: flex; align-items: baseline; gap: 8px; margin: 0 0 10px; font-size: 14px; font-weight: 600; }
+.sect-title .mono { color: var(--fa-accent); font-size: 11px; font-weight: 400; }
+.panel {
+  padding: 16px; background: var(--fa-surface-2); border: 1px solid var(--fa-border-control);
+  border-radius: 0 var(--fa-radius-container) 0 var(--fa-radius-container); corner-shape: var(--fa-corner-shape);
+}
+.themes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.tcard {
+  position: relative; padding: 8px; background: var(--fa-surface); border: 1px solid var(--fa-border-control);
+  border-radius: 0 8px 0 8px; corner-shape: var(--fa-corner-shape);
+}
+.tcard.active { border-color: var(--fa-border-active); }
+.tcard.active::before, .tcard.active::after { content: ""; position: absolute; width: 8px; height: 8px; border: 0 solid var(--fa-accent); }
+.tcard.active::before { top: 3px; left: 3px; border-width: 1.5px 0 0 1.5px; }
+.tcard.active::after { bottom: 3px; right: 3px; border-width: 0 1.5px 1.5px 0; }
+.tprev { height: 62px; display: grid; place-items: center; border-radius: 0 5px 0 5px; corner-shape: var(--fa-corner-shape); overflow: hidden; }
+.tprev .mini-win { width: 72%; padding: 8px; display: flex; gap: 6px; }
+.tprev .mini-win i { width: 7px; height: 7px; flex: 0 0 7px; }
+.tprev .mini-win span { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.tprev .mini-win b { height: 4px; width: 62%; }
+.tprev .mini-win em { height: 3px; }
+.tp-light { background: #E7E7DF; } .tp-light .mini-win { background: #FAF9F4; border-radius: 4px; } .tp-light i { background: #506B92; border-radius: 2px; } .tp-light b { background: #20242B; } .tp-light em { background: #D6D9D0; }
+.tp-dark { background: #0C0E12; } .tp-dark .mini-win { background: #1D2128; border-radius: 4px; } .tp-dark i { background: #8FA6C9; border-radius: 2px; } .tp-dark b { background: #E8EBF0; } .tp-dark em { background: #2A3039; }
+.tp-ind { background: #0F1012; position: relative; }
+.tp-ind::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--fa-hazard); }
+.tp-ind .mini-win { background: #1F2023; border-radius: 0 5px 0 5px; corner-shape: bevel; } .tp-ind i { background: #FFE400; } .tp-ind b { background: #FFE400; } .tp-ind em { background: #2E3034; }
+.tp-sys { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.tp-sys { place-items: stretch; }
+.tp-sys > div { display: grid; place-items: center; height: 62px; }
+.tp-sys > div:first-child { background: #F4F3ED; color: #506B92; }
+.tp-sys > div:last-child { background: #171A20; color: #8FA6C9; }
+.tcopy { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.tcopy b { display: block; font-size: 12px; font-weight: 600; }
+.tcopy small { font-size: 10.5px; color: var(--fa-muted); }
+.tcard.active .tcopy b { color: var(--fa-accent); }
+.tcheck { width: 18px; height: 18px; display: grid; place-items: center; background: var(--fa-accent); color: var(--fa-on-primary); opacity: 0; }
+.tcard.active .tcheck { opacity: 1; }
+.tcheck .ico { width: 12px; height: 12px; }
+.row { display: flex; align-items: center; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--fa-divider); }
+.row:last-child { border-bottom: 0; }
+.row .lbl { width: 108px; font-size: 12.5px; color: var(--fa-text); }
+.row .lbl small { display: block; color: var(--fa-muted); font-size: 11px; }
+.slider { position: relative; flex: 1; height: 4px; background: var(--fa-divider); }
+.slider .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 50%; background: var(--fa-accent); }
+.slider .knob { position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; transform: translate(-50%, -50%) rotate(45deg); background: var(--fa-accent); border: 2px solid var(--fa-surface-2); }
+.slider-val { font-family: var(--fa-font-label); font-size: 11.5px; color: var(--fa-accent); width: 44px; text-align: right; }
+.seg { display: flex; flex: 1; padding: 3px; gap: 3px; background: var(--fa-bg); border: 1px solid var(--fa-border-control); border-radius: 0 6px 0 6px; corner-shape: var(--fa-corner-shape); }
+.seg span { flex: 1; height: 26px; display: grid; place-items: center; font-size: 12px; color: var(--fa-muted); }
+.seg span.on { background: var(--fa-surface-3); color: var(--fa-text); box-shadow: inset 0 -2px 0 var(--fa-accent); }
+.switch { width: 34px; height: 18px; position: relative; background: var(--fa-surface-3); border: 1px solid var(--fa-border-control); margin-left: auto; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 10px; height: 10px; background: var(--fa-muted); }
+.switch.on { background: var(--fa-accent); border-color: var(--fa-accent); }
+.switch.on::after { left: 19px; background: var(--fa-on-primary); }
+.cols { display: grid; grid-template-columns: 1.55fr 1fr; gap: 18px; }
+
+/* ---------- history ---------- */
+.history { width: 900px; height: 560px; }
+.h-top { display: flex; align-items: center; gap: 14px; padding: 14px 16px 14px 26px; position: relative; border-bottom: 1px solid var(--fa-divider);
+  background-image: linear-gradient(var(--fa-grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--fa-grid-line) 1px, transparent 1px);
+  background-size: var(--fa-grid-size) var(--fa-grid-size); }
+.h-top::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 7px; background: var(--fa-hazard); }
+.h-top b { font-size: 15px; }
+.h-top small { display: block; font-family: var(--fa-font-label); font-size: 10px; color: var(--fa-accent); }
+.search {
+  flex: 1; display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; color: var(--fa-faint); font-size: 12.5px;
+  background: var(--fa-surface-2); border: 1px solid var(--fa-border-control); border-radius: 0 7px 0 7px; corner-shape: var(--fa-corner-shape);
+}
+.h-body { flex: 1; display: flex; min-height: 0; }
+.h-list { width: 330px; flex: 0 0 330px; border-right: 1px solid var(--fa-divider); display: flex; flex-direction: column; }
+.h-filters { display: flex; gap: 6px; padding: 10px 12px; flex-wrap: wrap; border-bottom: 1px solid var(--fa-divider); }
+.h-filters .chip { border-color: var(--fa-border-control); }
+.h-filters .chip.on { border-color: var(--fa-accent); color: var(--fa-accent); }
+.item { display: flex; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--fa-divider); }
+.item.sel-item { background: var(--fa-surface-2); box-shadow: inset 3px 0 0 var(--fa-accent); }
+.item .t { flex: 1; min-width: 0; }
+.item .t b { display: block; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .t small { display: block; font-family: var(--fa-font-label); font-size: 10.5px; color: var(--fa-faint); }
+.item .star { color: var(--fa-faint); }
+.item .star.on { color: var(--fa-accent); }
+.h-detail { flex: 1; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.meta-grid { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 4px 22px; font-size: 11px; color: var(--fa-muted); }
+.meta-grid .mono { color: var(--fa-body); }
+.confirm {
+  position: relative; margin-top: auto; padding: 12px 14px 12px 22px; background: var(--fa-red-soft);
+  border: 1px solid var(--fa-border-danger); border-radius: 0 8px 0 8px; corner-shape: var(--fa-corner-shape);
+}
+.confirm::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: var(--fa-hazard); }
+.confirm b { display: block; font-size: 13px; color: var(--fa-text); }
+.confirm p { margin: 3px 0 10px; font-size: 12px; color: var(--fa-body); }
+.confirm .mono { color: var(--fa-accent); }
+.confirm .acts { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ---------- tokens ---------- */
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; flex: 1 1 600px; }
+.sw { border: 1px solid #3A3C40; background: #1C1D20; }
+.sw div { height: 44px; }
+.sw p { margin: 0; padding: 6px 8px; font-size: 11px; color: #C2C3BE; }
+.sw p code { font-family: Consolas, monospace; color: #ECECE7; }
+.contrast { width: 100%; border-collapse: collapse; font-size: 12px; }
+.contrast td, .contrast th { padding: 6px 8px; border-bottom: 1px solid #3A3C40; text-align: left; }
+.contrast th { color: #A9AAA5; font-weight: 500; }
+.contrast .pass { color: #7FCB98; } .contrast .fail { color: #FF6A55; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-finder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/><path d="M12 8.5v7M8.5 12h7"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 5 3 3v2H7v-2l3-3-1-5Z"/><path d="M12 14v6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4Z"/><circle cx="12" cy="13" r="3.2"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" fill="currentColor"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.5 2.6 2.5 13.4 0 16M12 4c-2.5 2.6-2.5 13.4 0 16"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="11" height="11"/><path d="M5 15V5h10"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m12 4 2.4 5 5.4.7-4 3.7 1 5.4L12 16.2 7.2 18.8l1-5.4-4-3.7 5.4-.7Z"/></symbol>
+  <symbol id="i-star-on" viewBox="0 0 24 24"><path fill="currentColor" d="m12 4 2.4 5 5.4.7-4 3.7 1 5.4L12 16.2 7.2 18.8l1-5.4-4-3.7 5.4-.7Z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12 4 4 8-9"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3.5"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="6" y="5" width="12" height="15"/><path d="M9 5V3.5h6V5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></symbol>
+</svg>
+
+<div class="doc">
+  <h1>前哨 · 工业 — HTML 视觉稿 v0.1</h1>
+  <p class="lead">第三主题（深色），强度 C。配色与形状按 token 写成 <code>--fa-*</code> 变量，审过后可直接搬进 design-tokens.yaml。尺寸为示意：答案窗实际按 800 × 1425 DIP 默认尺寸拉起，这里缩小展示；字号、行高、组件高度与真实界面一致。</p>
+
+  <!-- 01 answer window, expanded, streaming -->
+  <section class="board">
+    <div class="board-head"><span class="ix">01</span><h2>答案窗 · 展开 · 生成中</h2><p>完整窗口操作、上下文、长回答、代码、来源、追问区</p></div>
+    <div class="board-body" data-theme="industrial">
+      <div class="win" style="width:600px;height:820px">
+        <header class="titlebar">
+          <span class="brand-block"><svg class="ico"><use href="#i-finder"/></svg></span>
+          <div class="brand-text">
+            <b>浮问 <span class="mono">fa.term // node-07</span></b>
+            <span class="status"><i></i>生成中 <span class="mono">0x3F2A</span></span>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" title="连续截图"><svg class="ico"><use href="#i-camera"/></svg></button>
+            <button class="icon-btn" title="重新框选"><svg class="ico"><use href="#i-finder"/></svg></button>
+            <button class="icon-btn on" title="取消置顶"><svg class="ico"><use href="#i-pin"/></svg></button>
+            <button class="icon-btn" title="历史记录"><svg class="ico"><use href="#i-clock"/></svg></button>
+            <button class="icon-btn" title="设置"><svg class="ico"><use href="#i-gear"/></svg></button>
+            <button class="icon-btn" title="收起"><svg class="ico"><use href="#i-expand"/></svg></button>
+            <button class="icon-btn" title="关闭"><svg class="ico"><use href="#i-close"/></svg></button>
+          </div>
+        </header>
+        <div class="conveyor"></div>
+        <div class="context-strip">
+          <span>src: chrome.exe</span><span class="sep">|</span><span>ocr 350 ch</span><span class="sep">|</span><span>lat 0.82s</span>
+          <span class="model-chip">deepseek-chat</span>
+        </div>
+        <div class="viewport">
+          <div class="msg-user"><span>解释一下这段</span></div>
+          <div class="msg-meta"><span>浮问</span><span class="mono">14:32:07</span></div>
+          <div class="md">
+            <h3><span class="mono">01 //</span>是什么</h3>
+            <p><strong>Transformer</strong> 是一种基于自注意力机制的神经网络架构，用来处理文本、代码等<span style="white-space:nowrap">序列数据 <span class="cite">1</span>。</span></p>
+            <h3><span class="mono">02 //</span>有什么用</h3>
+            <ul>
+              <li>能同时关注一句话里不同位置的信息，不必像 RNN 那样逐步传递。</li>
+              <li>训练可以高度并行，因此能用大规模语料训练出通用语言模型 <span class="cite">2</span>。</li>
+            </ul>
+            <div class="code">
+              <div class="code-head"><span>代码 · python</span><button class="icon-btn" style="width:24px;height:24px" title="复制"><svg class="ico" style="width:13px;height:13px"><use href="#i-copy"/></svg></button></div>
+<pre><span class="k">def</span> attention(q, k, v):
+    w = softmax(q @ k.T / sqrt(d))   <span class="c"># 每个词对其他词的权重</span>
+    <span class="k">return</span> w @ v</pre>
+            </div>
+            <h3><span class="mono">03 //</span>和这里的关系</h3>
+            <p>如果这段文字出现在技术文章里，作者通常是在解释大模型的地基；出现在代码旁，多半是在说明某个注意力层的实现。</p>
+            <blockquote>一句话记住：先看整句话，再决定每个词该关注谁。</blockquote>
+            <div class="sources">
+              <div class="label">参考来源 · 2</div>
+              <div class="src"><span class="n">[01]</span><span>Attention Is All You Need</span><span class="d">arxiv.org</span></div>
+              <div class="src"><span class="n">[02]</span><span>Transformer 模型详解</span><span class="d">zhihu.com</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="composer-zone">
+          <div class="chips"><span class="chip">更通俗</span><span class="chip">举个例子</span><span class="chip">深入一点</span><span class="chip">联网核查</span></div>
+          <div class="composer">
+            <span class="web"><svg class="ico" style="width:14px;height:14px"><use href="#i-globe"/></svg>联网</span>
+            <span class="ph">继续追问，或让我查一下…</span>
+            <span class="send stop" title="停止生成"><svg class="ico"><use href="#i-stop"/></svg></span>
+          </div>
+          <div class="hints"><span class="kbd">Enter</span> 发送<span class="gap"></span><span class="kbd">Shift</span>+<span class="kbd">Enter</span> 换行</div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li><b>切角</b>：窗口右上、左下切 16px；另两角放黄色角标。控件同规则，切角随尺寸缩小（10 / 7 / 5px）。描边与投影沿斜边走（<code>corner-shape: bevel</code>）。</li>
+        <li><b>标题栏</b>：左缘 7px 黄黑斜纹 + 网格底纹；品牌块是两块实心黄之一。</li>
+        <li><b>微标签</b>：<code>node-07</code> = 当前会话第几轮；<code>0x3F2A</code> = 会话短哈希（与历史记录对应）；均为真实数据，格式固定。</li>
+        <li><b>状态灯</b>：方形。黄 = 生成中，绿 = 完成，红 = 出错。</li>
+        <li><b>传送带</b>：只在流式生成和下载时出现并移动；完成即消失；减少动态时静止。</li>
+        <li><b>上下文行</b>：进程名、OCR 字数、首字响应耗时，全部来自真实数据（耗时需新增计时）。</li>
+        <li><b>正文</b>：字体、14px、行高 1.72 与近月一致；网格 8% 不透明度铺在下面。标题黄色 + <code>01 //</code> 序号，项目符号为黄色方块。</li>
+        <li><b>生成中</b>发送键变为“停止”（红色描边，非实心），实心黄仍只有品牌块。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 02 compact answer, done + error -->
+  <section class="board">
+    <div class="board-head"><span class="ix">02</span><h2>紧凑答案窗 · 完成 / 出错</h2><p>摘要态，保留重新框选、置顶、展开、关闭</p></div>
+    <div class="board-body" data-theme="industrial">
+      <div class="win" style="width:480px;height:360px">
+        <header class="titlebar">
+          <span class="brand-block"><svg class="ico"><use href="#i-finder"/></svg></span>
+          <div class="brand-text"><b>浮问 <span class="mono">fa.term // node-01</span></b><span class="status done"><i></i>已完成 <span class="mono">0x91C4</span></span></div>
+          <div class="actions">
+            <button class="icon-btn"><svg class="ico"><use href="#i-finder"/></svg></button>
+            <button class="icon-btn on"><svg class="ico"><use href="#i-pin"/></svg></button>
+            <button class="icon-btn"><svg class="ico"><use href="#i-expand"/></svg></button>
+            <button class="icon-btn"><svg class="ico"><use href="#i-close"/></svg></button>
+          </div>
+        </header>
+        <div class="context-strip"><span>src: code.exe</span><span class="sep">|</span><span>ocr 128 ch</span><span class="sep">|</span><span>lat 0.64s</span><span class="model-chip">deepseek-chat</span></div>
+        <div class="viewport" style="padding-top:12px">
+          <div class="md" style="font-size:14px">
+            <h3 style="margin-top:0"><span class="mono">01 //</span>报错原因</h3>
+            <p><strong>TypeError</strong>：对 <code style="font-family:var(--fa-font-label);color:var(--fa-text)">undefined</code> 读取了 <code style="font-family:var(--fa-font-label);color:var(--fa-text)">map</code>。接口返回前列表还没初始化。</p>
+          </div>
+        </div>
+        <div class="composer-zone">
+          <div class="composer focus"><span class="ph">继续追问…</span><span class="send"><svg class="ico"><use href="#i-up"/></svg></span></div>
+        </div>
+      </div>
+      <div class="win" style="width:480px;height:360px">
+        <header class="titlebar">
+          <span class="brand-block"><svg class="ico"><use href="#i-finder"/></svg></span>
+          <div class="brand-text"><b>浮问 <span class="mono">fa.term // node-01</span></b><span class="status error"><i></i>连接失败 <span class="mono">0x77B0</span></span></div>
+          <div class="actions">
+            <button class="icon-btn"><svg class="ico"><use href="#i-finder"/></svg></button>
+            <button class="icon-btn on"><svg class="ico"><use href="#i-pin"/></svg></button>
+            <button class="icon-btn"><svg class="ico"><use href="#i-expand"/></svg></button>
+            <button class="icon-btn"><svg class="ico"><use href="#i-close"/></svg></button>
+          </div>
+        </header>
+        <div class="context-strip"><span>src: chrome.exe</span><span class="sep">|</span><span>ocr 350 ch</span><span class="sep">|</span><span>lat --</span><span class="model-chip">deepseek-chat</span></div>
+        <div class="viewport" style="padding-top:14px">
+          <div class="confirm" style="margin-top:0">
+            <b>无法连接到模型服务</b>
+            <p>请求没有发出，截图与识别文字仍在本机。恢复网络后可直接重试，不需要重新框选。</p>
+            <div class="acts"><button class="btn ghost">打开设置</button><button class="btn">重试</button></div>
+          </div>
+        </div>
+        <div class="composer-zone">
+          <div class="composer"><span class="ph">继续追问…</span><span class="send"><svg class="ico"><use href="#i-up"/></svg></span></div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li><b>完成态</b>：状态灯转绿，传送带消失；输入框聚焦时描边转为实黄。</li>
+        <li><b>出错态</b>：错误卡复用斜纹边 + 红色描边；正文说明“数据是否已发送、如何恢复”，规则沿用现有规范。</li>
+        <li>耗时取不到时显示 <code>lat --</code>，标签位置不跳动。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 03 toolbar -->
+  <section class="board">
+    <div class="board-head"><span class="ix">03</span><h2>胶囊工具栏 · 展开 / 吸附</h2><p>328 × 52 展开；左右 44 × 52、上下 64 × 44 半胶囊</p></div>
+    <div class="board-body" data-theme="industrial">
+      <div>
+        <div class="desk">
+          <div class="capsule">
+            <span class="wordmark">浮</span>
+            <span class="ask"><svg class="ico"><use href="#i-finder"/></svg>框选</span>
+            <span class="mini" title="连续截多张"><svg class="ico"><use href="#i-plus"/></svg></span>
+            <span class="mini" title="截图翻译">译</span>
+            <span class="mini" title="剪贴板解释"><svg class="ico"><use href="#i-clip"/></svg></span>
+            <span class="mini" title="历史记录"><svg class="ico"><use href="#i-clock"/></svg></span>
+            <span class="mini" title="设置"><svg class="ico"><use href="#i-gear"/></svg></span>
+          </div>
+          <div class="tooltip">框选屏幕内容 <span class="kbd">Alt</span>+<span class="kbd">Q</span></div>
+          <div class="dock-row">
+            <div class="dock-left"><b>浮</b></div>
+            <div class="dock-top"><b>浮</b></div>
+          </div>
+        </div>
+        <div class="desk dark" style="margin-top:12px">
+          <div class="capsule">
+            <span class="wordmark">浮</span>
+            <span class="ask"><svg class="ico"><use href="#i-finder"/></svg>框选</span>
+            <span class="mini"><svg class="ico"><use href="#i-plus"/></svg></span>
+            <span class="mini">译</span>
+            <span class="mini"><svg class="ico"><use href="#i-clip"/></svg></span>
+            <span class="mini"><svg class="ico"><use href="#i-clock"/></svg></span>
+            <span class="mini"><svg class="ico"><use href="#i-gear"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li><b>外形</b>：全圆角 + bevel = 两端尖头的六边形胶囊；几何尺寸与吸附规则完全不变。</li>
+        <li><b>实心黄</b>只给“框选”主按钮；“浮”字标改为暗底黄字，避免同屏两块黄。</li>
+        <li><b>半胶囊</b>：贴边一侧平直，另一侧切角；字标内缩规则不变（32 × 32）。</li>
+        <li>浅色桌面和深色桌面都靠 1px 浮层描边分离，不加发光。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 04 selection overlay -->
+  <section class="board">
+    <div class="board-head"><span class="ix">04</span><h2>框选层</h2><p>遮罩、取景框角、尺寸读数、操作提示</p></div>
+    <div class="board-body" data-theme="industrial">
+      <div class="screen">
+        <div class="page">
+          <h4>理解自注意力</h4>
+          <p>Transformer 抛弃了循环结构，完全依赖注意力机制来建模序列中任意两个位置之间的依赖关系。每个位置都会计算它与其他所有位置的相关程度，再据此加权求和，得到新的表示。</p>
+          <p>这种设计让训练可以高度并行，也让长距离依赖不再随距离衰减。</p>
+        </div>
+        <div class="dim"></div>
+        <div class="sel"><i></i><i></i><i></i><i></i></div>
+        <div class="sel-size">434 × 144</div>
+        <div class="sel-hint">松开即解释 <span class="kbd">Esc</span> 取消 <span class="kbd">Alt</span>+<span class="kbd">Shift</span>+<span class="kbd">Q</span> 连续截图</div>
+      </div>
+      <ul class="notes">
+        <li><b>遮罩</b>：暗色遮罩 + 24px 网格，只在未选中区域；选区内画面保持原样。</li>
+        <li><b>取景框角</b>：品牌签名直接放大为 3px 黄色角标，选区描边 1px 半透明黄。</li>
+        <li><b>尺寸读数</b>：等宽数字黄底标签，跟随选区左下角。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 05 settings -->
+  <section class="board">
+    <div class="board-head"><span class="ix">05</span><h2>设置 · 外观与阅读</h2><p>四张主题卡、字号、密度、动态行为</p></div>
+    <div class="board-body" data-theme="industrial">
+      <div class="win settings">
+        <aside class="side">
+          <div class="s-brand"><span class="brand-block"><svg class="ico"><use href="#i-finder"/></svg></span><div><b>浮问设置</b><small>fa.term // settings</small></div></div>
+          <div class="nav"><span class="mono">01</span>模型服务</div>
+          <div class="nav"><span class="mono">02</span>联网检索</div>
+          <div class="nav"><span class="mono">03</span>通用与快捷键</div>
+          <div class="nav"><span class="mono">04</span>历史与隐私</div>
+          <div class="nav active"><span class="mono">05</span>外观与阅读</div>
+          <div class="nav"><span class="mono">06</span>更新与关于</div>
+          <div class="foot">配置仅保存在本机<br>保存后立即应用</div>
+        </aside>
+        <main class="main">
+          <div class="main-head">
+            <div><h3>外观与阅读</h3><p>调整主题、字体和阅读版式。所有变化即时预览，保存后跨窗口保持一致。</p></div>
+            <button class="btn primary">保存更改</button>
+          </div>
+          <div class="sect-title"><span class="mono">05.1</span>界面主题</div>
+          <div class="panel" style="margin-bottom:18px">
+            <div class="themes">
+              <div class="tcard"><div class="tprev tp-sys"><div><svg class="ico"><use href="#i-sun"/></svg></div><div><svg class="ico"><use href="#i-moon"/></svg></div></div><div class="tcopy"><div><b>跟随系统</b><small>朝日 / 近月</small></div><span class="tcheck"><svg class="ico"><use href="#i-check"/></svg></span></div></div>
+              <div class="tcard"><div class="tprev tp-light"><div class="mini-win"><i></i><span><b></b><em></em><em></em></span></div></div><div class="tcopy"><div><b>朝日 · 白天</b><small>柔和暖白</small></div><span class="tcheck"><svg class="ico"><use href="#i-check"/></svg></span></div></div>
+              <div class="tcard"><div class="tprev tp-dark"><div class="mini-win"><i></i><span><b></b><em></em><em></em></span></div></div><div class="tcopy"><div><b>近月 · 深夜</b><small>安静暗色</small></div><span class="tcheck"><svg class="ico"><use href="#i-check"/></svg></span></div></div>
+              <div class="tcard active"><div class="tprev tp-ind"><div class="mini-win"><i></i><span><b></b><em></em><em></em></span></div></div><div class="tcopy"><div><b>前哨 · 工业</b><small>深色 · 切角</small></div><span class="tcheck"><svg class="ico"><use href="#i-check"/></svg></span></div></div>
+            </div>
+          </div>
+          <div class="cols">
+            <div>
+              <div class="sect-title"><span class="mono">05.2</span>字体与阅读密度</div>
+              <div class="panel">
+                <div class="row"><div class="lbl">正文字号<small>12 – 16 px</small></div><div class="slider"><span class="fill"></span><span class="knob"></span></div><span class="slider-val">14 px</span></div>
+                <div class="row"><div class="lbl">阅读密度</div><div class="seg"><span>紧凑</span><span class="on">标准</span><span>宽松</span></div></div>
+              </div>
+            </div>
+            <div>
+              <div class="sect-title"><span class="mono">05.3</span>阅读与动态行为</div>
+              <div class="panel">
+                <div class="row"><div class="lbl" style="width:auto">流式回答自动跟随<small>向上阅读时自动暂停</small></div><span class="switch on"></span></div>
+                <div class="row"><div class="lbl" style="width:auto">减少动态效果<small>传送带与过渡立即静止</small></div><span class="switch"></span></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+      <ul class="notes">
+        <li><b>导航编号</b> 01–06 对应规范里固定的分区顺序；选中项 = 中性浅一级底 + 3px 黄条 + 黄色编号。</li>
+        <li><b>主题卡</b>四张一行；选中卡加黄色角标与黄底勾。“跟随系统”仍只在朝日 / 近月之间切换。</li>
+        <li><b>开关</b>改为方形轨道与方块滑块；滑杆滑块为菱形（切角的圆）。</li>
+        <li>本页实心黄块：品牌块 + “保存更改”；开关、勾选、滑块是小控件标记，不计入。侧栏铺网格，内容区不铺。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 06 history + destructive confirm -->
+  <section class="board">
+    <div class="board-head"><span class="ix">06</span><h2>历史与收藏 · 清除确认</h2><p>列表与详情并列；不可撤销操作用警示斜纹</p></div>
+    <div class="board-body" data-theme="industrial">
+      <div class="win history">
+        <div class="h-top">
+          <div><b>历史记录</b><small>fa.term // history · 27 条</small></div>
+          <div class="search"><svg class="ico" style="width:14px;height:14px"><use href="#i-search"/></svg>搜索标题、内容或来源窗口…</div>
+          <button class="icon-btn"><svg class="ico"><use href="#i-close"/></svg></button>
+        </div>
+        <div class="h-body">
+          <div class="h-list">
+            <div class="h-filters"><span class="chip on">全部</span><span class="chip">收藏</span><span class="chip">截图理解</span><span class="chip">纯文本</span><span class="chip">联网回答</span></div>
+            <div class="item sel-item"><div class="t"><b>Transformer 是什么</b><small>14:32 · chrome.exe · 0x3F2A</small></div><svg class="ico star on"><use href="#i-star-on"/></svg></div>
+            <div class="item"><div class="t"><b>TypeError: Cannot read properties of undefined</b><small>11:08 · code.exe · 0x91C4</small></div><svg class="ico star"><use href="#i-star"/></svg></div>
+            <div class="item"><div class="t"><b>这张图表的纵轴单位</b><small>昨天 · excel.exe · 0x5D10</small></div><svg class="ico star"><use href="#i-star"/></svg></div>
+            <div class="item"><div class="t"><b>SHA-256 校验失败怎么处理</b><small>3 天前 · explorer.exe · 0xA2E7</small></div><svg class="ico star on"><use href="#i-star-on"/></svg></div>
+          </div>
+          <div class="h-detail">
+            <div class="md" style="font-size:14px">
+              <h3 style="margin-top:0"><span class="mono">01 //</span>Transformer 是什么</h3>
+              <p>一种基于自注意力机制的神经网络架构，用来处理文本、代码等序列数据。</p>
+            </div>
+            <div class="meta-grid"><span>时间</span><span>来源窗口</span><span>模型</span><span class="mono">2026-11-03 14:32</span><span class="mono">chrome.exe</span><span class="mono">deepseek-chat</span></div>
+            <div style="display:flex;gap:8px"><button class="btn primary">继续对话</button><button class="btn">复制全部</button><button class="btn ghost">清除全部</button></div>
+            <div class="confirm">
+              <b>确认清除？</b>
+              <p>将删除 <span class="mono">23</span> 条 · 保留 <span class="mono">4</span> 条收藏。此操作不可撤销，不影响 API Key 与模型配置。</p>
+              <div class="acts"><button class="btn ghost">取消</button><button class="btn danger">确认清除</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li><b>会话哈希</b>出现在列表里，与答案窗标题栏的 <code>0x…</code> 对得上，微标签因此有用途。</li>
+        <li><b>警示斜纹</b>在内容区只用于不可撤销操作（清除、更新失败）；标题栏左缘的斜纹是框架签名。</li>
+        <li>收藏星标用实心黄图标（线条级，不计入实心黄块）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 07 tokens and contrast -->
+  <section class="board">
+    <div class="board-head"><span class="ix">07</span><h2>色板与对比度</h2><p>对比度由页面脚本按 WCAG 公式实时计算</p></div>
+    <div class="board-body" data-theme="industrial">
+      <div class="swatches" id="swatches"></div>
+      <div style="flex:1 1 360px">
+        <table class="contrast" id="contrast"><tr><th>前景 / 背景</th><th>对比度</th><th>要求</th></tr></table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  const scope = document.querySelector('[data-theme="industrial"]');
+  const css = getComputedStyle(scope);
+  const v = (name) => css.getPropertyValue(name).trim();
+  const roles = ['bg', 'surface', 'surface-2', 'surface-3', 'divider', 'text', 'body', 'muted', 'faint', 'accent', 'accent-soft', 'green', 'red', 'red-soft', 'on-primary'];
+  const sw = document.getElementById('swatches');
+  for (const role of roles) {
+    const hex = v('--fa-' + role);
+    sw.insertAdjacentHTML('beforeend', `<div class="sw"><div style="background:${hex}"></div><p>${role}<br><code>${hex}</code></p></div>`);
+  }
+  function lum(hex) {
+    const n = hex.replace('#', '').slice(0, 6);
+    const c = [0, 2, 4].map(i => parseInt(n.slice(i, i + 2), 16) / 255).map(x => x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4));
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  function ratio(a, b) {
+    const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+    return (x + 0.05) / (y + 0.05);
+  }
+  const pairs = [
+    ['text', 'surface', 4.5], ['body', 'surface', 4.5], ['muted', 'surface', 4.5], ['faint', 'surface', 4.5],
+    ['body', 'surface-2', 4.5], ['muted', 'surface-2', 4.5], ['accent', 'surface', 4.5], ['on-primary', 'accent', 4.5],
+    ['red', 'red-soft', 4.5], ['green', 'surface', 3], ['text', 'accent-soft', 4.5]
+  ];
+  const table = document.getElementById('contrast');
+  for (const [fg, bg, min] of pairs) {
+    const r = ratio(v('--fa-' + fg), v('--fa-' + bg));
+    table.insertAdjacentHTML('beforeend', `<tr><td>${fg} / ${bg}</td><td class="${r >= min ? 'pass' : 'fail'}">${r.toFixed(2)} : 1</td><td>≥ ${min}</td></tr>`);
+  }
+})();
+</script>
+</body>
+</html>
