@@ -40,7 +40,7 @@ const server = http.createServer((req,res) => {
    let n=0;
    const timer=setInterval(()=>{
     n++;
-    res.write('data: '+JSON.stringify({choices:[{delta:{content:'第'+n+'段 这一段内容足够长用来撑开回答视口的高度。'}}]})+'\n\n');
+    res.write('data: '+JSON.stringify({choices:[{delta:{content:'第'+n+'段 这一段内容足够长用来撑开回答视口的高度。\n\n'}}]})+'\n\n');
     if(n>=50){clearInterval(timer);res.end('data: [DONE]\n\n');}
    },25);
    return;

@@ -145,14 +145,19 @@ function scrollToBottomIfPinned() {
   else updateFollowButton();
 }
 
+// Programmatic tail jumps are instant: the stylesheet's smooth scrolling would
+// emit intermediate scroll events that read as "the user scrolled up" and
+// silently unpin the follow mid-stream.
+function jumpToTail() {
+  els.messages.scrollTo({ top: els.messages.scrollHeight, behavior: 'instant' });
+}
+
 function scrollToBottom(force = false) {
   if (force) follow.pinned = true;
   // The pinned flag can be stale for one event-loop turn after the user
   // scrolls up (the scroll event has not been delivered yet); only follow
   // when the viewport is genuinely at the bottom.
-  if (force || (follow.pinned && atBottom())) {
-    els.messages.scrollTop = els.messages.scrollHeight;
-  }
+  if (force || (follow.pinned && atBottom())) jumpToTail();
   updateFollowButton();
 }
 
@@ -168,7 +173,7 @@ els.messages.addEventListener('scroll', () => {
 
 els.followBtn.addEventListener('click', () => {
   follow.pinned = true;
-  els.messages.scrollTop = els.messages.scrollHeight;
+  jumpToTail();
   updateFollowButton();
 });
 
