@@ -88,52 +88,6 @@ test('edgeGapPosition floats the expanded capsule 8 DIP off its edge', () => {
   assert.equal(bottom.y, AREA.y + AREA.height - EXPANDED_EDGE_GAP - SIZE.height);
 });
 
-test('left and right edges expand vertically with the available direction', () => {
-  const top = geometry.expansionPlacement('left', { x: 0, y: 100 }, AREA);
-  assert.deepEqual(top, {
-    axis: 'vertical', direction: 'down',
-    bounds: { x: -2, y: 90, width: 72, height: 348 }
-  });
-  const bottom = geometry.expansionPlacement('right', { x: 1800, y: 800 }, AREA);
-  assert.deepEqual(bottom, {
-    axis: 'vertical', direction: 'up',
-    bounds: { x: 1840, y: 724, width: 72, height: 348 }
-  });
-});
-
-test('top and bottom edges expand horizontally away from the screen center', () => {
-  const topLeft = geometry.expansionPlacement('top', { x: 200, y: 0 }, AREA);
-  assert.deepEqual(topLeft, {
-    axis: 'horizontal', direction: 'right',
-    bounds: { x: 190, y: -2, width: 348, height: 72 }
-  });
-  const bottomRight = geometry.expansionPlacement('bottom', { x: 1600, y: 900 }, AREA);
-  assert.deepEqual(bottomRight, {
-    axis: 'horizontal', direction: 'left',
-    bounds: { x: 1564, y: 1000, width: 348, height: 72 }
-  });
-});
-
-test('collapse keeps the edge associated with its expansion direction anchored', () => {
-  assert.deepEqual(
-    geometry.collapseStartBounds({ x: 1856, y: 300, width: 64, height: 72 }, 'horizontal', 'left'),
-    { x: 1572, y: 300, width: 348, height: 72 }
-  );
-  assert.deepEqual(
-    geometry.collapseStartBounds({ x: 100, y: 724, width: 72, height: 72 }, 'vertical', 'up'),
-    { x: 100, y: 448, width: 72, height: 348 }
-  );
-  assert.deepEqual(
-    geometry.collapseStartBounds({ x: 100, y: 100, width: 72, height: 72 }, 'vertical', 'down'),
-    { x: 100, y: 100, width: 72, height: 348 }
-  );
-});
-
-test('vertical expansion only goes upward when there is insufficient space below', () => {
-  assert.equal(geometry.expansionPlacement('right', { x: 1800, y: 560 }, AREA).direction, 'down');
-  assert.equal(geometry.expansionPlacement('right', { x: 1800, y: 800 }, AREA).direction, 'up');
-});
-
 test('collapsed capsule drag clamps with its actual size rather than expanded width', () => {
   const collapsed = { x: 1866, y: 300, width: 64, height: 84 };
   assert.deepEqual(
@@ -145,4 +99,73 @@ test('collapsed capsule drag clamps with its actual size rather than expanded wi
     geometry.translateDragBounds(expanded, { x: -2, y: 0 }, AREA),
     { x: 1570, y: 300, width: 348, height: 72 }
   );
+});
+
+const PAD = 10;
+function visibleCapsule(bounds) {
+  return { x: bounds.x + PAD, y: bounds.y + PAD, right: bounds.x + bounds.width - PAD, bottom: bounds.y + bounds.height - PAD };
+}
+
+test('dockAnchor places the half-capsule flush on its edge', () => {
+  const floating = { x: 1500, y: 300, width: 328, height: 52 };
+  assert.deepEqual(geometry.dockAnchor('right', floating, AREA), { x: 1876, y: 300, width: 44, height: 52 });
+  assert.deepEqual(geometry.dockAnchor('left', floating, AREA), { x: 0, y: 300, width: 44, height: 52 });
+  assert.deepEqual(geometry.dockAnchor('bottom', { x: 1700, y: 1020, width: 328, height: 52 }, AREA), { x: 1700, y: 1036, width: 64, height: 44 });
+  assert.deepEqual(geometry.dockAnchor('top', { x: 200, y: 4, width: 328, height: 52 }, AREA), { x: 200, y: 0, width: 64, height: 44 });
+});
+
+test('dockedWindowBounds adds the shadow padding around the anchor', () => {
+  assert.deepEqual(geometry.dockedWindowBounds({ x: 1876, y: 300, width: 44, height: 52 }, PAD), { x: 1866, y: 290, width: 64, height: 72 });
+});
+
+test('expansion grows from the anchor and keeps an 8 DIP gap on every edge', () => {
+  const left = geometry.expansionPlacement('left', { x: 0, y: 100, width: 44, height: 52 }, AREA, PAD);
+  assert.deepEqual(left, { axis: 'vertical', direction: 'down', bounds: { x: -2, y: 90, width: 72, height: 348 } });
+  const right = geometry.expansionPlacement('right', { x: 1876, y: 800, width: 44, height: 52 }, AREA, PAD);
+  assert.deepEqual(right, { axis: 'vertical', direction: 'up', bounds: { x: 1850, y: 514, width: 72, height: 348 } });
+  const top = geometry.expansionPlacement('top', { x: 200, y: 0, width: 64, height: 44 }, AREA, PAD);
+  assert.deepEqual(top, { axis: 'horizontal', direction: 'right', bounds: { x: 190, y: -2, width: 348, height: 72 } });
+  const bottom = geometry.expansionPlacement('bottom', { x: 1600, y: 1036, width: 64, height: 44 }, AREA, PAD);
+  assert.deepEqual(bottom, { axis: 'horizontal', direction: 'left', bounds: { x: 1326, y: 1010, width: 348, height: 72 } });
+
+  assert.equal(visibleCapsule(left.bounds).x - AREA.x, 8);
+  assert.equal(AREA.x + AREA.width - visibleCapsule(right.bounds).right, 8);
+  assert.equal(visibleCapsule(top.bounds).y - AREA.y, 8);
+  assert.equal(AREA.y + AREA.height - visibleCapsule(bottom.bounds).bottom, 8);
+});
+
+test('upward and leftward expansion stays aligned with the anchor end', () => {
+  const anchorR = { x: 1876, y: 800, width: 44, height: 52 };
+  const up = visibleCapsule(geometry.expansionPlacement('right', anchorR, AREA, PAD).bounds);
+  assert.equal(up.bottom, anchorR.y + anchorR.height);
+  const anchorB = { x: 1600, y: 1036, width: 64, height: 44 };
+  const left = visibleCapsule(geometry.expansionPlacement('bottom', anchorB, AREA, PAD).bounds);
+  assert.equal(left.right, anchorB.x + anchorB.width);
+});
+
+test('vertical expansion only goes upward when there is insufficient space below', () => {
+  assert.equal(geometry.expansionPlacement('right', { x: 1876, y: 560, width: 44, height: 52 }, AREA, PAD).direction, 'down');
+  assert.equal(geometry.expansionPlacement('right', { x: 1876, y: 800, width: 44, height: 52 }, AREA, PAD).direction, 'up');
+});
+
+test('repeated expand and collapse cycles never move the dock', () => {
+  for (const [edge, anchor] of [
+    ['right', { x: 1876, y: 900, width: 44, height: 52 }],
+    ['bottom', { x: 1700, y: 1036, width: 64, height: 44 }],
+    ['left', { x: 0, y: 300, width: 44, height: 52 }],
+    ['top', { x: 1800, y: 0, width: 64, height: 44 }]
+  ]) {
+    const original = geometry.dockedWindowBounds(anchor, PAD);
+    for (let i = 0; i < 3; i++) {
+      geometry.expansionPlacement(edge, anchor, AREA, PAD);
+      assert.deepEqual(geometry.dockedWindowBounds(anchor, PAD), original, `${edge} cycle ${i + 1}`);
+    }
+  }
+});
+
+test('sanitizeDock accepts only a known edge with a finite anchor', () => {
+  assert.deepEqual(geometry.sanitizeDock({ edge: 'left', anchor: { x: 0.4, y: 300, width: 44, height: 52 } }), { edge: 'left', anchor: { x: 0, y: 300, width: 44, height: 52 } });
+  assert.equal(geometry.sanitizeDock({ edge: 'middle', anchor: { x: 0, y: 0, width: 1, height: 1 } }), null);
+  assert.equal(geometry.sanitizeDock({ edge: 'top', anchor: { x: 'a', y: 0, width: 1, height: 1 } }), null);
+  assert.equal(geometry.sanitizeDock(null), null);
 });

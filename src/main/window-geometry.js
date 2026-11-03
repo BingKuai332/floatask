@@ -8,6 +8,7 @@ const EXPANDED_EDGE_GAP = 8;
 const CAPSULE_EXPANDED = [328, 52];
 const HALF_CAPSULE_VERTICAL = [44, 52];
 const HALF_CAPSULE_HORIZONTAL = [64, 44];
+const SHADOW_PADDING = 10;
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
@@ -56,47 +57,75 @@ function edgeGapPosition(edge, size, position, workArea) {
   return clampToWorkArea({ ...next, width: size.width, height: size.height }, workArea);
 }
 
-function expansionPlacement(edge, position, workArea) {
+const DOCK_EDGES = ['left', 'right', 'top', 'bottom'];
+
+function halfCapsuleSize(edge) {
+  return edge === 'left' || edge === 'right'
+    ? { width: HALF_CAPSULE_VERTICAL[0], height: HALF_CAPSULE_VERTICAL[1] }
+    : { width: HALF_CAPSULE_HORIZONTAL[0], height: HALF_CAPSULE_HORIZONTAL[1] };
+}
+
+/** Half-capsule bounds (visible, no padding) flush on `edge`, keeping the along-edge coordinate of `capsule`. */
+function dockAnchor(edge, capsule, workArea) {
+  const size = halfCapsuleSize(edge);
+  const anchors = {
+    left: { x: workArea.x, y: capsule.y },
+    right: { x: workArea.x + workArea.width - size.width, y: capsule.y },
+    top: { x: capsule.x, y: workArea.y },
+    bottom: { x: capsule.x, y: workArea.y + workArea.height - size.height }
+  };
+  return clampToWorkArea({ ...anchors[edge], ...size }, workArea);
+}
+
+/** Window bounds for a docked half-capsule: the anchor plus the transparent shadow padding. */
+function dockedWindowBounds(anchor, padding = SHADOW_PADDING) {
+  return { x: anchor.x - padding, y: anchor.y - padding, width: anchor.width + padding * 2, height: anchor.height + padding * 2 };
+}
+
+/**
+ * Expanded window bounds for a docked capsule. The capsule grows from the
+ * anchor (down/right when there is room, otherwise up/left from the anchor's
+ * far end) and sits EXPANDED_EDGE_GAP DIP off its edge on all four sides.
+ */
+function expansionPlacement(edge, anchor, workArea, padding = SHADOW_PADDING) {
+  const [length, thickness] = CAPSULE_EXPANDED;
   const vertical = edge === 'left' || edge === 'right';
   const axis = vertical ? 'vertical' : 'horizontal';
+  const areaRight = workArea.x + workArea.width;
+  const areaBottom = workArea.y + workArea.height;
   const direction = vertical
-    ? (position.y + 328 + EXPANDED_EDGE_GAP > workArea.y + workArea.height ? 'up' : 'down')
-    : (position.x + 328 + EXPANDED_EDGE_GAP > workArea.x + workArea.width ? 'left' : 'right');
-  const width = vertical ? 72 : 348;
-  const height = vertical ? 348 : 72;
-  let x = position.x - 10;
-  let y = position.y - 10;
+    ? (anchor.y + length + EXPANDED_EDGE_GAP > areaBottom ? 'up' : 'down')
+    : (anchor.x + length + EXPANDED_EDGE_GAP > areaRight ? 'left' : 'right');
+  const width = (vertical ? thickness : length) + padding * 2;
+  const height = (vertical ? length : thickness) + padding * 2;
+  let capsuleX;
+  let capsuleY;
   if (vertical) {
-    x = edge === 'left' ? workArea.x + EXPANDED_EDGE_GAP - 10 : workArea.x + workArea.width - EXPANDED_EDGE_GAP - width;
-    if (direction === 'up') y = workArea.y + workArea.height - EXPANDED_EDGE_GAP - height;
+    capsuleX = edge === 'left' ? workArea.x + EXPANDED_EDGE_GAP : areaRight - EXPANDED_EDGE_GAP - thickness;
+    capsuleY = direction === 'down' ? anchor.y : anchor.y + anchor.height - length;
   } else {
-    if (direction === 'left') x = workArea.x + workArea.width - EXPANDED_EDGE_GAP - width;
-    if (edge === 'top') y = workArea.y + EXPANDED_EDGE_GAP - 10;
-    if (edge === 'bottom') y = workArea.y + workArea.height - EXPANDED_EDGE_GAP - height;
+    capsuleY = edge === 'top' ? workArea.y + EXPANDED_EDGE_GAP : areaBottom - EXPANDED_EDGE_GAP - thickness;
+    capsuleX = direction === 'right' ? anchor.x : anchor.x + anchor.width - length;
   }
   const paddedArea = {
-    x: workArea.x - 10,
-    y: workArea.y - 10,
-    width: workArea.width + 20,
-    height: workArea.height + 20
+    x: workArea.x - padding,
+    y: workArea.y - padding,
+    width: workArea.width + padding * 2,
+    height: workArea.height + padding * 2
   };
   return {
     axis,
     direction,
-    bounds: clampToWorkArea({ x, y, width, height }, paddedArea)
+    bounds: clampToWorkArea({ x: capsuleX - padding, y: capsuleY - padding, width, height }, paddedArea)
   };
 }
 
-function collapseStartBounds(target, axis, direction) {
-  const start = { ...target };
-  if (axis === 'vertical') {
-    start.height = 348;
-    if (direction === 'up') start.y -= 276;
-  } else {
-    start.width = 348;
-    if (direction === 'left') start.x -= 284;
-  }
-  return start;
+/** Validate a persisted dock ({ edge, anchor }); returns null when unusable. */
+function sanitizeDock(dock) {
+  if (!dock || !DOCK_EDGES.includes(dock.edge)) return null;
+  const a = dock.anchor || {};
+  if (![a.x, a.y, a.width, a.height].every(Number.isFinite)) return null;
+  return { edge: dock.edge, anchor: { x: Math.round(a.x), y: Math.round(a.y), width: Math.round(a.width), height: Math.round(a.height) } };
 }
 
 function translateDragBounds(start, delta, workArea, shadowPadding = 0) {
@@ -123,14 +152,17 @@ function physicalSize(dipSize, scaleFactor) {
 module.exports = {
   SNAP_DISTANCE,
   EXPANDED_EDGE_GAP,
+  SHADOW_PADDING,
   CAPSULE_EXPANDED,
   HALF_CAPSULE_VERTICAL,
   HALF_CAPSULE_HORIZONTAL,
   clampToWorkArea,
   snapToolbar,
   edgeGapPosition,
+  dockAnchor,
+  dockedWindowBounds,
   expansionPlacement,
-  collapseStartBounds,
+  sanitizeDock,
   translateDragBounds,
   physicalSize
 };
