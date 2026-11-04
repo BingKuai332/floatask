@@ -72,6 +72,8 @@ let resultState = null;
 let resultRevision = 0;
 let resultCollapsed = false;
 let resultExpandedBounds = null;
+let translateCollapsed = false;
+let translateExpandedBounds = null;
 let hotkey = 'Alt+Q';
 let hotkeyOk = false;
 let settingsFirstRun = false;
@@ -974,6 +976,7 @@ async function ensureTranslateWindow() {
 async function showTranslation(payload) {
   const win = await ensureTranslateWindow();
   if (!win || win.isDestroyed()) return;
+  if (translateCollapsed) setTranslateCollapsed(false);
   win.webContents.send('translate:init', payload);
   win.show();
   win.focus();
@@ -1267,22 +1270,25 @@ async function showResult(payload, screenRect, display, sessionId = session?.id)
   refreshBubble();
 }
 
+function collapseBounds(win, saved, width, height) {
+  const area = screen.getDisplayMatching(win.getBounds()).workArea;
+  const current = win.getBounds();
+  const x = Math.min(Math.max(current.x, area.x + 4), area.x + area.width - width - 4);
+  const y = Math.min(Math.max(current.y, area.y + 4), area.y + area.height - height - 4);
+  win.setBounds({ x, y, width, height });
+  return saved;
+}
+
 function setResultCollapsed(collapsed) {
   if (!resultWin || resultWin.isDestroyed()) return;
   const next = Boolean(collapsed);
   if (next === resultCollapsed) return;
-  const current = resultWin.getBounds();
-  const area = screen.getDisplayMatching(current).workArea;
   if (next) {
-    resultExpandedBounds = current;
+    resultExpandedBounds = resultWin.getBounds();
     resultCollapsed = true;
-    const width = 300;
-    const height = 74;
     resultWin.setResizable(false);
     resultWin.setMinimumSize(0, 0);
-    const x = Math.min(Math.max(current.x, area.x + 4), area.x + area.width - width - 4);
-    const y = Math.min(Math.max(current.y, area.y + 4), area.y + area.height - height - 4);
-    resultWin.setBounds({ x, y, width, height });
+    collapseBounds(resultWin, resultExpandedBounds, 300, 74);
     resultWin.webContents.send('result:collapsed', true);
     return;
   }
@@ -1290,12 +1296,30 @@ function setResultCollapsed(collapsed) {
   resultWin.setMinimumSize(400, 320);
   resultWin.setResizable(true);
   const saved = resultExpandedBounds || { width: 800, height: 600 };
-  const width = Math.min(saved.width, area.width - 8);
-  const height = Math.min(saved.height, area.height - 8);
-  const x = Math.min(Math.max(current.x, area.x + 4), area.x + area.width - width - 4);
-  const y = Math.min(Math.max(current.y, area.y + 4), area.y + area.height - height - 4);
-  resultWin.setBounds({ x, y, width, height });
+  collapseBounds(resultWin, saved, Math.min(saved.width, screen.getDisplayMatching(resultWin.getBounds()).workArea.width - 8), Math.min(saved.height, screen.getDisplayMatching(resultWin.getBounds()).workArea.height - 8));
   resultWin.webContents.send('result:collapsed', false);
+}
+
+function setTranslateCollapsed(collapsed) {
+  if (!translateWin || translateWin.isDestroyed()) return;
+  const next = Boolean(collapsed);
+  if (next === translateCollapsed) return;
+  if (next) {
+    translateExpandedBounds = translateWin.getBounds();
+    translateCollapsed = true;
+    translateWin.setResizable(false);
+    translateWin.setMinimumSize(0, 0);
+    collapseBounds(translateWin, translateExpandedBounds, 320, 76);
+    translateWin.webContents.send('translate:collapsed', true);
+    return;
+  }
+  translateCollapsed = false;
+  translateWin.setMinimumSize(640, 420);
+  translateWin.setResizable(true);
+  const saved = translateExpandedBounds || { width: 880, height: 620 };
+  const area = screen.getDisplayMatching(translateWin.getBounds()).workArea;
+  collapseBounds(translateWin, saved, Math.min(saved.width, area.width - 8), Math.min(saved.height, area.height - 8));
+  translateWin.webContents.send('translate:collapsed', false);
 }
 
 function hideResult() {
@@ -2331,8 +2355,11 @@ ipcMain.on('translate:close', () => {
   if (translationState?.abort) translationState.abort.abort();
   translationState = null;
   if (translateWin && !translateWin.isDestroyed()) translateWin.hide();
+  translateCollapsed = false;
+  translateExpandedBounds = null;
   refreshBubble();
 });
+ipcMain.on('translate:collapse', (_event, collapsed) => setTranslateCollapsed(Boolean(collapsed)));
 ipcMain.on('session:web', (_event, enabled) => {
   if (session) session.webEnabled = Boolean(enabled);
 });

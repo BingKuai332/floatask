@@ -60,6 +60,8 @@ contextBridge.exposeInMainWorld('floatask', {
   // Screenshot translation
   onTranslateInit: (cb) => subscribe('translate:init', cb),
   onTranslateEvent: (cb) => subscribe('translate:event', cb),
+  collapseTranslate: (collapsed) => ipcRenderer.send('translate:collapse', Boolean(collapsed)),
+  onTranslateCollapsed: (cb) => subscribe('translate:collapsed', cb),
   retranslate: (target) => ipcRenderer.send('translate:retry', target),
   searchTranslation: (text) => ipcRenderer.send('translate:search', text),
   closeTranslate: () => ipcRenderer.send('translate:close'),
