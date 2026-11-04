@@ -103,7 +103,7 @@
 | `bubble-industrial.png`、`translate-industrial.png`、`font-industrial.png` | 03 / — / — | 通过：切角与 token 生效 |
 | `result-dark.png`、`result-light.png`、`settings-dark.png` | 回归 | 通过：近月 / 朝日保持圆角，无工业装饰 |
 
-自动化：`npm test`（118 项单测 + Electron 冒烟，含前哨切换、会话哈希与 `ocr N ch` 数值断言）通过；`node scripts/build-theme.js --check` 通过。
+自动化：`npm test`（全部单元测试 + Electron 冒烟，含前哨切换、会话哈希与 `ocr N ch` 数值断言）通过；`node scripts/build-theme.js --check` 通过。
 
 待实机确认（需要人工操作 GUI）：工具栏四边吸附的展开 / 收起无跳动与 8 DIP 间距、重启后保持吸附、拖动吸附胶囊不换边；Windows 高对比度下装饰隐藏；关闭动画效果时传送带静止；125% / 150% 缩放。
 

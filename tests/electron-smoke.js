@@ -887,6 +887,26 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(await js(result,"document.querySelectorAll('.message.assistant').length"),assistantCount+1,'reloading a partial answer must not duplicate or drop it');
    assert.equal(await js(result,"Array.from(document.querySelectorAll('.message.assistant .md-body')).at(-1).textContent.trim()"),'A useful explanation with enough text to save.');
    streamDelay = 120;
+   const themeBeforeCollapsedIndustrial=await js(settings,"(async()=>(await window.floatask.getSettings()).theme)()");
+   await js(settings,"window.floatask.saveSettings({theme:'industrial'})");
+   await settleTheme(result,'industrial','result settles on industrial before collapsing');
+   const beforeCollapsedSize=result.getSize();
+   await js(result,"document.getElementById('collapseBtn').click();true");
+   await waitFor(async()=>await js(result,"document.body.classList.contains('collapsed')") && result.getSize().join()==='300,74','industrial result collapses to the titlebar');
+   const collapsedIndustrial=await js(result,`(() => ({
+    term:getComputedStyle(document.getElementById('termLabel')).display,
+    contour:getComputedStyle(document.querySelector('.contour-field')).display,
+    shadow:getComputedStyle(document.querySelector('.card')).boxShadow,
+    overflow:document.documentElement.scrollWidth>innerWidth
+   }))()`);
+   await screenshot(result,'result-collapsed-industrial');
+   assert.equal(collapsedIndustrial.term,'none','collapsed industrial hides the terminal readout');
+   assert.equal(collapsedIndustrial.contour,'none','collapsed industrial hides the contour field');
+   assert.equal(collapsedIndustrial.shadow,'none','collapsed result does not clip a floating shadow');
+   assert.equal(collapsedIndustrial.overflow,false,'collapsed industrial fits its window width');
+   await js(result,"document.getElementById('collapseBtn').click();true");
+   await waitFor(async()=>await js(result,"!document.body.classList.contains('collapsed')") && result.getSize().join()===beforeCollapsedSize.join(),'result expands back to its previous size');
+   await js(settings,`window.floatask.saveSettings({theme:${JSON.stringify(themeBeforeCollapsedIndustrial)}})`);
    await js(settings,"window.floatask.setLanguage('en')");
    await waitFor(()=>js(font,"document.getElementById('importBtn').textContent==='＋ Import font file…'"),'font translated');
    await js(result,"document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");

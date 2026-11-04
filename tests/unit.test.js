@@ -218,3 +218,23 @@ test('main-process design constants mirror the token source', () => {
  assert.deepEqual(geometry.HALF_CAPSULE_VERTICAL, constants.CAPSULE_COLLAPSED_VERTICAL, 'collapsed vertical capsule in sync');
  assert.deepEqual(geometry.HALF_CAPSULE_HORIZONTAL, constants.CAPSULE_COLLAPSED_HORIZONTAL, 'collapsed horizontal capsule in sync');
 });
+
+test('portable packaging excludes internal design and agent workspaces', () => {
+ const script = require('../package.json').scripts.pack;
+ const match = script.match(/--ignore="([^"]+)"/);
+ assert.ok(match, 'the pack script declares an ignore rule');
+ const ignore = new RegExp(match[1]);
+ for (const entry of ['/design-mockups', '/.superpowers', '/.design-reference']) {
+  assert.ok(ignore.test(entry), `${entry} must not ship in app.asar`);
+ }
+ for (const entry of ['/src', '/resources', '/package.json']) {
+  assert.ok(!ignore.test(entry), `${entry} remains in the application package`);
+ }
+});
+
+test('collapsed result and translation cards suppress their clipped floating shadow', () => {
+ for (const name of ['result', 'translate']) {
+  const css = fs.readFileSync(path.join(__dirname, '..', 'src', 'renderer', `${name}.css`), 'utf8');
+  assert.match(css, /body\.collapsed \.card\s*\{[^}]*box-shadow:\s*none/, `${name} removes the shadow in its collapsed window`);
+ }
+});

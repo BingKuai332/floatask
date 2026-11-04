@@ -450,8 +450,8 @@ if (settingsNav) settingsNav.addEventListener('wheel', event => {
   if (next !== current && next >= 0) selectPanel(navItems[next].dataset.panel);
 }, { passive: false });
 
-/* Theme / answer size / density: live preview now, persisted on save.
-   The underlying model stays compatible: untouched values pass through. */
+/* Theme persists immediately; answer size, font size and density preview live
+   and persist on save. Untouched values pass through unchanged. */
 const DENSITY_LINE_HEIGHT = { compact: 1.5, standard: 1.72, relaxed: 2.0 };
 const appearance = { theme: 'system', fontSize: 14, lineHeight: 1.72 };
 let savedAppearance = { ...appearance };

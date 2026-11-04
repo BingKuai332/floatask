@@ -1300,7 +1300,7 @@ function watchUserResultResize() {
   resultSizePollTimer = setInterval(() => {
     if (isQuitting || !resultWin || resultWin.isDestroyed()) return;
     const currentSize = resultWin.getSize();
-    if (resultProgrammaticResize > 0 || !resultWin.isVisible()) {
+    if (resultProgrammaticResize > 0 || resultCollapsed || !resultWin.isVisible()) {
       lastResultSize = currentSize.join('x');
       return;
     }

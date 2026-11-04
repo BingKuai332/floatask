@@ -919,8 +919,8 @@ html, body {
 .term-label, .session-hash, .term-meta { display: none; }
 .contour-field { display: none; }
 body.collapsed .shell { padding: 8px; }
-body.collapsed .card { height: 100%; }
-body.collapsed .context-strip, body.collapsed .messages, body.collapsed .composer, body.collapsed .toast, body.collapsed .lightbox { display: none !important; }
+body.collapsed .card { height: 100%; box-shadow: none; }
+body.collapsed .context-strip, body.collapsed .messages, body.collapsed .composer, body.collapsed .toast, body.collapsed .lightbox, body.collapsed .contour-field { display: none !important; }
 body.collapsed .titlebar { height: 100%; flex: 1 1 auto; border-bottom: 0; }
-body.collapsed .brand-en, body.collapsed .status-pill, body.collapsed .actions .icon-btn:not(#collapseBtn):not(#closeBtn) { display: none !important; }
+body.collapsed .brand-en, body.collapsed .status-pill, body.collapsed .term-label, body.collapsed .actions .icon-btn:not(#collapseBtn):not(#closeBtn) { display: none !important; }
 body.collapsed #collapseBtn svg { transform: rotate(180deg); }
