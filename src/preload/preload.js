@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 const { contextBridge, ipcRenderer } = require('electron');
 
@@ -43,6 +43,8 @@ contextBridge.exposeInMainWorld('floatask', {
   correctOcr: (text) => ipcRenderer.send('session:correct-ocr', text),
   setWebEnabled: (enabled) => ipcRenderer.send('session:web', Boolean(enabled)),
   closeResult: () => ipcRenderer.send('result:close'),
+  collapseResult: (collapsed) => ipcRenderer.send('result:collapse', Boolean(collapsed)),
+  onResultCollapsed: (cb) => subscribe('result:collapsed', cb),
   setPinned: (pinned) => ipcRenderer.send('result:pin', Boolean(pinned)),
   toggleResultExpand: () => ipcRenderer.send('result:toggle-expand'),
   onResultMode: (cb) => subscribe('result:mode', cb),

@@ -1096,3 +1096,21 @@ document.addEventListener('floatask:language', () => {
   els.contextToggle.title = tt(els.contextPanel.classList.contains('open') ? 'result.contextCollapse' : 'result.contextExpand');
   els.pinBtn.title = tt(state.pinned ? 'result.unpin' : 'result.pin');
 });
+(() => {
+  const actions = document.querySelector('.titlebar .actions');
+  if (!actions || document.getElementById('collapseBtn')) return;
+  const button = document.createElement('button');
+  button.id = 'collapseBtn';
+  button.className = 'icon-btn';
+  button.type = 'button';
+  button.title = 'Collapse dialog';
+  button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7 14 5-5 5 5"></path><path d="M5 20h14" opacity=".55"></path></svg>';
+  button.addEventListener('click', () => window.floatask.collapseResult(!document.body.classList.contains('collapsed')));
+  actions.insertBefore(button, actions.firstChild);
+  const apply = (collapsed) => {
+    document.body.classList.toggle('collapsed', Boolean(collapsed));
+    button.title = collapsed ? 'Expand dialog' : 'Collapse dialog';
+  };
+  window.floatask.onResultCollapsed(apply);
+  apply(false);
+})();

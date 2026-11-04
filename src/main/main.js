@@ -70,6 +70,8 @@ let pinned = true;
 let session = null;
 let resultState = null;
 let resultRevision = 0;
+let resultCollapsed = false;
+let resultExpandedBounds = null;
 let hotkey = 'Alt+Q';
 let hotkeyOk = false;
 let settingsFirstRun = false;
@@ -1265,8 +1267,41 @@ async function showResult(payload, screenRect, display, sessionId = session?.id)
   refreshBubble();
 }
 
+function setResultCollapsed(collapsed) {
+  if (!resultWin || resultWin.isDestroyed()) return;
+  const next = Boolean(collapsed);
+  if (next === resultCollapsed) return;
+  const current = resultWin.getBounds();
+  const area = screen.getDisplayMatching(current).workArea;
+  if (next) {
+    resultExpandedBounds = current;
+    resultCollapsed = true;
+    const width = 300;
+    const height = 74;
+    resultWin.setResizable(false);
+    resultWin.setMinimumSize(0, 0);
+    const x = Math.min(Math.max(current.x, area.x + 4), area.x + area.width - width - 4);
+    const y = Math.min(Math.max(current.y, area.y + 4), area.y + area.height - height - 4);
+    resultWin.setBounds({ x, y, width, height });
+    resultWin.webContents.send('result:collapsed', true);
+    return;
+  }
+  resultCollapsed = false;
+  resultWin.setMinimumSize(400, 320);
+  resultWin.setResizable(true);
+  const saved = resultExpandedBounds || { width: 800, height: 600 };
+  const width = Math.min(saved.width, area.width - 8);
+  const height = Math.min(saved.height, area.height - 8);
+  const x = Math.min(Math.max(current.x, area.x + 4), area.x + area.width - width - 4);
+  const y = Math.min(Math.max(current.y, area.y + 4), area.y + area.height - height - 4);
+  resultWin.setBounds({ x, y, width, height });
+  resultWin.webContents.send('result:collapsed', false);
+}
+
 function hideResult() {
   ++sessionCounter;
+  resultCollapsed = false;
+  resultExpandedBounds = null;
   if (resultWin && !resultWin.isDestroyed()) resultWin.destroy();
   if (session?.abort) session.abort.abort();
   session = null;
@@ -2225,6 +2260,7 @@ ipcMain.on('selection:finish', (_event, rect) => handleSelectionRect(rect));
 ipcMain.on('selection:cancel', () => cancelSelection());
 
 ipcMain.on('result:close', () => hideResult());
+ipcMain.on('result:collapse', (_event, collapsed) => setResultCollapsed(Boolean(collapsed)));
 ipcMain.on('result:toggle-expand', () => {
   const expanded = !store.getConfig().resultExpanded;
   store.save({ resultExpanded: expanded });
