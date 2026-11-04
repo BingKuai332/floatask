@@ -4,9 +4,10 @@ const tt = (key, params) => window.FloatAskI18n.t(key, params);
 const md = window.FloatAskMarkdown;
 const list = document.getElementById('recordList');
 const detail = document.getElementById('detail');
-let records = [], selected = null, favorites = false, query = '', generation = 0;
+let records = [], selected = null, requestedRecordId = null, favorites = false, query = '', generation = 0;
 let typeFilter = 'all', deleteArmed = false, toastTimer;
 const texts = new Map();
+let refreshGeneration = 0, searchTimer;
 function toast(text) {
  const el=document.getElementById('toast'); el.textContent=text; el.className='show';
  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.className='',2800);
@@ -47,9 +48,12 @@ async function toggleFavorite(row) {
 }
 async function select(id) {
  const version=++generation;
- try { const result=check(await api.getHistoryRecord(id)); if(version!==generation) return;
+ requestedRecordId=id;
+ try { const response=await api.getHistoryRecord(id); if(version!==generation) return;
+ const result=check(response);
  selected=result.record; deleteArmed=false; renderDetail(); renderList();
- } catch(err) { toast(err.message); }
+ if (!selected) requestedRecordId=null;
+ } catch(err) { if(version===generation) toast(err.message); }
 }
 function renderDetail() {
  detail.replaceChildren();
@@ -66,7 +70,10 @@ function renderDetail() {
  button('history.copyAll',async()=>{await api.copyText([record.selectionText,...record.messages.map(m=>m.content)].filter(Boolean).join('\n\n')); toast(tt('history.copiedToast'));}),
  button(deleteArmed?'common.confirmDelete':'common.delete',async()=>{
   if(!deleteArmed) {deleteArmed=true; renderDetail(); return;}
-  check(await api.deleteHistoryRecord(record.id)); selected=null; await refresh(); renderDetail(); toast(tt('history.deletedToast'));
+  check(await api.deleteHistoryRecord(record.id));
+  if(requestedRecordId===record.id) { ++generation; requestedRecordId=null; }
+  if(selected?.id===record.id) { selected=null; deleteArmed=false; renderDetail(); }
+  await refresh(); toast(tt('history.deletedToast'));
  }));
  detail.append(title,meta,actions);
  if(record.hasImage) {const p=document.createElement('p');p.textContent=tt('history.readOnlyImage');detail.append(p);}
@@ -82,18 +89,21 @@ function renderDetail() {
  }
 }
 async function refresh() {
- const result=check(await api.listHistory()); records=result.records;
- texts.clear();
- // Full text is indexed locally; no queries leave this device.
- await Promise.all(records.map(async r=>{
-  const result=check(await api.getHistoryRecord(r.id)); const record=result.record;
-  texts.set(r.id,[r.title,r.windowTitle,record?.selectionText,...(record?.messages || []).map(m=>m.content)].join(' ').toLowerCase());
- }));
- renderList();
+ clearTimeout(searchTimer); searchTimer=null;
+ const version = ++refreshGeneration;
+ try {
+  const response = await api.listHistory({query, favorites});
+  if (version !== refreshGeneration) return;
+  records = check(response).records; renderList();
+ } catch(err) { if(version===refreshGeneration) throw err; }
 }
-document.getElementById('searchInput').addEventListener('input',event=>{query=event.target.value.trim().toLowerCase();renderList();});
+function refreshSafely() { return refresh().catch(err=>toast(err.message)); }
+document.getElementById('searchInput').addEventListener('input',event=>{
+ query=event.target.value.trim().toLowerCase(); ++refreshGeneration;
+ clearTimeout(searchTimer); searchTimer=setTimeout(refreshSafely,120);
+});
 for(const [id,value] of [['allBtn',false],['favBtn',true]]) document.getElementById(id).onclick=()=>{
- favorites=value; document.getElementById('allBtn').classList.toggle('active',!value);document.getElementById('favBtn').classList.toggle('active',value);renderList();
+ favorites=value; document.getElementById('allBtn').classList.toggle('active',!value);document.getElementById('favBtn').classList.toggle('active',value);refreshSafely();
 };
 for(const btn of document.querySelectorAll('[data-type-filter]')) btn.onclick=()=>{
  typeFilter=btn.dataset.typeFilter;
@@ -109,7 +119,7 @@ document.getElementById('clearBtn').onclick=()=>{
 document.getElementById('historyClearCancel').onclick=()=>{ clearScope.hidden=true; };
 document.getElementById('historyClearConfirm').onclick=async()=>{
  try {
-  check(await api.clearHistory(true)); selected=null; clearScope.hidden=true; await refresh(); renderDetail();
+  check(await api.clearHistory(true)); ++generation; requestedRecordId=null; selected=null; deleteArmed=false; clearScope.hidden=true; await refresh(); renderDetail();
   toast(tt('history.clearedToast'));
  } catch(err) {toast(err.message);}
 };
@@ -117,7 +127,10 @@ document.getElementById('closeBtn').onclick=()=>api.closeHistory();
 document.addEventListener('keydown',e=>{if(e.key==='Escape')api.closeHistory();});
 document.addEventListener('click',e=>{const a=e.target.closest('a[data-url]');if(a){e.preventDefault();api.openExternal(a.dataset.url);}});
 document.addEventListener('floatask:language',()=>{renderList();renderDetail();});
-api.onHistoryUpdated(()=>refresh().then(()=>selected?select(selected.id):null).catch(err=>toast(err.message)));
+api.onHistoryUpdated(()=>{
+ const version=generation, id=requestedRecordId;
+ return refresh().then(()=>id && version===generation?select(id):null).catch(err=>toast(err.message));
+});
 api.onHistoryShowRecord(({id})=>select(id));
 api.onFontUpdated(font=>window.FloatAskFont.apply(font,{reading:true,ui:true}));
 Promise.all([window.FloatAskI18nReady,api.getFont().then(font=>window.FloatAskFont.apply(font,{reading:true,ui:true}))]).then(refresh).catch(err=>toast(tt('history.loadFailed',{err:err.message})));

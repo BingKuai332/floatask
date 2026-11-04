@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 // Runs the real main process, preload, IPC and renderer pages against a local AI.
 const { app, BrowserWindow, ipcMain, globalShortcut, nativeTheme, clipboard, screen } = require('electron');
 const fs = require('fs');
@@ -7,9 +7,11 @@ const path = require('path');
 const http = require('http');
 const assert = require('assert/strict');
 const root = path.join(__dirname, '..');
+const unhandled = [];
+process.on('unhandledRejection', error => unhandled.push(String(error?.stack || error)));
 const data = process.env.FLOATASK_USER_DATA || fs.mkdtempSync(path.join(os.tmpdir(), 'floatask-smoke-'));
 process.env.FLOATASK_USER_DATA = data;
-let calls = [], requestPaths = [], errors = [], slowSearch = false, rejectImages = false, captureDelay = 0, captureTag = "fixture";
+let calls = [], requestPaths = [], errors = [], slowSearch = false, rejectImages = false, captureDelay = 0, captureTag = "fixture", streamDelay = 120;
 const updaterModule = require('../src/main/updater');
 const realCreateUpdater = updaterModule.createUpdater;
 updaterModule.createUpdater = options => realCreateUpdater({ ...options, request: async () => Response.json({
@@ -48,7 +50,7 @@ const server = http.createServer((req,res) => {
   if (!payload.stream) { res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify({model:payload.model,choices:[{message:{content:'OK'}}]})); return; }
   res.writeHead(200, {'Content-Type':'text/event-stream'});
   res.write('data: '+JSON.stringify({choices:[{delta:{content:'A useful explanation with enough text to save.'}}]})+'\n\n');
-  setTimeout(()=>res.end('data: [DONE]\n\n'),120);
+  setTimeout(()=>res.end('data: [DONE]\n\n'),streamDelay);
  });
 });
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -259,9 +261,12 @@ server.listen(0,'127.0.0.1',()=>{
    await screenshot(settings,'updates-en');
    const history=require('../src/main/history');
    const record=history.record({selectionText:'Term about databases',windowInfo:{title:'Test window'},history:[{role:'user',content:'Explain'},{role:'assistant',content:'A rare searchable needle in a useful explanation.'}]},{model:'mock'});
+   const originalGetHistory = history.get; let detailReads = 0;
+   history.get = (...args) => { detailReads++; return originalGetHistory(...args); };
    await js(settings,'window.floatask.openHistory()');
    const win=await waitFor(()=>page('history'),'history');
    await waitFor(()=>js(win,"document.querySelectorAll('.record').length===1"),'history list');
+   assert.equal(detailReads,0,'history list must not load full conversations');
    await js(win,"document.querySelector('.record').click()");
    await waitFor(()=>js(win,"document.querySelectorAll('.history-message').length===2"),'detail');
    assert.equal(await js(win,"document.querySelector('#detail h2').textContent"),'Term about databases');
@@ -307,7 +312,7 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(await js(win,"document.getElementById('clearScope').hidden"),true,'cancel dismisses the confirm');
    assert.equal(history.list().length,1,'cancel keeps every record');
    await js(win,`window.floatask.resumeHistory(${JSON.stringify(record.id)})`);
-   const result=await waitFor(()=>page('result'),'result');
+   let result=await waitFor(()=>page('result'),'result');
    await waitFor(()=>js(result,"document.querySelectorAll('.message.assistant').length===1"),'restored messages');
    assert.equal(await js(result,"document.getElementById('statusText').textContent"),'Done');
    await screenshot(result,'result-en');
@@ -684,6 +689,7 @@ server.listen(0,'127.0.0.1',()=>{
    const screenshotSelection=await waitFor(()=>page('selection'),'mock screenshot selection');
    await js(screenshotSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='vision-model','vision task model');
+   result = await waitFor(()=>page('result'),'recreated result');
    assert(Array.isArray(calls.at(-1).messages.at(-1).content),'screenshot attached to vision model');
    assert.equal(requestPaths.at(-1),'/v1/chat/completions','vision inheritance uses default endpoint, not the initial override');
    const visionProbe=await js(result,`(async()=>{const s=await window.floatask.getResultState();return s.visionAttachment})()`);
@@ -702,6 +708,7 @@ server.listen(0,'127.0.0.1',()=>{
    const fallbackSelection=await waitFor(()=>page('selection'),'initial fallback selection');
    await js(fallbackSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='initial-fast','initial image fallback');
+   result = await waitFor(()=>page('result'),'recreated result');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'initial fallback completed');
    await js(settings,"window.floatask.saveSettings({vision:false})");
    captureDelay = 1000; captureTag = 'old-capture';
@@ -715,10 +722,25 @@ server.listen(0,'127.0.0.1',()=>{
    const newSelection = await waitFor(()=>page('selection'),'new race selection');
    await js(newSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.length>beforeCaptureRace && calls.at(-1).messages[0].content.includes('new-capture'),'new capture answer');
+   result = await waitFor(()=>page('result'),'recreated result');
    await pause(1100);
    const racedState = await js(result,'window.floatask.getResultState()');
    assert(racedState.init.selectionText.includes('new-capture'),'slow earlier capture must not replace the newer session');
    assert(!calls.slice(beforeCaptureRace).some(call=>call.messages[0].content.includes('old-capture')),'stale capture must not start an AI request');
+   const assistantCount = await js(result,"document.querySelectorAll('.message.assistant').length");
+   streamDelay = 600;
+   await js(result,"document.getElementById('questionInput').value='Reload fixture';document.getElementById('sendBtn').click()");
+   await waitFor(()=>calls.at(-1)?.messages.at(-1).content==='Reload fixture','reload fixture started');
+   await pause(50);
+   const liveSnapshot = await js(result,'window.floatask.getResultState()');
+   assert(Number.isSafeInteger(liveSnapshot.revision),'snapshot must identify its event boundary');
+   assert.equal(liveSnapshot.activeResponse.text,'A useful explanation with enough text to save.');
+   const loaded = new Promise(resolve => result.webContents.once('did-finish-load',resolve));
+   result.webContents.reload(); await loaded;
+   await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'answer completed after reload');
+   assert.equal(await js(result,"document.querySelectorAll('.message.assistant').length"),assistantCount+1,'reloading a partial answer must not duplicate or drop it');
+   assert.equal(await js(result,"Array.from(document.querySelectorAll('.message.assistant .md-body')).at(-1).textContent.trim()"),'A useful explanation with enough text to save.');
+   streamDelay = 120;
    await js(settings,"window.floatask.setLanguage('en')");
    await waitFor(()=>js(font,"document.getElementById('importBtn').textContent==='＋ Import font file…'"),'font translated');
    await js(result,"document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
