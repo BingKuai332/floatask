@@ -1,0 +1,1198 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 01
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 长回答与来源
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 紧凑行距容纳真实回答；五个窗口操作与视觉模型状态完整保留
+- elementId: result
+  elementType: shape
+  bounds:
+  - 64
+  - 154
+  - 810
+  - 812
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 810
+  - 812
+  path: M 16,0 H 794 Q 810,0 810,16 V 796 Q 810,812 794,812 H 16 Q 0,812 0,796 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 38
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: result-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 170
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: result-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 178
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: result-brand
+  elementType: text
+  bounds:
+  - 132
+  - 168
+  - 100
+  - 26
+  content:
+    fontSize: 19
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问
+    bold: true
+- elementId: result-brand-en
+  elementType: text
+  bounds:
+  - 133
+  - 194
+  - 100
+  - 12
+  content:
+    fontSize: 8
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: result-status-dot
+  elementType: shape
+  bounds:
+  - 534
+  - 183
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: result-status
+  elementType: text
+  bounds:
+  - 546
+  - 176
+  - 60
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 已完成
+- elementId: result-action-0
+  elementType: icon
+  bounds:
+  - 654
+  - 178
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: result-action-1
+  elementType: icon
+  bounds:
+  - 696
+  - 178
+  - 15
+  - 15
+  iconName: fas:thumbtack
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: result-action-2
+  elementType: icon
+  bounds:
+  - 738
+  - 178
+  - 15
+  - 15
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: result-action-3
+  elementType: icon
+  bounds:
+  - 780
+  - 178
+  - 15
+  - 15
+  iconName: fas:gear
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: result-action-4
+  elementType: icon
+  bounds:
+  - 822
+  - 178
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: result-head-line
+  elementType: shape
+  bounds:
+  - 64
+  - 217
+  - 810
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: result-context-bg
+  elementType: shape
+  bounds:
+  - 65
+  - 218
+  - 808
+  - 43
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#1D2128'
+- elementId: result-context-icon
+  elementType: icon
+  bounds:
+  - 88
+  - 232
+  - 14
+  - 14
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: result-context
+  elementType: text
+  bounds:
+  - 112
+  - 227
+  - 510
+  - 24
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer · 技术文章
+- elementId: result-model
+  elementType: text
+  bounds:
+  - 684
+  - 227
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - right
+    - top
+- elementId: result-chevron
+  elementType: icon
+  bounds:
+  - 826
+  - 234
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: result-context-line
+  elementType: shape
+  bounds:
+  - 64
+  - 260
+  - 810
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: avatar
+  elementType: shape
+  bounds:
+  - 90
+  - 282
+  - 28
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 28
+  - 28
+  path: M 8,0 H 20 Q 28,0 28,8 V 20 Q 28,28 20,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: avatar-mark
+  elementType: icon
+  bounds:
+  - 96
+  - 288
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: answer-name
+  elementType: text
+  bounds:
+  - 130
+  - 285
+  - 160
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 刚刚
+- elementId: intro
+  elementType: text
+  bounds:
+  - 90
+  - 323
+  - 758
+  - 52
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: <p><strong>Transformer</strong> 是一种基于自注意力机制的神经网络架构，用来处理文本、代码等序列数据。</p>
+- elementId: heading-1
+  elementType: text
+  bounds:
+  - 90
+  - 383
+  - 300
+  - 24
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 它解决什么问题
+    bold: true
+- elementId: body-1
+  elementType: text
+  bounds:
+  - 90
+  - 412
+  - 758
+  - 45
+  content:
+    fontSize: 13
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 传统循环网络按顺序处理信息，长文本中的远距离关系容易变弱。Transformer 会让每个词同时关注句子里的其他词，再计算彼此的重要程度。
+- elementId: heading-2
+  elementType: text
+  bounds:
+  - 90
+  - 470
+  - 300
+  - 24
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 它带来了什么
+    bold: true
+- elementId: bullets
+  elementType: text
+  bounds:
+  - 90
+  - 499
+  - 758
+  - 67
+  content:
+    fontSize: 13
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.48
+    wrap: true
+    text: <p><span style="color:#8FA6C9">•</span>　<strong>理解上下文</strong>：同一个词可以随语境获得不同含义。</p><p><span style="color:#8FA6C9">•</span>　<strong>并行计算</strong>：更适合利用现代硬件进行大规模训练。</p><p><span style="color:#8FA6C9">•</span>　<strong>通用架构</strong>：语言、视觉和多模态模型都能以此为基础。</p>
+- elementId: heading-3
+  elementType: text
+  bounds:
+  - 90
+  - 578
+  - 400
+  - 24
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 和这段文字的关系
+    bold: true
+- elementId: body-3
+  elementType: text
+  bounds:
+  - 90
+  - 607
+  - 758
+  - 43
+  content:
+    fontSize: 13
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 你框选的内容出现在一篇技术文章中。这里的重点是概念解释，不需要先理解公式；可以把它看成模型读取上下文的一种机制。
+- elementId: summary-rule
+  elementType: shape
+  bounds:
+  - 90
+  - 664
+  - 3
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 3
+  - 38
+  path: M 1.5,0 H 1.5 Q 3,0 3,1.5 V 36.5 Q 3,38 1.5,38 H 1.5 Q 0,38 0,36.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: summary
+  elementType: text
+  bounds:
+  - 106
+  - 662
+  - 742
+  - 42
+  content:
+    fontSize: 13
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: <p><strong>一句话记住</strong>：它让模型学会“看整句话，再决定每个词该关注谁”。</p>
+- elementId: sources-rule
+  elementType: shape
+  bounds:
+  - 90
+  - 715
+  - 758
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: sources-title
+  elementType: text
+  bounds:
+  - 90
+  - 728
+  - 200
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 参考来源
+    bold: true
+- elementId: source-index-1
+  elementType: shape
+  bounds:
+  - 90
+  - 757
+  - 18
+  - 18
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#28333F'
+- elementId: source-index-text-1
+  elementType: text
+  bounds:
+  - 90
+  - 757
+  - 18
+  - 18
+  content:
+    fontSize: 10
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '1'
+    align:
+    - center
+    - middle
+- elementId: source-1
+  elementType: text
+  bounds:
+  - 118
+  - 754
+  - 450
+  - 21
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Attention Is All You Need
+- elementId: source-domain-1
+  elementType: text
+  bounds:
+  - 684
+  - 755
+  - 164
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: arxiv.org
+    align:
+    - right
+    - top
+- elementId: source-index-2
+  elementType: shape
+  bounds:
+  - 90
+  - 785
+  - 18
+  - 18
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#28333F'
+- elementId: source-index-text-2
+  elementType: text
+  bounds:
+  - 90
+  - 785
+  - 18
+  - 18
+  content:
+    fontSize: 10
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '2'
+    align:
+    - center
+    - middle
+- elementId: source-2
+  elementType: text
+  bounds:
+  - 118
+  - 782
+  - 450
+  - 21
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: The Illustrated Transformer
+- elementId: source-domain-2
+  elementType: text
+  bounds:
+  - 684
+  - 783
+  - 164
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: jalammar.github.io
+    align:
+    - right
+    - top
+- elementId: footer-line
+  elementType: shape
+  bounds:
+  - 64
+  - 814
+  - 810
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: composer-chip-0
+  elementType: shape
+  bounds:
+  - 90
+  - 828
+  - 72
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 72
+  - 28
+  path: M 8,0 H 64 Q 72,0 72,8 V 20 Q 72,28 64,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: composer-chip-text-0
+  elementType: text
+  bounds:
+  - 90
+  - 828
+  - 72
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更通俗
+    align:
+    - center
+    - middle
+- elementId: composer-chip-1
+  elementType: shape
+  bounds:
+  - 170
+  - 828
+  - 82
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 82
+  - 28
+  path: M 8,0 H 74 Q 82,0 82,8 V 20 Q 82,28 74,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: composer-chip-text-1
+  elementType: text
+  bounds:
+  - 170
+  - 828
+  - 82
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 举个例子
+    align:
+    - center
+    - middle
+- elementId: composer-chip-2
+  elementType: shape
+  bounds:
+  - 260
+  - 828
+  - 82
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 82
+  - 28
+  path: M 8,0 H 74 Q 82,0 82,8 V 20 Q 82,28 74,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: composer-chip-text-2
+  elementType: text
+  bounds:
+  - 260
+  - 828
+  - 82
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 深入一点
+    align:
+    - center
+    - middle
+- elementId: composer-chip-3
+  elementType: shape
+  bounds:
+  - 350
+  - 828
+  - 92
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 92
+  - 28
+  path: M 8,0 H 84 Q 92,0 92,8 V 20 Q 92,28 84,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: composer-chip-text-3
+  elementType: text
+  bounds:
+  - 350
+  - 828
+  - 92
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网核查
+    align:
+    - center
+    - middle
+- elementId: composer-box
+  elementType: shape
+  bounds:
+  - 90
+  - 868
+  - 758
+  - 58
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 758
+  - 58
+  path: M 12,0 H 746 Q 758,0 758,12 V 46 Q 758,58 746,58 H 12 Q 0,58 0,46 V 12 Q 0,0 12,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: composer-web
+  elementType: icon
+  bounds:
+  - 108
+  - 889
+  - 15
+  - 15
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: composer-web-text
+  elementType: text
+  bounds:
+  - 131
+  - 885
+  - 40
+  - 24
+  content:
+    fontSize: 11
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网
+- elementId: composer-sep
+  elementType: shape
+  bounds:
+  - 180
+  - 882
+  - 1
+  - 30
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: composer-placeholder
+  elementType: text
+  bounds:
+  - 198
+  - 881
+  - 568
+  - 32
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 继续追问，或让我查一下…
+    align:
+    - left
+    - middle
+- elementId: composer-send
+  elementType: shape
+  bounds:
+  - 794
+  - 876
+  - 42
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 42
+  - 42
+  path: M 10,0 H 32 Q 42,0 42,10 V 32 Q 42,42 32,42 H 10 Q 0,42 0,32 V 10 Q 0,0 10,0 Z
+- elementId: composer-send-icon
+  elementType: icon
+  bounds:
+  - 807
+  - 889
+  - 16
+  - 16
+  iconName: fas:arrow-up
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: composer-hint
+  elementType: text
+  bounds:
+  - 90
+  - 938
+  - 416.90000000000003
+  - 18
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Enter 发送　·　Shift + Enter 换行
+- elementId: composer-vision
+  elementType: text
+  bounds:
+  - 506.90000000000003
+  - 938
+  - 341.1
+  - 18
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: OCR 在本机完成
+    align:
+    - right
+    - top
+- elementId: spec-title
+  elementType: text
+  bounds:
+  - 956
+  - 162
+  - 480
+  - 30
+  content:
+    fontSize: 20
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 落地约束
+    bold: true
+- elementId: spec-sub
+  elementType: text
+  bounds:
+  - 956
+  - 201
+  - 520
+  - 42
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 组件共享语义 token；浅色模式只替换颜色，不改布局。
+- elementId: spec-type-title
+  elementType: text
+  bounds:
+  - 956
+  - 266
+  - 300
+  - 24
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 阅读密度
+    bold: true
+- elementId: spec-type
+  elementType: text
+  bounds:
+  - 956
+  - 300
+  - 530
+  - 106
+  content:
+    fontSize: 13
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: '正文 13–14px / 1.5–1.55
+
+      小节标题 16px / 600
+
+      段落间距 6px · 小节间距 14px
+
+      辅助文字不低于 12px / #8A9099'
+- elementId: spec-rule-1
+  elementType: shape
+  bounds:
+  - 956
+  - 424
+  - 500
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: spec-radius-title
+  elementType: text
+  bounds:
+  - 956
+  - 450
+  - 300
+  - 24
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 形状与分离
+    bold: true
+- elementId: spec-radius
+  elementType: text
+  bounds:
+  - 956
+  - 484
+  - 540
+  - 72
+  content:
+    fontSize: 13
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: '窗口 16px · 容器 12px · 控件 10px · 小元素 8px
+
+      同级组件同半径；嵌套轮廓 R内 = R外 − 间距'
+- elementId: spec-rule-2
+  elementType: shape
+  bounds:
+  - 956
+  - 576
+  - 500
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: spec-color-title
+  elementType: text
+  bounds:
+  - 956
+  - 602
+  - 300
+  - 24
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 核心颜色
+    bold: true
+- elementId: swatch-0
+  elementType: shape
+  bounds:
+  - 956
+  - 640
+  - 104
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 104
+  - 48
+  path: M 8,0 H 96 Q 104,0 104,8 V 40 Q 104,48 96,48 H 8 Q 0,48 0,40 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: swatch-label-0
+  elementType: text
+  bounds:
+  - 956
+  - 698
+  - 104
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Surface
+    align:
+    - center
+    - top
+- elementId: swatch-1
+  elementType: shape
+  bounds:
+  - 1078
+  - 640
+  - 104
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 104
+  - 48
+  path: M 8,0 H 96 Q 104,0 104,8 V 40 Q 104,48 96,48 H 8 Q 0,48 0,40 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: swatch-label-1
+  elementType: text
+  bounds:
+  - 1078
+  - 698
+  - 104
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Text
+    align:
+    - center
+    - top
+- elementId: swatch-2
+  elementType: shape
+  bounds:
+  - 1200
+  - 640
+  - 104
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#9299A6'
+  viewBox:
+  - 104
+  - 48
+  path: M 8,0 H 96 Q 104,0 104,8 V 40 Q 104,48 96,48 H 8 Q 0,48 0,40 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: swatch-label-2
+  elementType: text
+  bounds:
+  - 1200
+  - 698
+  - 104
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Muted
+    align:
+    - center
+    - top
+- elementId: swatch-3
+  elementType: shape
+  bounds:
+  - 1322
+  - 640
+  - 104
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 104
+  - 48
+  path: M 8,0 H 96 Q 104,0 104,8 V 40 Q 104,48 96,48 H 8 Q 0,48 0,40 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: swatch-label-3
+  elementType: text
+  bounds:
+  - 1322
+  - 698
+  - 104
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Accent
+    align:
+    - center
+    - top
+- elementId: signature-box
+  elementType: shape
+  bounds:
+  - 956
+  - 756
+  - 74
+  - 74
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 74
+  - 74
+  path: M 12,0 H 62 Q 74,0 74,12 V 62 Q 74,74 62,74 H 12 Q 0,74 0,62 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: signature-icon
+  elementType: icon
+  bounds:
+  - 976
+  - 776
+  - 34
+  - 34
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: signature-title
+  elementType: text
+  bounds:
+  - 1050
+  - 758
+  - 360
+  - 24
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 取景框角 = 品牌签名
+    bold: true
+- elementId: signature-copy
+  elementType: text
+  bounds:
+  - 1050
+  - 790
+  - 420
+  - 52
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 只用于头像与框选四角。其余区域保持安静，不重复装饰。

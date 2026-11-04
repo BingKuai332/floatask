@@ -1,0 +1,21 @@
+version: v2
+title: FloatAsk 深夜石墨风格样张
+size: [1000, 1000]
+customFonts:
+  - family: Liter
+    src: "https://statics.kimi.ai/neo-design-static/p-font/Liter.ttf"
+  - family: MiSans
+    src: "https://statics.kimi.ai/neo-design-static/p-font/MiSans.ttf"
+theme:
+  colors:
+    accent: "#8FA6C9"
+    text: "#E8EBF0"
+    secondary: "#9299A6"
+  textStyles:
+    body:
+      fontSize: 14
+      color: "$text"
+      fontFamily: {latin: "Liter", ea: "MiSans"}
+      lineHeight: 1.6
+pages:
+  - pages/dark.page

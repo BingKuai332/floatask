@@ -1,0 +1,1751 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 19
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日／近月 · 双主题
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 同一答案窗并排校验朝日与近月；只替换语义颜色，不改变布局、圆角与阅读结构
+- elementId: theme-light-desktop
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 720
+  - 466
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#DFE1D8'
+  viewBox:
+  - 720
+  - 466
+  path: M 16,0 H 704 Q 720,0 720,16 V 450 Q 720,466 704,466 H 16 Q 0,466 0,450 V 16 Q 0,0 16,0 Z
+  border: &id003
+    width: 1
+    color: '#141B2E14'
+- elementId: theme-light-label
+  elementType: text
+  bounds:
+  - 88
+  - 166
+  - 260
+  - 24
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 柔和暖白
+    bold: true
+- elementId: theme-light-note
+  elementType: text
+  bounds:
+  - 468
+  - 166
+  - 292
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 深色描边 + 柔和投影
+    align:
+    - right
+    - top
+- elementId: theme-dark-desktop
+  elementType: shape
+  bounds:
+  - 816
+  - 148
+  - 720
+  - 466
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#101419'
+  viewBox:
+  - 720
+  - 466
+  path: M 16,0 H 704 Q 720,0 720,16 V 450 Q 720,466 704,466 H 16 Q 0,466 0,450 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: theme-dark-label
+  elementType: text
+  bounds:
+  - 840
+  - 166
+  - 260
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 近月 · 安静暗色
+    bold: true
+- elementId: theme-dark-note
+  elementType: text
+  bounds:
+  - 1220
+  - 166
+  - 292
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浅色描边 + 柔和投影
+    align:
+    - right
+    - top
+- elementId: theme-token-card
+  elementType: shape
+  bounds:
+  - 64
+  - 642
+  - 1040
+  - 294
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 1040
+  - 294
+  path: M 12,0 H 1028 Q 1040,0 1040,12 V 282 Q 1040,294 1028,294 H 12 Q 0,294 0,282 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: theme-token-title
+  elementType: text
+  bounds:
+  - 88
+  - 660
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 语义色映射
+    bold: true
+- elementId: theme-token-subtitle
+  elementType: text
+  bounds:
+  - 394
+  - 664
+  - 680
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 实现时使用角色名称，不在组件中散落主题判断
+    align:
+    - right
+    - top
+- elementId: theme-token-head-rule
+  elementType: shape
+  bounds:
+  - 88
+  - 704
+  - 992
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: theme-token-head-role
+  elementType: text
+  bounds:
+  - 88
+  - 712
+  - 130
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 语义角色
+    bold: true
+- elementId: theme-token-head-light
+  elementType: text
+  bounds:
+  - 250
+  - 712
+  - 170
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日
+    bold: true
+- elementId: theme-token-head-dark
+  elementType: text
+  bounds:
+  - 462
+  - 712
+  - 170
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 近月
+    bold: true
+- elementId: theme-token-head-use
+  elementType: text
+  bounds:
+  - 686
+  - 712
+  - 300
+  - 20
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 用途
+    bold: true
+- elementId: theme-switch-card
+  elementType: shape
+  bounds:
+  - 1128
+  - 642
+  - 408
+  - 294
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 408
+  - 294
+  path: M 12,0 H 396 Q 408,0 408,12 V 282 Q 408,294 396,294 H 12 Q 0,294 0,282 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: theme-switch-title
+  elementType: text
+  bounds:
+  - 1152
+  - 660
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 切换与验收规则
+    bold: true
+- elementId: theme-light-window
+  elementType: shape
+  bounds:
+  - 88
+  - 206
+  - 672
+  - 384
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 672
+  - 384
+  path: M 16,0 H 656 Q 672,0 672,16 V 368 Q 672,384 656,384 H 16 Q 0,384 0,368 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+  shadow:
+    blur: 34
+    color: '#26314726'
+    offset:
+    - 0
+    - 12
+- elementId: theme-light-logo-bg
+  elementType: shape
+  bounds:
+  - 108
+  - 222
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: theme-light-logo
+  elementType: icon
+  bounds:
+  - 116
+  - 230
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: theme-light-brand
+  elementType: text
+  bounds:
+  - 152
+  - 224
+  - 90
+  - 26
+  content:
+    fontSize: 17
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问
+    bold: true
+- elementId: theme-light-status
+  elementType: text
+  bounds:
+  - 582
+  - 228
+  - 90
+  - 20
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 已完成
+    align:
+    - right
+    - top
+- elementId: theme-light-pin
+  elementType: icon
+  bounds:
+  - 688
+  - 230
+  - 14
+  - 14
+  iconName: fas:thumbtack
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: theme-light-close
+  elementType: icon
+  bounds:
+  - 726
+  - 230
+  - 14
+  - 14
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: theme-light-head-rule
+  elementType: shape
+  bounds:
+  - 88
+  - 268
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: theme-light-context
+  elementType: shape
+  bounds:
+  - 89
+  - 269
+  - 670
+  - 42
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#FAF9F4'
+- elementId: theme-light-context-icon
+  elementType: icon
+  bounds:
+  - 108
+  - 283
+  - 14
+  - 14
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: theme-light-context-text
+  elementType: text
+  bounds:
+  - 132
+  - 278
+  - 360
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer · 技术文章
+- elementId: theme-light-model
+  elementType: text
+  bounds:
+  - 588
+  - 278
+  - 140
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - right
+    - top
+- elementId: theme-light-context-rule
+  elementType: shape
+  bounds:
+  - 88
+  - 310
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: theme-light-avatar
+  elementType: shape
+  bounds:
+  - 110
+  - 330
+  - 28
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 28
+  - 28
+  path: M 8,0 H 20 Q 28,0 28,8 V 20 Q 28,28 20,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: theme-light-avatar-icon
+  elementType: icon
+  bounds:
+  - 116
+  - 336
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: theme-light-answer-name
+  elementType: text
+  bounds:
+  - 150
+  - 333
+  - 150
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 刚刚
+- elementId: theme-light-answer-title
+  elementType: text
+  bounds:
+  - 110
+  - 376
+  - 420
+  - 24
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 它解决什么问题
+    bold: true
+- elementId: theme-light-answer-body
+  elementType: text
+  bounds:
+  - 110
+  - 410
+  - 620
+  - 48
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: Transformer 会让每个词同时关注句子里的其他词，再计算彼此的重要程度，因此更适合理解长距离上下文。
+- elementId: theme-light-summary
+  elementType: shape
+  bounds:
+  - 110
+  - 474
+  - 628
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 628
+  - 52
+  path: M 10,0 H 618 Q 628,0 628,10 V 42 Q 628,52 618,52 H 10 Q 0,52 0,42 V 10 Q 0,0 10,0 Z
+- elementId: theme-light-summary-mark
+  elementType: shape
+  bounds:
+  - 126
+  - 488
+  - 3
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 3
+  - 24
+  path: M 1.5,0 H 1.5 Q 3,0 3,1.5 V 22.5 Q 3,24 1.5,24 H 1.5 Q 0,24 0,22.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: theme-light-summary-text
+  elementType: text
+  bounds:
+  - 142
+  - 480
+  - 570
+  - 40
+  content:
+    fontSize: 11
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 一句话记住：看整句话，再决定每个词该关注谁。
+    align:
+    - left
+    - middle
+- elementId: theme-light-composer
+  elementType: shape
+  bounds:
+  - 110
+  - 540
+  - 628
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 628
+  - 38
+  path: M 12,0 H 616 Q 628,0 628,12 V 26 Q 628,38 616,38 H 12 Q 0,38 0,26 V 12 Q 0,0 12,0 Z
+  border: *id003
+- elementId: theme-light-web
+  elementType: icon
+  bounds:
+  - 126
+  - 552
+  - 14
+  - 14
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: theme-light-placeholder
+  elementType: text
+  bounds:
+  - 150
+  - 544
+  - 360
+  - 30
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 继续追问，或让我查一下…
+    align:
+    - left
+    - middle
+- elementId: theme-light-send
+  elementType: shape
+  bounds:
+  - 692
+  - 546
+  - 36
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 36
+  - 26
+  path: M 8,0 H 28 Q 36,0 36,8 V 18 Q 36,26 28,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+- elementId: theme-light-send-icon
+  elementType: icon
+  bounds:
+  - 703
+  - 553
+  - 12
+  - 12
+  iconName: fas:arrow-up
+  fill:
+    type: solid
+    color: '#F5F7FA'
+- elementId: theme-dark-window
+  elementType: shape
+  bounds:
+  - 840
+  - 206
+  - 672
+  - 384
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 672
+  - 384
+  path: M 16,0 H 656 Q 672,0 672,16 V 368 Q 672,384 656,384 H 16 Q 0,384 0,368 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 34
+    color: '#00000073'
+    offset:
+    - 0
+    - 12
+- elementId: theme-dark-logo-bg
+  elementType: shape
+  bounds:
+  - 860
+  - 222
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: theme-dark-logo
+  elementType: icon
+  bounds:
+  - 868
+  - 230
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: theme-dark-brand
+  elementType: text
+  bounds:
+  - 904
+  - 224
+  - 90
+  - 26
+  content:
+    fontSize: 17
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问
+    bold: true
+- elementId: theme-dark-status
+  elementType: text
+  bounds:
+  - 1334
+  - 228
+  - 90
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 已完成
+    align:
+    - right
+    - top
+- elementId: theme-dark-pin
+  elementType: icon
+  bounds:
+  - 1440
+  - 230
+  - 14
+  - 14
+  iconName: fas:thumbtack
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: theme-dark-close
+  elementType: icon
+  bounds:
+  - 1478
+  - 230
+  - 14
+  - 14
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: theme-dark-head-rule
+  elementType: shape
+  bounds:
+  - 840
+  - 268
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: theme-dark-context
+  elementType: shape
+  bounds:
+  - 841
+  - 269
+  - 670
+  - 42
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#1D2128'
+- elementId: theme-dark-context-icon
+  elementType: icon
+  bounds:
+  - 860
+  - 283
+  - 14
+  - 14
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: theme-dark-context-text
+  elementType: text
+  bounds:
+  - 884
+  - 278
+  - 360
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer · 技术文章
+- elementId: theme-dark-model
+  elementType: text
+  bounds:
+  - 1340
+  - 278
+  - 140
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - right
+    - top
+- elementId: theme-dark-context-rule
+  elementType: shape
+  bounds:
+  - 840
+  - 310
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: theme-dark-avatar
+  elementType: shape
+  bounds:
+  - 862
+  - 330
+  - 28
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 28
+  - 28
+  path: M 8,0 H 20 Q 28,0 28,8 V 20 Q 28,28 20,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: theme-dark-avatar-icon
+  elementType: icon
+  bounds:
+  - 868
+  - 336
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: theme-dark-answer-name
+  elementType: text
+  bounds:
+  - 902
+  - 333
+  - 150
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 刚刚
+- elementId: theme-dark-answer-title
+  elementType: text
+  bounds:
+  - 862
+  - 376
+  - 420
+  - 24
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 它解决什么问题
+    bold: true
+- elementId: theme-dark-answer-body
+  elementType: text
+  bounds:
+  - 862
+  - 410
+  - 620
+  - 48
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: Transformer 会让每个词同时关注句子里的其他词，再计算彼此的重要程度，因此更适合理解长距离上下文。
+- elementId: theme-dark-summary
+  elementType: shape
+  bounds:
+  - 862
+  - 474
+  - 628
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 628
+  - 52
+  path: M 10,0 H 618 Q 628,0 628,10 V 42 Q 628,52 618,52 H 10 Q 0,52 0,42 V 10 Q 0,0 10,0 Z
+- elementId: theme-dark-summary-mark
+  elementType: shape
+  bounds:
+  - 878
+  - 488
+  - 3
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 3
+  - 24
+  path: M 1.5,0 H 1.5 Q 3,0 3,1.5 V 22.5 Q 3,24 1.5,24 H 1.5 Q 0,24 0,22.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: theme-dark-summary-text
+  elementType: text
+  bounds:
+  - 894
+  - 480
+  - 570
+  - 40
+  content:
+    fontSize: 11
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 一句话记住：看整句话，再决定每个词该关注谁。
+    align:
+    - left
+    - middle
+- elementId: theme-dark-composer
+  elementType: shape
+  bounds:
+  - 862
+  - 540
+  - 628
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 628
+  - 38
+  path: M 12,0 H 616 Q 628,0 628,12 V 26 Q 628,38 616,38 H 12 Q 0,38 0,26 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: theme-dark-web
+  elementType: icon
+  bounds:
+  - 878
+  - 552
+  - 14
+  - 14
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: theme-dark-placeholder
+  elementType: text
+  bounds:
+  - 902
+  - 544
+  - 360
+  - 30
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 继续追问，或让我查一下…
+    align:
+    - left
+    - middle
+- elementId: theme-dark-send
+  elementType: shape
+  bounds:
+  - 1444
+  - 546
+  - 36
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 36
+  - 26
+  path: M 8,0 H 28 Q 36,0 36,8 V 18 Q 36,26 28,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+- elementId: theme-dark-send-icon
+  elementType: icon
+  bounds:
+  - 1455
+  - 553
+  - 12
+  - 12
+  iconName: fas:arrow-up
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: theme-role-0
+  elementType: text
+  bounds:
+  - 88
+  - 740
+  - 140
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 主表面
+- elementId: theme-light-swatch-0
+  elementType: shape
+  bounds:
+  - 250
+  - 743
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  border: *id003
+- elementId: theme-light-hex-0
+  elementType: text
+  bounds:
+  - 276
+  - 740
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#F4F3ED'
+- elementId: theme-dark-swatch-0
+  elementType: shape
+  bounds:
+  - 462
+  - 743
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+  border: *id002
+- elementId: theme-dark-hex-0
+  elementType: text
+  bounds:
+  - 488
+  - 740
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#171A20'
+- elementId: theme-usage-0
+  elementType: text
+  bounds:
+  - 686
+  - 740
+  - 360
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 窗口与答案表面
+- elementId: theme-role-1
+  elementType: text
+  bounds:
+  - 88
+  - 766
+  - 140
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 次表面
+- elementId: theme-light-swatch-1
+  elementType: shape
+  bounds:
+  - 250
+  - 769
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  border: *id003
+- elementId: theme-light-hex-1
+  elementType: text
+  bounds:
+  - 276
+  - 766
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#FAF9F4'
+- elementId: theme-dark-swatch-1
+  elementType: shape
+  bounds:
+  - 462
+  - 769
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#1D2128'
+  border: *id002
+- elementId: theme-dark-hex-1
+  elementType: text
+  bounds:
+  - 488
+  - 766
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#1D2128'
+- elementId: theme-usage-1
+  elementType: text
+  bounds:
+  - 686
+  - 766
+  - 360
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 上下文、输入与卡片
+- elementId: theme-role-2
+  elementType: text
+  bounds:
+  - 88
+  - 792
+  - 140
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 主文字
+- elementId: theme-light-swatch-2
+  elementType: shape
+  bounds:
+  - 250
+  - 795
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#20242B'
+  border: *id003
+- elementId: theme-light-hex-2
+  elementType: text
+  bounds:
+  - 276
+  - 792
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#20242B'
+- elementId: theme-dark-swatch-2
+  elementType: shape
+  bounds:
+  - 462
+  - 795
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  border: *id002
+- elementId: theme-dark-hex-2
+  elementType: text
+  bounds:
+  - 488
+  - 792
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#E8EBF0'
+- elementId: theme-usage-2
+  elementType: text
+  bounds:
+  - 686
+  - 792
+  - 360
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 标题与重点内容
+- elementId: theme-role-3
+  elementType: text
+  bounds:
+  - 88
+  - 818
+  - 140
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 正文
+- elementId: theme-light-swatch-3
+  elementType: shape
+  bounds:
+  - 250
+  - 821
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#3F4650'
+  border: *id003
+- elementId: theme-light-hex-3
+  elementType: text
+  bounds:
+  - 276
+  - 818
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#3F4650'
+- elementId: theme-dark-swatch-3
+  elementType: shape
+  bounds:
+  - 462
+  - 821
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#CDD3DC'
+  border: *id002
+- elementId: theme-dark-hex-3
+  elementType: text
+  bounds:
+  - 488
+  - 818
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#CDD3DC'
+- elementId: theme-usage-3
+  elementType: text
+  bounds:
+  - 686
+  - 818
+  - 360
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 长文阅读
+- elementId: theme-role-4
+  elementType: text
+  bounds:
+  - 88
+  - 844
+  - 140
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 辅助文字
+- elementId: theme-light-swatch-4
+  elementType: shape
+  bounds:
+  - 250
+  - 847
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'
+  border: *id003
+- elementId: theme-light-hex-4
+  elementType: text
+  bounds:
+  - 276
+  - 844
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#66707C'
+- elementId: theme-dark-swatch-4
+  elementType: shape
+  bounds:
+  - 462
+  - 847
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#9299A6'
+  border: *id002
+- elementId: theme-dark-hex-4
+  elementType: text
+  bounds:
+  - 488
+  - 844
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#9299A6'
+- elementId: theme-usage-4
+  elementType: text
+  bounds:
+  - 686
+  - 844
+  - 360
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 次要说明 · 朝日 4.53:1
+- elementId: theme-role-5
+  elementType: text
+  bounds:
+  - 88
+  - 870
+  - 140
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 强调色
+- elementId: theme-light-swatch-5
+  elementType: shape
+  bounds:
+  - 250
+  - 873
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+  border: *id003
+- elementId: theme-light-hex-5
+  elementType: text
+  bounds:
+  - 276
+  - 870
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#506B92'
+- elementId: theme-dark-swatch-5
+  elementType: shape
+  bounds:
+  - 462
+  - 873
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  border: *id002
+- elementId: theme-dark-hex-5
+  elementType: text
+  bounds:
+  - 488
+  - 870
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#8FA6C9'
+- elementId: theme-usage-5
+  elementType: text
+  bounds:
+  - 686
+  - 870
+  - 360
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 选中、焦点与链接
+- elementId: theme-role-6
+  elementType: text
+  bounds:
+  - 88
+  - 896
+  - 140
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 主按钮
+- elementId: theme-light-swatch-6
+  elementType: shape
+  bounds:
+  - 250
+  - 899
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+  border: *id003
+- elementId: theme-light-hex-6
+  elementType: text
+  bounds:
+  - 276
+  - 896
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#506B92'
+- elementId: theme-dark-swatch-6
+  elementType: shape
+  bounds:
+  - 462
+  - 899
+  - 15
+  - 15
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  border: *id002
+- elementId: theme-dark-hex-6
+  elementType: text
+  bounds:
+  - 488
+  - 896
+  - 130
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#E8EBF0'
+- elementId: theme-usage-6
+  elementType: text
+  bounds:
+  - 686
+  - 896
+  - 360
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 发送与主要操作
+- elementId: theme-rule-dot-0
+  elementType: shape
+  bounds:
+  - 1154
+  - 715
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: theme-rule-title-0
+  elementType: text
+  bounds:
+  - 1174
+  - 708
+  - 110
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 跟随系统
+    bold: true
+- elementId: theme-rule-copy-0
+  elementType: text
+  bounds:
+  - 1174
+  - 730
+  - 326
+  - 26
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 监听 Windows 深浅色变化，无需重启。
+- elementId: theme-rule-dot-1
+  elementType: shape
+  bounds:
+  - 1154
+  - 767
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: theme-rule-title-1
+  elementType: text
+  bounds:
+  - 1174
+  - 760
+  - 110
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 结构一致
+    bold: true
+- elementId: theme-rule-copy-1
+  elementType: text
+  bounds:
+  - 1174
+  - 782
+  - 326
+  - 26
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 布局、尺寸、圆角和组件状态保持不变。
+- elementId: theme-rule-dot-2
+  elementType: shape
+  bounds:
+  - 1154
+  - 819
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: theme-rule-title-2
+  elementType: text
+  bounds:
+  - 1174
+  - 812
+  - 110
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 过渡克制
+    bold: true
+- elementId: theme-rule-copy-2
+  elementType: text
+  bounds:
+  - 1174
+  - 834
+  - 326
+  - 26
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 颜色过渡 120 ms；减少动态效果时立即切换。
+- elementId: theme-rule-dot-3
+  elementType: shape
+  bounds:
+  - 1154
+  - 871
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: theme-rule-title-3
+  elementType: text
+  bounds:
+  - 1174
+  - 864
+  - 110
+  - 22
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮层可读
+    bold: true
+- elementId: theme-rule-copy-3
+  elementType: text
+  bounds:
+  - 1174
+  - 886
+  - 326
+  - 26
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 两种桌面均保留 1 px 描边与投影，不用发光。

@@ -1,0 +1,279 @@
+pageType: content
+background: {type: solid, color: "#0C0E12"}
+elements:
+  - elementId: study-kicker
+    elementType: text
+    bounds: [64, 42, 500, 20]
+    content: {fontSize: 11, color: "#747D8C", letterSpacing: 2, wrap: false, text: "FLOATASK · VISUAL DIRECTION 02"}
+  - elementId: study-title
+    elementType: text
+    bounds: [64, 72, 400, 42]
+    content: {fontSize: 30, bold: true, color: "#EDF0F4", wrap: false, text: "深夜石墨"}
+  - elementId: study-desc
+    elementType: text
+    bounds: [64, 119, 500, 24]
+    content: {fontSize: 13, color: "#8B929E", wrap: false, text: "沉稳、克制，以细腻明度区分界面层级"}
+  - elementId: swatch-1
+    elementType: shape
+    bounds: [842, 82, 18, 18]
+    shapeName: ellipse
+    fill: {type: solid, color: "#191C22"}
+    border: {width: 1, color: "#353A44"}
+  - elementId: swatch-2
+    elementType: shape
+    bounds: [870, 82, 18, 18]
+    shapeName: ellipse
+    fill: {type: solid, color: "#E8EBF0"}
+  - elementId: swatch-3
+    elementType: shape
+    bounds: [898, 82, 18, 18]
+    shapeName: ellipse
+    fill: {type: solid, color: "#8FA6C9"}
+  - elementId: window
+    elementType: shape
+    bounds: [170, 160, 660, 780]
+    shapeName: roundRect
+    adjustments: [6500]
+    fill: {type: solid, color: "#171A20"}
+    border: {width: 1, color: "#30353E"}
+    shadow: {blur: 46, color: "#00000080", offset: [0, 18]}
+  - elementId: context-surface
+    elementType: shape
+    bounds: [171, 232, 658, 48]
+    shapeName: rect
+    fill: {type: solid, color: "#1B1F26"}
+  - elementId: logo-bg
+    elementType: shape
+    bounds: [202, 184, 36, 36]
+    shapeName: roundRect
+    adjustments: [18000]
+    fill: {type: solid, color: "#252D38"}
+  - elementId: logo-icon
+    elementType: icon
+    bounds: [211, 193, 18, 18]
+    iconName: "fas:crop-simple"
+    fill: {type: solid, color: "#8FA6C9"}
+  - elementId: brand
+    elementType: text
+    bounds: [252, 181, 110, 28]
+    content: {fontSize: 20, bold: true, color: "#EDF0F4", wrap: false, text: "浮问"}
+  - elementId: brand-en
+    elementType: text
+    bounds: [253, 209, 110, 14]
+    content: {fontSize: 8, color: "#737D8C", letterSpacing: 2, wrap: false, text: "FLOATASK"}
+  - elementId: status-dot
+    elementType: shape
+    bounds: [608, 195, 7, 7]
+    shapeName: ellipse
+    fill: {type: solid, color: "#8DB9A4"}
+  - elementId: status
+    elementType: text
+    bounds: [623, 189, 56, 20]
+    content: {fontSize: 11, color: "#9299A6", wrap: false, text: "已完成"}
+  - elementId: history-icon
+    elementType: icon
+    bounds: [704, 192, 16, 16]
+    iconName: "far:clock"
+    fill: {type: solid, color: "#9299A6"}
+  - elementId: settings-icon
+    elementType: icon
+    bounds: [748, 192, 16, 16]
+    iconName: "fas:gear"
+    fill: {type: solid, color: "#9299A6"}
+  - elementId: close-icon
+    elementType: icon
+    bounds: [792, 192, 15, 15]
+    iconName: "fas:xmark"
+    fill: {type: solid, color: "#9299A6"}
+  - elementId: header-divider
+    elementType: shape
+    bounds: [170, 231, 660, 1]
+    shapeName: rect
+    fill: {type: solid, color: "#2A2E36"}
+  - elementId: context-icon
+    elementType: icon
+    bounds: [202, 248, 15, 15]
+    iconName: "fas:crop-simple"
+    fill: {type: solid, color: "#8FA6C9"}
+  - elementId: context-title
+    elementType: text
+    bounds: [228, 243, 340, 24]
+    content: {fontSize: 12, color: "#ABB2BD", wrap: false, text: "Transformer · 屏幕框选"}
+  - elementId: model
+    elementType: text
+    bounds: [650, 243, 124, 24]
+    content: {fontSize: 11, color: "#7F8998", align: [right, top], wrap: false, text: "DeepSeek"}
+  - elementId: context-chevron
+    elementType: icon
+    bounds: [786, 249, 12, 12]
+    iconName: "fas:chevron-down"
+    fill: {type: solid, color: "#7F8998"}
+  - elementId: answer-avatar
+    elementType: shape
+    bounds: [202, 306, 30, 30]
+    shapeName: roundRect
+    adjustments: [22000]
+    fill: {type: solid, color: "#8FA6C9"}
+  - elementId: answer-avatar-text
+    elementType: text
+    bounds: [202, 306, 30, 30]
+    content: {fontSize: 13, bold: true, color: "#111318", align: [center, middle], wrap: false, text: "问"}
+  - elementId: answer-name
+    elementType: text
+    bounds: [244, 309, 180, 22]
+    content: {fontSize: 12, color: "#9299A6", wrap: false, text: "浮问 · 刚刚"}
+  - elementId: answer-intro
+    elementType: text
+    bounds: [202, 350, 594, 66]
+    content:
+      fontSize: 16
+      color: "#E8EBF0"
+      lineHeight: 1.6
+      text: |
+        <p><strong>Transformer</strong> 是一种让模型理解上下文关系的神经网络架构，也是许多现代 AI 模型的重要基础。</p>
+  - elementId: answer-heading
+    elementType: text
+    bounds: [202, 428, 360, 28]
+    content: {fontSize: 17, bold: true, color: "#EDF0F4", wrap: false, text: "它解决什么问题"}
+  - elementId: answer-body
+    elementType: text
+    bounds: [202, 464, 594, 58]
+    content:
+      fontSize: 14
+      color: "#C3C9D2"
+      lineHeight: 1.65
+      text: |
+        <p>传统模型按顺序处理文字，而 Transformer 能同时观察一句话中的各个词，并判断哪些词彼此相关。</p>
+  - elementId: answer-bullets
+    elementType: text
+    bounds: [202, 528, 594, 112]
+    content:
+      fontSize: 14
+      color: "#C3C9D2"
+      lineHeight: 1.62
+      text: |
+        <p><span style="color:#8FA6C9">•</span>　<strong>理解上下文</strong>：分辨“苹果”指水果还是公司。</p>
+        <p><span style="color:#8FA6C9">•</span>　<strong>并行处理</strong>：让大规模训练和文本理解更高效。</p>
+        <p><span style="color:#8FA6C9">•</span>　<strong>通用基础</strong>：广泛用于语言、视觉与多模态模型。</p>
+  - elementId: summary-line
+    elementType: shape
+    bounds: [202, 657, 3, 52]
+    shapeName: roundRect
+    adjustments: [50000]
+    fill: {type: solid, color: "#8FA6C9"}
+  - elementId: answer-summary
+    elementType: text
+    bounds: [220, 654, 574, 60]
+    content:
+      fontSize: 14
+      color: "#D6DAE1"
+      lineHeight: 1.6
+      text: |
+        <p><strong>一句话记住</strong>：它会根据语境，决定每个词应该关注谁。</p>
+  - elementId: copy-icon
+    elementType: icon
+    bounds: [202, 715, 13, 13]
+    iconName: "far:copy"
+    fill: {type: solid, color: "#7F8998"}
+  - elementId: copy-text
+    elementType: text
+    bounds: [222, 710, 48, 20]
+    content: {fontSize: 11, color: "#7F8998", wrap: false, text: "复制"}
+  - elementId: bookmark-icon
+    elementType: icon
+    bounds: [278, 715, 13, 13]
+    iconName: "far:bookmark"
+    fill: {type: solid, color: "#7F8998"}
+  - elementId: bookmark-text
+    elementType: text
+    bounds: [298, 710, 48, 20]
+    content: {fontSize: 11, color: "#7F8998", wrap: false, text: "收藏"}
+  - elementId: footer-divider
+    elementType: shape
+    bounds: [170, 744, 660, 1]
+    shapeName: rect
+    fill: {type: solid, color: "#2A2E36"}
+  - elementId: chip-1
+    elementType: shape
+    bounds: [202, 762, 74, 30]
+    shapeName: roundRect
+    adjustments: [50000]
+    fill: {type: solid, color: "#22262D"}
+  - elementId: chip-1-text
+    elementType: text
+    bounds: [202, 762, 74, 30]
+    content: {fontSize: 11, color: "#ABB2BD", align: [center, middle], wrap: false, text: "更通俗"}
+  - elementId: chip-2
+    elementType: shape
+    bounds: [284, 762, 82, 30]
+    shapeName: roundRect
+    adjustments: [50000]
+    fill: {type: solid, color: "#22262D"}
+  - elementId: chip-2-text
+    elementType: text
+    bounds: [284, 762, 82, 30]
+    content: {fontSize: 11, color: "#ABB2BD", align: [center, middle], wrap: false, text: "举个例子"}
+  - elementId: chip-3
+    elementType: shape
+    bounds: [374, 762, 82, 30]
+    shapeName: roundRect
+    adjustments: [50000]
+    fill: {type: solid, color: "#22262D"}
+  - elementId: chip-3-text
+    elementType: text
+    bounds: [374, 762, 82, 30]
+    content: {fontSize: 11, color: "#ABB2BD", align: [center, middle], wrap: false, text: "深入一点"}
+  - elementId: chip-4
+    elementType: shape
+    bounds: [464, 762, 94, 30]
+    shapeName: roundRect
+    adjustments: [50000]
+    fill: {type: solid, color: "#22262D"}
+  - elementId: chip-4-text
+    elementType: text
+    bounds: [464, 762, 94, 30]
+    content: {fontSize: 11, color: "#ABB2BD", align: [center, middle], wrap: false, text: "联网核查"}
+  - elementId: composer
+    elementType: shape
+    bounds: [202, 808, 596, 64]
+    shapeName: roundRect
+    adjustments: [18000]
+    fill: {type: solid, color: "#20242B"}
+    border: {width: 1, color: "#353B45"}
+  - elementId: web-icon
+    elementType: icon
+    bounds: [220, 832, 16, 16]
+    iconName: "fas:globe"
+    fill: {type: solid, color: "#8FA6C9"}
+  - elementId: web-text
+    elementType: text
+    bounds: [244, 828, 42, 24]
+    content: {fontSize: 11, color: "#8FA6C9", wrap: false, text: "联网"}
+  - elementId: composer-separator
+    elementType: shape
+    bounds: [294, 824, 1, 32]
+    shapeName: rect
+    fill: {type: solid, color: "#353B45"}
+  - elementId: composer-placeholder
+    elementType: text
+    bounds: [314, 824, 390, 32]
+    content: {fontSize: 13, color: "#7F8998", align: [left, middle], wrap: false, text: "继续追问，或让我查一下…"}
+  - elementId: send-button
+    elementType: shape
+    bounds: [742, 818, 44, 44]
+    shapeName: roundRect
+    adjustments: [26000]
+    fill: {type: solid, color: "#8FA6C9"}
+  - elementId: send-icon
+    elementType: icon
+    bounds: [756, 832, 16, 16]
+    iconName: "fas:arrow-up"
+    fill: {type: solid, color: "#111318"}
+  - elementId: composer-hint
+    elementType: text
+    bounds: [202, 888, 380, 18]
+    content: {fontSize: 10, color: "#7F8998", wrap: false, text: "Enter 发送　·　Shift + Enter 换行"}
+  - elementId: privacy-hint
+    elementType: text
+    bounds: [590, 888, 208, 18]
+    content: {fontSize: 10, color: "#7F8998", align: [right, top], wrap: false, text: "截图默认仅在本机识别"}

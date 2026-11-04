@@ -1,0 +1,909 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 05
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 圆角与边框
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 四级圆角、三类描边；共边嵌套共享圆心，不使用覆盖矩形修补轮廓
+- elementId: radius-sample-0
+  elementType: shape
+  bounds:
+  - 64
+  - 164
+  - 200
+  - 112
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 200
+  - 112
+  path: M 16,0 H 184 Q 200,0 200,16 V 96 Q 200,112 184,112 H 16 Q 0,112 0,96 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: radius-value-0
+  elementType: text
+  bounds:
+  - 64
+  - 296
+  - 200
+  - 30
+  content:
+    fontSize: 20
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 16 px
+    bold: true
+- elementId: radius-label-0
+  elementType: text
+  bounds:
+  - 64
+  - 332
+  - 200
+  - 36
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 外窗 / 大型浮层
+- elementId: radius-sample-1
+  elementType: shape
+  bounds:
+  - 288
+  - 164
+  - 200
+  - 112
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 200
+  - 112
+  path: M 12,0 H 188 Q 200,0 200,12 V 100 Q 200,112 188,112 H 12 Q 0,112 0,100 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: radius-value-1
+  elementType: text
+  bounds:
+  - 288
+  - 296
+  - 200
+  - 30
+  content:
+    fontSize: 20
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 12 px
+    bold: true
+- elementId: radius-label-1
+  elementType: text
+  bounds:
+  - 288
+  - 332
+  - 200
+  - 36
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 容器 / 输入区
+- elementId: radius-sample-2
+  elementType: shape
+  bounds:
+  - 512
+  - 164
+  - 200
+  - 112
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 200
+  - 112
+  path: M 10,0 H 190 Q 200,0 200,10 V 102 Q 200,112 190,112 H 10 Q 0,112 0,102 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: radius-value-2
+  elementType: text
+  bounds:
+  - 512
+  - 296
+  - 200
+  - 30
+  content:
+    fontSize: 20
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 10 px
+    bold: true
+- elementId: radius-label-2
+  elementType: text
+  bounds:
+  - 512
+  - 332
+  - 200
+  - 36
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 输入框 / 按钮 / 卡片
+- elementId: radius-sample-3
+  elementType: shape
+  bounds:
+  - 736
+  - 164
+  - 200
+  - 112
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 200
+  - 112
+  path: M 8,0 H 192 Q 200,0 200,8 V 104 Q 200,112 192,112 H 8 Q 0,112 0,104 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: radius-value-3
+  elementType: text
+  bounds:
+  - 736
+  - 296
+  - 200
+  - 30
+  content:
+    fontSize: 20
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 8 px
+    bold: true
+- elementId: radius-label-3
+  elementType: text
+  bounds:
+  - 736
+  - 332
+  - 200
+  - 36
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: chips / 图标底 / 键帽
+- elementId: nested-title
+  elementType: text
+  bounds:
+  - 64
+  - 400
+  - 300
+  - 28
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 共边嵌套
+    bold: true
+- elementId: nested-formula
+  elementType: text
+  bounds:
+  - 430
+  - 400
+  - 506
+  - 28
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: R内 = R外 − 间距
+    bold: true
+    align:
+    - right
+    - top
+- elementId: nested-window
+  elementType: shape
+  bounds:
+  - 64
+  - 446
+  - 872
+  - 306
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 872
+  - 306
+  path: M 16,0 H 856 Q 872,0 872,16 V 290 Q 872,306 856,306 H 16 Q 0,306 0,290 V 16 Q 0,0 16,0 Z
+  border: &id003
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 28
+    color: '#00000055'
+    offset:
+    - 0
+    - 10
+- elementId: nested-sidebar
+  elementType: shape
+  bounds:
+  - 65
+  - 447
+  - 218
+  - 304
+  shapeName: custom
+  viewBox:
+  - 218
+  - 304
+  fill:
+    type: solid
+    color: '#1D2128'
+  path: M 15,0 H 218 V 304 H 15 Q 0,304 0,289 V 15 Q 0,0 15,0 Z
+- elementId: nested-divider
+  elementType: shape
+  bounds:
+  - 283
+  - 447
+  - 1
+  - 304
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: nested-logo
+  elementType: shape
+  bounds:
+  - 88
+  - 474
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: nested-logo-icon
+  elementType: icon
+  bounds:
+  - 96
+  - 482
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: nested-sidebar-title
+  elementType: text
+  bounds:
+  - 134
+  - 474
+  - 120
+  - 28
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 侧栏
+    bold: true
+- elementId: nested-sidebar-value
+  elementType: text
+  bounds:
+  - 88
+  - 536
+  - 166
+  - 28
+  content:
+    fontSize: 13
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: R15 = 16 − 1
+    bold: true
+- elementId: nested-sidebar-copy
+  elementType: text
+  bounds:
+  - 88
+  - 574
+  - 164
+  - 66
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: '内缩 1 px
+
+      左侧圆角同步减小
+
+      右侧保持直角'
+- elementId: nested-content-title
+  elementType: text
+  bounds:
+  - 322
+  - 474
+  - 300
+  - 30
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 内容区
+    bold: true
+- elementId: nested-content-copy
+  elementType: text
+  bounds:
+  - 322
+  - 522
+  - 540
+  - 62
+  content:
+    fontSize: 13
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '外窗与侧栏不是两个独立圆角矩形。
+
+      它们共用一条连续的外轮廓。'
+- elementId: nested-control
+  elementType: shape
+  bounds:
+  - 322
+  - 626
+  - 180
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 180
+  - 48
+  path: M 10,0 H 170 Q 180,0 180,10 V 38 Q 180,48 170,48 H 10 Q 0,48 0,38 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: nested-control-text
+  elementType: text
+  bounds:
+  - 322
+  - 626
+  - 180
+  - 48
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 独立控件 · R10
+    align:
+    - center
+    - middle
+- elementId: nested-chip
+  elementType: shape
+  bounds:
+  - 518
+  - 636
+  - 104
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 104
+  - 28
+  path: M 8,0 H 96 Q 104,0 104,8 V 20 Q 104,28 96,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: nested-chip-text
+  elementType: text
+  bounds:
+  - 518
+  - 636
+  - 104
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: chip · R8
+    align:
+    - center
+    - middle
+- elementId: exceptions-title
+  elementType: text
+  bounds:
+  - 64
+  - 794
+  - 200
+  - 26
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 明确例外
+    bold: true
+- elementId: exception-toggle
+  elementType: shape
+  bounds:
+  - 64
+  - 840
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: exception-knob
+  elementType: shape
+  bounds:
+  - 81
+  - 843
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: exception-toggle-text
+  elementType: text
+  bounds:
+  - 112
+  - 836
+  - 330
+  - 28
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Switch / 悬浮工具栏使用全圆角
+- elementId: exception-skeleton
+  elementType: shape
+  bounds:
+  - 64
+  - 894
+  - 120
+  - 10
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 120
+  - 10
+  path: M 5.0,0 H 115.0 Q 120,0 120,5.0 V 5.0 Q 120,10 115.0,10 H 5.0 Q 0,10 0,5.0 V 5.0 Q 0,0 5.0,0 Z
+- elementId: exception-skeleton-text
+  elementType: text
+  bounds:
+  - 200
+  - 886
+  - 240
+  - 28
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 骨架条使用全圆角
+- elementId: exception-crop
+  elementType: icon
+  bounds:
+  - 500
+  - 836
+  - 24
+  - 24
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: exception-crop-text
+  elementType: text
+  bounds:
+  - 540
+  - 836
+  - 340
+  - 28
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 取景框保持直角，不套圆角
+- elementId: border-title
+  elementType: text
+  bounds:
+  - 1000
+  - 162
+  - 300
+  - 30
+  content:
+    fontSize: 18
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 边框角色
+    bold: true
+- elementId: border-sample-0
+  elementType: shape
+  bounds:
+  - 1000
+  - 214
+  - 160
+  - 64
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 160
+  - 64
+  path: M 16,0 H 144 Q 160,0 160,16 V 48 Q 160,64 144,64 H 16 Q 0,64 0,48 V 16 Q 0,0 16,0 Z
+  border: *id003
+- elementId: border-label-0
+  elementType: text
+  bounds:
+  - 1184
+  - 216
+  - 300
+  - 26
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮层描边
+    bold: true
+- elementId: border-value-0
+  elementType: text
+  bounds:
+  - 1184
+  - 248
+  - 340
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#FFFFFF26 · 15% · 1 px'
+- elementId: border-sample-1
+  elementType: shape
+  bounds:
+  - 1000
+  - 320
+  - 160
+  - 64
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 160
+  - 64
+  path: M 10,0 H 150 Q 160,0 160,10 V 54 Q 160,64 150,64 H 10 Q 0,64 0,54 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: border-label-1
+  elementType: text
+  bounds:
+  - 1184
+  - 322
+  - 300
+  - 26
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 控件描边
+    bold: true
+- elementId: border-value-1
+  elementType: text
+  bounds:
+  - 1184
+  - 354
+  - 340
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#FFFFFF1A · 10% · 1 px'
+- elementId: border-sample-2
+  elementType: shape
+  bounds:
+  - 1000
+  - 426
+  - 160
+  - 64
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 160
+  - 64
+  path: M 10,0 H 150 Q 160,0 160,10 V 54 Q 160,64 150,64 H 10 Q 0,64 0,54 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#8FA6C999'
+- elementId: border-label-2
+  elementType: text
+  bounds:
+  - 1184
+  - 428
+  - 300
+  - 26
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 激活描边
+    bold: true
+- elementId: border-value-2
+  elementType: text
+  bounds:
+  - 1184
+  - 460
+  - 340
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#8FA6C999 · 60% · 1 px'
+- elementId: geometry-rule
+  elementType: shape
+  bounds:
+  - 1000
+  - 536
+  - 536
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: acceptance-title
+  elementType: text
+  bounds:
+  - 1000
+  - 568
+  - 300
+  - 28
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 几何验收
+    bold: true
+- elementId: geometry-check-0
+  elementType: icon
+  bounds:
+  - 1000
+  - 621
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: geometry-check-text-0
+  elementType: text
+  bounds:
+  - 1028
+  - 618
+  - 500
+  - 26
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 同类组件不单独修改半径
+- elementId: geometry-check-1
+  elementType: icon
+  bounds:
+  - 1000
+  - 663
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: geometry-check-text-1
+  elementType: text
+  bounds:
+  - 1028
+  - 660
+  - 500
+  - 26
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 共边嵌套必须同步减小圆角
+- elementId: geometry-check-2
+  elementType: icon
+  bounds:
+  - 1000
+  - 705
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: geometry-check-text-2
+  elementType: text
+  bounds:
+  - 1028
+  - 702
+  - 500
+  - 26
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 边框统一 1 px，不用覆盖矩形
+- elementId: geometry-check-3
+  elementType: icon
+  bounds:
+  - 1000
+  - 747
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: geometry-check-text-3
+  elementType: text
+  bounds:
+  - 1028
+  - 744
+  - 500
+  - 26
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 白色发送按钮不额外加描边
+- elementId: css-token-box
+  elementType: shape
+  bounds:
+  - 1000
+  - 810
+  - 536
+  - 124
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 536
+  - 124
+  path: M 12,0 H 524 Q 536,0 536,12 V 112 Q 536,124 524,124 H 12 Q 0,124 0,112 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: css-token-text
+  elementType: text
+  bounds:
+  - 1020
+  - 826
+  - 500
+  - 94
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: '--radius-window: 16px;  --radius-container: 12px;
+
+      --radius-control: 10px;  --radius-small: 8px;
+
+      --border-floating: #FFFFFF26;  --radius-toolbar: 999px;
+
+      --border-control: #FFFFFF1A;  --border-active: #8FA6C999;'

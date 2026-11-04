@@ -1,0 +1,180 @@
+version: 1.4.3
+updated: 2026-10-31
+owner: FloatAsk design system
+usage: 唯一机器可读设计 token 源；实现与设计生成脚本均不得另建平行色板。
+themeIds:
+  light: 朝日 · 白天
+  dark: 近月 · 深夜
+  system: 跟随系统
+fonts:
+  latin: Liter
+  cjk: MiSans
+  code: 等宽字体
+radius:
+  window: 16
+  container: 12
+  control: 10
+  small: 8
+  media: 9
+  compact: 7
+  mini: 5
+  pill: pill
+spacing:
+  unit: 4
+  windowPadding: 24
+  containerPadding: 24
+  controlGap: 8
+  sectionGap: 32
+  floatingGap: 12
+themes:
+  dark:
+    label: 近月 · 深夜
+    colors:
+      bg: "#0C0E12"
+      surface: "#171A20"
+      surface2: "#1D2128"
+      surface3: "#242931"
+      divider: "#2A3039"
+      text: "#E8EBF0"
+      body: "#CDD3DC"
+      muted: "#9299A6"
+      faint: "#8A9099"
+      accent: "#8FA6C9"
+      accentSoft: "#28333F"
+      green: "#8DB9A4"
+      red: "#E1A0A8"
+      redSoft: "#2C2025"
+      primaryButton: "#E8EBF0"
+      onPrimary: "#171A20"
+      overlay: "#06080BB8"
+    borders:
+      floating: {width: 1, color: "#FFFFFF26"}
+      control: {width: 1, color: "#FFFFFF1A"}
+      active: {width: 1, color: "#8FA6C999"}
+      danger: {width: 1, color: "#E1A0A84D"}
+    shadows:
+      floating: {blur: 6, color: "#00000066", offset: [0, 2]}
+      toolbar: {blur: 6, color: "#00000077", offset: [0, 2]}
+  light:
+    label: 朝日 · 白天
+    colors:
+      bg: "#E7E7DF"
+      surface: "#F4F3ED"
+      surface2: "#FAF9F4"
+      surface3: "#E9EBE4"
+      divider: "#D6D9D0"
+      text: "#20242B"
+      body: "#3F4650"
+      muted: "#66707C"
+      faint: "#66707C"
+      accent: "#506B92"
+      accentSoft: "#E6EBF1"
+      green: "#3E7561"
+      red: "#A14D58"
+      redSoft: "#F7E8EA"
+      primaryButton: "#506B92"
+      onPrimary: "#F5F7FA"
+      overlay: "#20242B66"
+    borders:
+      floating: {width: 1, color: "#141B2E1F"}
+      control: {width: 1, color: "#141B2E14"}
+      active: {width: 1, color: "#506B9299"}
+      danger: {width: 1, color: "#A14D584D"}
+    shadows:
+      floating: {blur: 6, color: "#26314726", offset: [0, 2]}
+      toolbar: {blur: 6, color: "#2631472E", offset: [0, 2]}
+typography:
+  windowTitle: {size: 23, weight: 600}
+  sectionTitle: {size: 15, weight: 600}
+  answerTitle: {size: 16, weight: 600}
+  answerBody: {size: 13, lineHeight: 1.5}
+  answerBodyLarge: {size: 14, lineHeight: 1.55}
+  control: {size: 11, lineHeight: 1.5}
+  auxiliaryMin: 10
+  microText: {kicker: 7.5, micro: 8.5, nano: 9, caption: 9.5}
+  microTextRule: 仅用于全大写装饰性 kicker、微型注记与辅助标签；正文与控件文字不小于 auxiliaryMin。
+  answerSizes: [12, 14, 16]
+  defaultAnswerSize: 14
+components:
+  answerWindow:
+    radius: 16
+    compactSize: [800, 1425]
+    expandedSize: [960, 1600]
+    header: fixed
+    context: fixed
+    composer: fixed
+    answerViewport: scroll
+    scrollbarWidth: 3
+  settingsWindow:
+    radius: 16
+    sidebarWidth: 218
+    sidebarInset: 1
+    sidebarRadius: 15
+  toolbar:
+    expandedSize: [328, 52]
+    collapsedVertical: [44, 64]
+    collapsedHorizontal: [64, 44]
+    outerRadius: 26
+    collapsedOuterRadius: 22
+    padding: 5
+    primaryRadius: 21
+    brandSize: [40, 42]
+    logoSize: 32
+    collapsedLogoRadius: 16
+    iconSize: 16
+    snapDistance: 24
+    expandedEdgeGap: 8
+  moreMenu:
+    size: [224, 152]
+    radius: 12
+    itemRadius: 10
+    itemHeight: 36
+    gapFromToolbar: 12
+  controls:
+    buttonHeight: 40
+    inputHeight: 42
+    chipHeight: 28
+    switchSize: [34, 20]
+motion:
+  themeColorDuration: 120
+  toolbarDuration: 180
+  toolbarCollapseFade: 80
+  toolbarExpandDelay: 60
+  hoverExpandDelay: 120
+  leaveCollapseDelay: 300
+  easing: ease-out
+  reducedMotion: immediate
+readingDensity:
+  compact: 0.92
+  relaxed: 1.12
+  standard: 1
+  rule: 紧凑/宽松阅读密度只缩放注记与间距系数，不缩小正文字号；正文不小于 auxiliaryMin。
+accessibility:
+  minimumTextContrast: 4.5
+  lightOnSurface:
+    text: 14.01
+    body: 8.57
+    muted: 4.53
+    accent: 4.89
+  lightOnPrimary: 5.07
+  lightAccentOnSoft: 4.54
+  keyboardFocus: visible
+  keyboardFocusColorRole: accent
+  keyboardFocusOutlineWidth: 2
+  keyboardFocusOutlineOffset: 2
+  windowsCoordinateUnit: DIP
+  windowsUseWorkArea: true
+  systemHighContrastPriority: true
+  reducedMotionRule: 立即切换最终状态，不移除功能反馈
+  screenReaderStreamingRule: 不逐字播报流式内容，只播报完成、错误与恢复动作
+  externalDisplayRemovalRule: 外接屏移除时迁回主屏工作区
+  crossDisplayDpiRule: 跨屏后重新读取目标 DPI，不重复缩放
+  lightSurfaceRule: 禁止纯白大面积表面；禁止黄色滤层与大面积绿色。
+  sharedGeometryRule: 双主题共享尺寸、圆角、布局与组件状态，仅替换语义颜色、描边和投影。
+compatibility:
+  changePolicy: additive
+  tokenRenameRule: 已有 token 改名或删除前保留别名并记录弃用
+  generatedCssRule: 冲突在 YAML 与生成器源中解决后重新生成，不手解生成 CSS 冲突
+  featureIntegrationRule: 优先复用语义 token 与组件；新原语须同步规范、样张和验收矩阵
+  collectionRule: 不使用固定数量或 nth-child 假设提供商、来源、快捷动作、设置项与菜单项
+  upstreamRule: 上游新增功能按功能合并并保留，不以当前设计基线回退

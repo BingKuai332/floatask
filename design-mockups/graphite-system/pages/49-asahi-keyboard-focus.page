@@ -1,0 +1,876 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 49
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 键盘焦点与操作
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 焦点顺序、弹层返回与 Esc 行为保持一致；灰雾蓝焦点外描边在暖白表面清晰可见
+- elementId: focus-window
+  elementType: shape
+  bounds:
+  - 64
+  - 182
+  - 980
+  - 704
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 980
+  - 704
+  path: M 16,0 H 964 Q 980,0 980,16 V 688 Q 980,704 964,704 H 16 Q 0,704 0,688 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+  shadow:
+    blur: 38
+    color: '#26314726'
+    offset:
+    - 0
+    - 14
+- elementId: focus-window-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 198
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: focus-window-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 206
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: focus-window-brand
+  elementType: text
+  bounds:
+  - 132
+  - 196
+  - 100
+  - 26
+  content:
+    fontSize: 19
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问
+    bold: true
+- elementId: focus-window-brand-en
+  elementType: text
+  bounds:
+  - 133
+  - 222
+  - 100
+  - 12
+  content:
+    fontSize: 8
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: focus-window-status-dot
+  elementType: shape
+  bounds:
+  - 704
+  - 211
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: focus-window-status
+  elementType: text
+  bounds:
+  - 716
+  - 204
+  - 60
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 已完成
+- elementId: focus-window-action-0
+  elementType: icon
+  bounds:
+  - 824
+  - 206
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: focus-window-action-1
+  elementType: icon
+  bounds:
+  - 866
+  - 206
+  - 15
+  - 15
+  iconName: fas:thumbtack
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: focus-window-action-2
+  elementType: icon
+  bounds:
+  - 908
+  - 206
+  - 15
+  - 15
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: focus-window-action-3
+  elementType: icon
+  bounds:
+  - 950
+  - 206
+  - 15
+  - 15
+  iconName: fas:gear
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: focus-window-action-4
+  elementType: icon
+  bounds:
+  - 992
+  - 206
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: focus-window-head-line
+  elementType: shape
+  bounds:
+  - 64
+  - 245
+  - 980
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: focus-window-context-bg
+  elementType: shape
+  bounds:
+  - 65
+  - 246
+  - 978
+  - 43
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#FAF9F4'
+- elementId: focus-window-context-icon
+  elementType: icon
+  bounds:
+  - 88
+  - 260
+  - 14
+  - 14
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: focus-window-context
+  elementType: text
+  bounds:
+  - 112
+  - 255
+  - 680
+  - 24
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer · 屏幕框选
+- elementId: focus-window-model
+  elementType: text
+  bounds:
+  - 854
+  - 255
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - right
+    - top
+- elementId: focus-window-chevron
+  elementType: icon
+  bounds:
+  - 996
+  - 262
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: focus-window-context-line
+  elementType: shape
+  bounds:
+  - 64
+  - 288
+  - 980
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: focus-answer-title
+  elementType: text
+  bounds:
+  - 94
+  - 318
+  - 620
+  - 30
+  content:
+    fontSize: 18
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer 是什么？
+    bold: true
+- elementId: focus-answer-body
+  elementType: text
+  bounds:
+  - 94
+  - 366
+  - 920
+  - 116
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.65
+    wrap: true
+    text: 它是一种基于自注意力机制的神经网络架构，会让模型在处理一个词时，同时参考句子里的其他词。你当前框选的是论文中的概念解释段落。
+- elementId: focus-source
+  elementType: shape
+  bounds:
+  - 94
+  - 502
+  - 920
+  - 64
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 920
+  - 64
+  path: M 12,0 H 908 Q 920,0 920,12 V 52 Q 920,64 908,64 H 12 Q 0,64 0,52 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: focus-source-icon
+  elementType: icon
+  bounds:
+  - 112
+  - 524
+  - 16
+  - 16
+  iconName: fas:link
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: focus-source-text
+  elementType: text
+  bounds:
+  - 142
+  - 516
+  - 620
+  - 36
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '[1] Attention Is All You Need · arXiv'
+    align:
+    - left
+    - middle
+- elementId: focus-copy
+  elementType: shape
+  bounds:
+  - 894
+  - 516
+  - 96
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 96
+  - 36
+  path: M 10,0 H 86 Q 96,0 96,10 V 26 Q 96,36 86,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: focus-copy-text
+  elementType: text
+  bounds:
+  - 894
+  - 516
+  - 96
+  - 36
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 复制来源
+    align:
+    - center
+    - middle
+- elementId: focus-input
+  elementType: shape
+  bounds:
+  - 94
+  - 614
+  - 920
+  - 64
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 920
+  - 64
+  path: M 12,0 H 908 Q 920,0 920,12 V 52 Q 920,64 908,64 H 12 Q 0,64 0,52 V 12 Q 0,0 12,0 Z
+  border:
+    style: solid
+    width: 2
+    color: '#506B92'
+- elementId: focus-input-text
+  elementType: text
+  bounds:
+  - 116
+  - 614
+  - 800
+  - 64
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 继续追问，或让我查一下…
+    align:
+    - left
+    - middle
+- elementId: focus-send
+  elementType: shape
+  bounds:
+  - 940
+  - 625
+  - 42
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 42
+  - 42
+  path: M 10,0 H 32 Q 42,0 42,10 V 32 Q 42,42 32,42 H 10 Q 0,42 0,32 V 10 Q 0,0 10,0 Z
+- elementId: focus-send-icon
+  elementType: icon
+  bounds:
+  - 953
+  - 638
+  - 16
+  - 16
+  iconName: fas:arrow-up
+  fill:
+    type: solid
+    color: '#F5F7FA'
+- elementId: focus-ring-label
+  elementType: text
+  bounds:
+  - 116
+  - 690
+  - 420
+  - 20
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 2 DIP 焦点外描边 · 与控件边界间隔 2 DIP
+- elementId: focus-menu
+  elementType: shape
+  bounds:
+  - 762
+  - 728
+  - 224
+  - 116
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 224
+  - 116
+  path: M 12,0 H 212 Q 224,0 224,12 V 104 Q 224,116 212,116 H 12 Q 0,116 0,104 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: focus-menu-item-1
+  elementType: text
+  bounds:
+  - 778
+  - 740
+  - 192
+  - 36
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 重新框选
+    align:
+    - left
+    - middle
+- elementId: focus-menu-active
+  elementType: shape
+  bounds:
+  - 778
+  - 784
+  - 192
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 192
+  - 36
+  path: M 10,0 H 182 Q 192,0 192,10 V 26 Q 192,36 182,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+  border:
+    style: solid
+    width: 2
+    color: '#506B92'
+- elementId: focus-menu-item-2
+  elementType: text
+  bounds:
+  - 794
+  - 784
+  - 160
+  - 36
+  content:
+    fontSize: 11
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 关闭答案窗
+    align:
+    - left
+    - middle
+- elementId: focus-badge-1
+  elementType: shape
+  bounds:
+  - 818
+  - 198
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: focus-badge-1-text
+  elementType: text
+  bounds:
+  - 818
+  - 198
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '1'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: focus-badge-2
+  elementType: shape
+  bounds:
+  - 880
+  - 492
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: focus-badge-2-text
+  elementType: text
+  bounds:
+  - 880
+  - 492
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '2'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: focus-badge-3
+  elementType: shape
+  bounds:
+  - 76
+  - 596
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: focus-badge-3-text
+  elementType: text
+  bounds:
+  - 76
+  - 596
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '3'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: focus-badge-4
+  elementType: shape
+  bounds:
+  - 926
+  - 602
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: focus-badge-4-text
+  elementType: text
+  bounds:
+  - 926
+  - 602
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '4'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: focus-badge-5
+  elementType: shape
+  bounds:
+  - 750
+  - 714
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: focus-badge-5-text
+  elementType: text
+  bounds:
+  - 750
+  - 714
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '5'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: focus-note-1-title
+  elementType: text
+  bounds:
+  - 1110
+  - 202
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 焦点顺序
+    bold: true
+- elementId: focus-note-1-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 240
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: focus-note-1-body
+  elementType: text
+  bounds:
+  - 1110
+  - 256
+  - 420
+  - 140
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: '1. 标题栏与窗口操作
+
+      2. 回答、来源与上下文
+
+      3. 追问输入
+
+      4. 发送、快捷 chips 和次级动作
+
+      5. 菜单与弹层'
+- elementId: focus-note-2-title
+  elementType: text
+  bounds:
+  - 1110
+  - 408
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 弹层与 Esc
+    bold: true
+- elementId: focus-note-2-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 446
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: focus-note-2-body
+  elementType: text
+  bounds:
+  - 1110
+  - 462
+  - 420
+  - 28
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: 菜单打开后焦点进入菜单；方向键移动，Enter 执行。Esc 关闭菜单并返回触发按钮，再次 Esc 才关闭答案窗。
+- elementId: focus-note-3-title
+  elementType: text
+  bounds:
+  - 1110
+  - 618
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 焦点可见性
+    bold: true
+- elementId: focus-note-3-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 656
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: focus-note-3-body
+  elementType: text
+  bounds:
+  - 1110
+  - 672
+  - 420
+  - 28
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: 2 DIP `active` 外描边，偏移 2 DIP；不被父容器裁剪。disabled 不进入 Tab 顺序，图标按钮均有可访问名称与 tooltip。

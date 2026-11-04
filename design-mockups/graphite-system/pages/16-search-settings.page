@@ -1,0 +1,1408 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 16
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网检索
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 服务选择与数据流向同屏说明；失败时允许无网降级，但不伪造来源
+- elementId: search-window
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 1472
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 1472
+  - 788
+  path: M 16,0 H 1456 Q 1472,0 1472,16 V 772 Q 1472,788 1456,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 40
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: search-sidebar
+  elementType: shape
+  bounds:
+  - 65
+  - 149
+  - 218
+  - 786
+  shapeName: custom
+  viewBox:
+  - 218
+  - 786
+  fill:
+    type: solid
+    color: '#1D2128'
+  path: M 15,0 H 218 V 786 H 15 Q 0,786 0,771 V 15 Q 0,0 15,0 Z
+- elementId: search-sidebar-line
+  elementType: shape
+  bounds:
+  - 283
+  - 149
+  - 1
+  - 786
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: search-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 170
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: search-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 178
+  - 18
+  - 18
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: search-brand
+  elementType: text
+  bounds:
+  - 134
+  - 168
+  - 100
+  - 28
+  content:
+    fontSize: 18
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问设置
+    bold: true
+- elementId: search-brand-sub
+  elementType: text
+  bounds:
+  - 134
+  - 197
+  - 120
+  - 16
+  content:
+    fontSize: 8
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: search-nav-icon-0
+  elementType: icon
+  bounds:
+  - 94
+  - 260
+  - 15
+  - 15
+  iconName: fas:sliders
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-nav-text-0
+  elementType: text
+  bounds:
+  - 122
+  - 256
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 模型服务
+- elementId: search-nav-active
+  elementType: shape
+  bounds:
+  - 78
+  - 301
+  - 190
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 190
+  - 40
+  path: M 10,0 H 180 Q 190,0 190,10 V 30 Q 190,40 180,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: search-nav-icon-1
+  elementType: icon
+  bounds:
+  - 94
+  - 312
+  - 15
+  - 15
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: search-nav-text-1
+  elementType: text
+  bounds:
+  - 122
+  - 308
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网检索
+- elementId: search-nav-icon-2
+  elementType: icon
+  bounds:
+  - 94
+  - 364
+  - 15
+  - 15
+  iconName: fas:keyboard
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-nav-text-2
+  elementType: text
+  bounds:
+  - 122
+  - 360
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 通用与快捷键
+- elementId: search-nav-icon-3
+  elementType: icon
+  bounds:
+  - 94
+  - 416
+  - 15
+  - 15
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-nav-text-3
+  elementType: text
+  bounds:
+  - 122
+  - 412
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与隐私
+- elementId: search-nav-icon-4
+  elementType: icon
+  bounds:
+  - 94
+  - 468
+  - 15
+  - 15
+  iconName: fas:font
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-nav-text-4
+  elementType: text
+  bounds:
+  - 122
+  - 464
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 外观与阅读
+- elementId: search-nav-icon-5
+  elementType: icon
+  bounds:
+  - 94
+  - 520
+  - 15
+  - 15
+  iconName: fas:rotate
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-nav-text-5
+  elementType: text
+  bounds:
+  - 122
+  - 516
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更新与关于
+- elementId: search-nav-note
+  elementType: text
+  bounds:
+  - 90
+  - 866
+  - 170
+  - 40
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: '配置仅保存在本机
+
+      保存后立即应用'
+- elementId: search-close
+  elementType: icon
+  bounds:
+  - 1490
+  - 174
+  - 16
+  - 16
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-title
+  elementType: text
+  bounds:
+  - 322
+  - 178
+  - 400
+  - 34
+  content:
+    fontSize: 23
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网检索
+    bold: true
+- elementId: search-desc
+  elementType: text
+  bounds:
+  - 322
+  - 220
+  - 790
+  - 24
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 选择检索服务并控制网页上下文。关闭联网后，不会向搜索引擎发送检索词。
+- elementId: search-save
+  elementType: shape
+  bounds:
+  - 1370
+  - 176
+  - 118
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 118
+  - 40
+  path: M 10,0 H 108 Q 118,0 118,10 V 30 Q 118,40 108,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: search-save-text
+  elementType: text
+  bounds:
+  - 1370
+  - 176
+  - 118
+  - 40
+  content:
+    fontSize: 12
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保存更改
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: search-provider-section
+  elementType: text
+  bounds:
+  - 322
+  - 280
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 检索服务
+    bold: true
+- elementId: bing-card
+  elementType: shape
+  bounds:
+  - 322
+  - 316
+  - 350
+  - 270
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 350
+  - 270
+  path: M 12,0 H 338 Q 350,0 350,12 V 258 Q 350,270 338,270 H 12 Q 0,270 0,258 V 12 Q 0,0 12,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: bing-icon-bg
+  elementType: shape
+  bounds:
+  - 346
+  - 338
+  - 38
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 38
+  - 38
+  path: M 10,0 H 28 Q 38,0 38,10 V 28 Q 38,38 28,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: bing-icon
+  elementType: icon
+  bounds:
+  - 356
+  - 348
+  - 18
+  - 18
+  iconName: fas:magnifying-glass
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: bing-title
+  elementType: text
+  bounds:
+  - 400
+  - 338
+  - 170
+  - 26
+  content:
+    fontSize: 13
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 必应内置服务
+    bold: true
+- elementId: bing-subtitle
+  elementType: text
+  bounds:
+  - 400
+  - 368
+  - 180
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 开箱即用 · 无需 API Key
+- elementId: bing-radio
+  elementType: shape
+  bounds:
+  - 626
+  - 346
+  - 16
+  - 16
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 16
+  - 16
+  path: M 8.0,0 H 8.0 Q 16,0 16,8.0 V 8.0 Q 16,16 8.0,16 H 8.0 Q 0,16 0,8.0 V 8.0 Q 0,0 8.0,0 Z
+  border: *id002
+- elementId: bing-desc
+  elementType: text
+  bounds:
+  - 346
+  - 402
+  - 298
+  - 48
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 使用内置必应检索并抓取公开网页正文，适合不想维护服务的场景。
+- elementId: bing-rule
+  elementType: shape
+  bounds:
+  - 346
+  - 468
+  - 302
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: bing-check-1
+  elementType: icon
+  bounds:
+  - 346
+  - 488
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: bing-note-1
+  elementType: text
+  bounds:
+  - 370
+  - 482
+  - 260
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 无需额外配置
+- elementId: bing-check-2
+  elementType: icon
+  bounds:
+  - 346
+  - 522
+  - 13
+  - 13
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: bing-note-2
+  elementType: text
+  bounds:
+  - 370
+  - 516
+  - 270
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 搜索结果可用性取决于网络
+- elementId: searx-card
+  elementType: shape
+  bounds:
+  - 692
+  - 316
+  - 350
+  - 270
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 350
+  - 270
+  path: M 12,0 H 338 Q 350,0 350,12 V 258 Q 350,270 338,270 H 12 Q 0,270 0,258 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#8FA6C999'
+- elementId: searx-icon-bg
+  elementType: shape
+  bounds:
+  - 716
+  - 338
+  - 38
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 38
+  - 38
+  path: M 10,0 H 28 Q 38,0 38,10 V 28 Q 38,38 28,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: searx-icon
+  elementType: icon
+  bounds:
+  - 726
+  - 348
+  - 18
+  - 18
+  iconName: fas:server
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: searx-title
+  elementType: text
+  bounds:
+  - 770
+  - 338
+  - 160
+  - 26
+  content:
+    fontSize: 13
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 自部署 SearXNG
+    bold: true
+- elementId: searx-subtitle
+  elementType: text
+  bounds:
+  - 770
+  - 368
+  - 170
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 使用自己的聚合检索服务
+- elementId: searx-selected
+  elementType: shape
+  bounds:
+  - 958
+  - 340
+  - 66
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 66
+  - 26
+  path: M 8,0 H 58 Q 66,0 66,8 V 18 Q 66,26 58,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+- elementId: searx-selected-text
+  elementType: text
+  bounds:
+  - 958
+  - 340
+  - 66
+  - 26
+  content:
+    fontSize: 9
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 已选择
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: searx-address-label
+  elementType: text
+  bounds:
+  - 716
+  - 412
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 服务地址
+    bold: true
+- elementId: searx-address
+  elementType: shape
+  bounds:
+  - 716
+  - 442
+  - 206
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 206
+  - 40
+  path: M 10,0 H 196 Q 206,0 206,10 V 30 Q 206,40 196,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: searx-address-text
+  elementType: text
+  bounds:
+  - 730
+  - 442
+  - 180
+  - 40
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: http://127.0.0.1:8080
+    align:
+    - left
+    - middle
+- elementId: searx-test
+  elementType: shape
+  bounds:
+  - 932
+  - 442
+  - 92
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 92
+  - 40
+  path: M 10,0 H 82 Q 92,0 92,10 V 30 Q 92,40 82,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: searx-test-text
+  elementType: text
+  bounds:
+  - 932
+  - 442
+  - 92
+  - 40
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 测试连接
+    align:
+    - center
+    - middle
+- elementId: searx-status-icon
+  elementType: icon
+  bounds:
+  - 718
+  - 504
+  - 14
+  - 14
+  iconName: fas:circle-check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: searx-status
+  elementType: text
+  bounds:
+  - 742
+  - 498
+  - 190
+  - 24
+  content:
+    fontSize: 10
+    color: '#8DB9A4'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 连接成功 · 38 ms
+- elementId: searx-status-time
+  elementType: text
+  bounds:
+  - 912
+  - 498
+  - 110
+  - 24
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 刚刚测试
+    align:
+    - right
+    - top
+- elementId: searx-local-note
+  elementType: text
+  bounds:
+  - 716
+  - 540
+  - 300
+  - 22
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 示例为本机服务；也可填写可访问的远程地址
+- elementId: search-behavior-section
+  elementType: text
+  bounds:
+  - 322
+  - 618
+  - 400
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网行为与隐私
+    bold: true
+- elementId: search-privacy-card
+  elementType: shape
+  bounds:
+  - 322
+  - 654
+  - 720
+  - 242
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 720
+  - 242
+  path: M 12,0 H 708 Q 720,0 720,12 V 230 Q 720,242 708,242 H 12 Q 0,242 0,230 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: search-privacy-icon-bg
+  elementType: shape
+  bounds:
+  - 346
+  - 674
+  - 36
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 36
+  - 36
+  path: M 10,0 H 26 Q 36,0 36,10 V 26 Q 36,36 26,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: search-privacy-icon
+  elementType: icon
+  bounds:
+  - 356
+  - 684
+  - 16
+  - 16
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: search-privacy-title
+  elementType: text
+  bounds:
+  - 398
+  - 678
+  - 300
+  - 26
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 数据会发送到哪里
+    bold: true
+- elementId: search-privacy-copy
+  elementType: text
+  bounds:
+  - 346
+  - 728
+  - 668
+  - 62
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 检索词会发送给所选搜索引擎。开启网页正文抓取后，正文会作为模型上下文发送；OCR 仍在本机完成，关闭联网则不会发起检索。
+- elementId: search-privacy-rule
+  elementType: shape
+  bounds:
+  - 346
+  - 802
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: search-fallback-note
+  elementType: shape
+  bounds:
+  - 346
+  - 822
+  - 672
+  - 50
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 672
+  - 50
+  path: M 10,0 H 662 Q 672,0 672,10 V 40 Q 672,50 662,50 H 10 Q 0,50 0,40 V 10 Q 0,0 10,0 Z
+- elementId: search-fallback-icon
+  elementType: icon
+  bounds:
+  - 364
+  - 839
+  - 15
+  - 15
+  iconName: fas:circle-info
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: search-fallback-text
+  elementType: text
+  bounds:
+  - 392
+  - 830
+  - 604
+  - 34
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 检索失败可降级为不联网回答，并明确提示；不会生成来源标注。
+    align:
+    - left
+    - middle
+- elementId: search-params-section
+  elementType: text
+  bounds:
+  - 1066
+  - 280
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 检索参数
+    bold: true
+- elementId: search-params-card
+  elementType: shape
+  bounds:
+  - 1066
+  - 316
+  - 446
+  - 580
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 446
+  - 580
+  path: M 12,0 H 434 Q 446,0 446,12 V 568 Q 446,580 434,580 H 12 Q 0,580 0,568 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: search-enable-title
+  elementType: text
+  bounds:
+  - 1090
+  - 338
+  - 240
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 启用联网检索
+    bold: true
+- elementId: search-enable-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 366
+  - 310
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 回答前根据问题获取公开网页资料
+- elementId: search-param-rule-1
+  elementType: shape
+  bounds:
+  - 1090
+  - 404
+  - 398
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: search-count-title
+  elementType: text
+  bounds:
+  - 1090
+  - 430
+  - 200
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 来源数量
+    bold: true
+- elementId: search-count-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 458
+  - 230
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 每次最多纳入回答的网页数
+- elementId: search-count-select
+  elementType: shape
+  bounds:
+  - 1340
+  - 426
+  - 148
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 148
+  - 40
+  path: M 10,0 H 138 Q 148,0 148,10 V 30 Q 148,40 138,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: search-count-value
+  elementType: text
+  bounds:
+  - 1356
+  - 426
+  - 88
+  - 40
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 4 个来源
+    align:
+    - left
+    - middle
+- elementId: search-count-chevron
+  elementType: icon
+  bounds:
+  - 1458
+  - 440
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-timeout-title
+  elementType: text
+  bounds:
+  - 1090
+  - 510
+  - 200
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 检索超时
+    bold: true
+- elementId: search-timeout-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 538
+  - 230
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 超时后进入降级或重试流程
+- elementId: search-timeout-select
+  elementType: shape
+  bounds:
+  - 1340
+  - 506
+  - 148
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 148
+  - 40
+  path: M 10,0 H 138 Q 148,0 148,10 V 30 Q 148,40 138,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: search-timeout-value
+  elementType: text
+  bounds:
+  - 1356
+  - 506
+  - 88
+  - 40
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 12 秒
+    align:
+    - left
+    - middle
+- elementId: search-timeout-chevron
+  elementType: icon
+  bounds:
+  - 1458
+  - 520
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-fetch-title
+  elementType: text
+  bounds:
+  - 1090
+  - 590
+  - 230
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 抓取网页正文
+    bold: true
+- elementId: search-fetch-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 618
+  - 300
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 不仅使用搜索摘要，也读取正文内容
+- elementId: search-param-rule-2
+  elementType: shape
+  bounds:
+  - 1090
+  - 662
+  - 398
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: search-degrade-title
+  elementType: text
+  bounds:
+  - 1090
+  - 688
+  - 250
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 失败时允许无网回答
+    bold: true
+- elementId: search-degrade-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 716
+  - 320
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 明确标记未联网，不保留失效引用
+- elementId: search-data-note
+  elementType: shape
+  bounds:
+  - 1090
+  - 762
+  - 398
+  - 110
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 398
+  - 110
+  path: M 12,0 H 386 Q 398,0 398,12 V 98 Q 398,110 386,110 H 12 Q 0,110 0,98 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: search-data-icon
+  elementType: icon
+  bounds:
+  - 1108
+  - 782
+  - 15
+  - 15
+  iconName: fas:arrow-up-right-from-square
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: search-data-title
+  elementType: text
+  bounds:
+  - 1136
+  - 774
+  - 240
+  - 24
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 一次联网回答会传出
+    bold: true
+- elementId: search-data-copy
+  elementType: text
+  bounds:
+  - 1108
+  - 812
+  - 356
+  - 44
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: '检索词 → 搜索引擎
+
+      OCR、可选截图与网页正文 → 当前模型'
+- elementId: search-footer
+  elementType: text
+  bounds:
+  - 322
+  - 906
+  - 960
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 来源标注仅对应实际检索结果；无网降级不会复用上一次回答的引用。
+- elementId: search-enable-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 340
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: search-enable-toggle-knob
+  elementType: shape
+  bounds:
+  - 1471
+  - 343
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: search-fetch-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 592
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: search-fetch-toggle-knob
+  elementType: shape
+  bounds:
+  - 1471
+  - 595
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: search-degrade-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 690
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: search-degrade-toggle-knob
+  elementType: shape
+  bounds:
+  - 1471
+  - 693
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'

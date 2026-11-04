@@ -1,0 +1,884 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 07
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更多菜单
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 一级工具栏保留高频操作；菜单只承载设置、隐藏与退出
+- elementId: menu-desktop
+  elementType: shape
+  bounds:
+  - 64
+  - 170
+  - 960
+  - 600
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#12161C'
+  viewBox:
+  - 960
+  - 600
+  path: M 16,0 H 944 Q 960,0 960,16 V 584 Q 960,600 944,600 H 16 Q 0,600 0,584 V 16 Q 0,0 16,0 Z
+  border: &id003
+    width: 1
+    color: '#FFFFFF26'
+- elementId: menu-context
+  elementType: text
+  bounds:
+  - 96
+  - 196
+  - 400
+  - 28
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 底部右侧 · 向上展开
+    bold: true
+- elementId: menu-window-bar
+  elementType: shape
+  bounds:
+  - 96
+  - 252
+  - 560
+  - 42
+  shapeName: custom
+  viewBox:
+  - 560
+  - 42
+  fill:
+    type: solid
+    color: '#1D2128'
+  path: M 12,0 H 548 Q 560,0 560,12 V 42 H 0 V 12 Q 0,0 12,0 Z
+- elementId: menu-window-dot
+  elementType: shape
+  bounds:
+  - 116
+  - 269
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: menu-window-title
+  elementType: text
+  bounds:
+  - 140
+  - 260
+  - 260
+  - 26
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 当前应用窗口
+- elementId: menu-window-body
+  elementType: shape
+  bounds:
+  - 96
+  - 294
+  - 560
+  - 260
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#171A20'
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: menu-window-line-1
+  elementType: shape
+  bounds:
+  - 124
+  - 330
+  - 230
+  - 9
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 230
+  - 9
+  path: M 4.5,0 H 225.5 Q 230,0 230,4.5 V 4.5 Q 230,9 225.5,9 H 4.5 Q 0,9 0,4.5 V 4.5 Q 0,0 4.5,0 Z
+- elementId: menu-window-line-2
+  elementType: shape
+  bounds:
+  - 124
+  - 355
+  - 310
+  - 9
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 310
+  - 9
+  path: M 4.5,0 H 305.5 Q 310,0 310,4.5 V 4.5 Q 310,9 305.5,9 H 4.5 Q 0,9 0,4.5 V 4.5 Q 0,0 4.5,0 Z
+- elementId: menu-window-line-3
+  elementType: shape
+  bounds:
+  - 124
+  - 380
+  - 180
+  - 9
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 180
+  - 9
+  path: M 4.5,0 H 175.5 Q 180,0 180,4.5 V 4.5 Q 180,9 175.5,9 H 4.5 Q 0,9 0,4.5 V 4.5 Q 0,0 4.5,0 Z
+- elementId: menu-open-caption
+  elementType: text
+  bounds:
+  - 98
+  - 704
+  - 420
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 菜单与工具栏保持 12 px 间距
+- elementId: menu-spec-card
+  elementType: shape
+  bounds:
+  - 1056
+  - 170
+  - 480
+  - 600
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 480
+  - 600
+  path: M 16,0 H 464 Q 480,0 480,16 V 584 Q 480,600 464,600 H 16 Q 0,600 0,584 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: menu-spec-title
+  elementType: text
+  bounds:
+  - 1080
+  - 196
+  - 300
+  - 28
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 菜单结构
+    bold: true
+- elementId: menu-spec-size
+  elementType: text
+  bounds:
+  - 1080
+  - 240
+  - 380
+  - 30
+  content:
+    fontSize: 20
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 224 × 152 px
+    bold: true
+- elementId: menu-spec-copy
+  elementType: text
+  bounds:
+  - 1080
+  - 282
+  - 410
+  - 54
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '容器 R12 · 菜单项 R10 · 行高 36 px
+
+      一级已有功能不重复出现'
+- elementId: menu-spec-rule
+  elementType: shape
+  bounds:
+  - 1080
+  - 350
+  - 432
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: menu-toolbar
+  elementType: shape
+  bounds:
+  - 656
+  - 660
+  - 328
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 328
+  - 52
+  path: M 26.0,0 H 302.0 Q 328,0 328,26.0 V 26.0 Q 328,52 302.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: *id003
+  shadow:
+    blur: 26
+    color: '#00000077'
+    offset:
+    - 0
+    - 10
+- elementId: menu-toolbar-logo-bg
+  elementType: shape
+  bounds:
+  - 661
+  - 665
+  - 40
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 40
+  - 42
+  path: M 20.0,0 H 20.0 Q 40,0 40,20.0 V 22.0 Q 40,42 20.0,42 H 20.0 Q 0,42 0,22.0 V 20.0 Q 0,0 20.0,0 Z
+- elementId: menu-toolbar-logo
+  elementType: text
+  bounds:
+  - 661
+  - 665
+  - 40
+  - 42
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: menu-toolbar-primary
+  elementType: shape
+  bounds:
+  - 706
+  - 665
+  - 142
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 142
+  - 42
+  path: M 21,0 H 121 Q 142,0 142,21 V 21 Q 142,42 121,42 H 21 Q 0,42 0,21 V 21 Q 0,0 21,0 Z
+- elementId: menu-toolbar-primary-icon
+  elementType: icon
+  bounds:
+  - 720
+  - 678
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: menu-toolbar-primary-text
+  elementType: text
+  bounds:
+  - 742
+  - 671
+  - 38
+  - 30
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: menu-toolbar-key
+  elementType: shape
+  bounds:
+  - 784
+  - 674
+  - 52
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 52
+  - 24
+  path: M 8,0 H 44 Q 52,0 52,8 V 16 Q 52,24 44,24 H 8 Q 0,24 0,16 V 8 Q 0,0 8,0 Z
+- elementId: menu-toolbar-key-text
+  elementType: text
+  bounds:
+  - 784
+  - 674
+  - 52
+  - 24
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Alt Q
+    align:
+    - center
+    - middle
+- elementId: menu-toolbar-clipboard
+  elementType: icon
+  bounds:
+  - 867
+  - 678
+  - 16
+  - 16
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: menu-toolbar-history
+  elementType: icon
+  bounds:
+  - 907
+  - 678
+  - 16
+  - 16
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: menu-toolbar-more-hover
+  elementType: shape
+  bounds:
+  - 938
+  - 669
+  - 34
+  - 34
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#242931'
+- elementId: menu-toolbar-more
+  elementType: icon
+  bounds:
+  - 947
+  - 678
+  - 16
+  - 16
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: more-menu
+  elementType: shape
+  bounds:
+  - 748
+  - 496
+  - 224
+  - 152
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 224
+  - 152
+  path: M 12,0 H 212 Q 224,0 224,12 V 140 Q 224,152 212,152 H 12 Q 0,152 0,140 V 12 Q 0,0 12,0 Z
+  border: *id003
+  shadow:
+    blur: 28
+    color: '#00000077'
+    offset:
+    - 0
+    - 10
+- elementId: more-menu-settings-hover
+  elementType: shape
+  bounds:
+  - 754
+  - 502
+  - 212
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 212
+  - 36
+  path: M 10,0 H 202 Q 212,0 212,10 V 26 Q 212,36 202,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: more-menu-settings-icon
+  elementType: icon
+  bounds:
+  - 766
+  - 512
+  - 15
+  - 15
+  iconName: fas:gear
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: more-menu-settings-text
+  elementType: text
+  bounds:
+  - 794
+  - 502
+  - 140
+  - 36
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 设置
+    align:
+    - left
+    - middle
+- elementId: more-menu-hide-icon
+  elementType: icon
+  bounds:
+  - 766
+  - 552
+  - 15
+  - 15
+  iconName: fas:eye-slash
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: more-menu-hide-text
+  elementType: text
+  bounds:
+  - 794
+  - 542
+  - 140
+  - 36
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 隐藏工具栏
+    align:
+    - left
+    - middle
+- elementId: more-menu-divider
+  elementType: shape
+  bounds:
+  - 760
+  - 586
+  - 200
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: more-menu-quit-icon
+  elementType: icon
+  bounds:
+  - 766
+  - 604
+  - 15
+  - 15
+  iconName: fas:power-off
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: more-menu-quit-text
+  elementType: text
+  bounds:
+  - 794
+  - 594
+  - 140
+  - 36
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 退出浮问
+    align:
+    - left
+    - middle
+- elementId: menu-check-0
+  elementType: icon
+  bounds:
+  - 1080
+  - 389
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: menu-check-text-0
+  elementType: text
+  bounds:
+  - 1108
+  - 386
+  - 390
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 点击更多打开，再次点击关闭
+- elementId: menu-check-1
+  elementType: icon
+  bounds:
+  - 1080
+  - 445
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: menu-check-text-1
+  elementType: text
+  bounds:
+  - 1108
+  - 442
+  - 390
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Esc 或点击外部关闭菜单
+- elementId: menu-check-2
+  elementType: icon
+  bounds:
+  - 1080
+  - 501
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: menu-check-text-2
+  elementType: text
+  bounds:
+  - 1108
+  - 498
+  - 390
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 菜单打开时禁止自动收起
+- elementId: menu-check-3
+  elementType: icon
+  bounds:
+  - 1080
+  - 557
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: menu-check-text-3
+  elementType: text
+  bounds:
+  - 1108
+  - 554
+  - 390
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 隐藏后可从系统托盘恢复
+- elementId: menu-check-4
+  elementType: icon
+  bounds:
+  - 1080
+  - 613
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: menu-check-text-4
+  elementType: text
+  bounds:
+  - 1108
+  - 610
+  - 390
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 菜单位置随边缘方向翻转
+- elementId: menu-focus-note
+  elementType: text
+  bounds:
+  - 1080
+  - 690
+  - 410
+  - 44
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 打开后聚焦首个菜单项；关闭后焦点返回更多按钮。
+- elementId: placement-0
+  elementType: shape
+  bounds:
+  - 64
+  - 802
+  - 472
+  - 134
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 472
+  - 134
+  path: M 12,0 H 460 Q 472,0 472,12 V 122 Q 472,134 460,134 H 12 Q 0,134 0,122 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: placement-icon-0
+  elementType: icon
+  bounds:
+  - 84
+  - 826
+  - 16
+  - 16
+  iconName: fas:arrow-up
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: placement-title-0
+  elementType: text
+  bounds:
+  - 114
+  - 820
+  - 300
+  - 28
+  content:
+    fontSize: 13
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 底部边缘
+    bold: true
+- elementId: placement-copy-0
+  elementType: text
+  bounds:
+  - 84
+  - 866
+  - 420
+  - 42
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 菜单向上展开，避免超出屏幕。
+- elementId: placement-1
+  elementType: shape
+  bounds:
+  - 564
+  - 802
+  - 472
+  - 134
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 472
+  - 134
+  path: M 12,0 H 460 Q 472,0 472,12 V 122 Q 472,134 460,134 H 12 Q 0,134 0,122 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: placement-icon-1
+  elementType: icon
+  bounds:
+  - 584
+  - 826
+  - 16
+  - 16
+  iconName: fas:arrow-down
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: placement-title-1
+  elementType: text
+  bounds:
+  - 614
+  - 820
+  - 300
+  - 28
+  content:
+    fontSize: 13
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 顶部边缘
+    bold: true
+- elementId: placement-copy-1
+  elementType: text
+  bounds:
+  - 584
+  - 866
+  - 420
+  - 42
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 菜单向下展开，保留 12 px 间距。
+- elementId: placement-2
+  elementType: shape
+  bounds:
+  - 1064
+  - 802
+  - 472
+  - 134
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 472
+  - 134
+  path: M 12,0 H 460 Q 472,0 472,12 V 122 Q 472,134 460,134 H 12 Q 0,134 0,122 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: placement-icon-2
+  elementType: icon
+  bounds:
+  - 1084
+  - 826
+  - 16
+  - 16
+  iconName: fas:arrows-left-right
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: placement-title-2
+  elementType: text
+  bounds:
+  - 1114
+  - 820
+  - 300
+  - 28
+  content:
+    fontSize: 13
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 左右边缘
+    bold: true
+- elementId: placement-copy-2
+  elementType: text
+  bounds:
+  - 1084
+  - 866
+  - 420
+  - 42
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 工具栏先朝屏幕内部展开，再打开菜单。

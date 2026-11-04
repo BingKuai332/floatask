@@ -1,0 +1,1192 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 06
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 悬浮工具栏
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 完整胶囊用于操作；吸附后保留半胶囊入口，悬停或点击展开
+- elementId: expanded-title
+  elementType: text
+  bounds:
+  - 64
+  - 154
+  - 300
+  - 28
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 01 · 展开状态
+    bold: true
+- elementId: toolbar-desktop
+  elementType: shape
+  bounds:
+  - 64
+  - 194
+  - 960
+  - 292
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#12161C'
+  viewBox:
+  - 960
+  - 292
+  path: M 16,0 H 944 Q 960,0 960,16 V 276 Q 960,292 944,292 H 16 Q 0,292 0,276 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF26'
+- elementId: toolbar-desktop-bar
+  elementType: shape
+  bounds:
+  - 65
+  - 195
+  - 958
+  - 38
+  shapeName: custom
+  viewBox:
+  - 958
+  - 38
+  fill:
+    type: solid
+    color: '#1D2128'
+  path: M 15,0 H 943 Q 958,0 958,15 V 38 H 0 V 15 Q 0,0 15,0 Z
+- elementId: desktop-dot-1
+  elementType: shape
+  bounds:
+  - 86
+  - 211
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: desktop-dot-2
+  elementType: shape
+  bounds:
+  - 101
+  - 211
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8A9099'
+- elementId: desktop-title
+  elementType: text
+  bounds:
+  - 128
+  - 202
+  - 300
+  - 24
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · DESKTOP
+    letterSpacing: 1.2
+- elementId: desktop-code-1
+  elementType: shape
+  bounds:
+  - 98
+  - 268
+  - 210
+  - 9
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 210
+  - 9
+  path: M 4.5,0 H 205.5 Q 210,0 210,4.5 V 4.5 Q 210,9 205.5,9 H 4.5 Q 0,9 0,4.5 V 4.5 Q 0,0 4.5,0 Z
+- elementId: desktop-code-2
+  elementType: shape
+  bounds:
+  - 98
+  - 291
+  - 154
+  - 9
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 154
+  - 9
+  path: M 4.5,0 H 149.5 Q 154,0 154,4.5 V 4.5 Q 154,9 149.5,9 H 4.5 Q 0,9 0,4.5 V 4.5 Q 0,0 4.5,0 Z
+- elementId: desktop-code-3
+  elementType: shape
+  bounds:
+  - 98
+  - 314
+  - 184
+  - 9
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 184
+  - 9
+  path: M 4.5,0 H 179.5 Q 184,0 184,4.5 V 4.5 Q 184,9 179.5,9 H 4.5 Q 0,9 0,4.5 V 4.5 Q 0,0 4.5,0 Z
+- elementId: desktop-context
+  elementType: text
+  bounds:
+  - 98
+  - 362
+  - 210
+  - 48
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '工具栏浮在应用上方
+
+      保留清晰的轮廓与点击区域'
+- elementId: clipboard-tooltip
+  elementType: shape
+  bounds:
+  - 550
+  - 266
+  - 104
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 104
+  - 28
+  path: M 8,0 H 96 Q 104,0 104,8 V 20 Q 104,28 96,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+  border: &id003
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: clipboard-tooltip-text
+  elementType: text
+  bounds:
+  - 550
+  - 266
+  - 104
+  - 28
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 剪贴板解释
+    align:
+    - center
+    - middle
+- elementId: expanded-caption
+  elementType: text
+  bounds:
+  - 280
+  - 394
+  - 528
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选保持主操作；剪贴板、历史、更多使用图标
+    align:
+    - center
+    - top
+- elementId: expanded-size
+  elementType: text
+  bounds:
+  - 280
+  - 432
+  - 528
+  - 22
+  content:
+    fontSize: 10
+    color: '#8A9099'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 328 × 52 px · 图标 16 px · 次级按钮点击区域 34 px
+    align:
+    - center
+    - top
+- elementId: capsule-spec
+  elementType: shape
+  bounds:
+  - 1056
+  - 194
+  - 480
+  - 292
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 480
+  - 292
+  path: M 16,0 H 464 Q 480,0 480,16 V 276 Q 480,292 464,292 H 16 Q 0,292 0,276 V 16 Q 0,0 16,0 Z
+  border: *id002
+- elementId: capsule-spec-title
+  elementType: text
+  bounds:
+  - 1080
+  - 216
+  - 300
+  - 28
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 胶囊几何
+    bold: true
+- elementId: capsule-spec-outer
+  elementType: shape
+  bounds:
+  - 1080
+  - 264
+  - 200
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 200
+  - 52
+  path: M 26.0,0 H 174.0 Q 200,0 200,26.0 V 26.0 Q 200,52 174.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: *id002
+- elementId: capsule-spec-inner
+  elementType: shape
+  bounds:
+  - 1085
+  - 269
+  - 70
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 70
+  - 42
+  path: M 21.0,0 H 49.0 Q 70,0 70,21.0 V 21.0 Q 70,42 49.0,42 H 21.0 Q 0,42 0,21.0 V 21.0 Q 0,0 21.0,0 Z
+- elementId: capsule-spec-outer-label
+  elementType: text
+  bounds:
+  - 1304
+  - 260
+  - 200
+  - 26
+  content:
+    fontSize: 13
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 外半径 26 px
+    bold: true
+- elementId: capsule-spec-inner-label
+  elementType: text
+  bounds:
+  - 1304
+  - 290
+  - 220
+  - 24
+  content:
+    fontSize: 11
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 品牌区／主按钮 R21
+- elementId: capsule-spec-rule
+  elementType: shape
+  bounds:
+  - 1080
+  - 342
+  - 432
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: capsule-spec-copy
+  elementType: text
+  bounds:
+  - 1080
+  - 362
+  - 420
+  - 88
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: '52 px 高 · 5 px 内边距
+
+      内圆角 = 26 − 5 = 21 px
+
+      浮问字标拖动 · 仅主按钮使用框选图标'
+- elementId: expanded-toolbar
+  elementType: shape
+  bounds:
+  - 380
+  - 312
+  - 328
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 328
+  - 52
+  path: M 26.0,0 H 302.0 Q 328,0 328,26.0 V 26.0 Q 328,52 302.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: *id002
+  shadow:
+    blur: 26
+    color: '#00000077'
+    offset:
+    - 0
+    - 10
+- elementId: expanded-toolbar-logo-bg
+  elementType: shape
+  bounds:
+  - 385
+  - 317
+  - 40
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 40
+  - 42
+  path: M 20.0,0 H 20.0 Q 40,0 40,20.0 V 22.0 Q 40,42 20.0,42 H 20.0 Q 0,42 0,22.0 V 20.0 Q 0,0 20.0,0 Z
+- elementId: expanded-toolbar-logo
+  elementType: text
+  bounds:
+  - 385
+  - 317
+  - 40
+  - 42
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: expanded-toolbar-primary
+  elementType: shape
+  bounds:
+  - 430
+  - 317
+  - 142
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 142
+  - 42
+  path: M 21,0 H 121 Q 142,0 142,21 V 21 Q 142,42 121,42 H 21 Q 0,42 0,21 V 21 Q 0,0 21,0 Z
+- elementId: expanded-toolbar-primary-icon
+  elementType: icon
+  bounds:
+  - 444
+  - 330
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: expanded-toolbar-primary-text
+  elementType: text
+  bounds:
+  - 466
+  - 323
+  - 38
+  - 30
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: expanded-toolbar-key
+  elementType: shape
+  bounds:
+  - 508
+  - 326
+  - 52
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 52
+  - 24
+  path: M 8,0 H 44 Q 52,0 52,8 V 16 Q 52,24 44,24 H 8 Q 0,24 0,16 V 8 Q 0,0 8,0 Z
+- elementId: expanded-toolbar-key-text
+  elementType: text
+  bounds:
+  - 508
+  - 326
+  - 52
+  - 24
+  content:
+    fontSize: 9
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Alt Q
+    align:
+    - center
+    - middle
+- elementId: expanded-toolbar-clipboard-hover
+  elementType: shape
+  bounds:
+  - 582
+  - 321
+  - 34
+  - 34
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#242931'
+- elementId: expanded-toolbar-clipboard
+  elementType: icon
+  bounds:
+  - 591
+  - 330
+  - 16
+  - 16
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: expanded-toolbar-history
+  elementType: icon
+  bounds:
+  - 631
+  - 330
+  - 16
+  - 16
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: expanded-toolbar-more
+  elementType: icon
+  bounds:
+  - 671
+  - 330
+  - 16
+  - 16
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: edge-card-0
+  elementType: shape
+  bounds:
+  - 64
+  - 524
+  - 344
+  - 412
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#12161C'
+  viewBox:
+  - 344
+  - 412
+  path: M 16,0 H 328 Q 344,0 344,16 V 396 Q 344,412 328,412 H 16 Q 0,412 0,396 V 16 Q 0,0 16,0 Z
+  border: *id003
+- elementId: edge-title-0
+  elementType: text
+  bounds:
+  - 84
+  - 546
+  - 260
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 左侧吸附
+    bold: true
+- elementId: edge-subtitle-0
+  elementType: text
+  bounds:
+  - 84
+  - 578
+  - 280
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 半胶囊 · 44 × 64 px
+- elementId: edge-card-1
+  elementType: shape
+  bounds:
+  - 432
+  - 524
+  - 344
+  - 412
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#12161C'
+  viewBox:
+  - 344
+  - 412
+  path: M 16,0 H 328 Q 344,0 344,16 V 396 Q 344,412 328,412 H 16 Q 0,412 0,396 V 16 Q 0,0 16,0 Z
+  border: *id003
+- elementId: edge-title-1
+  elementType: text
+  bounds:
+  - 452
+  - 546
+  - 260
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 右侧吸附
+    bold: true
+- elementId: edge-subtitle-1
+  elementType: text
+  bounds:
+  - 452
+  - 578
+  - 280
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 半胶囊 · 44 × 64 px
+- elementId: edge-card-2
+  elementType: shape
+  bounds:
+  - 800
+  - 524
+  - 344
+  - 412
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#12161C'
+  viewBox:
+  - 344
+  - 412
+  path: M 16,0 H 328 Q 344,0 344,16 V 396 Q 344,412 328,412 H 16 Q 0,412 0,396 V 16 Q 0,0 16,0 Z
+  border: *id003
+- elementId: edge-title-2
+  elementType: text
+  bounds:
+  - 820
+  - 546
+  - 260
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 上下边缘
+    bold: true
+- elementId: edge-subtitle-2
+  elementType: text
+  bounds:
+  - 820
+  - 578
+  - 280
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 横置半胶囊 · 64 × 44 px
+- elementId: left-collapsed
+  elementType: shape
+  bounds:
+  - 64
+  - 688
+  - 44
+  - 64
+  shapeName: custom
+  viewBox:
+  - 44
+  - 64
+  fill:
+    type: solid
+    color: '#171A20'
+  path: M 0,0 H 22 Q 44,0 44,22 V 42 Q 44,64 22,64 H 0 Z
+  border: *id002
+  shadow:
+    blur: 22
+    color: '#00000066'
+    offset:
+    - 0
+    - 8
+- elementId: left-collapsed-logo-bg
+  elementType: shape
+  bounds:
+  - 70
+  - 704
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: left-collapsed-logo
+  elementType: text
+  bounds:
+  - 70
+  - 704
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: right-collapsed
+  elementType: shape
+  bounds:
+  - 732
+  - 688
+  - 44
+  - 64
+  shapeName: custom
+  viewBox:
+  - 44
+  - 64
+  fill:
+    type: solid
+    color: '#171A20'
+  path: M 22,0 H 44 V 64 H 22 Q 0,64 0,42 V 22 Q 0,0 22,0 Z
+  border: *id002
+  shadow:
+    blur: 22
+    color: '#00000066'
+    offset:
+    - 0
+    - 8
+- elementId: right-collapsed-logo-bg
+  elementType: shape
+  bounds:
+  - 738
+  - 704
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: right-collapsed-logo
+  elementType: text
+  bounds:
+  - 738
+  - 704
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: left-edge-copy
+  elementType: text
+  bounds:
+  - 132
+  - 688
+  - 220
+  - 64
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: 'Logo 始终可见
+
+      点击或悬停展开'
+- elementId: right-edge-copy
+  elementType: text
+  bounds:
+  - 452
+  - 688
+  - 220
+  - 64
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: '贴边后自动收起
+
+      主入口仍然保留'
+- elementId: left-edge-note
+  elementType: text
+  bounds:
+  - 84
+  - 878
+  - 280
+  - 24
+  content:
+    fontSize: 10
+    color: '#8A9099'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保留 44 px 点击宽度
+- elementId: right-edge-note
+  elementType: text
+  bounds:
+  - 452
+  - 878
+  - 280
+  - 24
+  content:
+    fontSize: 10
+    color: '#8A9099'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 展开时距边缘 8 px
+- elementId: vertical-screen
+  elementType: shape
+  bounds:
+  - 820
+  - 624
+  - 304
+  - 238
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 304
+  - 238
+  path: M 12,0 H 292 Q 304,0 304,12 V 226 Q 304,238 292,238 H 12 Q 0,238 0,226 V 12 Q 0,0 12,0 Z
+  border: *id003
+- elementId: top-collapsed
+  elementType: shape
+  bounds:
+  - 940
+  - 624
+  - 64
+  - 44
+  shapeName: custom
+  viewBox:
+  - 64
+  - 44
+  fill:
+    type: solid
+    color: '#171A20'
+  path: M 0,0 H 64 V 22 Q 64,44 42,44 H 22 Q 0,44 0,22 Z
+  border: *id002
+  shadow:
+    blur: 22
+    color: '#00000066'
+    offset:
+    - 0
+    - 8
+- elementId: top-collapsed-logo-bg
+  elementType: shape
+  bounds:
+  - 956
+  - 630
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: top-collapsed-logo
+  elementType: text
+  bounds:
+  - 956
+  - 630
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: bottom-collapsed
+  elementType: shape
+  bounds:
+  - 940
+  - 818
+  - 64
+  - 44
+  shapeName: custom
+  viewBox:
+  - 64
+  - 44
+  fill:
+    type: solid
+    color: '#171A20'
+  path: M 22,0 H 42 Q 64,0 64,22 V 44 H 0 V 22 Q 0,0 22,0 Z
+  border: *id002
+  shadow:
+    blur: 22
+    color: '#00000066'
+    offset:
+    - 0
+    - 8
+- elementId: bottom-collapsed-logo-bg
+  elementType: shape
+  bounds:
+  - 956
+  - 824
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: bottom-collapsed-logo
+  elementType: text
+  bounds:
+  - 956
+  - 824
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: vertical-caption
+  elementType: text
+  bounds:
+  - 850
+  - 718
+  - 244
+  - 48
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '上下边缘使用横置形态
+
+      保持相同的 Logo 与轮廓'
+    align:
+    - center
+    - top
+- elementId: behavior-card
+  elementType: shape
+  bounds:
+  - 1168
+  - 524
+  - 368
+  - 412
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 368
+  - 412
+  path: M 16,0 H 352 Q 368,0 368,16 V 396 Q 368,412 352,412 H 16 Q 0,412 0,396 V 16 Q 0,0 16,0 Z
+  border: *id003
+- elementId: behavior-title
+  elementType: text
+  bounds:
+  - 1188
+  - 546
+  - 280
+  - 28
+  content:
+    fontSize: 16
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 吸附与展开
+    bold: true
+- elementId: behavior-icon-0
+  elementType: icon
+  bounds:
+  - 1188
+  - 611
+  - 14
+  - 14
+  iconName: fas:magnet
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: behavior-text-0
+  elementType: text
+  bounds:
+  - 1216
+  - 608
+  - 300
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 距边缘 24 px 内松手吸附
+- elementId: behavior-icon-1
+  elementType: icon
+  bounds:
+  - 1188
+  - 661
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: behavior-text-1
+  elementType: text
+  bounds:
+  - 1216
+  - 658
+  - 300
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 180 ms ease-out 定位
+- elementId: behavior-icon-2
+  elementType: icon
+  bounds:
+  - 1188
+  - 711
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: behavior-text-2
+  elementType: text
+  bounds:
+  - 1216
+  - 708
+  - 300
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 悬停 120 ms 或点击展开
+- elementId: behavior-icon-3
+  elementType: icon
+  bounds:
+  - 1188
+  - 761
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: behavior-text-3
+  elementType: text
+  bounds:
+  - 1216
+  - 758
+  - 300
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 移开 300 ms 后收起
+- elementId: behavior-icon-4
+  elementType: icon
+  bounds:
+  - 1188
+  - 811
+  - 14
+  - 14
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: behavior-text-4
+  elementType: text
+  bounds:
+  - 1216
+  - 808
+  - 300
+  - 26
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 拖动过程中不自动收起
+- elementId: behavior-rule
+  elementType: shape
+  bounds:
+  - 1188
+  - 858
+  - 328
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: behavior-note
+  elementType: text
+  bounds:
+  - 1188
+  - 876
+  - 320
+  - 44
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: Esc 可收起；减少动态效果时取消位移动画

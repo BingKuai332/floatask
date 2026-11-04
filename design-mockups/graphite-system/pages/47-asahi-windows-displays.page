@@ -1,0 +1,716 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 47
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 多显示器与屏幕边缘
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 工作区、任务栏与跨屏恢复规则不变；浅色拓扑和胶囊使用同一几何与边界
+- elementId: display-map
+  elementType: shape
+  bounds:
+  - 64
+  - 184
+  - 980
+  - 566
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 980
+  - 566
+  path: M 16,0 H 964 Q 980,0 980,16 V 550 Q 980,566 964,566 H 16 Q 0,566 0,550 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: display-map-title
+  elementType: text
+  bounds:
+  - 92
+  - 208
+  - 500
+  - 28
+  content:
+    fontSize: 15
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 混合显示器拓扑 · 界面示例
+    bold: true
+- elementId: display-map-subtitle
+  elementType: text
+  bounds:
+  - 92
+  - 242
+  - 650
+  - 20
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 逻辑坐标以每块屏幕的工作区为基准，不使用整张虚拟桌面的统一缩放。
+- elementId: display-left
+  elementType: shape
+  bounds:
+  - 104
+  - 306
+  - 520
+  - 292
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 520
+  - 292
+  path: M 12,0 H 508 Q 520,0 520,12 V 280 Q 520,292 508,292 H 12 Q 0,292 0,280 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: display-left-label
+  elementType: text
+  bounds:
+  - 124
+  - 322
+  - 300
+  - 24
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 显示器 1 · 2560 × 1440 · 100%
+    bold: true
+- elementId: display-left-taskbar
+  elementType: shape
+  bounds:
+  - 104
+  - 566
+  - 520
+  - 32
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#E9EBE4'
+- elementId: display-left-workarea
+  elementType: text
+  bounds:
+  - 124
+  - 570
+  - 300
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 工作区扣除任务栏
+- elementId: display-answer
+  elementType: shape
+  bounds:
+  - 154
+  - 382
+  - 280
+  - 160
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 280
+  - 160
+  path: M 16,0 H 264 Q 280,0 280,16 V 144 Q 280,160 264,160 H 16 Q 0,160 0,144 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#506B9299'
+- elementId: display-answer-head
+  elementType: shape
+  bounds:
+  - 154
+  - 382
+  - 280
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 280
+  - 36
+  path: M 10,0 H 270 Q 280,0 280,10 V 26 Q 280,36 270,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: display-answer-title
+  elementType: text
+  bounds:
+  - 170
+  - 382
+  - 180
+  - 36
+  content:
+    fontSize: 10
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 答案窗 · 480 × 360 DIP
+    align:
+    - left
+    - middle
+- elementId: display-answer-copy
+  elementType: text
+  bounds:
+  - 174
+  - 440
+  - 210
+  - 48
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: '跟随触发框选的显示器
+
+      完整落在当前工作区内'
+- elementId: display-right
+  elementType: shape
+  bounds:
+  - 652
+  - 340
+  - 336
+  - 226
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 336
+  - 226
+  path: M 12,0 H 324 Q 336,0 336,12 V 214 Q 336,226 324,226 H 12 Q 0,226 0,214 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: display-right-label
+  elementType: text
+  bounds:
+  - 670
+  - 354
+  - 290
+  - 24
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 显示器 2 · 1920 × 1080 · 125%
+    bold: true
+- elementId: display-right-taskbar
+  elementType: shape
+  bounds:
+  - 652
+  - 536
+  - 336
+  - 30
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#E9EBE4'
+- elementId: display-crossing
+  elementType: shape
+  bounds:
+  - 566
+  - 424
+  - 134
+  - 68
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 134
+  - 68
+  path: M 10,0 H 124 Q 134,0 134,10 V 58 Q 134,68 124,68 H 10 Q 0,68 0,58 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#506B9299'
+- elementId: display-crossing-text
+  elementType: text
+  bounds:
+  - 566
+  - 424
+  - 134
+  - 68
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: '禁止答案窗
+
+      横跨屏幕接缝'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: display-toolbar-right
+  elementType: shape
+  bounds:
+  - 924
+  - 408
+  - 31.68
+  - 46.08
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 31.68
+  - 46.08
+  path: M 15.84,0 H 15.84 Q 31.68,0 31.68,15.84 V 30.24 Q 31.68,46.08 15.84,46.08 H 15.84 Q 0,46.08 0,30.24 V 15.84 Q 0,0 15.84,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: display-toolbar-right-brand
+  elementType: shape
+  bounds:
+  - 928.32
+  - 412.32
+  - 23.04
+  - 23.04
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 23.04
+  - 23.04
+  path: M 11.52,0 H 11.52 Q 23.04,0 23.04,11.52 V 11.52 Q 23.04,23.04 11.52,23.04 H 11.52 Q 0,23.04 0,11.52 V 11.52 Q 0,0 11.52,0 Z
+- elementId: display-toolbar-right-brand-text
+  elementType: text
+  bounds:
+  - 928.32
+  - 412.32
+  - 23.04
+  - 23.04
+  content:
+    fontSize: 8.64
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: display-right-snap
+  elementType: text
+  bounds:
+  - 760
+  - 584
+  - 228
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 外侧右缘 · 半胶囊吸附
+    align:
+    - right
+    - top
+- elementId: display-bottom
+  elementType: shape
+  bounds:
+  - 104
+  - 640
+  - 884
+  - 70
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 884
+  - 70
+  path: M 12,0 H 872 Q 884,0 884,12 V 58 Q 884,70 872,70 H 12 Q 0,70 0,58 V 12 Q 0,0 12,0 Z
+- elementId: display-bottom-label
+  elementType: text
+  bounds:
+  - 124
+  - 654
+  - 220
+  - 22
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 底部工作区边缘
+    bold: true
+- elementId: display-bottom-copy
+  elementType: text
+  bounds:
+  - 124
+  - 680
+  - 380
+  - 18
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 展开距边缘 8 DIP，不压任务栏
+- elementId: display-toolbar-bottom
+  elementType: shape
+  bounds:
+  - 586
+  - 649
+  - 328.0
+  - 52.0
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 328.0
+  - 52.0
+  path: M 26.0,0 H 302.0 Q 328.0,0 328.0,26.0 V 26.0 Q 328.0,52.0 302.0,52.0 H 26.0 Q 0,52.0 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: display-toolbar-bottom-brand
+  elementType: shape
+  bounds:
+  - 591.0
+  - 654.0
+  - 54.0
+  - 42.0
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 54.0
+  - 42.0
+  path: M 21.0,0 H 33.0 Q 54.0,0 54.0,21.0 V 21.0 Q 54.0,42.0 33.0,42.0 H 21.0 Q 0,42.0 0,21.0 V 21.0 Q 0,0 21.0,0 Z
+- elementId: display-toolbar-bottom-brand-text
+  elementType: text
+  bounds:
+  - 591.0
+  - 654.0
+  - 54.0
+  - 42.0
+  content:
+    fontSize: 13.0
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: display-toolbar-bottom-capture
+  elementType: shape
+  bounds:
+  - 653.0
+  - 654.0
+  - 114.0
+  - 42.0
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 114.0
+  - 42.0
+  path: M 21.0,0 H 93.0 Q 114.0,0 114.0,21.0 V 21.0 Q 114.0,42.0 93.0,42.0 H 21.0 Q 0,42.0 0,21.0 V 21.0 Q 0,0 21.0,0 Z
+- elementId: display-toolbar-bottom-capture-icon
+  elementType: icon
+  bounds:
+  - 667.0
+  - 667.0
+  - 15.0
+  - 15.0
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: display-toolbar-bottom-capture-text
+  elementType: text
+  bounds:
+  - 691.0
+  - 654.0
+  - 64.0
+  - 42.0
+  content:
+    fontSize: 11.0
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: display-toolbar-bottom-clipboard
+  elementType: icon
+  bounds:
+  - 790.0
+  - 667.0
+  - 15.0
+  - 15.0
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: display-toolbar-bottom-history
+  elementType: icon
+  bounds:
+  - 835.0
+  - 667.0
+  - 15.0
+  - 15.0
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: display-toolbar-bottom-more
+  elementType: icon
+  bounds:
+  - 880.0
+  - 667.0
+  - 15.0
+  - 15.0
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: display-note-1-title
+  elementType: text
+  bounds:
+  - 1110
+  - 202
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 窗口归属
+    bold: true
+- elementId: display-note-1-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 240
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: display-note-1-body
+  elementType: text
+  bounds:
+  - 1110
+  - 256
+  - 420
+  - 84
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: '• 框选与答案窗跟随当前显示器
+
+      • 窗口迁移后重新读取目标屏 DPI
+
+      • 外接屏移除时迁回主屏工作区'
+- elementId: display-note-2-title
+  elementType: text
+  bounds:
+  - 1110
+  - 398
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 边缘行为
+    bold: true
+- elementId: display-note-2-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 436
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: display-note-2-body
+  elementType: text
+  bounds:
+  - 1110
+  - 452
+  - 420
+  - 84
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: '• 使用工作区，不覆盖任务栏
+
+      • 吸附阈值 24 DIP，展开间距 8 DIP
+
+      • 屏幕接缝处不跨屏展开菜单'
+- elementId: display-note-3-title
+  elementType: text
+  bounds:
+  - 1110
+  - 594
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 验收组合
+    bold: true
+- elementId: display-note-3-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 632
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: display-note-3-body
+  elementType: text
+  bounds:
+  - 1110
+  - 648
+  - 420
+  - 28
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: 左右排列、上下排列、不同缩放、主副屏切换、断开外接屏，以及任务栏位于四边时的完整恢复路径。

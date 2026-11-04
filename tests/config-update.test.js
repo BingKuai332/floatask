@@ -83,3 +83,46 @@ test('development builds check releases but do not install or download', async (
  await updater.check();assert.equal(updater.getState().canInstall,false);
  assert.equal((await updater.download()).error,'update.devOnly');
 }));
+test('store persists the theme choice and falls back to system for invalid values', () => temporary(directory => {
+ const filename=path.resolve(__dirname,'../src/main/store.js');
+ const actualRequire=createRequire(filename);
+ const electron={app:{getPath:()=>directory,getLocale:()=>'en'},safeStorage:{isEncryptionAvailable:()=>true,encryptString:s=>Buffer.from(s),decryptString:b=>b.toString()}};
+ const context={require:name=>name==='electron'?electron:actualRequire(name),module:{exports:{}},console};
+ vm.runInNewContext(fs.readFileSync(filename,'utf8'),context);const store=context.module.exports;
+ assert.equal(store.getConfig().theme,'system','default theme is system');
+ store.save({theme:'light'});assert.equal(store.getConfig().theme,'light');
+ store.save({theme:'dark'});assert.equal(store.getConfig().theme,'dark');
+ store.save({theme:'neon'});assert.equal(store.getConfig().theme,'system','invalid string falls back to system');
+ store.save({theme:'dark'});store.save({theme:42});assert.equal(store.getConfig().theme,'dark','non-string patch is ignored like other settings fields');
+ store.save({theme:'light'});store.save({hotkey:'Alt+Q'});assert.equal(store.getConfig().theme,'light','patches without theme keep the current value');
+ assert.equal(store.publicSettings().theme,'light','theme is part of the public settings payload');
+ const raw=fs.readFileSync(store.getConfigPath(),'utf8');assert(JSON.parse(raw).theme==='light','theme persisted to disk');
+}));
+test('store persists the onboarding step and rejects out-of-range values', () => temporary(directory => {
+ const filename=path.resolve(__dirname,'../src/main/store.js');
+ const actualRequire=createRequire(filename);
+ const electron={app:{getPath:()=>directory,getLocale:()=>'en'},safeStorage:{isEncryptionAvailable:()=>true,encryptString:s=>Buffer.from(s),decryptString:b=>b.toString()}};
+ const context={require:name=>name==='electron'?electron:actualRequire(name),module:{exports:{}},console};
+ vm.runInNewContext(fs.readFileSync(filename,'utf8'),context);const store=context.module.exports;
+ assert.equal(store.getConfig().onboardingStep,1,'default onboarding step is 1');
+ store.save({onboardingStep:2});assert.equal(store.getConfig().onboardingStep,2);
+ store.save({onboardingStep:3});assert.equal(store.getConfig().onboardingStep,3);
+ store.save({onboardingStep:9});assert.equal(store.getConfig().onboardingStep,3,'out-of-range step keeps the current value');
+ store.save({onboardingStep:0});assert.equal(store.getConfig().onboardingStep,3,'zero step keeps the current value');
+ assert.equal(store.publicSettings().onboardingStep,3,'onboarding step exposed in public settings');
+}));
+test('store persists the history retention window and rejects invalid values', () => temporary(directory => {
+ const filename=path.resolve(__dirname,'../src/main/store.js');
+ const actualRequire=createRequire(filename);
+ const electron={app:{getPath:()=>directory,getLocale:()=>'en'},safeStorage:{isEncryptionAvailable:()=>true,encryptString:s=>Buffer.from(s),decryptString:b=>b.toString()}};
+ const context={require:name=>name==='electron'?electron:actualRequire(name),module:{exports:{}},console};
+ vm.runInNewContext(fs.readFileSync(filename,'utf8'),context);const store=context.module.exports;
+ assert.equal(store.getConfig().historyRetentionDays,90,'default retention is 90 days');
+ store.save({historyRetentionDays:30});assert.equal(store.getConfig().historyRetentionDays,30);
+ store.save({historyRetentionDays:0});assert.equal(store.getConfig().historyRetentionDays,0,'zero means keep forever');
+ store.save({historyRetentionDays:30});
+ store.save({historyRetentionDays:999});assert.equal(store.getConfig().historyRetentionDays,365,'out-of-range values clamp like other numeric settings');
+ store.save({historyRetentionDays:-5});assert.equal(store.getConfig().historyRetentionDays,0,'negative values clamp to keep forever');
+ store.save({historyRetentionDays:30});
+ assert.equal(store.publicSettings().historyRetentionDays,30,'retention exposed in public settings');
+}));

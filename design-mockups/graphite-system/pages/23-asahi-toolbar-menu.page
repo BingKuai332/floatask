@@ -1,0 +1,1325 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 23
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 悬浮工具栏
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1100
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 完整胶囊、更多菜单与四边吸附沿用同一几何；暖白浮层依靠细描边和柔和投影脱离桌面
+- elementId: asahi-toolbar-desktop
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 960
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 960
+  - 788
+  path: M 16,0 H 944 Q 960,0 960,16 V 772 Q 960,788 944,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border: &id003
+    width: 1
+    color: '#141B2E1F'
+- elementId: asahi-browser
+  elementType: shape
+  bounds:
+  - 96
+  - 196
+  - 864
+  - 600
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 864
+  - 600
+  path: M 12,0 H 852 Q 864,0 864,12 V 588 Q 864,600 852,600 H 12 Q 0,600 0,588 V 12 Q 0,0 12,0 Z
+  border: &id002
+    width: 1
+    color: '#141B2E14'
+  shadow:
+    blur: 20
+    color: '#26314714'
+    offset:
+    - 0
+    - 8
+- elementId: asahi-browser-bar
+  elementType: shape
+  bounds:
+  - 97
+  - 197
+  - 862
+  - 44
+  shapeName: custom
+  viewBox:
+  - 862
+  - 44
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  path: M 11,0 H 851 Q 862,0 862,11 V 44 H 0 V 11 Q 0,0 11,0 Z
+- elementId: asahi-browser-dot-1
+  elementType: shape
+  bounds:
+  - 118
+  - 215
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-browser-dot-2
+  elementType: shape
+  bounds:
+  - 133
+  - 215
+  - 7
+  - 7
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-browser-address
+  elementType: shape
+  bounds:
+  - 240
+  - 206
+  - 480
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 480
+  - 26
+  path: M 8,0 H 472 Q 480,0 480,8 V 18 Q 480,26 472,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: asahi-browser-lock
+  elementType: icon
+  bounds:
+  - 254
+  - 213
+  - 11
+  - 11
+  iconName: fas:lock
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-browser-url
+  elementType: text
+  bounds:
+  - 274
+  - 206
+  - 420
+  - 26
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: developer.mozilla.org / attention
+    align:
+    - left
+    - middle
+- elementId: asahi-article-kicker
+  elementType: text
+  bounds:
+  - 136
+  - 276
+  - 340
+  - 22
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DEVELOPER NOTES · MACHINE LEARNING
+    letterSpacing: 1.1
+- elementId: asahi-article-title
+  elementType: text
+  bounds:
+  - 136
+  - 314
+  - 540
+  - 48
+  content:
+    fontSize: 25
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 理解注意力机制
+    bold: true
+- elementId: asahi-article-intro
+  elementType: text
+  bounds:
+  - 136
+  - 374
+  - 480
+  - 58
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 注意力机制让模型在处理当前内容时，同时参考上下文中的相关信息。
+- elementId: asahi-article-rule
+  elementType: shape
+  bounds:
+  - 136
+  - 454
+  - 760
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-article-heading
+  elementType: text
+  bounds:
+  - 136
+  - 482
+  - 360
+  - 28
+  content:
+    fontSize: 15
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 从序列到上下文
+    bold: true
+- elementId: asahi-article-copy
+  elementType: text
+  bounds:
+  - 136
+  - 524
+  - 434
+  - 96
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: 每个词都会与序列中的其他词建立联系。模型根据相关程度分配权重，再将这些信息组合成当前词的表示。
+- elementId: asahi-article-code
+  elementType: shape
+  bounds:
+  - 604
+  - 482
+  - 292
+  - 150
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 292
+  - 150
+  path: M 12,0 H 280 Q 292,0 292,12 V 138 Q 292,150 280,150 H 12 Q 0,150 0,138 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: asahi-article-code-text
+  elementType: text
+  bounds:
+  - 624
+  - 502
+  - 252
+  - 110
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.75
+    wrap: true
+    text: 'scores = query @ key.T
+
+      weights = softmax(scores)
+
+      output = weights @ value'
+- elementId: asahi-article-line-1
+  elementType: shape
+  bounds:
+  - 136
+  - 654
+  - 434
+  - 8
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 434
+  - 8
+  path: M 4.0,0 H 430.0 Q 434,0 434,4.0 V 4.0 Q 434,8 430.0,8 H 4.0 Q 0,8 0,4.0 V 4.0 Q 0,0 4.0,0 Z
+- elementId: asahi-article-line-2
+  elementType: shape
+  bounds:
+  - 136
+  - 678
+  - 360
+  - 8
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 360
+  - 8
+  path: M 4.0,0 H 356.0 Q 360,0 360,4.0 V 4.0 Q 360,8 356.0,8 H 4.0 Q 0,8 0,4.0 V 4.0 Q 0,0 4.0,0 Z
+- elementId: asahi-toolbar-caption
+  elementType: text
+  bounds:
+  - 96
+  - 832
+  - 480
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 菜单向上展开，与工具栏保持 12 px 间距
+- elementId: asahi-toolbar-scene-note
+  elementType: text
+  bounds:
+  - 96
+  - 872
+  - 500
+  - 44
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: '一级只保留框选、剪贴板、历史和更多。
+
+      菜单打开时，工具栏不会自动收起。'
+- elementId: asahi-toolbar-spec-card
+  elementType: shape
+  bounds:
+  - 1056
+  - 148
+  - 480
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 480
+  - 788
+  path: M 16,0 H 464 Q 480,0 480,16 V 772 Q 480,788 464,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border: *id003
+  shadow:
+    blur: 38
+    color: '#26314726'
+    offset:
+    - 0
+    - 14
+- elementId: asahi-toolbar-spec-title
+  elementType: text
+  bounds:
+  - 1080
+  - 172
+  - 300
+  - 28
+  content:
+    fontSize: 16
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 胶囊几何
+    bold: true
+- elementId: asahi-toolbar-spec-subtitle
+  elementType: text
+  bounds:
+  - 1080
+  - 206
+  - 400
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 双主题共享尺寸，不重新排布功能
+- elementId: asahi-toolbar-size
+  elementType: text
+  bounds:
+  - 1080
+  - 324
+  - 200
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 328 × 52 px
+    bold: true
+- elementId: asahi-toolbar-radius
+  elementType: text
+  bounds:
+  - 1288
+  - 324
+  - 200
+  - 24
+  content:
+    fontSize: 12
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: R26 / R21
+    bold: true
+    align:
+    - right
+    - top
+- elementId: asahi-toolbar-metrics
+  elementType: text
+  bounds:
+  - 1080
+  - 352
+  - 420
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 内边距 5 · 品牌区 40 × 42 · 图标 16 px
+- elementId: asahi-toolbar-spec-rule
+  elementType: shape
+  bounds:
+  - 1080
+  - 394
+  - 432
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-edge-title
+  elementType: text
+  bounds:
+  - 1080
+  - 420
+  - 300
+  - 28
+  content:
+    fontSize: 16
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 边缘吸附
+    bold: true
+- elementId: asahi-edge-copy
+  elementType: text
+  bounds:
+  - 1080
+  - 454
+  - 420
+  - 44
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 距边缘 24 px 内松手吸附；展开时距边缘 8 px。
+- elementId: asahi-left-label
+  elementType: text
+  bounds:
+  - 1140
+  - 512
+  - 130
+  - 64
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '左侧吸附
+
+      44 × 64 px'
+- elementId: asahi-right-label
+  elementType: text
+  bounds:
+  - 1300
+  - 512
+  - 144
+  - 64
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '右侧吸附
+
+      44 × 64 px'
+    align:
+    - right
+    - top
+- elementId: asahi-horizontal-screen
+  elementType: shape
+  bounds:
+  - 1080
+  - 610
+  - 432
+  - 170
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 432
+  - 170
+  path: M 12,0 H 420 Q 432,0 432,12 V 158 Q 432,170 420,170 H 12 Q 0,170 0,158 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: asahi-horizontal-label
+  elementType: text
+  bounds:
+  - 1080
+  - 668
+  - 432
+  - 48
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.6
+    wrap: true
+    text: '上下边缘使用横置半胶囊
+
+      64 × 44 px · Logo 始终可见'
+    align:
+    - center
+    - top
+- elementId: asahi-behavior-title
+  elementType: text
+  bounds:
+  - 1080
+  - 808
+  - 300
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 行为保持不变
+    bold: true
+- elementId: asahi-toolbar-spec-note
+  elementType: text
+  bounds:
+  - 1080
+  - 900
+  - 420
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 减少动态效果时，直接切换最终状态。
+- elementId: asahi-main-toolbar
+  elementType: shape
+  bounds:
+  - 656
+  - 780
+  - 328
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 328
+  - 52
+  path: M 26.0,0 H 302.0 Q 328,0 328,26.0 V 26.0 Q 328,52 302.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: *id003
+  shadow: &id004
+    blur: 26
+    color: '#2631472E'
+    offset:
+    - 0
+    - 10
+- elementId: asahi-main-toolbar-logo-bg
+  elementType: shape
+  bounds:
+  - 661
+  - 785
+  - 40
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 40
+  - 42
+  path: M 20.0,0 H 20.0 Q 40,0 40,20.0 V 22.0 Q 40,42 20.0,42 H 20.0 Q 0,42 0,22.0 V 20.0 Q 0,0 20.0,0 Z
+- elementId: asahi-main-toolbar-logo
+  elementType: text
+  bounds:
+  - 661
+  - 785
+  - 40
+  - 42
+  content:
+    fontSize: 14
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-main-toolbar-primary
+  elementType: shape
+  bounds:
+  - 706
+  - 785
+  - 142
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 142
+  - 42
+  path: M 21,0 H 121 Q 142,0 142,21 V 21 Q 142,42 121,42 H 21 Q 0,42 0,21 V 21 Q 0,0 21,0 Z
+- elementId: asahi-main-toolbar-primary-icon
+  elementType: icon
+  bounds:
+  - 720
+  - 798
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-main-toolbar-primary-text
+  elementType: text
+  bounds:
+  - 742
+  - 791
+  - 38
+  - 30
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: asahi-main-toolbar-key
+  elementType: shape
+  bounds:
+  - 784
+  - 794
+  - 52
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 52
+  - 24
+  path: M 8,0 H 44 Q 52,0 52,8 V 16 Q 52,24 44,24 H 8 Q 0,24 0,16 V 8 Q 0,0 8,0 Z
+- elementId: asahi-main-toolbar-key-text
+  elementType: text
+  bounds:
+  - 784
+  - 794
+  - 52
+  - 24
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Alt Q
+    align:
+    - center
+    - middle
+- elementId: asahi-main-toolbar-clipboard
+  elementType: icon
+  bounds:
+  - 867
+  - 798
+  - 16
+  - 16
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-main-toolbar-history
+  elementType: icon
+  bounds:
+  - 907
+  - 798
+  - 16
+  - 16
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-main-toolbar-more-hover
+  elementType: shape
+  bounds:
+  - 938
+  - 789
+  - 34
+  - 34
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E9EBE4'
+- elementId: asahi-main-toolbar-more
+  elementType: icon
+  bounds:
+  - 947
+  - 798
+  - 16
+  - 16
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-main-menu
+  elementType: shape
+  bounds:
+  - 748
+  - 616
+  - 224
+  - 152
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 224
+  - 152
+  path: M 12,0 H 212 Q 224,0 224,12 V 140 Q 224,152 212,152 H 12 Q 0,152 0,140 V 12 Q 0,0 12,0 Z
+  border: *id003
+  shadow: *id004
+- elementId: asahi-main-menu-settings-hover
+  elementType: shape
+  bounds:
+  - 754
+  - 622
+  - 212
+  - 36
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 212
+  - 36
+  path: M 10,0 H 202 Q 212,0 212,10 V 26 Q 212,36 202,36 H 10 Q 0,36 0,26 V 10 Q 0,0 10,0 Z
+- elementId: asahi-main-menu-settings-icon
+  elementType: icon
+  bounds:
+  - 766
+  - 632
+  - 15
+  - 15
+  iconName: fas:gear
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-main-menu-settings-text
+  elementType: text
+  bounds:
+  - 794
+  - 622
+  - 140
+  - 36
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 设置
+    align:
+    - left
+    - middle
+- elementId: asahi-main-menu-hide-icon
+  elementType: icon
+  bounds:
+  - 766
+  - 672
+  - 15
+  - 15
+  iconName: fas:eye-slash
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-main-menu-hide-text
+  elementType: text
+  bounds:
+  - 794
+  - 662
+  - 140
+  - 36
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 隐藏工具栏
+    align:
+    - left
+    - middle
+- elementId: asahi-main-menu-divider
+  elementType: shape
+  bounds:
+  - 760
+  - 706
+  - 200
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-main-menu-quit-icon
+  elementType: icon
+  bounds:
+  - 766
+  - 712
+  - 15
+  - 15
+  iconName: fas:power-off
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-main-menu-quit-text
+  elementType: text
+  bounds:
+  - 794
+  - 702
+  - 140
+  - 36
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 退出浮问
+    align:
+    - left
+    - middle
+- elementId: asahi-spec-toolbar
+  elementType: shape
+  bounds:
+  - 1080
+  - 252
+  - 328
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 328
+  - 52
+  path: M 26.0,0 H 302.0 Q 328,0 328,26.0 V 26.0 Q 328,52 302.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: *id003
+  shadow: *id004
+- elementId: asahi-spec-toolbar-logo-bg
+  elementType: shape
+  bounds:
+  - 1085
+  - 257
+  - 40
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 40
+  - 42
+  path: M 20.0,0 H 20.0 Q 40,0 40,20.0 V 22.0 Q 40,42 20.0,42 H 20.0 Q 0,42 0,22.0 V 20.0 Q 0,0 20.0,0 Z
+- elementId: asahi-spec-toolbar-logo
+  elementType: text
+  bounds:
+  - 1085
+  - 257
+  - 40
+  - 42
+  content:
+    fontSize: 14
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-spec-toolbar-primary
+  elementType: shape
+  bounds:
+  - 1130
+  - 257
+  - 142
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 142
+  - 42
+  path: M 21,0 H 121 Q 142,0 142,21 V 21 Q 142,42 121,42 H 21 Q 0,42 0,21 V 21 Q 0,0 21,0 Z
+- elementId: asahi-spec-toolbar-primary-icon
+  elementType: icon
+  bounds:
+  - 1144
+  - 270
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-spec-toolbar-primary-text
+  elementType: text
+  bounds:
+  - 1166
+  - 263
+  - 38
+  - 30
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: asahi-spec-toolbar-key
+  elementType: shape
+  bounds:
+  - 1208
+  - 266
+  - 52
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 52
+  - 24
+  path: M 8,0 H 44 Q 52,0 52,8 V 16 Q 52,24 44,24 H 8 Q 0,24 0,16 V 8 Q 0,0 8,0 Z
+- elementId: asahi-spec-toolbar-key-text
+  elementType: text
+  bounds:
+  - 1208
+  - 266
+  - 52
+  - 24
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Alt Q
+    align:
+    - center
+    - middle
+- elementId: asahi-spec-toolbar-clipboard
+  elementType: icon
+  bounds:
+  - 1291
+  - 270
+  - 16
+  - 16
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-spec-toolbar-history
+  elementType: icon
+  bounds:
+  - 1331
+  - 270
+  - 16
+  - 16
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-spec-toolbar-more
+  elementType: icon
+  bounds:
+  - 1371
+  - 270
+  - 16
+  - 16
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-left-collapsed
+  elementType: shape
+  bounds:
+  - 1080
+  - 510
+  - 44
+  - 64
+  shapeName: custom
+  viewBox:
+  - 44
+  - 64
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  path: M 0,0 H 22 Q 44,0 44,22 V 42 Q 44,64 22,64 H 0 Z
+  border: *id003
+  shadow: *id004
+- elementId: asahi-left-collapsed-logo-bg
+  elementType: shape
+  bounds:
+  - 1086
+  - 526
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: asahi-left-collapsed-logo
+  elementType: text
+  bounds:
+  - 1086
+  - 526
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-right-collapsed
+  elementType: shape
+  bounds:
+  - 1468
+  - 510
+  - 44
+  - 64
+  shapeName: custom
+  viewBox:
+  - 44
+  - 64
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  path: M 22,0 H 44 V 64 H 22 Q 0,64 0,42 V 22 Q 0,0 22,0 Z
+  border: *id003
+  shadow: *id004
+- elementId: asahi-right-collapsed-logo-bg
+  elementType: shape
+  bounds:
+  - 1474
+  - 526
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: asahi-right-collapsed-logo
+  elementType: text
+  bounds:
+  - 1474
+  - 526
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-top-collapsed
+  elementType: shape
+  bounds:
+  - 1264
+  - 610
+  - 64
+  - 44
+  shapeName: custom
+  viewBox:
+  - 64
+  - 44
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  path: M 0,0 H 64 V 22 Q 64,44 42,44 H 22 Q 0,44 0,22 Z
+  border: *id003
+  shadow: *id004
+- elementId: asahi-top-collapsed-logo-bg
+  elementType: shape
+  bounds:
+  - 1280
+  - 616
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: asahi-top-collapsed-logo
+  elementType: text
+  bounds:
+  - 1280
+  - 616
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-bottom-collapsed
+  elementType: shape
+  bounds:
+  - 1264
+  - 736
+  - 64
+  - 44
+  shapeName: custom
+  viewBox:
+  - 64
+  - 44
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  path: M 22,0 H 42 Q 64,0 64,22 V 44 H 0 V 22 Q 0,0 22,0 Z
+  border: *id003
+  shadow: *id004
+- elementId: asahi-bottom-collapsed-logo-bg
+  elementType: shape
+  bounds:
+  - 1280
+  - 742
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 32
+  - 32
+  path: M 16,0 H 16 Q 32,0 32,16 V 16 Q 32,32 16,32 H 16 Q 0,32 0,16 V 16 Q 0,0 16,0 Z
+- elementId: asahi-bottom-collapsed-logo
+  elementType: text
+  bounds:
+  - 1280
+  - 742
+  - 32
+  - 32
+  content:
+    fontSize: 14
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-behavior-check-0
+  elementType: icon
+  bounds:
+  - 1080
+  - 845
+  - 12
+  - 12
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: asahi-behavior-text-0
+  elementType: text
+  bounds:
+  - 1102
+  - 842
+  - 360
+  - 18
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 悬停 120 ms 或点击展开
+- elementId: asahi-behavior-check-1
+  elementType: icon
+  bounds:
+  - 1080
+  - 865
+  - 12
+  - 12
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: asahi-behavior-text-1
+  elementType: text
+  bounds:
+  - 1102
+  - 862
+  - 360
+  - 18
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 移开 300 ms 后收起
+- elementId: asahi-behavior-check-2
+  elementType: icon
+  bounds:
+  - 1080
+  - 885
+  - 12
+  - 12
+  iconName: fas:check
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: asahi-behavior-text-2
+  elementType: text
+  bounds:
+  - 1102
+  - 882
+  - 360
+  - 18
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 拖动或菜单打开时禁止收起

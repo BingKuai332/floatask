@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="zh-CN"><head>
+<!DOCTYPE html><html lang="zh-CN" data-density="standard"><head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="controls.css">
   <link rel="stylesheet" href="result.css">
   <title data-i18n="common.appName">浮问</title>
 </head>
@@ -42,6 +42,11 @@
               <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.36a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.64 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.64 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.64a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.36 9v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"></path>
             </svg>
           </button>
+          <button id="expandBtn" class="icon-btn" title="展开阅读" data-i18n-title="result.expand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"></path>
+            </svg>
+          </button>
           <button id="closeBtn" class="icon-btn close" title="关闭" data-i18n-title="common.close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
               <path d="m6 6 12 12M18 6 6 18"></path>
@@ -75,17 +80,26 @@
           <div class="ocr-wrap">
             <div class="ocr-head">
               <span data-i18n="result.ocrTitle">识别文字</span>
-              <button id="copyOcrBtn" class="mini-btn" data-i18n="common.copy">复制</button>
+              <div class="ocr-actions no-drag">
+                <span id="ocrCorrectedBadge" class="ocr-badge" hidden data-i18n="result.ocrCorrected">已修正</span>
+                <button id="ocrEditBtn" class="mini-btn" data-i18n="result.ocrEdit">修正</button>
+                <button id="ocrRevertBtn" class="mini-btn" hidden data-i18n="result.ocrRevert">还原原文</button>
+                <button id="copyOcrBtn" class="mini-btn" data-i18n="common.copy">复制</button>
+              </div>
             </div>
             <pre id="ocrText" class="ocr-text"></pre>
+            <textarea id="ocrEditArea" class="ocr-edit" hidden spellcheck="false"></textarea>
           </div>
+        </div>
+        <div class="preview-notes">
+          <span id="localOnlyNote" class="preview-note" data-i18n="result.ocrLocalOnly">原始截图仅保留在本机</span>
+          <span id="visionAttachmentNote" class="preview-note" hidden></span>
         </div>
         <div id="windowInfo" class="window-info"></div>
       </section>
 
       <main id="messages" class="messages">
         <div id="loadingCard" class="loading-card">
-          <div class="scan-line"></div>
           <div class="loading-head">
             <span class="spinner"></span>
             <span id="loadingText">正在读取屏幕…</span>
@@ -113,10 +127,10 @@
 
       <footer class="composer">
         <div id="quickRow" class="quick-row no-drag">
-          <button class="quick-chip" data-question="用更通俗的话解释，最好打个比方。" data-i18n="result.quickSimpler" data-question-key="result.qSimpler">更通俗</button>
-          <button class="quick-chip" data-question="举一个具体、贴近实际的例子帮助理解。" data-i18n="result.quickExample" data-question-key="result.qExample">举个例子</button>
-          <button class="quick-chip" data-question="再深入一点，讲讲它的原理或关键细节。" data-i18n="result.quickDeeper" data-question-key="result.qDeeper">深入一点</button>
-          <button class="quick-chip" data-question="帮我联网核查一下这个内容，并给出来源。" data-web="1" data-i18n="result.quickWeb" data-question-key="result.qWeb">联网核查</button>
+          <button class="quick-chip fa-chip" data-question="用更通俗的话解释，最好打个比方。" data-i18n="result.quickSimpler" data-question-key="result.qSimpler">更通俗</button>
+          <button class="quick-chip fa-chip" data-question="举一个具体、贴近实际的例子帮助理解。" data-i18n="result.quickExample" data-question-key="result.qExample">举个例子</button>
+          <button class="quick-chip fa-chip" data-question="再深入一点，讲讲它的原理或关键细节。" data-i18n="result.quickDeeper" data-question-key="result.qDeeper">深入一点</button>
+          <button class="quick-chip fa-chip" data-question="帮我联网核查一下这个内容，并给出来源。" data-web="1" data-i18n="result.quickWeb" data-question-key="result.qWeb">联网核查</button>
         </div>
         <div class="input-shell no-drag">
           <button id="webToggle" class="web-toggle on" title="联网检索" data-i18n-title="settings.webTitle">
@@ -143,12 +157,19 @@
       </footer>
 
       <div id="toast" class="toast"></div>
+      <button id="followBtn" class="follow-btn" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M6 13l6 6 6-6"></path>
+        </svg>
+        <span data-i18n="result.followBottom">回到底部</span>
+      </button>
+      <div id="liveRegion" class="visually-hidden" aria-live="polite" role="status"></div>
       <div id="lightbox" class="lightbox">
         <img id="lightboxImg" alt="框选截图" data-i18n-alt="result.screenshotAlt">
       </div>
     </div>
   </div>
-  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script>
+  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="theme.js"></script><script src="focus.js"></script>
   <script src="markdown.js"></script>
   <script src="result.js"></script>
 

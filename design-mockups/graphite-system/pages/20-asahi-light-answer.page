@@ -1,0 +1,1382 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 20
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 白天
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1080
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 柔和暖白降低大面积亮度；保留灰雾蓝强调色、清晰文字与既有圆角结构
+- elementId: asahi-window
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 980
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 980
+  - 788
+  path: M 16,0 H 964 Q 980,0 980,16 V 772 Q 980,788 964,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#141B2E1F'
+  shadow:
+    blur: 38
+    color: '#26314726'
+    offset:
+    - 0
+    - 14
+- elementId: asahi-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 168
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: asahi-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 176
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-brand
+  elementType: text
+  bounds:
+  - 132
+  - 166
+  - 100
+  - 28
+  content:
+    fontSize: 19
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问
+    bold: true
+- elementId: asahi-brand-en
+  elementType: text
+  bounds:
+  - 133
+  - 192
+  - 100
+  - 12
+  content:
+    fontSize: 8
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: asahi-status-dot
+  elementType: shape
+  bounds:
+  - 708
+  - 181
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#3E7561'
+- elementId: asahi-status
+  elementType: text
+  bounds:
+  - 724
+  - 174
+  - 66
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 已完成
+- elementId: asahi-head-line
+  elementType: shape
+  bounds:
+  - 64
+  - 211
+  - 980
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-context-bg
+  elementType: shape
+  bounds:
+  - 65
+  - 212
+  - 978
+  - 43
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#FAF9F4'
+- elementId: asahi-context-icon
+  elementType: icon
+  bounds:
+  - 88
+  - 226
+  - 14
+  - 14
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-context
+  elementType: text
+  bounds:
+  - 112
+  - 221
+  - 520
+  - 24
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer · 技术文章
+- elementId: asahi-model
+  elementType: text
+  bounds:
+  - 854
+  - 221
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - right
+    - top
+- elementId: asahi-chevron
+  elementType: icon
+  bounds:
+  - 996
+  - 228
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-context-line
+  elementType: shape
+  bounds:
+  - 64
+  - 254
+  - 980
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-avatar
+  elementType: shape
+  bounds:
+  - 90
+  - 276
+  - 28
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 28
+  - 28
+  path: M 8,0 H 20 Q 28,0 28,8 V 20 Q 28,28 20,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: asahi-avatar-mark
+  elementType: icon
+  bounds:
+  - 96
+  - 282
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-answer-name
+  elementType: text
+  bounds:
+  - 130
+  - 279
+  - 160
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 刚刚
+- elementId: asahi-intro
+  elementType: text
+  bounds:
+  - 90
+  - 320
+  - 928
+  - 52
+  content:
+    fontSize: 15
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: <p><strong>Transformer</strong> 是一种基于自注意力机制的神经网络架构，用来处理文本、代码等序列数据。</p>
+- elementId: asahi-heading-1
+  elementType: text
+  bounds:
+  - 90
+  - 394
+  - 300
+  - 24
+  content:
+    fontSize: 16
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 它解决什么问题
+    bold: true
+- elementId: asahi-body-1
+  elementType: text
+  bounds:
+  - 90
+  - 426
+  - 928
+  - 48
+  content:
+    fontSize: 13
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 传统循环网络按顺序处理信息，长文本中的远距离关系容易变弱。Transformer 会让每个词同时关注句子里的其他词，再计算彼此的重要程度。
+- elementId: asahi-heading-2
+  elementType: text
+  bounds:
+  - 90
+  - 496
+  - 300
+  - 24
+  content:
+    fontSize: 16
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 它带来了什么
+    bold: true
+- elementId: asahi-bullets
+  elementType: text
+  bounds:
+  - 90
+  - 528
+  - 928
+  - 68
+  content:
+    fontSize: 13
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.48
+    wrap: true
+    text: <p><span style="color:#506B92">•</span>　<strong>理解上下文</strong>：同一个词可以随语境获得不同含义。</p><p><span style="color:#506B92">•</span>　<strong>并行计算</strong>：更适合利用现代硬件进行大规模训练。</p><p><span style="color:#506B92">•</span>　<strong>通用架构</strong>：语言、视觉和多模态模型都能以此为基础。</p>
+- elementId: asahi-summary-bg
+  elementType: shape
+  bounds:
+  - 90
+  - 618
+  - 928
+  - 62
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 928
+  - 62
+  path: M 12,0 H 916 Q 928,0 928,12 V 50 Q 928,62 916,62 H 12 Q 0,62 0,50 V 12 Q 0,0 12,0 Z
+- elementId: asahi-summary-rule
+  elementType: shape
+  bounds:
+  - 106
+  - 630
+  - 3
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 3
+  - 38
+  path: M 1.5,0 H 1.5 Q 3,0 3,1.5 V 36.5 Q 3,38 1.5,38 H 1.5 Q 0,38 0,36.5 V 1.5 Q 0,0 1.5,0 Z
+- elementId: asahi-summary
+  elementType: text
+  bounds:
+  - 122
+  - 628
+  - 888
+  - 42
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: <p><strong>一句话记住</strong>：它让模型学会“看整句话，再决定每个词该关注谁”。</p>
+- elementId: asahi-sources-rule
+  elementType: shape
+  bounds:
+  - 90
+  - 702
+  - 928
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-sources-title
+  elementType: text
+  bounds:
+  - 90
+  - 722
+  - 200
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 参考来源
+    bold: true
+- elementId: asahi-source-index-1
+  elementType: shape
+  bounds:
+  - 90
+  - 754
+  - 18
+  - 18
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E6EBF1'
+- elementId: asahi-source-index-text-1
+  elementType: text
+  bounds:
+  - 90
+  - 754
+  - 18
+  - 18
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '1'
+    align:
+    - center
+    - middle
+- elementId: asahi-source-1
+  elementType: text
+  bounds:
+  - 118
+  - 750
+  - 450
+  - 22
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Attention Is All You Need
+- elementId: asahi-source-domain-1
+  elementType: text
+  bounds:
+  - 854
+  - 751
+  - 164
+  - 20
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: arxiv.org
+    align:
+    - right
+    - top
+- elementId: asahi-source-index-2
+  elementType: shape
+  bounds:
+  - 90
+  - 786
+  - 18
+  - 18
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E6EBF1'
+- elementId: asahi-source-index-text-2
+  elementType: text
+  bounds:
+  - 90
+  - 786
+  - 18
+  - 18
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '2'
+    align:
+    - center
+    - middle
+- elementId: asahi-source-2
+  elementType: text
+  bounds:
+  - 118
+  - 782
+  - 450
+  - 22
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: The Illustrated Transformer
+- elementId: asahi-source-domain-2
+  elementType: text
+  bounds:
+  - 854
+  - 783
+  - 164
+  - 20
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: jalammar.github.io
+    align:
+    - right
+    - top
+- elementId: asahi-footer-line
+  elementType: shape
+  bounds:
+  - 64
+  - 808
+  - 980
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-composer-box
+  elementType: shape
+  bounds:
+  - 90
+  - 858
+  - 928
+  - 58
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 928
+  - 58
+  path: M 12,0 H 916 Q 928,0 928,12 V 46 Q 928,58 916,58 H 12 Q 0,58 0,46 V 12 Q 0,0 12,0 Z
+  border: &id003
+    width: 1
+    color: '#141B2E14'
+- elementId: asahi-web
+  elementType: icon
+  bounds:
+  - 108
+  - 879
+  - 15
+  - 15
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-web-text
+  elementType: text
+  bounds:
+  - 131
+  - 875
+  - 40
+  - 24
+  content:
+    fontSize: 11
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网
+- elementId: asahi-composer-sep
+  elementType: shape
+  bounds:
+  - 180
+  - 872
+  - 1
+  - 30
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-placeholder
+  elementType: text
+  bounds:
+  - 198
+  - 871
+  - 600
+  - 32
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 继续追问，或让我查一下…
+    align:
+    - left
+    - middle
+- elementId: asahi-send
+  elementType: shape
+  bounds:
+  - 964
+  - 866
+  - 42
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 42
+  - 42
+  path: M 10,0 H 32 Q 42,0 42,10 V 32 Q 42,42 32,42 H 10 Q 0,42 0,32 V 10 Q 0,0 10,0 Z
+- elementId: asahi-send-icon
+  elementType: icon
+  bounds:
+  - 977
+  - 879
+  - 16
+  - 16
+  iconName: fas:arrow-up
+  fill:
+    type: solid
+    color: '#F5F7FA'
+- elementId: asahi-hint
+  elementType: text
+  bounds:
+  - 90
+  - 926
+  - 500
+  - 18
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Enter 发送　·　Shift + Enter 换行
+- elementId: asahi-vision
+  elementType: text
+  bounds:
+  - 718
+  - 926
+  - 300
+  - 18
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: OCR 在本机完成
+    align:
+    - right
+    - top
+- elementId: asahi-spec-card
+  elementType: shape
+  bounds:
+  - 1080
+  - 148
+  - 456
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 456
+  - 788
+  path: M 16,0 H 440 Q 456,0 456,16 V 772 Q 456,788 440,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border: *id002
+  shadow:
+    blur: 30
+    color: '#2631471A'
+    offset:
+    - 0
+    - 10
+- elementId: asahi-spec-kicker
+  elementType: text
+  bounds:
+  - 1104
+  - 172
+  - 280
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: ASAHI / DAYLIGHT
+    bold: true
+    letterSpacing: 1.5
+- elementId: asahi-spec-title
+  elementType: text
+  bounds:
+  - 1104
+  - 206
+  - 240
+  - 40
+  content:
+    fontSize: 28
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日
+    bold: true
+- elementId: asahi-spec-subtitle
+  elementType: text
+  bounds:
+  - 1104
+  - 254
+  - 390
+  - 48
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 以柔和暖白代替冷白高亮。色彩更安静，文字与功能状态仍然清晰。
+- elementId: asahi-spec-rule-1
+  elementType: shape
+  bounds:
+  - 1104
+  - 324
+  - 408
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-palette-title
+  elementType: text
+  bounds:
+  - 1104
+  - 348
+  - 240
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 核心色板
+    bold: true
+- elementId: asahi-spec-rule-2
+  elementType: shape
+  bounds:
+  - 1104
+  - 548
+  - 408
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: asahi-soft-title
+  elementType: text
+  bounds:
+  - 1104
+  - 574
+  - 260
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 柔和，但不过度染色
+    bold: true
+- elementId: asahi-soft-copy
+  elementType: text
+  bounds:
+  - 1104
+  - 608
+  - 398
+  - 64
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: 暖白只用于大面积表面；正文保持中性深灰，强调色沿用灰雾蓝，不使用黄色滤层或大面积绿色。
+- elementId: asahi-contrast-title
+  elementType: text
+  bounds:
+  - 1104
+  - 698
+  - 260
+  - 24
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 主表面阅读对比度
+    bold: true
+- elementId: asahi-name-note
+  elementType: shape
+  bounds:
+  - 1104
+  - 842
+  - 408
+  - 66
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 408
+  - 66
+  path: M 12,0 H 396 Q 408,0 408,12 V 54 Q 408,66 396,66 H 12 Q 0,66 0,54 V 12 Q 0,0 12,0 Z
+- elementId: asahi-name-icon
+  elementType: icon
+  bounds:
+  - 1122
+  - 864
+  - 16
+  - 16
+  iconName: far:sun
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-name-copy
+  elementType: text
+  bounds:
+  - 1152
+  - 852
+  - 336
+  - 48
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.55
+    wrap: true
+    text: '朝日 · 白天　／　近月 · 深夜
+
+      名称来自《近月少女的礼仪》的意象'
+- elementId: asahi-action-0
+  elementType: icon
+  bounds:
+  - 824
+  - 176
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-action-1
+  elementType: icon
+  bounds:
+  - 866
+  - 176
+  - 15
+  - 15
+  iconName: fas:thumbtack
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-action-2
+  elementType: icon
+  bounds:
+  - 908
+  - 176
+  - 15
+  - 15
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-action-3
+  elementType: icon
+  bounds:
+  - 950
+  - 176
+  - 15
+  - 15
+  iconName: fas:gear
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-action-4
+  elementType: icon
+  bounds:
+  - 992
+  - 176
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-chip-0
+  elementType: shape
+  bounds:
+  - 90
+  - 820
+  - 72
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 72
+  - 28
+  path: M 8,0 H 64 Q 72,0 72,8 V 20 Q 72,28 64,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: asahi-chip-text-0
+  elementType: text
+  bounds:
+  - 90
+  - 820
+  - 72
+  - 28
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更通俗
+    align:
+    - center
+    - middle
+- elementId: asahi-chip-1
+  elementType: shape
+  bounds:
+  - 170
+  - 820
+  - 82
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 82
+  - 28
+  path: M 8,0 H 74 Q 82,0 82,8 V 20 Q 82,28 74,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: asahi-chip-text-1
+  elementType: text
+  bounds:
+  - 170
+  - 820
+  - 82
+  - 28
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 举个例子
+    align:
+    - center
+    - middle
+- elementId: asahi-chip-2
+  elementType: shape
+  bounds:
+  - 260
+  - 820
+  - 82
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 82
+  - 28
+  path: M 8,0 H 74 Q 82,0 82,8 V 20 Q 82,28 74,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: asahi-chip-text-2
+  elementType: text
+  bounds:
+  - 260
+  - 820
+  - 82
+  - 28
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 深入一点
+    align:
+    - center
+    - middle
+- elementId: asahi-chip-3
+  elementType: shape
+  bounds:
+  - 350
+  - 820
+  - 92
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 92
+  - 28
+  path: M 8,0 H 84 Q 92,0 92,8 V 20 Q 92,28 84,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: asahi-chip-text-3
+  elementType: text
+  bounds:
+  - 350
+  - 820
+  - 92
+  - 28
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网核查
+    align:
+    - center
+    - middle
+- elementId: asahi-swatch-0
+  elementType: shape
+  bounds:
+  - 1104
+  - 388
+  - 88
+  - 58
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 88
+  - 58
+  path: M 10,0 H 78 Q 88,0 88,10 V 48 Q 88,58 78,58 H 10 Q 0,58 0,48 V 10 Q 0,0 10,0 Z
+  border: *id003
+- elementId: asahi-swatch-hex-0
+  elementType: text
+  bounds:
+  - 1104
+  - 456
+  - 88
+  - 20
+  content:
+    fontSize: 9
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#F4F3ED'
+    align:
+    - center
+    - top
+- elementId: asahi-swatch-label-0
+  elementType: text
+  bounds:
+  - 1104
+  - 482
+  - 88
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 主表面
+    align:
+    - center
+    - top
+- elementId: asahi-swatch-1
+  elementType: shape
+  bounds:
+  - 1208
+  - 388
+  - 88
+  - 58
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 88
+  - 58
+  path: M 10,0 H 78 Q 88,0 88,10 V 48 Q 88,58 78,58 H 10 Q 0,58 0,48 V 10 Q 0,0 10,0 Z
+  border: *id003
+- elementId: asahi-swatch-hex-1
+  elementType: text
+  bounds:
+  - 1208
+  - 456
+  - 88
+  - 20
+  content:
+    fontSize: 9
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#FAF9F4'
+    align:
+    - center
+    - top
+- elementId: asahi-swatch-label-1
+  elementType: text
+  bounds:
+  - 1208
+  - 482
+  - 88
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 次表面
+    align:
+    - center
+    - top
+- elementId: asahi-swatch-2
+  elementType: shape
+  bounds:
+  - 1312
+  - 388
+  - 88
+  - 58
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 88
+  - 58
+  path: M 10,0 H 78 Q 88,0 88,10 V 48 Q 88,58 78,58 H 10 Q 0,58 0,48 V 10 Q 0,0 10,0 Z
+  border: *id003
+- elementId: asahi-swatch-hex-2
+  elementType: text
+  bounds:
+  - 1312
+  - 456
+  - 88
+  - 20
+  content:
+    fontSize: 9
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#E6EBF1'
+    align:
+    - center
+    - top
+- elementId: asahi-swatch-label-2
+  elementType: text
+  bounds:
+  - 1312
+  - 482
+  - 88
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 柔和底色
+    align:
+    - center
+    - top
+- elementId: asahi-swatch-3
+  elementType: shape
+  bounds:
+  - 1416
+  - 388
+  - 88
+  - 58
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 88
+  - 58
+  path: M 10,0 H 78 Q 88,0 88,10 V 48 Q 88,58 78,58 H 10 Q 0,58 0,48 V 10 Q 0,0 10,0 Z
+  border: *id003
+- elementId: asahi-swatch-hex-3
+  elementType: text
+  bounds:
+  - 1416
+  - 456
+  - 88
+  - 20
+  content:
+    fontSize: 9
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: '#506B92'
+    align:
+    - center
+    - top
+- elementId: asahi-swatch-label-3
+  elementType: text
+  bounds:
+  - 1416
+  - 482
+  - 88
+  - 20
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 强调色
+    align:
+    - center
+    - top
+- elementId: asahi-contrast-label-0
+  elementType: text
+  bounds:
+  - 1104
+  - 734
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 主文字
+- elementId: asahi-contrast-value-0
+  elementType: text
+  bounds:
+  - 1360
+  - 734
+  - 128
+  - 22
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 14.01:1
+    bold: true
+    align:
+    - right
+    - top
+- elementId: asahi-contrast-label-1
+  elementType: text
+  bounds:
+  - 1104
+  - 760
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 正文
+- elementId: asahi-contrast-value-1
+  elementType: text
+  bounds:
+  - 1360
+  - 760
+  - 128
+  - 22
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 8.57:1
+    bold: true
+    align:
+    - right
+    - top
+- elementId: asahi-contrast-label-2
+  elementType: text
+  bounds:
+  - 1104
+  - 786
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 辅助文字
+- elementId: asahi-contrast-value-2
+  elementType: text
+  bounds:
+  - 1360
+  - 786
+  - 128
+  - 22
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 4.53:1
+    bold: true
+    align:
+    - right
+    - top
+- elementId: asahi-contrast-label-3
+  elementType: text
+  bounds:
+  - 1104
+  - 812
+  - 180
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 强调色
+- elementId: asahi-contrast-value-3
+  elementType: text
+  bounds:
+  - 1360
+  - 812
+  - 128
+  - 22
+  content:
+    fontSize: 10
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 4.89:1
+    bold: true
+    align:
+    - right
+    - top

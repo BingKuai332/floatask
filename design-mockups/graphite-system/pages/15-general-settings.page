@@ -1,0 +1,1367 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 15
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 通用与快捷键
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 快捷键录制与冲突反馈就地完成；工具栏、启动行为、语言与主题集中管理
+- elementId: general-window
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 1472
+  - 788
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 1472
+  - 788
+  path: M 16,0 H 1456 Q 1472,0 1472,16 V 772 Q 1472,788 1456,788 H 16 Q 0,788 0,772 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 40
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: general-sidebar
+  elementType: shape
+  bounds:
+  - 65
+  - 149
+  - 218
+  - 786
+  shapeName: custom
+  viewBox:
+  - 218
+  - 786
+  fill:
+    type: solid
+    color: '#1D2128'
+  path: M 15,0 H 218 V 786 H 15 Q 0,786 0,771 V 15 Q 0,0 15,0 Z
+- elementId: general-sidebar-line
+  elementType: shape
+  bounds:
+  - 283
+  - 149
+  - 1
+  - 786
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: general-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 170
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: general-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 178
+  - 18
+  - 18
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: general-brand
+  elementType: text
+  bounds:
+  - 134
+  - 168
+  - 100
+  - 28
+  content:
+    fontSize: 18
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问设置
+    bold: true
+- elementId: general-brand-sub
+  elementType: text
+  bounds:
+  - 134
+  - 197
+  - 120
+  - 16
+  content:
+    fontSize: 8
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: general-nav-icon-0
+  elementType: icon
+  bounds:
+  - 94
+  - 260
+  - 15
+  - 15
+  iconName: fas:sliders
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: general-nav-text-0
+  elementType: text
+  bounds:
+  - 122
+  - 256
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 模型服务
+- elementId: general-nav-icon-1
+  elementType: icon
+  bounds:
+  - 94
+  - 312
+  - 15
+  - 15
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: general-nav-text-1
+  elementType: text
+  bounds:
+  - 122
+  - 308
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网检索
+- elementId: general-nav-active
+  elementType: shape
+  bounds:
+  - 78
+  - 353
+  - 190
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 190
+  - 40
+  path: M 10,0 H 180 Q 190,0 190,10 V 30 Q 190,40 180,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: general-nav-icon-2
+  elementType: icon
+  bounds:
+  - 94
+  - 364
+  - 15
+  - 15
+  iconName: fas:keyboard
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: general-nav-text-2
+  elementType: text
+  bounds:
+  - 122
+  - 360
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 通用与快捷键
+- elementId: general-nav-icon-3
+  elementType: icon
+  bounds:
+  - 94
+  - 416
+  - 15
+  - 15
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: general-nav-text-3
+  elementType: text
+  bounds:
+  - 122
+  - 412
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 历史与隐私
+- elementId: general-nav-icon-4
+  elementType: icon
+  bounds:
+  - 94
+  - 468
+  - 15
+  - 15
+  iconName: fas:font
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: general-nav-text-4
+  elementType: text
+  bounds:
+  - 122
+  - 464
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 外观与阅读
+- elementId: general-nav-icon-5
+  elementType: icon
+  bounds:
+  - 94
+  - 520
+  - 15
+  - 15
+  iconName: fas:rotate
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: general-nav-text-5
+  elementType: text
+  bounds:
+  - 122
+  - 516
+  - 130
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更新与关于
+- elementId: general-nav-note
+  elementType: text
+  bounds:
+  - 90
+  - 866
+  - 170
+  - 40
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: '配置仅保存在本机
+
+      快捷键由 Windows 注册'
+- elementId: general-close
+  elementType: icon
+  bounds:
+  - 1490
+  - 174
+  - 16
+  - 16
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: general-title
+  elementType: text
+  bounds:
+  - 322
+  - 178
+  - 400
+  - 34
+  content:
+    fontSize: 23
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 通用与快捷键
+    bold: true
+- elementId: general-desc
+  elementType: text
+  bounds:
+  - 322
+  - 220
+  - 780
+  - 24
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 管理全局操作、悬浮工具栏与启动行为。快捷键冲突不会覆盖当前可用配置。
+- elementId: general-save
+  elementType: shape
+  bounds:
+  - 1370
+  - 176
+  - 118
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 118
+  - 40
+  path: M 10,0 H 108 Q 118,0 118,10 V 30 Q 118,40 108,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: general-save-text
+  elementType: text
+  bounds:
+  - 1370
+  - 176
+  - 118
+  - 40
+  content:
+    fontSize: 12
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 保存更改
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: shortcut-section
+  elementType: text
+  bounds:
+  - 322
+  - 280
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 全局快捷键
+    bold: true
+- elementId: shortcut-card
+  elementType: shape
+  bounds:
+  - 322
+  - 316
+  - 720
+  - 250
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 720
+  - 250
+  path: M 12,0 H 708 Q 720,0 720,12 V 238 Q 720,250 708,250 H 12 Q 0,250 0,238 V 12 Q 0,0 12,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: shortcut-current-title
+  elementType: text
+  bounds:
+  - 346
+  - 334
+  - 240
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选屏幕
+    bold: true
+- elementId: shortcut-current-sub
+  elementType: text
+  bounds:
+  - 346
+  - 364
+  - 320
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 在任意应用中唤起框选遮罩
+- elementId: shortcut-current-key
+  elementType: shape
+  bounds:
+  - 808
+  - 338
+  - 86
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 86
+  - 34
+  path: M 8,0 H 78 Q 86,0 86,8 V 26 Q 86,34 78,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+  border: *id002
+- elementId: shortcut-current-key-text
+  elementType: text
+  bounds:
+  - 808
+  - 338
+  - 86
+  - 34
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Alt Q
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: shortcut-record
+  elementType: shape
+  bounds:
+  - 906
+  - 338
+  - 112
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 112
+  - 34
+  path: M 10,0 H 102 Q 112,0 112,10 V 24 Q 112,34 102,34 H 10 Q 0,34 0,24 V 10 Q 0,0 10,0 Z
+- elementId: shortcut-record-text
+  elementType: text
+  bounds:
+  - 906
+  - 338
+  - 112
+  - 34
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重新录制
+    align:
+    - center
+    - middle
+- elementId: shortcut-divider
+  elementType: shape
+  bounds:
+  - 346
+  - 386
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: shortcut-recording
+  elementType: shape
+  bounds:
+  - 346
+  - 402
+  - 672
+  - 142
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 672
+  - 142
+  path: M 12,0 H 660 Q 672,0 672,12 V 130 Q 672,142 660,142 H 12 Q 0,142 0,130 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#E1A0A866'
+- elementId: shortcut-listening-dot
+  elementType: shape
+  bounds:
+  - 362
+  - 421
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: shortcut-listening
+  elementType: text
+  bounds:
+  - 378
+  - 412
+  - 260
+  - 24
+  content:
+    fontSize: 10
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 正在录制 · Esc 取消
+    bold: true
+- elementId: shortcut-new-key
+  elementType: shape
+  bounds:
+  - 346
+  - 450
+  - 174
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 174
+  - 38
+  path: M 10,0 H 164 Q 174,0 174,10 V 28 Q 174,38 164,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: shortcut-new-key-text
+  elementType: text
+  bounds:
+  - 346
+  - 450
+  - 174
+  - 38
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Ctrl Alt Q
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: shortcut-error-icon
+  elementType: icon
+  bounds:
+  - 538
+  - 461
+  - 14
+  - 14
+  iconName: fas:triangle-exclamation
+  fill:
+    type: solid
+    color: '#E1A0A8'
+- elementId: shortcut-error
+  elementType: text
+  bounds:
+  - 562
+  - 450
+  - 350
+  - 38
+  content:
+    fontSize: 10
+    color: '#E1A0A8'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 系统无法注册，可能已被其他应用占用
+    align:
+    - left
+    - middle
+- elementId: shortcut-current-kept
+  elementType: text
+  bounds:
+  - 346
+  - 500
+  - 360
+  - 24
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 当前 Alt+Q 保持不变
+- elementId: shortcut-cancel
+  elementType: shape
+  bounds:
+  - 828
+  - 494
+  - 70
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 70
+  - 32
+  path: M 10,0 H 60 Q 70,0 70,10 V 22 Q 70,32 60,32 H 10 Q 0,32 0,22 V 10 Q 0,0 10,0 Z
+- elementId: shortcut-cancel-text
+  elementType: text
+  bounds:
+  - 828
+  - 494
+  - 70
+  - 32
+  content:
+    fontSize: 10
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 取消
+    align:
+    - center
+    - middle
+- elementId: shortcut-apply
+  elementType: shape
+  bounds:
+  - 908
+  - 494
+  - 86
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 86
+  - 32
+  path: M 10,0 H 76 Q 86,0 86,10 V 22 Q 86,32 76,32 H 10 Q 0,32 0,22 V 10 Q 0,0 10,0 Z
+- elementId: shortcut-apply-text
+  elementType: text
+  bounds:
+  - 908
+  - 494
+  - 86
+  - 32
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 不可应用
+    align:
+    - center
+    - middle
+- elementId: toolbar-section
+  elementType: text
+  bounds:
+  - 1066
+  - 280
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 悬浮工具栏
+    bold: true
+- elementId: toolbar-settings-card
+  elementType: shape
+  bounds:
+  - 1066
+  - 316
+  - 446
+  - 250
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 446
+  - 250
+  path: M 12,0 H 434 Q 446,0 446,12 V 238 Q 446,250 434,250 H 12 Q 0,250 0,238 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: toolbar-show-title
+  elementType: text
+  bounds:
+  - 1090
+  - 338
+  - 220
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 显示悬浮工具栏
+    bold: true
+- elementId: toolbar-show-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 366
+  - 270
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 隐藏后可从系统托盘恢复
+- elementId: toolbar-snap-title
+  elementType: text
+  bounds:
+  - 1090
+  - 402
+  - 220
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 边缘自动吸附
+    bold: true
+- elementId: toolbar-snap-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 430
+  - 300
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 距边缘 24 px 内松手吸附
+- elementId: toolbar-collapse-title
+  elementType: text
+  bounds:
+  - 1090
+  - 466
+  - 220
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 移开后自动收起
+    bold: true
+- elementId: toolbar-collapse-sub
+  elementType: text
+  bounds:
+  - 1090
+  - 494
+  - 300
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 菜单打开或拖动时不会收起
+- elementId: startup-section
+  elementType: text
+  bounds:
+  - 322
+  - 598
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 启动与后台行为
+    bold: true
+- elementId: startup-card
+  elementType: shape
+  bounds:
+  - 322
+  - 634
+  - 720
+  - 262
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 720
+  - 262
+  path: M 12,0 H 708 Q 720,0 720,12 V 250 Q 720,262 708,262 H 12 Q 0,262 0,250 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: startup-launch-title
+  elementType: text
+  bounds:
+  - 346
+  - 656
+  - 260
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 登录 Windows 后启动
+    bold: true
+- elementId: startup-launch-sub
+  elementType: text
+  bounds:
+  - 346
+  - 684
+  - 400
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 仅启动浮问，不自动执行框选或模型请求
+- elementId: startup-toolbar-title
+  elementType: text
+  bounds:
+  - 346
+  - 720
+  - 260
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 启动时显示悬浮工具栏
+    bold: true
+- elementId: startup-toolbar-sub
+  elementType: text
+  bounds:
+  - 346
+  - 748
+  - 400
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 关闭后仍可使用全局快捷键
+- elementId: startup-background-title
+  elementType: text
+  bounds:
+  - 346
+  - 784
+  - 260
+  - 24
+  content:
+    fontSize: 12
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 关闭答案窗后保留后台运行
+    bold: true
+- elementId: startup-background-sub
+  elementType: text
+  bounds:
+  - 346
+  - 812
+  - 420
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 退出浮问需要从工具栏菜单或系统托盘操作
+- elementId: startup-note-rule
+  elementType: shape
+  bounds:
+  - 346
+  - 852
+  - 672
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: startup-note
+  elementType: text
+  bounds:
+  - 346
+  - 866
+  - 620
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 启动项变化仅在保存后生效
+- elementId: appearance-section
+  elementType: text
+  bounds:
+  - 1066
+  - 598
+  - 300
+  - 28
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 语言与外观
+    bold: true
+- elementId: appearance-card
+  elementType: shape
+  bounds:
+  - 1066
+  - 634
+  - 446
+  - 262
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 446
+  - 262
+  path: M 12,0 H 434 Q 446,0 446,12 V 250 Q 446,262 434,262 H 12 Q 0,262 0,250 V 12 Q 0,0 12,0 Z
+  border: *id002
+- elementId: language-label
+  elementType: text
+  bounds:
+  - 1090
+  - 656
+  - 200
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 界面语言
+    bold: true
+- elementId: language-select
+  elementType: shape
+  bounds:
+  - 1090
+  - 684
+  - 398
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 398
+  - 40
+  path: M 10,0 H 388 Q 398,0 398,10 V 30 Q 398,40 388,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: language-value
+  elementType: text
+  bounds:
+  - 1106
+  - 684
+  - 220
+  - 40
+  content:
+    fontSize: 11
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 简体中文
+    align:
+    - left
+    - middle
+- elementId: language-chevron
+  elementType: icon
+  bounds:
+  - 1454
+  - 698
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: theme-label
+  elementType: text
+  bounds:
+  - 1090
+  - 748
+  - 200
+  - 22
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 主题
+    bold: true
+- elementId: theme-control
+  elementType: shape
+  bounds:
+  - 1090
+  - 776
+  - 398
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 398
+  - 40
+  path: M 10,0 H 388 Q 398,0 398,10 V 30 Q 398,40 388,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border: *id002
+- elementId: theme-active
+  elementType: shape
+  bounds:
+  - 1093
+  - 779
+  - 126
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 126
+  - 34
+  path: M 8,0 H 118 Q 126,0 126,8 V 26 Q 126,34 118,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: theme-system
+  elementType: text
+  bounds:
+  - 1093
+  - 779
+  - 126
+  - 34
+  content:
+    fontSize: 10
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 跟随系统
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: theme-light
+  elementType: text
+  bounds:
+  - 1223
+  - 779
+  - 126
+  - 34
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 白天
+    align:
+    - center
+    - middle
+- elementId: theme-dark
+  elementType: text
+  bounds:
+  - 1353
+  - 779
+  - 126
+  - 34
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 深夜
+    align:
+    - center
+    - middle
+- elementId: theme-note
+  elementType: text
+  bounds:
+  - 1090
+  - 840
+  - 390
+  - 36
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 双主题共用布局与圆角，仅替换语义颜色。
+- elementId: general-footer
+  elementType: text
+  bounds:
+  - 322
+  - 906
+  - 900
+  - 20
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 快捷键保存失败时继续沿用旧配置；主题切换不需要重启。
+- elementId: toolbar-show-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 340
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: toolbar-show-toggle-knob
+  elementType: shape
+  bounds:
+  - 1471
+  - 343
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: toolbar-snap-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 404
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: toolbar-snap-toggle-knob
+  elementType: shape
+  bounds:
+  - 1471
+  - 407
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: toolbar-collapse-toggle
+  elementType: shape
+  bounds:
+  - 1454
+  - 468
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: toolbar-collapse-toggle-knob
+  elementType: shape
+  bounds:
+  - 1471
+  - 471
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: startup-launch-toggle
+  elementType: shape
+  bounds:
+  - 960
+  - 658
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: startup-launch-toggle-knob
+  elementType: shape
+  bounds:
+  - 963
+  - 661
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: startup-toolbar-toggle
+  elementType: shape
+  bounds:
+  - 960
+  - 722
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: startup-toolbar-toggle-knob
+  elementType: shape
+  bounds:
+  - 977
+  - 725
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'
+- elementId: startup-background-toggle
+  elementType: shape
+  bounds:
+  - 960
+  - 786
+  - 34
+  - 20
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#8FA6C9'
+  viewBox:
+  - 34
+  - 20
+  path: M 10.0,0 H 24.0 Q 34,0 34,10.0 V 10.0 Q 34,20 24.0,20 H 10.0 Q 0,20 0,10.0 V 10.0 Q 0,0 10.0,0 Z
+- elementId: startup-background-toggle-knob
+  elementType: shape
+  bounds:
+  - 977
+  - 789
+  - 14
+  - 14
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#171A20'

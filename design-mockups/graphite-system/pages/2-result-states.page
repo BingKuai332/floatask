@@ -1,0 +1,1290 @@
+pageType: content
+background:
+  type: solid
+  color: '#0C0E12'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · GRAPHITE DESIGN SYSTEM / 02
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 结果状态
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 加载、流式与错误状态共享同一窗口骨架，避免状态切换时布局跳动
+- elementId: streaming
+  elementType: shape
+  bounds:
+  - 64
+  - 166
+  - 750
+  - 770
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 750
+  - 770
+  path: M 16,0 H 734 Q 750,0 750,16 V 754 Q 750,770 734,770 H 16 Q 0,770 0,754 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#FFFFFF26'
+  shadow:
+    blur: 38
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: streaming-logo-bg
+  elementType: shape
+  bounds:
+  - 88
+  - 182
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: streaming-logo
+  elementType: icon
+  bounds:
+  - 96
+  - 190
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: streaming-brand
+  elementType: text
+  bounds:
+  - 132
+  - 180
+  - 100
+  - 26
+  content:
+    fontSize: 19
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问
+    bold: true
+- elementId: streaming-brand-en
+  elementType: text
+  bounds:
+  - 133
+  - 206
+  - 100
+  - 12
+  content:
+    fontSize: 8
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: streaming-status-dot
+  elementType: shape
+  bounds:
+  - 664
+  - 195
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: streaming-status
+  elementType: text
+  bounds:
+  - 676
+  - 188
+  - 60
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 正在生成
+- elementId: streaming-close
+  elementType: icon
+  bounds:
+  - 772
+  - 190
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: streaming-head-line
+  elementType: shape
+  bounds:
+  - 64
+  - 229
+  - 750
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: streaming-context-bg
+  elementType: shape
+  bounds:
+  - 65
+  - 230
+  - 748
+  - 43
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#1D2128'
+- elementId: streaming-context-icon
+  elementType: icon
+  bounds:
+  - 88
+  - 244
+  - 14
+  - 14
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: streaming-context
+  elementType: text
+  bounds:
+  - 112
+  - 239
+  - 450
+  - 24
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer · 屏幕框选
+- elementId: streaming-model
+  elementType: text
+  bounds:
+  - 624
+  - 239
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - right
+    - top
+- elementId: streaming-chevron
+  elementType: icon
+  bounds:
+  - 766
+  - 246
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: streaming-context-line
+  elementType: shape
+  bounds:
+  - 64
+  - 272
+  - 750
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: stream-avatar
+  elementType: shape
+  bounds:
+  - 90
+  - 298
+  - 28
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 28
+  - 28
+  path: M 8,0 H 20 Q 28,0 28,8 V 20 Q 28,28 20,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: stream-avatar-icon
+  elementType: icon
+  bounds:
+  - 96
+  - 304
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: stream-name
+  elementType: text
+  bounds:
+  - 130
+  - 301
+  - 180
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 · 正在回答
+- elementId: stream-content
+  elementType: text
+  bounds:
+  - 90
+  - 343
+  - 698
+  - 190
+  content:
+    fontSize: 15
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.62
+    wrap: true
+    text: <p><strong>Transformer</strong> 是一种基于自注意力机制的神经网络架构。</p><p style="margin-top:14px">它让模型在处理一个词时，同时参考句子里的其他词。例如读到“苹果发布了新芯片”时，模型会依据“发布”和“芯片”，判断这里更可能指科技公司。<span style="color:#8FA6C9">▍</span></p>
+- elementId: stream-rule
+  elementType: shape
+  bounds:
+  - 90
+  - 558
+  - 698
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: stream-search
+  elementType: icon
+  bounds:
+  - 90
+  - 582
+  - 14
+  - 14
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: stream-phase
+  elementType: text
+  bounds:
+  - 114
+  - 576
+  - 500
+  - 26
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 已检索 4 个来源 · 正在组织回答
+- elementId: stream-note
+  elementType: text
+  bounds:
+  - 90
+  - 624
+  - 698
+  - 46
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 流式阶段保留稳定的输入区；停止按钮使用语义色，不让整个窗口闪烁。
+- elementId: stream-footer
+  elementType: shape
+  bounds:
+  - 64
+  - 786
+  - 750
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: stream-composer-chip-0
+  elementType: shape
+  bounds:
+  - 90
+  - 800
+  - 72
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 72
+  - 28
+  path: M 8,0 H 64 Q 72,0 72,8 V 20 Q 72,28 64,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: stream-composer-chip-text-0
+  elementType: text
+  bounds:
+  - 90
+  - 800
+  - 72
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 更通俗
+    align:
+    - center
+    - middle
+- elementId: stream-composer-chip-1
+  elementType: shape
+  bounds:
+  - 170
+  - 800
+  - 82
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 82
+  - 28
+  path: M 8,0 H 74 Q 82,0 82,8 V 20 Q 82,28 74,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: stream-composer-chip-text-1
+  elementType: text
+  bounds:
+  - 170
+  - 800
+  - 82
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 举个例子
+    align:
+    - center
+    - middle
+- elementId: stream-composer-chip-2
+  elementType: shape
+  bounds:
+  - 260
+  - 800
+  - 82
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 82
+  - 28
+  path: M 8,0 H 74 Q 82,0 82,8 V 20 Q 82,28 74,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: stream-composer-chip-text-2
+  elementType: text
+  bounds:
+  - 260
+  - 800
+  - 82
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 深入一点
+    align:
+    - center
+    - middle
+- elementId: stream-composer-chip-3
+  elementType: shape
+  bounds:
+  - 350
+  - 800
+  - 92
+  - 28
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 92
+  - 28
+  path: M 8,0 H 84 Q 92,0 92,8 V 20 Q 92,28 84,28 H 8 Q 0,28 0,20 V 8 Q 0,0 8,0 Z
+- elementId: stream-composer-chip-text-3
+  elementType: text
+  bounds:
+  - 350
+  - 800
+  - 92
+  - 28
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网核查
+    align:
+    - center
+    - middle
+- elementId: stream-composer-box
+  elementType: shape
+  bounds:
+  - 90
+  - 840
+  - 698
+  - 58
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 698
+  - 58
+  path: M 12,0 H 686 Q 698,0 698,12 V 46 Q 698,58 686,58 H 12 Q 0,58 0,46 V 12 Q 0,0 12,0 Z
+  border: &id003
+    width: 1
+    color: '#FFFFFF1A'
+- elementId: stream-composer-web
+  elementType: icon
+  bounds:
+  - 108
+  - 861
+  - 15
+  - 15
+  iconName: fas:globe
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: stream-composer-web-text
+  elementType: text
+  bounds:
+  - 131
+  - 857
+  - 40
+  - 24
+  content:
+    fontSize: 11
+    color: '#8FA6C9'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 联网
+- elementId: stream-composer-sep
+  elementType: shape
+  bounds:
+  - 180
+  - 854
+  - 1
+  - 30
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: stream-composer-placeholder
+  elementType: text
+  bounds:
+  - 198
+  - 853
+  - 508
+  - 32
+  content:
+    fontSize: 13
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 正在生成回答…
+    align:
+    - left
+    - middle
+- elementId: stream-composer-send
+  elementType: shape
+  bounds:
+  - 734
+  - 848
+  - 42
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#2C2025'
+  viewBox:
+  - 42
+  - 42
+  path: M 10,0 H 32 Q 42,0 42,10 V 32 Q 42,42 32,42 H 10 Q 0,42 0,32 V 10 Q 0,0 10,0 Z
+- elementId: stream-composer-send-icon
+  elementType: icon
+  bounds:
+  - 747
+  - 861
+  - 16
+  - 16
+  iconName: fas:stop
+  fill:
+    type: solid
+    color: '#E1A0A8'
+- elementId: stream-composer-hint
+  elementType: text
+  bounds:
+  - 90
+  - 910
+  - 383.90000000000003
+  - 18
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Esc 停止生成
+- elementId: stream-composer-vision
+  elementType: text
+  bounds:
+  - 473.90000000000003
+  - 910
+  - 314.1
+  - 18
+  content:
+    fontSize: 10
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 视觉模型 · 截图已压缩
+    align:
+    - right
+    - top
+- elementId: loading
+  elementType: shape
+  bounds:
+  - 872
+  - 166
+  - 664
+  - 340
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 664
+  - 340
+  path: M 16,0 H 648 Q 664,0 664,16 V 324 Q 664,340 648,340 H 16 Q 0,340 0,324 V 16 Q 0,0 16,0 Z
+  border: *id002
+  shadow:
+    blur: 38
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: loading-logo-bg
+  elementType: shape
+  bounds:
+  - 896
+  - 182
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: loading-logo
+  elementType: icon
+  bounds:
+  - 904
+  - 190
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: loading-brand
+  elementType: text
+  bounds:
+  - 940
+  - 180
+  - 100
+  - 26
+  content:
+    fontSize: 19
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问
+    bold: true
+- elementId: loading-brand-en
+  elementType: text
+  bounds:
+  - 941
+  - 206
+  - 100
+  - 12
+  content:
+    fontSize: 8
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: loading-status-dot
+  elementType: shape
+  bounds:
+  - 1386
+  - 195
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: loading-status
+  elementType: text
+  bounds:
+  - 1398
+  - 188
+  - 60
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 读取屏幕
+- elementId: loading-close
+  elementType: icon
+  bounds:
+  - 1494
+  - 190
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: loading-head-line
+  elementType: shape
+  bounds:
+  - 872
+  - 229
+  - 664
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: loading-context-bg
+  elementType: shape
+  bounds:
+  - 873
+  - 230
+  - 662
+  - 43
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#1D2128'
+- elementId: loading-context-icon
+  elementType: icon
+  bounds:
+  - 896
+  - 244
+  - 14
+  - 14
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: loading-context
+  elementType: text
+  bounds:
+  - 920
+  - 239
+  - 364
+  - 24
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer · 屏幕框选
+- elementId: loading-model
+  elementType: text
+  bounds:
+  - 1346
+  - 239
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - right
+    - top
+- elementId: loading-chevron
+  elementType: icon
+  bounds:
+  - 1488
+  - 246
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: loading-context-line
+  elementType: shape
+  bounds:
+  - 872
+  - 272
+  - 664
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: loading-icon
+  elementType: icon
+  bounds:
+  - 900
+  - 306
+  - 18
+  - 18
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: loading-title
+  elementType: text
+  bounds:
+  - 930
+  - 300
+  - 400
+  - 28
+  content:
+    fontSize: 14
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 正在识别框选内容…
+    bold: true
+- elementId: loading-sub
+  elementType: text
+  bounds:
+  - 930
+  - 332
+  - 480
+  - 22
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: OCR 在本机完成，不会上传截图
+- elementId: skeleton-1
+  elementType: shape
+  bounds:
+  - 900
+  - 382
+  - 544
+  - 10
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 544
+  - 10
+  path: M 5.0,0 H 539.0 Q 544,0 544,5.0 V 5.0 Q 544,10 539.0,10 H 5.0 Q 0,10 0,5.0 V 5.0 Q 0,0 5.0,0 Z
+- elementId: skeleton-2
+  elementType: shape
+  bounds:
+  - 900
+  - 404
+  - 444
+  - 10
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 444
+  - 10
+  path: M 5.0,0 H 439.0 Q 444,0 444,5.0 V 5.0 Q 444,10 439.0,10 H 5.0 Q 0,10 0,5.0 V 5.0 Q 0,0 5.0,0 Z
+- elementId: skeleton-3
+  elementType: shape
+  bounds:
+  - 900
+  - 426
+  - 344
+  - 10
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 344
+  - 10
+  path: M 5.0,0 H 339.0 Q 344,0 344,5.0 V 5.0 Q 344,10 339.0,10 H 5.0 Q 0,10 0,5.0 V 5.0 Q 0,0 5.0,0 Z
+- elementId: loading-foot
+  elementType: text
+  bounds:
+  - 900
+  - 462
+  - 500
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 随后将结合窗口上下文生成解释
+- elementId: error
+  elementType: shape
+  bounds:
+  - 872
+  - 548
+  - 664
+  - 388
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#171A20'
+  viewBox:
+  - 664
+  - 388
+  path: M 16,0 H 648 Q 664,0 664,16 V 372 Q 664,388 648,388 H 16 Q 0,388 0,372 V 16 Q 0,0 16,0 Z
+  border: *id002
+  shadow:
+    blur: 38
+    color: '#00000066'
+    offset:
+    - 0
+    - 14
+- elementId: error-logo-bg
+  elementType: shape
+  bounds:
+  - 896
+  - 564
+  - 32
+  - 32
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#28333F'
+  viewBox:
+  - 32
+  - 32
+  path: M 8,0 H 24 Q 32,0 32,8 V 24 Q 32,32 24,32 H 8 Q 0,32 0,24 V 8 Q 0,0 8,0 Z
+- elementId: error-logo
+  elementType: icon
+  bounds:
+  - 904
+  - 572
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: error-brand
+  elementType: text
+  bounds:
+  - 940
+  - 562
+  - 100
+  - 26
+  content:
+    fontSize: 19
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问
+    bold: true
+- elementId: error-brand-en
+  elementType: text
+  bounds:
+  - 941
+  - 588
+  - 100
+  - 12
+  content:
+    fontSize: 8
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    letterSpacing: 1.8
+- elementId: error-status-dot
+  elementType: shape
+  bounds:
+  - 1386
+  - 577
+  - 6
+  - 6
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#8DB9A4'
+- elementId: error-status
+  elementType: text
+  bounds:
+  - 1398
+  - 570
+  - 60
+  - 20
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 连接失败
+- elementId: error-close
+  elementType: icon
+  bounds:
+  - 1494
+  - 572
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: error-head-line
+  elementType: shape
+  bounds:
+  - 872
+  - 611
+  - 664
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: error-context-bg
+  elementType: shape
+  bounds:
+  - 873
+  - 612
+  - 662
+  - 43
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#1D2128'
+- elementId: error-context-icon
+  elementType: icon
+  bounds:
+  - 896
+  - 626
+  - 14
+  - 14
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#8FA6C9'
+- elementId: error-context
+  elementType: text
+  bounds:
+  - 920
+  - 621
+  - 364
+  - 24
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Transformer · 屏幕框选
+- elementId: error-model
+  elementType: text
+  bounds:
+  - 1346
+  - 621
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: DeepSeek
+    align:
+    - right
+    - top
+- elementId: error-chevron
+  elementType: icon
+  bounds:
+  - 1488
+  - 628
+  - 11
+  - 11
+  iconName: fas:chevron-down
+  fill:
+    type: solid
+    color: '#9299A6'
+- elementId: error-context-line
+  elementType: shape
+  bounds:
+  - 872
+  - 654
+  - 664
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#2A3039'
+- elementId: error-symbol
+  elementType: shape
+  bounds:
+  - 900
+  - 684
+  - 34
+  - 34
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#2C2025'
+  viewBox:
+  - 34
+  - 34
+  path: M 8,0 H 26 Q 34,0 34,8 V 26 Q 34,34 26,34 H 8 Q 0,34 0,26 V 8 Q 0,0 8,0 Z
+- elementId: error-icon
+  elementType: icon
+  bounds:
+  - 909
+  - 693
+  - 16
+  - 16
+  iconName: fas:triangle-exclamation
+  fill:
+    type: solid
+    color: '#E1A0A8'
+- elementId: error-title
+  elementType: text
+  bounds:
+  - 948
+  - 684
+  - 420
+  - 26
+  content:
+    fontSize: 15
+    color: '#E8EBF0'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 暂时无法连接模型服务
+    bold: true
+- elementId: error-body
+  elementType: text
+  bounds:
+  - 948
+  - 718
+  - 520
+  - 44
+  content:
+    fontSize: 12
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: true
+    text: 请检查网络、Base URL 和 API Key。已识别的文字仍保留在本机。
+- elementId: error-detail
+  elementType: shape
+  bounds:
+  - 900
+  - 778
+  - 608
+  - 54
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#1D2128'
+  viewBox:
+  - 608
+  - 54
+  path: M 12,0 H 596 Q 608,0 608,12 V 42 Q 608,54 596,54 H 12 Q 0,54 0,42 V 12 Q 0,0 12,0 Z
+  border: *id003
+- elementId: error-detail-text
+  elementType: text
+  bounds:
+  - 914
+  - 788
+  - 580
+  - 34
+  content:
+    fontSize: 12
+    color: '#E1A0A8'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: HTTP 401 · Unauthorized
+    align:
+    - left
+    - middle
+- elementId: retry
+  elementType: shape
+  bounds:
+  - 900
+  - 854
+  - 100
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E8EBF0'
+  viewBox:
+  - 100
+  - 38
+  path: M 10,0 H 90 Q 100,0 100,10 V 28 Q 100,38 90,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: retry-text
+  elementType: text
+  bounds:
+  - 900
+  - 854
+  - 100
+  - 38
+  content:
+    fontSize: 12
+    color: '#171A20'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 重试
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: open-settings
+  elementType: shape
+  bounds:
+  - 1012
+  - 854
+  - 116
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#242931'
+  viewBox:
+  - 116
+  - 38
+  path: M 10,0 H 106 Q 116,0 116,10 V 28 Q 116,38 106,38 H 10 Q 0,38 0,28 V 10 Q 0,0 10,0 Z
+- elementId: open-settings-text
+  elementType: text
+  bounds:
+  - 1012
+  - 854
+  - 116
+  - 38
+  content:
+    fontSize: 12
+    color: '#CDD3DC'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 打开设置
+    align:
+    - center
+    - middle
+- elementId: error-manual
+  elementType: text
+  bounds:
+  - 1150
+  - 862
+  - 280
+  - 22
+  content:
+    fontSize: 11
+    color: '#9299A6'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 也可以粘贴文字，手动解释

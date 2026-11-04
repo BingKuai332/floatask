@@ -1,0 +1,102 @@
+/* Shared controls: geometry, borders and states come from design tokens only.
+   Do not introduce colors, radii or shadows here that are not --fa-* variables. */
+
+.fa-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: var(--fa-button-height);
+  padding: 0 16px;
+  border-radius: var(--fa-radius-control);
+  border: 1px solid var(--fa-border-control);
+  background: var(--fa-surface-2);
+  color: var(--fa-text);
+  font-size: var(--fa-size-control);
+  letter-spacing: 0.04em;
+}
+.fa-button:hover { background: var(--fa-surface-3); border-color: var(--fa-border-floating); }
+.fa-button:disabled,
+.fa-icon-button:disabled,
+.fa-chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.fa-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: var(--fa-radius-control);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fa-muted);
+}
+.fa-icon-button:hover { background: var(--fa-accent-soft); color: var(--fa-accent); }
+.fa-icon-button svg { width: 16px; height: 16px; }
+
+.fa-input {
+  height: var(--fa-input-height);
+  padding: 0 12px;
+  border-radius: var(--fa-radius-control);
+  border: 1px solid var(--fa-border-control);
+  background: var(--fa-surface-2);
+  color: var(--fa-text);
+  font: inherit;
+}
+.fa-input:focus { border-color: var(--fa-border-active); }
+
+.fa-chip {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  height: var(--fa-chip-height);
+  padding: 0 12px;
+  border-radius: var(--fa-radius-small);
+  border: 1px solid var(--fa-border-control);
+  background: var(--fa-surface-2);
+  color: var(--fa-body);
+  font-size: var(--fa-size-control);
+  white-space: nowrap;
+}
+.fa-chip:hover { color: var(--fa-text); border-color: var(--fa-border-floating); background: var(--fa-surface-3); }
+
+.fa-menu {
+  min-width: var(--fa-more-menu-width);
+  padding: 6px;
+  border-radius: var(--fa-radius-container);
+  border: 1px solid var(--fa-border-floating);
+  background: var(--fa-surface);
+  box-shadow: var(--fa-shadow-floating);
+}
+.fa-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--fa-radius-control);
+  background: transparent;
+  color: var(--fa-text);
+  font-size: var(--fa-size-answer-body);
+  text-align: left;
+}
+.fa-menu-item:hover,
+.fa-menu-item[data-active='true'] { background: var(--fa-accent-soft); color: var(--fa-accent); }
+.fa-menu-item:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Keyboard focus: 2px active outline with 2px offset, never suppressed. */
+:where(button, [role='button'], input, select, textarea, a[href], [tabindex]):focus-visible {
+  outline: var(--fa-focus-outline-width) solid var(--fa-border-active);
+  outline-offset: var(--fa-focus-outline-offset);
+}
+
+/* Reading density only changes rhythm, never control geometry.
+   The compact/relaxed factors are generated from design-tokens.yaml
+   (readingDensity) into theme.css; the standard factor stays here. */
+:root { --fa-density-factor: 1; }
+.md-body { line-height: calc(var(--reading-line, 1.55) * var(--fa-density-factor)); }

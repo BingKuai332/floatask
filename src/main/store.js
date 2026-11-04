@@ -42,7 +42,12 @@ const DEFAULTS = {
   showBubble: true,
   bubblePosition: null,
   autoLaunch: false,
-  onboarded: false
+  onboarded: false,
+  theme: 'system',
+  resultExpanded: false,
+  resultSize: null,
+  onboardingStep: 1,
+  historyRetentionDays: 90
 };
 
 let configPath = null;
@@ -104,6 +109,12 @@ function sanitize(patch, current) {
   }
   if (patch.fontScope === 'all' || patch.fontScope === 'reading') next.fontScope = patch.fontScope;
   if (!['all', 'reading'].includes(next.fontScope)) next.fontScope = 'all';
+  if (typeof patch.theme === 'string') next.theme = patch.theme;
+  if (!['system', 'light', 'dark'].includes(next.theme)) next.theme = 'system';
+  if (patch.onboardingStep === 1 || patch.onboardingStep === 2 || patch.onboardingStep === 3) next.onboardingStep = patch.onboardingStep;
+  if (typeof patch.historyRetentionDays !== 'undefined') {
+    next.historyRetentionDays = Math.round(clampNumber(patch.historyRetentionDays, current.historyRetentionDays, 0, 365));
+  }
   if (typeof patch.customFontFile === 'string') next.customFontFile = patch.customFontFile.trim().slice(0, 160);
   if (typeof patch.customFontName === 'string') next.customFontName = patch.customFontName.trim().slice(0, 120);
   if (next.customFontFile && !/^custom-[a-z0-9._-]+$/i.test(next.customFontFile)) next.customFontFile = '';
@@ -114,7 +125,7 @@ function sanitize(patch, current) {
   if (typeof patch.maxTokens !== 'undefined') {
     next.maxTokens = Math.round(clampNumber(patch.maxTokens, current.maxTokens, 128, 8000));
   }
-  for (const field of ['vision', 'webEnabled', 'showBubble', 'autoLaunch', 'onboarded', 'saveHistory', 'autoCheckUpdates']) {
+  for (const field of ['vision', 'webEnabled', 'showBubble', 'autoLaunch', 'onboarded', 'saveHistory', 'autoCheckUpdates', 'resultExpanded']) {
     if (typeof patch[field] === 'boolean') next[field] = patch[field];
   }
   if (patch.bubblePosition === null) {
@@ -124,6 +135,27 @@ function sanitize(patch, current) {
       x: Math.round(patch.bubblePosition.x),
       y: Math.round(patch.bubblePosition.y)
     };
+  }
+  if (patch.resultSize === null) {
+    next.resultSize = null;
+  } else if (patch.resultSize && typeof patch.resultSize === 'object') {
+    // Per-mode manual sizes the user dragged the answer window to; each
+    // mode falls back to the design size while its entry is missing.
+    const clampDim = (value, fallback, min, max) => {
+      const n = Math.round(Number(value));
+      return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
+    };
+    const entry = (value) => {
+      if (!Array.isArray(value) || value.length !== 2) return undefined;
+      return [clampDim(value[0], 800, 400, 4000), clampDim(value[1], 1425, 320, 4000)];
+    };
+    const compact = entry(patch.resultSize.compact);
+    const expanded = entry(patch.resultSize.expanded);
+    next.resultSize = {
+      ...(compact ? { compact } : {}),
+      ...(expanded ? { expanded } : {})
+    };
+    if (!compact && !expanded) next.resultSize = null;
   }
   if (!PRESETS[next.provider]) next.provider = 'custom';
   if (next.searchProvider === 'searxng' && next.searxngUrl) {
@@ -219,6 +251,10 @@ function publicSettings() {
     showBubble: c.showBubble,
     autoLaunch: c.autoLaunch,
     onboarded: c.onboarded,
+    theme: c.theme,
+    resultExpanded: c.resultExpanded,
+    onboardingStep: c.onboardingStep,
+    historyRetentionDays: c.historyRetentionDays,
     hasApiKey: Boolean(c.apiKey),
     presets: Object.values(PRESETS).map(({ id, label, baseUrl, model, vision, keyUrl, note }) => ({
       id, label, baseUrl, model, vision, keyUrl, note

@@ -1,0 +1,671 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 41
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 更新下载与校验
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 版本、下载进度、SHA-256 与重启确认在暖白表面中保持清晰，不新增状态色
+- elementId: update-window
+  elementType: shape
+  bounds:
+  - 64
+  - 184
+  - 980
+  - 700
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 980
+  - 700
+  path: M 16,0 H 964 Q 980,0 980,16 V 684 Q 980,700 964,700 H 16 Q 0,700 0,684 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+  shadow:
+    blur: 38
+    color: '#26314726'
+    offset:
+    - 0
+    - 14
+- elementId: update-logo-bg
+  elementType: shape
+  bounds:
+  - 94
+  - 210
+  - 42
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 42
+  - 42
+  path: M 8,0 H 34 Q 42,0 42,8 V 34 Q 42,42 34,42 H 8 Q 0,42 0,34 V 8 Q 0,0 8,0 Z
+- elementId: update-logo
+  elementType: icon
+  bounds:
+  - 105
+  - 221
+  - 20
+  - 20
+  iconName: fas:download
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: update-title
+  elementType: text
+  bounds:
+  - 152
+  - 209
+  - 300
+  - 28
+  content:
+    fontSize: 20
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 软件更新
+    bold: true
+- elementId: update-current
+  elementType: text
+  bounds:
+  - 152
+  - 240
+  - 300
+  - 18
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 当前版本 v0.3.1
+- elementId: update-close
+  elementType: icon
+  bounds:
+  - 998
+  - 222
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: update-head-line
+  elementType: shape
+  bounds:
+  - 64
+  - 276
+  - 980
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: update-found
+  elementType: text
+  bounds:
+  - 94
+  - 308
+  - 550
+  - 34
+  content:
+    fontSize: 23
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 发现新版本 v0.4.0
+    bold: true
+- elementId: update-chip
+  elementType: shape
+  bounds:
+  - 884
+  - 310
+  - 130
+  - 30
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 130
+  - 30
+  path: M 8,0 H 122 Q 130,0 130,8 V 22 Q 130,30 122,30 H 8 Q 0,30 0,22 V 8 Q 0,0 8,0 Z
+- elementId: update-chip-text
+  elementType: text
+  bounds:
+  - 884
+  - 310
+  - 130
+  - 30
+  content:
+    fontSize: 11
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 稳定版
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: update-meta
+  elementType: text
+  bounds:
+  - 94
+  - 350
+  - 700
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 发布于 2026-10-30 · 48.6 MB · 来自 GitHub Releases（界面示例）
+- elementId: update-notes
+  elementType: shape
+  bounds:
+  - 94
+  - 392
+  - 920
+  - 170
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 920
+  - 170
+  path: M 12,0 H 908 Q 920,0 920,12 V 158 Q 920,170 908,170 H 12 Q 0,170 0,158 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: update-release-title
+  elementType: text
+  bounds:
+  - 116
+  - 416
+  - 876
+  - 24
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 此版本包含
+    bold: true
+- elementId: update-release-body
+  elementType: text
+  bounds:
+  - 116
+  - 450
+  - 876
+  - 104
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.8
+    wrap: true
+    text: '• 改进长回答滚动与代码块复制
+
+      • 新增悬浮工具栏边缘吸附
+
+      • 修正部分快捷键冲突与 OCR 异常'
+- elementId: update-progress-label
+  elementType: text
+  bounds:
+  - 94
+  - 594
+  - 450
+  - 22
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 正在下载更新包
+    bold: true
+- elementId: update-progress-value
+  elementType: text
+  bounds:
+  - 784
+  - 594
+  - 230
+  - 22
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 31.1 / 48.6 MB · 64%
+    align:
+    - right
+    - top
+- elementId: update-progress-track
+  elementType: shape
+  bounds:
+  - 94
+  - 630
+  - 920
+  - 8
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 920
+  - 8
+  path: M 4.0,0 H 916.0 Q 920,0 920,4.0 V 4.0 Q 920,8 916.0,8 H 4.0 Q 0,8 0,4.0 V 4.0 Q 0,0 4.0,0 Z
+- elementId: update-progress-bar
+  elementType: shape
+  bounds:
+  - 94
+  - 630
+  - 588.8000000000001
+  - 8
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 588.8000000000001
+  - 8
+  path: M 4.0,0 H 584.8000000000001 Q 588.8000000000001,0 588.8000000000001,4.0 V 4.0 Q 588.8000000000001,8 584.8000000000001,8 H 4.0 Q 0,8 0,4.0 V 4.0 Q 0,0 4.0,0 Z
+- elementId: update-verify-box
+  elementType: shape
+  bounds:
+  - 94
+  - 666
+  - 920
+  - 82
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 920
+  - 82
+  path: M 12,0 H 908 Q 920,0 920,12 V 70 Q 920,82 908,82 H 12 Q 0,82 0,70 V 12 Q 0,0 12,0 Z
+- elementId: update-verify-icon
+  elementType: icon
+  bounds:
+  - 114
+  - 689
+  - 18
+  - 18
+  iconName: fas:shield-halved
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: update-verify-title
+  elementType: text
+  bounds:
+  - 146
+  - 678
+  - 520
+  - 24
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 下载完成后自动执行 SHA-256 校验
+    bold: true
+- elementId: update-verify-copy
+  elementType: text
+  bounds:
+  - 146
+  - 707
+  - 720
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 校验通过后才允许安装；校验失败的安装包不会保留。
+- elementId: update-footer-line
+  elementType: shape
+  bounds:
+  - 64
+  - 788
+  - 980
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: update-later
+  elementType: text
+  bounds:
+  - 94
+  - 814
+  - 160
+  - 34
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 稍后提醒
+    align:
+    - left
+    - middle
+- elementId: update-preserve
+  elementType: text
+  bounds:
+  - 254
+  - 814
+  - 430
+  - 34
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 安装前提示保存工作，不会自动重启
+    align:
+    - left
+    - middle
+- elementId: update-cancel
+  elementType: shape
+  bounds:
+  - 704
+  - 812
+  - 140
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 140
+  - 40
+  path: M 10,0 H 130 Q 140,0 140,10 V 30 Q 140,40 130,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: update-cancel-label
+  elementType: text
+  bounds:
+  - 704
+  - 812
+  - 140
+  - 40
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 取消下载
+    align:
+    - center
+    - middle
+- elementId: update-install
+  elementType: shape
+  bounds:
+  - 858
+  - 812
+  - 156
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 156
+  - 40
+  path: M 10,0 H 146 Q 156,0 156,10 V 30 Q 156,40 146,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: update-install-label
+  elementType: text
+  bounds:
+  - 858
+  - 812
+  - 156
+  - 40
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 重启并安装
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: update-note-1-title
+  elementType: text
+  bounds:
+  - 1110
+  - 202
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 更新链路
+    bold: true
+- elementId: update-note-1-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 240
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: update-note-1-body
+  elementType: text
+  bounds:
+  - 1110
+  - 256
+  - 420
+  - 112
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: '1. 获取版本信息与更新包
+
+      2. 显示下载进度，可取消
+
+      3. SHA-256 校验通过
+
+      4. 用户确认后重启安装'
+- elementId: update-note-2-title
+  elementType: text
+  bounds:
+  - 1110
+  - 420
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 配置与数据
+    bold: true
+- elementId: update-note-2-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 458
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: update-note-2-body
+  elementType: text
+  bounds:
+  - 1110
+  - 474
+  - 420
+  - 84
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: '• 模型配置、DPAPI 密钥与历史保留
+
+      • 未完成的回答先提示保存
+
+      • 取消下载不影响当前版本'
+- elementId: update-note-3-title
+  elementType: text
+  bounds:
+  - 1110
+  - 620
+  - 420
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 完成态
+    bold: true
+- elementId: update-note-3-line
+  elementType: shape
+  bounds:
+  - 1110
+  - 658
+  - 420
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: update-note-3-body
+  elementType: text
+  bounds:
+  - 1110
+  - 674
+  - 420
+  - 28
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.75
+    wrap: true
+    text: 校验完成后，进度区变为“已验证”，主按钮启用；按钮文案保持“重启并安装”，不自动关闭其他窗口。

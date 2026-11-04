@@ -126,7 +126,7 @@
     if (event.key === 'Escape') { finishRecording(true); return; }
     if (recordingPending) return;
     const value = window.FloatAskHotkeys.fromKeyboard(event);
-    if (value) { hotkey.value = value; finishRecording(false); }
+    if (value) { hotkey.value = value; hotkey.dispatchEvent(new Event('input', { bubbles: true })); finishRecording(false); }
   },true);
   window.addEventListener('blur', () => finishRecording(true));
   document.getElementById('resetHotkeyBtn').onclick = async () => { await finishRecording(true); hotkey.value = 'Alt+Q'; };
@@ -136,7 +136,9 @@
     const busy = ['checking','downloading','installing'].includes(state.phase);
     document.getElementById('checkUpdatesBtn').disabled = busy;
     document.getElementById('downloadUpdateBtn').hidden = !state.canInstall || !state.available || !['available','error'].includes(state.phase);
-    document.getElementById('installUpdateBtn').hidden = state.phase !== 'ready';
+    const installBtn = document.getElementById('installUpdateBtn');
+    installBtn.hidden = false;
+    installBtn.disabled = state.phase !== 'ready';
     document.getElementById('updateDevNote').hidden = state.canInstall;
     document.getElementById('updateStatus').textContent = t('update.'+state.phase,{version:state.available?.version,n:state.progress,error:t(state.error || 'update.failed')});
   }
@@ -144,8 +146,15 @@
     try { showUpdate(await api[method]()); } catch { showUpdate({...updateState,phase:'error',error:'update.failed'}); }
   };
   document.getElementById('installUpdateBtn').onclick = async () => {
-    document.getElementById('installUpdateBtn').disabled = true;
-    try { await api.installUpdate(); showUpdate(await api.getUpdateState()); } finally { document.getElementById('installUpdateBtn').disabled = false; }
+    const installBtn = document.getElementById('installUpdateBtn');
+    installBtn.disabled = true;
+    try {
+      await api.installUpdate();
+      showUpdate(await api.getUpdateState());
+    } finally {
+      // Keep the verification gate: only a verified package may be installed.
+      installBtn.disabled = !updateState || updateState.phase !== 'ready';
+    }
   };
   api.onUpdateState(showUpdate);
   document.addEventListener('floatask:language', () => {

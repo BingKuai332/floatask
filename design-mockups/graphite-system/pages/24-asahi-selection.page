@@ -1,0 +1,647 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: &id001
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 24
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 框选与悬浮工具栏
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1100
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浅色桌面使用中性遮罩降低干扰；选中区域保持清晰，取景框角是唯一品牌装饰
+- elementId: asahi-select-desktop
+  elementType: shape
+  bounds:
+  - 64
+  - 148
+  - 1472
+  - 794
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 1472
+  - 794
+  path: M 16,0 H 1456 Q 1472,0 1472,16 V 778 Q 1472,794 1456,794 H 16 Q 0,794 0,778 V 16 Q 0,0 16,0 Z
+  border: &id002
+    width: 1
+    color: '#141B2E1F'
+- elementId: asahi-select-sidebar
+  elementType: shape
+  bounds:
+  - 65
+  - 149
+  - 210
+  - 792
+  shapeName: custom
+  viewBox:
+  - 210
+  - 792
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  path: M 15,0 H 210 V 792 H 15 Q 0,792 0,777 V 15 Q 0,0 15,0 Z
+- elementId: asahi-select-tabbar
+  elementType: shape
+  bounds:
+  - 275
+  - 149
+  - 1260
+  - 48
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#FAF9F4'
+- elementId: asahi-select-status
+  elementType: shape
+  bounds:
+  - 65
+  - 912
+  - 1470
+  - 29
+  shapeName: custom
+  viewBox:
+  - 1470
+  - 29
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  path: M 0,0 H 1470 V 14.5 Q 1470,29 1455.5,29 H 14.5 Q 0,29 0,14.5 Z
+- elementId: asahi-select-nav-title
+  elementType: text
+  bounds:
+  - 88
+  - 166
+  - 160
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: EXPLORER
+    letterSpacing: 1.2
+- elementId: asahi-select-project
+  elementType: text
+  bounds:
+  - 88
+  - 210
+  - 170
+  - 24
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK
+    bold: true
+- elementId: asahi-select-files
+  elementType: text
+  bounds:
+  - 104
+  - 252
+  - 160
+  - 160
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: '▾  src
+
+      　▾  renderer
+
+      　　result.js
+
+      　　theme.css
+
+      　　selection.js
+
+      　▾  main
+
+      　　main.js'
+- elementId: asahi-select-tab
+  elementType: shape
+  bounds:
+  - 290
+  - 158
+  - 156
+  - 38
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 156
+  - 38
+  path: M 8,0 H 148 Q 156,0 156,8 V 30 Q 156,38 148,38 H 8 Q 0,38 0,30 V 8 Q 0,0 8,0 Z
+- elementId: asahi-select-tab-text
+  elementType: text
+  bounds:
+  - 308
+  - 163
+  - 120
+  - 26
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: transformer.py
+- elementId: asahi-select-code-outside
+  elementType: text
+  bounds:
+  - 314
+  - 236
+  - 1060
+  - 580
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: "import torch\nimport torch.nn as nn\n\nclass MultiHeadAttention(nn.Module):\n    def __init__(self, hidden_size, heads):\n        super().__init__()\n        self.heads = heads\n        self.attention = nn.Linear(hidden_size, hidden_size)\n\n    def forward(self, query, key, value):\n        scores = query @ key.transpose(-2, -1)\n        weights = torch.softmax(scores, dim=-1)\n        return weights @ value\n\n# Each token learns which other tokens to attend to\n# Context shapes the meaning of the current token"
+- elementId: asahi-select-overlay
+  elementType: shape
+  bounds:
+  - 65
+  - 149
+  - 1470
+  - 792
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#20242B66'
+  viewBox:
+  - 1470
+  - 792
+  path: M 15,0 H 1455 Q 1470,0 1470,15 V 777 Q 1470,792 1455,792 H 15 Q 0,792 0,777 V 15 Q 0,0 15,0 Z
+- elementId: asahi-select-region
+  elementType: shape
+  bounds:
+  - 494
+  - 300
+  - 700
+  - 344
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B9208'
+  border:
+    width: 1
+    color: '#506B92CC'
+- elementId: asahi-select-code-inside
+  elementType: text
+  bounds:
+  - 520
+  - 326
+  - 650
+  - 280
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.65
+    wrap: true
+    text: "class MultiHeadAttention(nn.Module):\n    def __init__(self, hidden_size, heads):\n        super().__init__()\n        self.heads = heads\n        self.attention = nn.Linear(hidden_size, hidden_size)\n\n    def forward(self, query, key, value):\n        scores = query @ key.transpose(-2, -1)\n        weights = torch.softmax(scores, dim=-1)\n        return weights @ value"
+- elementId: asahi-select-size
+  elementType: shape
+  bounds:
+  - 1060
+  - 654
+  - 134
+  - 30
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 134
+  - 30
+  path: M 8,0 H 126 Q 134,0 134,8 V 22 Q 134,30 126,30 H 8 Q 0,30 0,22 V 8 Q 0,0 8,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: asahi-select-size-text
+  elementType: text
+  bounds:
+  - 1060
+  - 654
+  - 134
+  - 30
+  content:
+    fontSize: 11
+    color: '#3F4650'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 700 × 344
+    align:
+    - center
+    - middle
+- elementId: asahi-select-hint
+  elementType: shape
+  bounds:
+  - 568
+  - 176
+  - 464
+  - 48
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 464
+  - 48
+  path: M 16,0 H 448 Q 464,0 464,16 V 32 Q 464,48 448,48 H 16 Q 0,48 0,32 V 16 Q 0,0 16,0 Z
+  border: *id002
+  shadow: &id003
+    blur: 26
+    color: '#2631472E'
+    offset:
+    - 0
+    - 10
+- elementId: asahi-select-hint-icon
+  elementType: icon
+  bounds:
+  - 590
+  - 191
+  - 17
+  - 17
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-select-hint-text
+  elementType: text
+  bounds:
+  - 620
+  - 185
+  - 270
+  - 30
+  content:
+    fontSize: 13
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 拖拽框选要解释的内容
+    align:
+    - left
+    - middle
+- elementId: asahi-select-key
+  elementType: shape
+  bounds:
+  - 902
+  - 187
+  - 54
+  - 26
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 54
+  - 26
+  path: M 8,0 H 46 Q 54,0 54,8 V 18 Q 54,26 46,26 H 8 Q 0,26 0,18 V 8 Q 0,0 8,0 Z
+- elementId: asahi-select-key-text
+  elementType: text
+  bounds:
+  - 902
+  - 187
+  - 54
+  - 26
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Esc
+    align:
+    - center
+    - middle
+- elementId: asahi-select-cancel
+  elementType: text
+  bounds:
+  - 964
+  - 185
+  - 50
+  - 30
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 取消
+    align:
+    - left
+    - middle
+- elementId: asahi-select-caption
+  elementType: text
+  bounds:
+  - 82
+  - 906
+  - 650
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 遮罩只降低干扰，不改变截图内容；OCR 仍在本机完成。
+- elementId: asahi-corner-h-tl
+  elementType: shape
+  bounds:
+  - 491
+  - 297
+  - 24
+  - 3
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-corner-v-tl
+  elementType: shape
+  bounds:
+  - 491
+  - 297
+  - 3
+  - 24
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-corner-h-tr
+  elementType: shape
+  bounds:
+  - 1173
+  - 297
+  - 24
+  - 3
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-corner-v-tr
+  elementType: shape
+  bounds:
+  - 1195
+  - 297
+  - 3
+  - 24
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-corner-h-bl
+  elementType: shape
+  bounds:
+  - 491
+  - 645
+  - 24
+  - 3
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-corner-v-bl
+  elementType: shape
+  bounds:
+  - 491
+  - 623
+  - 3
+  - 24
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-corner-h-br
+  elementType: shape
+  bounds:
+  - 1173
+  - 645
+  - 24
+  - 3
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-corner-v-br
+  elementType: shape
+  bounds:
+  - 1195
+  - 623
+  - 3
+  - 24
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-selection-toolbar
+  elementType: shape
+  bounds:
+  - 1168
+  - 848
+  - 328
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 328
+  - 52
+  path: M 26.0,0 H 302.0 Q 328,0 328,26.0 V 26.0 Q 328,52 302.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border: *id002
+  shadow: *id003
+- elementId: asahi-selection-toolbar-logo-bg
+  elementType: shape
+  bounds:
+  - 1173
+  - 853
+  - 40
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 40
+  - 42
+  path: M 20.0,0 H 20.0 Q 40,0 40,20.0 V 22.0 Q 40,42 20.0,42 H 20.0 Q 0,42 0,22.0 V 20.0 Q 0,0 20.0,0 Z
+- elementId: asahi-selection-toolbar-logo
+  elementType: text
+  bounds:
+  - 1173
+  - 853
+  - 40
+  - 42
+  content:
+    fontSize: 14
+    color: '#506B92'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: asahi-selection-toolbar-primary
+  elementType: shape
+  bounds:
+  - 1218
+  - 853
+  - 142
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 142
+  - 42
+  path: M 21,0 H 121 Q 142,0 142,21 V 21 Q 142,42 121,42 H 21 Q 0,42 0,21 V 21 Q 0,0 21,0 Z
+- elementId: asahi-selection-toolbar-primary-icon
+  elementType: icon
+  bounds:
+  - 1232
+  - 866
+  - 15
+  - 15
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: asahi-selection-toolbar-primary-text
+  elementType: text
+  bounds:
+  - 1254
+  - 859
+  - 38
+  - 30
+  content:
+    fontSize: 12
+    color: '#20242B'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: asahi-selection-toolbar-key
+  elementType: shape
+  bounds:
+  - 1296
+  - 862
+  - 52
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 52
+  - 24
+  path: M 8,0 H 44 Q 52,0 52,8 V 16 Q 52,24 44,24 H 8 Q 0,24 0,16 V 8 Q 0,0 8,0 Z
+- elementId: asahi-selection-toolbar-key-text
+  elementType: text
+  bounds:
+  - 1296
+  - 862
+  - 52
+  - 24
+  content:
+    fontSize: 9
+    color: '#66707C'
+    fontFamily: *id001
+    lineHeight: 1.5
+    wrap: false
+    text: Alt Q
+    align:
+    - center
+    - middle
+- elementId: asahi-selection-toolbar-clipboard
+  elementType: icon
+  bounds:
+  - 1379
+  - 866
+  - 16
+  - 16
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-selection-toolbar-history
+  elementType: icon
+  bounds:
+  - 1419
+  - 866
+  - 16
+  - 16
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: asahi-selection-toolbar-more
+  elementType: icon
+  bounds:
+  - 1459
+  - 866
+  - 16
+  - 16
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#66707C'

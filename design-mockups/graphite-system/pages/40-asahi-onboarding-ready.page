@@ -1,0 +1,1272 @@
+pageType: content
+background:
+  type: solid
+  color: '#E7E7DF'
+elements:
+- elementId: kicker
+  elementType: text
+  bounds:
+  - 64
+  - 34
+  - 700
+  - 20
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: FLOATASK · ASAHI LIGHT THEME / 40
+    letterSpacing: 2
+- elementId: page-title
+  elementType: text
+  bounds:
+  - 64
+  - 65
+  - 700
+  - 42
+  content:
+    fontSize: 29
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 朝日 · 快捷键与完成
+    bold: true
+- elementId: page-subtitle
+  elementType: text
+  bounds:
+  - 64
+  - 110
+  - 1000
+  - 24
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 快捷键验证、本机 OCR 与可选上传清晰可读；完成页保持同一胶囊几何与唯一主动作
+- elementId: onboard-hotkey
+  elementType: shape
+  bounds:
+  - 64
+  - 184
+  - 680
+  - 704
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 680
+  - 704
+  path: M 16,0 H 664 Q 680,0 680,16 V 688 Q 680,704 664,704 H 16 Q 0,704 0,688 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+  shadow:
+    blur: 38
+    color: '#26314726'
+    offset:
+    - 0
+    - 14
+- elementId: onboard-hotkey-logo-bg
+  elementType: shape
+  bounds:
+  - 92
+  - 208
+  - 40
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 40
+  - 40
+  path: M 8,0 H 32 Q 40,0 40,8 V 32 Q 40,40 32,40 H 8 Q 0,40 0,32 V 8 Q 0,0 8,0 Z
+- elementId: onboard-hotkey-logo
+  elementType: text
+  bounds:
+  - 92
+  - 208
+  - 40
+  - 40
+  content:
+    fontSize: 18
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-hotkey-brand
+  elementType: text
+  bounds:
+  - 146
+  - 208
+  - 160
+  - 26
+  content:
+    fontSize: 18
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 FloatAsk
+    bold: true
+- elementId: onboard-hotkey-tagline
+  elementType: text
+  bounds:
+  - 146
+  - 235
+  - 180
+  - 18
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 框一下，就懂了
+- elementId: onboard-hotkey-close
+  elementType: icon
+  bounds:
+  - 698
+  - 218
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: onboard-hotkey-head-line
+  elementType: shape
+  bounds:
+  - 64
+  - 271
+  - 680
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-hotkey-steps-dot-1
+  elementType: shape
+  bounds:
+  - 94
+  - 294
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E6EBF1'
+- elementId: onboard-hotkey-steps-number-1
+  elementType: text
+  bounds:
+  - 94
+  - 294
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: ✓
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-hotkey-steps-label-1
+  elementType: text
+  bounds:
+  - 128
+  - 294
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 模型服务
+    align:
+    - left
+    - middle
+- elementId: onboard-hotkey-steps-line-1
+  elementType: shape
+  bounds:
+  - 233
+  - 306
+  - 26
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-hotkey-steps-dot-2
+  elementType: shape
+  bounds:
+  - 268
+  - 294
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: onboard-hotkey-steps-number-2
+  elementType: text
+  bounds:
+  - 268
+  - 294
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '2'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-hotkey-steps-label-2
+  elementType: text
+  bounds:
+  - 302
+  - 294
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 快捷键与隐私
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: onboard-hotkey-steps-line-2
+  elementType: shape
+  bounds:
+  - 407
+  - 306
+  - 26
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-hotkey-steps-dot-3
+  elementType: shape
+  bounds:
+  - 442
+  - 294
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E9EBE4'
+- elementId: onboard-hotkey-steps-number-3
+  elementType: text
+  bounds:
+  - 442
+  - 294
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '3'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-hotkey-steps-label-3
+  elementType: text
+  bounds:
+  - 476
+  - 294
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 开始使用
+    align:
+    - left
+    - middle
+- elementId: hotkey-title
+  elementType: text
+  bounds:
+  - 94
+  - 344
+  - 520
+  - 32
+  content:
+    fontSize: 22
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 试试你的框选快捷键
+    bold: true
+- elementId: hotkey-subtitle
+  elementType: text
+  bounds:
+  - 94
+  - 385
+  - 560
+  - 40
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 按下组合键即可录制；若系统占用，可修改后继续。
+- elementId: hotkey-recorder
+  elementType: shape
+  bounds:
+  - 94
+  - 445
+  - 620
+  - 96
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 620
+  - 96
+  path: M 12,0 H 608 Q 620,0 620,12 V 84 Q 620,96 608,96 H 12 Q 0,96 0,84 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#506B9299'
+- elementId: hotkey-key
+  elementType: text
+  bounds:
+  - 94
+  - 457
+  - 620
+  - 46
+  content:
+    fontSize: 25
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: Alt  +  Q
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: hotkey-state
+  elementType: text
+  bounds:
+  - 94
+  - 507
+  - 620
+  - 22
+  content:
+    fontSize: 11
+    color: '#3E7561'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: ✓ 系统注册成功
+    align:
+    - center
+    - middle
+- elementId: hotkey-reset
+  elementType: icon
+  bounds:
+  - 680
+  - 462
+  - 15
+  - 15
+  iconName: fas:rotate-right
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: hotkey-privacy-title
+  elementType: text
+  bounds:
+  - 94
+  - 575
+  - 400
+  - 26
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 识别与发送
+    bold: true
+- elementId: hotkey-privacy-box
+  elementType: shape
+  bounds:
+  - 94
+  - 616
+  - 620
+  - 124
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 620
+  - 124
+  path: M 12,0 H 608 Q 620,0 620,12 V 112 Q 620,124 608,124 H 12 Q 0,124 0,112 V 12 Q 0,0 12,0 Z
+  border:
+    width: 1
+    color: '#141B2E14'
+- elementId: hotkey-ocr-icon
+  elementType: icon
+  bounds:
+  - 114
+  - 637
+  - 17
+  - 17
+  iconName: fas:font
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: hotkey-ocr-title
+  elementType: text
+  bounds:
+  - 146
+  - 630
+  - 410
+  - 24
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 本机 OCR · 始终启用
+    bold: true
+- elementId: hotkey-ocr-copy
+  elementType: text
+  bounds:
+  - 146
+  - 659
+  - 500
+  - 38
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: 识别文字会随模型请求发送；原始截图默认只保留在本机。
+- elementId: hotkey-vision-track
+  elementType: shape
+  bounds:
+  - 652
+  - 635
+  - 42
+  - 24
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 42
+  - 24
+  path: M 12.0,0 H 30.0 Q 42,0 42,12.0 V 12.0 Q 42,24 30.0,24 H 12.0 Q 0,24 0,12.0 V 12.0 Q 0,0 12.0,0 Z
+- elementId: hotkey-vision-knob
+  elementType: shape
+  bounds:
+  - 654
+  - 637
+  - 20
+  - 20
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: hotkey-vision-label
+  elementType: text
+  bounds:
+  - 114
+  - 704
+  - 500
+  - 22
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 截图理解默认关闭，可在需要时开启
+- elementId: hotkey-footer-line
+  elementType: shape
+  bounds:
+  - 64
+  - 805
+  - 680
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: hotkey-back
+  elementType: text
+  bounds:
+  - 94
+  - 828
+  - 100
+  - 30
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: ← 上一步
+    align:
+    - left
+    - middle
+- elementId: hotkey-next
+  elementType: shape
+  bounds:
+  - 554
+  - 823
+  - 160
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 160
+  - 40
+  path: M 10,0 H 150 Q 160,0 160,10 V 30 Q 160,40 150,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: hotkey-next-label
+  elementType: text
+  bounds:
+  - 554
+  - 823
+  - 160
+  - 40
+  content:
+    fontSize: 12
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 下一步
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-ready
+  elementType: shape
+  bounds:
+  - 788
+  - 184
+  - 742
+  - 704
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#F4F3ED'
+  viewBox:
+  - 742
+  - 704
+  path: M 16,0 H 726 Q 742,0 742,16 V 688 Q 742,704 726,704 H 16 Q 0,704 0,688 V 16 Q 0,0 16,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+  shadow:
+    blur: 38
+    color: '#26314726'
+    offset:
+    - 0
+    - 14
+- elementId: onboard-ready-logo-bg
+  elementType: shape
+  bounds:
+  - 816
+  - 208
+  - 40
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 40
+  - 40
+  path: M 8,0 H 32 Q 40,0 40,8 V 32 Q 40,40 32,40 H 8 Q 0,40 0,32 V 8 Q 0,0 8,0 Z
+- elementId: onboard-ready-logo
+  elementType: text
+  bounds:
+  - 816
+  - 208
+  - 40
+  - 40
+  content:
+    fontSize: 18
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-ready-brand
+  elementType: text
+  bounds:
+  - 870
+  - 208
+  - 160
+  - 26
+  content:
+    fontSize: 18
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮问 FloatAsk
+    bold: true
+- elementId: onboard-ready-tagline
+  elementType: text
+  bounds:
+  - 870
+  - 235
+  - 180
+  - 18
+  content:
+    fontSize: 10
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 框一下，就懂了
+- elementId: onboard-ready-close
+  elementType: icon
+  bounds:
+  - 1484
+  - 218
+  - 15
+  - 15
+  iconName: fas:xmark
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: onboard-ready-head-line
+  elementType: shape
+  bounds:
+  - 788
+  - 271
+  - 742
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-ready-steps-dot-1
+  elementType: shape
+  bounds:
+  - 818
+  - 294
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E6EBF1'
+- elementId: onboard-ready-steps-number-1
+  elementType: text
+  bounds:
+  - 818
+  - 294
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: ✓
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-ready-steps-label-1
+  elementType: text
+  bounds:
+  - 852
+  - 294
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 模型服务
+    align:
+    - left
+    - middle
+- elementId: onboard-ready-steps-line-1
+  elementType: shape
+  bounds:
+  - 957
+  - 306
+  - 26
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-ready-steps-dot-2
+  elementType: shape
+  bounds:
+  - 992
+  - 294
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#E6EBF1'
+- elementId: onboard-ready-steps-number-2
+  elementType: text
+  bounds:
+  - 992
+  - 294
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: ✓
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-ready-steps-label-2
+  elementType: text
+  bounds:
+  - 1026
+  - 294
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 快捷键与隐私
+    align:
+    - left
+    - middle
+- elementId: onboard-ready-steps-line-2
+  elementType: shape
+  bounds:
+  - 1131
+  - 306
+  - 26
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: onboard-ready-steps-dot-3
+  elementType: shape
+  bounds:
+  - 1166
+  - 294
+  - 24
+  - 24
+  shapeName: ellipse
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: onboard-ready-steps-number-3
+  elementType: text
+  bounds:
+  - 1166
+  - 294
+  - 24
+  - 24
+  content:
+    fontSize: 10
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: '3'
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: onboard-ready-steps-label-3
+  elementType: text
+  bounds:
+  - 1200
+  - 294
+  - 120
+  - 24
+  content:
+    fontSize: 11
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 开始使用
+    bold: true
+    align:
+    - left
+    - middle
+- elementId: ready-hero
+  elementType: shape
+  bounds:
+  - 818
+  - 349
+  - 682
+  - 250
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 682
+  - 250
+  path: M 12,0 H 670 Q 682,0 682,12 V 238 Q 682,250 670,250 H 12 Q 0,250 0,238 V 12 Q 0,0 12,0 Z
+- elementId: ready-logo-bg
+  elementType: shape
+  bounds:
+  - 1125.0
+  - 376
+  - 68
+  - 68
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 68
+  - 68
+  path: M 16,0 H 52 Q 68,0 68,16 V 52 Q 68,68 52,68 H 16 Q 0,68 0,52 V 16 Q 0,0 16,0 Z
+- elementId: ready-logo
+  elementType: text
+  bounds:
+  - 1125.0
+  - 376
+  - 68
+  - 68
+  content:
+    fontSize: 29
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: ready-title
+  elementType: text
+  bounds:
+  - 818
+  - 462
+  - 682
+  - 34
+  content:
+    fontSize: 24
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 准备就绪
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: ready-copy
+  elementType: text
+  bounds:
+  - 858
+  - 504
+  - 602
+  - 48
+  content:
+    fontSize: 13
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: true
+    text: 在任意页面按下 Alt + Q，框选你想理解的内容。
+    align:
+    - center
+    - top
+- elementId: ready-key
+  elementType: shape
+  bounds:
+  - 1079.0
+  - 558
+  - 160
+  - 30
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 160
+  - 30
+  path: M 8,0 H 152 Q 160,0 160,8 V 22 Q 160,30 152,30 H 8 Q 0,30 0,22 V 8 Q 0,0 8,0 Z
+- elementId: ready-key-text
+  elementType: text
+  bounds:
+  - 1079.0
+  - 558
+  - 160
+  - 30
+  content:
+    fontSize: 12
+    color: '#3F4650'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: Alt  +  Q
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: ready-toolbar-label
+  elementType: text
+  bounds:
+  - 818
+  - 632
+  - 360
+  - 22
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 悬浮工具栏已显示，可拖到屏幕边缘吸附
+- elementId: ready-toolbar
+  elementType: shape
+  bounds:
+  - 818
+  - 670
+  - 360
+  - 52
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#FAF9F4'
+  viewBox:
+  - 360
+  - 52
+  path: M 26.0,0 H 334.0 Q 360,0 360,26.0 V 26.0 Q 360,52 334.0,52 H 26.0 Q 0,52 0,26.0 V 26.0 Q 0,0 26.0,0 Z
+  border:
+    width: 1
+    color: '#141B2E1F'
+- elementId: ready-brand
+  elementType: shape
+  bounds:
+  - 823
+  - 675
+  - 66
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E9EBE4'
+  viewBox:
+  - 66
+  - 42
+  path: M 21.0,0 H 45.0 Q 66,0 66,21.0 V 21.0 Q 66,42 45.0,42 H 21.0 Q 0,42 0,21.0 V 21.0 Q 0,0 21.0,0 Z
+- elementId: ready-brand-text
+  elementType: text
+  bounds:
+  - 823
+  - 675
+  - 66
+  - 42
+  content:
+    fontSize: 14
+    color: '#20242B'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 浮
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: ready-capture
+  elementType: shape
+  bounds:
+  - 897
+  - 675
+  - 126
+  - 42
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#E6EBF1'
+  viewBox:
+  - 126
+  - 42
+  path: M 21.0,0 H 105.0 Q 126,0 126,21.0 V 21.0 Q 126,42 105.0,42 H 21.0 Q 0,42 0,21.0 V 21.0 Q 0,0 21.0,0 Z
+- elementId: ready-capture-icon
+  elementType: icon
+  bounds:
+  - 913
+  - 688
+  - 16
+  - 16
+  iconName: fas:crop-simple
+  fill:
+    type: solid
+    color: '#506B92'
+- elementId: ready-capture-text
+  elementType: text
+  bounds:
+  - 939
+  - 675
+  - 72
+  - 42
+  content:
+    fontSize: 12
+    color: '#506B92'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 框选
+    bold: true
+    align:
+    - center
+    - middle
+- elementId: ready-clipboard
+  elementType: icon
+  bounds:
+  - 1038
+  - 688
+  - 16
+  - 16
+  iconName: far:clipboard
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: ready-history
+  elementType: icon
+  bounds:
+  - 1083
+  - 688
+  - 16
+  - 16
+  iconName: far:clock
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: ready-more
+  elementType: icon
+  bounds:
+  - 1128
+  - 688
+  - 16
+  - 16
+  iconName: fas:ellipsis
+  fill:
+    type: solid
+    color: '#66707C'
+- elementId: ready-footer-line
+  elementType: shape
+  bounds:
+  - 788
+  - 805
+  - 742
+  - 1
+  shapeName: rect
+  fill:
+    type: solid
+    color: '#D6D9D0'
+- elementId: ready-back
+  elementType: text
+  bounds:
+  - 818
+  - 828
+  - 100
+  - 30
+  content:
+    fontSize: 12
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: ← 上一步
+    align:
+    - left
+    - middle
+- elementId: ready-settings
+  elementType: text
+  bounds:
+  - 948
+  - 828
+  - 220
+  - 30
+  content:
+    fontSize: 11
+    color: '#66707C'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 打开完整设置
+    align:
+    - left
+    - middle
+- elementId: ready-start
+  elementType: shape
+  bounds:
+  - 1312
+  - 823
+  - 188
+  - 40
+  shapeName: custom
+  fill:
+    type: solid
+    color: '#506B92'
+  viewBox:
+  - 188
+  - 40
+  path: M 10,0 H 178 Q 188,0 188,10 V 30 Q 188,40 178,40 H 10 Q 0,40 0,30 V 10 Q 0,0 10,0 Z
+- elementId: ready-start-label
+  elementType: text
+  bounds:
+  - 1312
+  - 823
+  - 188
+  - 40
+  content:
+    fontSize: 12
+    color: '#F5F7FA'
+    fontFamily:
+      latin: Liter
+      ea: MiSans
+    lineHeight: 1.5
+    wrap: false
+    text: 开始第一次框选
+    bold: true
+    align:
+    - center
+    - middle

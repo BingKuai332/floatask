@@ -18,6 +18,11 @@ const els = {
   previewWrap: document.getElementById('previewWrap'),
   previewImg: document.getElementById('previewImg'),
   ocrText: document.getElementById('ocrText'),
+  ocrEditArea: document.getElementById('ocrEditArea'),
+  ocrEditBtn: document.getElementById('ocrEditBtn'),
+  ocrRevertBtn: document.getElementById('ocrRevertBtn'),
+  ocrCorrectedBadge: document.getElementById('ocrCorrectedBadge'),
+  visionAttachmentNote: document.getElementById('visionAttachmentNote'),
   copyOcrBtn: document.getElementById('copyOcrBtn'),
   windowInfo: document.getElementById('windowInfo'),
   pinBtn: document.getElementById('pinBtn'),
@@ -34,6 +39,9 @@ const els = {
   sendBtn: document.getElementById('sendBtn'),
   visionHint: document.getElementById('visionHint'),
   toast: document.getElementById('toast'),
+  followBtn: document.getElementById('followBtn'),
+  liveRegion: document.getElementById('liveRegion'),
+  expandBtn: document.getElementById('expandBtn'),
   lightbox: document.getElementById('lightbox'),
   lightboxImg: document.getElementById('lightboxImg')
 };
@@ -47,10 +55,14 @@ function applyReadingFont(font) {
   const root = document.documentElement;
   root.style.setProperty('--reading-size', `${size}px`);
   root.style.setProperty('--reading-line', String(line));
+  root.dataset.density = line < 1.6 ? 'compact' : (line > 1.95 ? 'relaxed' : 'standard');
 }
 
 const state = {
   selectionText: '',
+  ocrRaw: '',
+  ocrCorrected: null,
+  ocrEditing: false,
   windowInfo: {},
   preview: '',
   shotCount: 1,
@@ -82,7 +94,22 @@ function truncate(text, length = 56) {
   return value.length > length ? value.slice(0, length - 1) + '…' : value;
 }
 
+// Announce completion, errors and recovery to screen readers. The same
+// message never repeats within the throttle window, and language refresh of
+// an unchanged status kind stays silent.
+let lastAnnounce = { text: '', at: 0 };
+function announceStatus(kind) {
+  const key = { done: 'result.announceDone', error: 'result.announceError', stopped: 'result.announceStopped' }[kind];
+  if (!key) return;
+  const text = tt(key);
+  const now = Date.now();
+  if (text === lastAnnounce.text && now - lastAnnounce.at < 1500) return;
+  lastAnnounce = { text, at: now };
+  els.liveRegion.textContent = text;
+}
+
 function setStatus(kind, text) {
+  if (state.statusKind !== kind) announceStatus(kind);
   els.statusPill.className = `status-pill ${kind}`;
   els.statusText.textContent = text;
   state.statusKind = kind;
@@ -98,12 +125,52 @@ function toast(message, error = false) {
   }, 2800);
 }
 
-function scrollToBottom(force = false) {
+// Stream follow: only chase the tail while the reader is at the bottom.
+// Scrolling up pauses following and surfaces the "back to bottom" action.
+const follow = { pinned: true };
+
+function atBottom() {
   const distance = els.messages.scrollHeight - els.messages.scrollTop - els.messages.clientHeight;
-  if (force || distance < 110) {
+  return distance < 24;
+}
+
+function updateFollowButton() {
+  els.followBtn.hidden = follow.pinned;
+}
+
+function scrollToBottomIfPinned() {
+  // A re-created answer card must not yank the viewport while the user is
+  // reading up; the follow button keeps the resume affordance instead.
+  if (follow.pinned) scrollToBottom(true);
+  else updateFollowButton();
+}
+
+function scrollToBottom(force = false) {
+  if (force) follow.pinned = true;
+  // The pinned flag can be stale for one event-loop turn after the user
+  // scrolls up (the scroll event has not been delivered yet); only follow
+  // when the viewport is genuinely at the bottom.
+  if (force || (follow.pinned && atBottom())) {
     els.messages.scrollTop = els.messages.scrollHeight;
   }
+  updateFollowButton();
 }
+
+els.messages.addEventListener('scroll', () => {
+  if (atBottom() && !follow.pinned) {
+    follow.pinned = true;
+    updateFollowButton();
+  } else if (!atBottom() && follow.pinned) {
+    follow.pinned = false;
+    updateFollowButton();
+  }
+});
+
+els.followBtn.addEventListener('click', () => {
+  follow.pinned = true;
+  els.messages.scrollTop = els.messages.scrollHeight;
+  updateFollowButton();
+});
 
 function autoResize() {
   els.questionInput.style.height = 'auto';
@@ -263,7 +330,7 @@ function createAssistant() {
   };
   state.current = current;
   els.messages.appendChild(message);
-  scrollToBottom(true);
+  scrollToBottomIfPinned();
   return current;
 }
 
@@ -417,6 +484,16 @@ function showManual(message) {
 
 function reset(payload) {
   state.selectionText = payload?.selectionText || '';
+  state.ocrRaw = payload?.selectionText || '';
+  state.ocrCorrected = null;
+  state.ocrEditing = false;
+  els.ocrCorrectedBadge.hidden = true;
+  els.ocrRevertBtn.hidden = true;
+  els.ocrEditArea.hidden = true;
+  els.ocrText.style.display = '';
+  els.ocrEditBtn.textContent = tt('result.ocrEdit');
+  els.ocrEditBtn.disabled = false;
+  els.ocrEditBtn.title = '';
   state.windowInfo = payload?.windowInfo || {};
   state.shotCount = Number(payload?.shotCount) || 1;
   state.vision = Boolean(payload?.vision);
@@ -525,7 +602,7 @@ function handleStart(mode) {
   current.message.classList.add('streaming');
   current.time.textContent = tt('result.answering');
   state.streaming = true;
-  scrollToBottom(true);
+  scrollToBottomIfPinned();
 }
 
 function handleDelta(text) {
@@ -556,7 +633,7 @@ function handleDone(payload) {
   state.current.time.dataset.i18n = 'result.justNow';
   addSourceCards(state.current.sources, payload?.sources || state.pendingSources || []);
   addActions(state.current.actions, text);
-  scrollToBottom(true);
+  scrollToBottomIfPinned();
   state.current = null;
   state.pendingSources = [];
   setTimeout(() => els.questionInput.focus(), 80);
@@ -685,7 +762,80 @@ els.pinBtn.addEventListener('click', () => {
 });
 
 els.closeBtn.addEventListener('click', () => api.closeResult());
-els.newSelectBtn.addEventListener('click', () => api.startSelection());
+els.expandBtn.addEventListener('click', () => api.toggleResultExpand());
+function syncResultMode(expanded) {
+  document.body.dataset.mode = expanded ? 'expanded' : 'compact';
+  els.expandBtn.title = tt(expanded ? 'result.collapse' : 'result.expand');
+}
+api.onResultMode(payload => syncResultMode(Boolean(payload && payload.expanded)));
+api.getSettings().then(settings => syncResultMode(Boolean(settings && settings.resultExpanded))).catch(() => {});
+els.newSelectBtn.addEventListener('click', () => {
+  api.startSelection();
+});
+// The main-process guard asks this window before any selection entry
+// (this button, the global hotkey, tray or bubble) discards a pending OCR
+// correction, so every entry shares one confirmation.
+api.onOcrGuard(() => {
+  api.resolveOcrGuard(window.confirm(tt('result.ocrReselectConfirm')));
+});
+
+// OCR correction: edit the recognized text; corrections apply to the next
+// request only and never touch the original screenshot or the raw OCR copy.
+function setOcrCorrected(raw, corrected) {
+  state.ocrRaw = raw;
+  state.ocrCorrected = corrected;
+  setOcr(corrected || raw || '', '');
+  els.ocrCorrectedBadge.hidden = !corrected;
+  els.ocrRevertBtn.hidden = !corrected;
+  updateContext();
+}
+
+function setOcrEditing(editing) {
+  state.ocrEditing = editing;
+  els.ocrEditArea.hidden = !editing;
+  els.ocrText.style.display = editing ? 'none' : '';
+  els.ocrEditBtn.textContent = tt(editing ? 'result.ocrEditing' : 'result.ocrEdit');
+  if (editing) {
+    els.ocrEditArea.value = state.ocrCorrected || els.ocrText.textContent;
+    els.ocrEditArea.focus();
+  }
+}
+
+els.ocrEditBtn.addEventListener('click', () => {
+  if (state.ocrEditing) {
+    const value = els.ocrEditArea.value.trim();
+    setOcrEditing(false);
+    if (value) api.correctOcr(value);
+  } else {
+    setOcrEditing(true);
+  }
+});
+
+els.ocrRevertBtn.addEventListener('click', () => {
+  setOcrEditing(false);
+  api.correctOcr('');
+});
+
+async function refreshSessionMeta() {
+  try {
+    const meta = await api.getResultState();
+    if (!meta) return;
+    state.ocrRaw = meta.ocrRaw || state.ocrRaw || '';
+    state.ocrCorrected = meta.ocrCorrected || null;
+    els.ocrCorrectedBadge.hidden = !state.ocrCorrected;
+    els.ocrRevertBtn.hidden = !state.ocrCorrected;
+    const attachment = meta.visionAttachment;
+    els.ocrEditBtn.disabled = state.shotCount > 1;
+    els.ocrEditBtn.title = state.shotCount > 1 ? tt('result.ocrEditMultiHint') : '';
+    if (attachment && attachment.width) {
+      const kb = Math.max(1, Math.round(attachment.bytes / 1024));
+      els.visionAttachmentNote.hidden = false;
+      els.visionAttachmentNote.textContent = `${attachment.width}×${attachment.height} · ${kb} KB · ${tt(attachment.enabled ? 'result.visionSent' : 'result.visionHeld')}`;
+    } else {
+      els.visionAttachmentNote.hidden = true;
+    }
+  } catch { /* state unavailable */ }
+}
 document.getElementById('historyBtn').addEventListener('click', () => api.openHistory());
 
 els.settingsBtn.addEventListener('click', () => api.openSettings());
@@ -740,10 +890,13 @@ document.addEventListener('click', (event) => {
 });
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && els.lightbox.classList.contains('open')) {
+  if (event.key !== 'Escape') return;
+  if (els.lightbox.classList.contains('open')) {
     els.lightbox.classList.remove('open');
     els.lightboxImg.removeAttribute('src');
+    return;
   }
+  api.closeResult();
 });
 
 function ensureAddShotButton() {
@@ -760,7 +913,7 @@ function ensureAddShotButton() {
 }
 
 api.onFontUpdated((font) => applyReadingFont(font));
-api.onResultInit((payload) => { ensureAddShotButton(); reset(payload); });
+api.onResultInit((payload) => { ensureAddShotButton(); reset(payload); refreshSessionMeta(); });
 
 api.onResultEvent((payload) => {
   if (!payload || !payload.type) return;
@@ -779,12 +932,16 @@ api.onResultEvent((payload) => {
         els.contextStrip.classList.add('open');
       }
       break;
+    case 'ocr-corrected':
+      setOcrCorrected(payload.raw, payload.corrected);
+      refreshSessionMeta();
+      break;
     case 'shot':
       state.shotCount = Number(payload.count) || state.shotCount;
       setPreview(payload.preview || state.preview);
       if (payload.text !== undefined) setOcr(payload.text, '');
       updateContext();
-      toast(`已添加第 ${state.shotCount} 张截图`);
+      toast(tt('result.shotAdded',{n:state.shotCount}));
       break;
     case 'context':
       state.windowInfo = payload.windowInfo || {};
@@ -853,6 +1010,14 @@ api.onResultEvent((payload) => {
       state.streaming = false;
       clearError();
       setOcr(payload.text || '', '');
+      state.ocrRaw = payload.text || '';
+      state.ocrCorrected = null;
+      state.ocrEditing = false;
+      els.ocrCorrectedBadge.hidden = true;
+      els.ocrRevertBtn.hidden = true;
+      els.ocrEditArea.hidden = true;
+      els.ocrText.style.display = '';
+      els.ocrEditBtn.textContent = tt('result.ocrEdit');
       state.windowInfo = { title: tt('result.manualInputTitle'), process: '' };
       updateContext();
       showLoading(tt('result.organizing'));

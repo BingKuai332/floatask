@@ -2,12 +2,31 @@
 
 const {
   app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, nativeImage,
-  screen, shell, clipboard, Notification, protocol, dialog
+  screen, shell, clipboard, Notification, protocol, dialog, nativeTheme
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 const store = require('./store');
+const { buildDiagnostics } = require('./diagnostics');
+const { createSelectionGuard } = require('./selection-guard');
+const designConstants = require('./design-constants');
+const {
+  CAPSULE_EXPANDED,
+  HALF_CAPSULE_VERTICAL,
+  HALF_CAPSULE_HORIZONTAL,
+  clampToWorkArea,
+  snapToolbar,
+  edgeGapPosition
+} = require('./window-geometry');
+
+const BUBBLE_PADDING = 10;
+const CAPSULE = { width: CAPSULE_EXPANDED[0], height: CAPSULE_EXPANDED[1] };
+const BUBBLE_WINDOW_EXPANDED = [CAPSULE.width + BUBBLE_PADDING * 2, CAPSULE.height + BUBBLE_PADDING * 2];
+let bubbleMode = 'expanded';
+let bubbleEdge = null;
+let preMenuBounds = null;
 const { PRESETS } = require('../shared/presets');
 const { t } = require('./i18n');
 const { normalizeLocale } = require('../shared/i18n');
@@ -118,7 +137,7 @@ function secureWindow(win) {
 function openExternal(url) {
   try {
     const parsed = new URL(String(url));
-    if (!['http:', 'https:'].includes(parsed.protocol)) return false;
+    if (parsed.protocol !== 'https:') return false;
     shell.openExternal(parsed.href).catch(() => {});
     return true;
   } catch {
@@ -231,7 +250,7 @@ function defaultBubblePosition() {
   const display = screen.getPrimaryDisplay();
   const area = display.workArea;
   return {
-    x: area.x + area.width - 238 - 16,
+    x: area.x + area.width - BUBBLE_WINDOW_EXPANDED[0] - 16,
     y: area.y + Math.round(area.height * 0.52)
   };
 }
@@ -239,11 +258,69 @@ function defaultBubblePosition() {
 function clampBubblePosition(x, y) {
   const displays = screen.getAllDisplays();
   const display = screen.getDisplayNearestPoint({ x, y }) || displays[0];
+  const bounds = clampToWorkArea(
+    { x, y, width: BUBBLE_WINDOW_EXPANDED[0], height: BUBBLE_WINDOW_EXPANDED[1] },
+    display.workArea
+  );
+  return { x: bounds.x, y: bounds.y };
+}
+
+function capsuleBounds(winX, winY) {
+  return { x: winX + BUBBLE_PADDING, y: winY + BUBBLE_PADDING, width: CAPSULE.width, height: CAPSULE.height };
+}
+
+function sendBubbleMode() {
+  if (bubbleWin && !bubbleWin.isDestroyed()) {
+    bubbleWin.webContents.send('bubble:mode', { mode: bubbleMode, edge: bubbleEdge });
+  }
+}
+
+/** Resize/position the bubble window for the given capsule mode. */
+function setBubbleMode(mode, edge) {
+  bubbleMode = mode;
+  bubbleEdge = edge || null;
+  if (!bubbleWin || bubbleWin.isDestroyed()) return;
+  const bounds = bubbleWin.getBounds();
+  const cap = capsuleBounds(bounds.x, bounds.y);
+  const display = screen.getDisplayNearestPoint({ x: cap.x + cap.width / 2, y: cap.y + cap.height / 2 });
   const area = display.workArea;
-  return {
-    x: Math.round(Math.min(Math.max(x, area.x + 4), area.x + area.width - 238 - 4)),
-    y: Math.round(Math.min(Math.max(y, area.y + 4), area.y + area.height - 68 - 4))
-  };
+  if (mode === 'expanded') {
+    const next = bubbleEdge ? edgeGapPosition(bubbleEdge, CAPSULE, cap, area) : cap;
+    bubbleWin.setBounds({
+      x: next.x - BUBBLE_PADDING,
+      y: next.y - BUBBLE_PADDING,
+      width: BUBBLE_WINDOW_EXPANDED[0],
+      height: BUBBLE_WINDOW_EXPANDED[1]
+    });
+  } else {
+    const vertical = mode === 'left' || mode === 'right';
+    const size = vertical ? { width: HALF_CAPSULE_VERTICAL[0], height: HALF_CAPSULE_VERTICAL[1] }
+      : { width: HALF_CAPSULE_HORIZONTAL[0], height: HALF_CAPSULE_HORIZONTAL[1] };
+    const anchors = {
+      left: { x: area.x, y: cap.y },
+      right: { x: area.x + area.width - size.width, y: cap.y },
+      top: { x: cap.x, y: area.y },
+      bottom: { x: cap.x, y: area.y + area.height - size.height }
+    };
+    const docked = clampToWorkArea({ ...anchors[mode], ...size }, area);
+    bubbleWin.setBounds({
+      x: docked.x - BUBBLE_PADDING,
+      y: docked.y - BUBBLE_PADDING,
+      width: docked.width + BUBBLE_PADDING * 2,
+      height: docked.height + BUBBLE_PADDING * 2
+    });
+  }
+  sendBubbleMode();
+}
+
+/** After a drag ends, snap to an edge half-capsule or stay floating expanded. */
+function finalizeBubbleDock(winX, winY) {
+  if (!bubbleWin || bubbleWin.isDestroyed()) return;
+  const cap = capsuleBounds(winX, winY);
+  const display = screen.getDisplayNearestPoint({ x: cap.x + cap.width / 2, y: cap.y + cap.height / 2 });
+  const { edge } = snapToolbar(cap, CAPSULE, display.workArea);
+  if (edge) setBubbleMode(edge, edge);
+  else setBubbleMode('expanded', null);
 }
 
 async function ensureBubble() {
@@ -252,11 +329,14 @@ async function ensureBubble() {
 
   bubbleCreating = (async () => {
   bubbleWin = new BrowserWindow({
-    width: 238,
-    height: 68,
+    width: BUBBLE_WINDOW_EXPANDED[0],
+    height: BUBBLE_WINDOW_EXPANDED[1],
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: false,
     movable: true,
     minimizable: false,
@@ -295,13 +375,18 @@ async function ensureBubble() {
       if (!bubbleWin || bubbleWin.isDestroyed()) return;
       const [x, y] = bubbleWin.getPosition();
       store.setBubblePosition(x, y);
+      finalizeBubbleDock(x, y);
     }, 400);
   });
 
   bubbleWin.on('closed', () => { bubbleWin = null; });
 
   await bubbleWin.loadFile(path.join(RENDERER, 'bubble.html'));
+  sendBubbleMode();
   bubbleWin.showInactive();
+  // A fresh renderer resolves its own theme via getSettings + matchMedia;
+  // push the authoritative theme too so it never sits on the wrong default.
+  broadcastTheme();
   return bubbleWin;
   })();
 
@@ -315,10 +400,12 @@ async function ensureBubble() {
 function refreshBubble() {
   const config = store.getConfig();
   if (isQuitting || !config.showBubble) {
+    restoreBubbleMenuBounds();
     if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
     return;
   }
   if ((overlayWin && !overlayWin.isDestroyed()) || (resultWin && !resultWin.isDestroyed() && resultWin.isVisible())) {
+    restoreBubbleMenuBounds();
     if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
     return;
   }
@@ -326,6 +413,11 @@ function refreshBubble() {
     if (!win || win.isDestroyed()) return;
     if (!win.isVisible()) win.showInactive();
   }).catch((err) => log('bubble error', err.message));
+}
+
+function restoreBubbleMenuBounds() {
+  if (preMenuBounds && bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.setBounds(preMenuBounds);
+  preMenuBounds = null;
 }
 
 function toggleBubble(show) {
@@ -349,12 +441,52 @@ function closeOverlay() {
   }
 }
 
+// Every selection entry (global hotkey, tray, tray icon, launcher bubble,
+// result-window button) funnels through startSelection, so guarding here
+// covers them all. Translation selections leave the result session alone.
+const selectionGuard = createSelectionGuard({
+  hasPendingCorrection: () => Boolean(session?.ocrCorrectedText),
+  hasResultWindow: () => Boolean(resultWin && !resultWin.isDestroyed()),
+  showResultWindow: () => {
+    try {
+      resultWin.show();
+      resultWin.focus();
+      resultWin.setAlwaysOnTop(pinned, 'screen-saver');
+    } catch { /* the window went away mid-guard */ }
+  },
+  askRenderer: () => new Promise((resolve) => {
+    const onReply = (_event, ok) => {
+      clearTimeout(timer);
+      ipcMain.removeListener('result:ocr-guard-response', onReply);
+      resolve(Boolean(ok));
+    };
+    const timer = setTimeout(() => {
+      ipcMain.removeListener('result:ocr-guard-response', onReply);
+      resolve(false);
+    }, 20000);
+    ipcMain.on('result:ocr-guard-response', onReply);
+    resultWin.webContents.send('result:ocr-guard');
+  }),
+  askNative: async () => {
+    const { response } = await dialog.showMessageBox({
+      type: 'warning',
+      message: t('result.ocrReselectConfirm'),
+      buttons: [t('common.continue'), t('common.cancel')],
+      defaultId: 1,
+      cancelId: 1,
+      noLink: true
+    });
+    return response === 0;
+  }
+});
+
 async function startSelection(mode = 'single') {
   if (isQuitting) return;
   if (overlayWin && !overlayWin.isDestroyed()) {
     overlayWin.focus();
     return;
   }
+  if (mode !== 'translate' && !(await selectionGuard.confirm())) return;
   overlayMode = mode;
   if (mode === 'single' && resultWin && !resultWin.isDestroyed() && resultWin.isVisible()) hideResult();
   if (mode === 'translate' && translateWin && !translateWin.isDestroyed()) translateWin.hide();
@@ -371,6 +503,9 @@ async function startSelection(mode = 'single') {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: false,
     movable: false,
     minimizable: false,
@@ -524,6 +659,8 @@ async function handleSelection(display, rect) {
   session = {
     id,
     selectionText: '',
+    ocrRawText: '',
+    ocrCorrectedText: null,
     windowInfo: {},
     imageDataUrl: capture?.visionDataUrl || null,
     previewDataUrl: capture?.previewDataUrl || '',
@@ -606,6 +743,8 @@ async function handleSelection(display, rect) {
   if (!session || session.id !== id) return;
 
   session.selectionText = ocr.text;
+  session.ocrRawText = ocr.text;
+  session.ocrCorrectedText = null;
   session.shots = [{
     text: ocr.text,
     preview: session.previewDataUrl,
@@ -763,6 +902,9 @@ async function ensureTranslateWindow() {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     movable: true,
     minimizable: false,
@@ -793,6 +935,7 @@ async function ensureTranslateWindow() {
     refreshBubble();
   });
   await translateWin.loadFile(path.join(RENDERER, 'translate.html'));
+  broadcastTheme();
   return translateWin;
 }
 
@@ -940,17 +1083,78 @@ async function searchTranslation(rawText) {
 /* Result window                                                       */
 /* ------------------------------------------------------------------ */
 
+const RESULT_COMPACT_SIZE = designConstants.ANSWER_COMPACT_SIZE;
+const RESULT_EXPANDED_SIZE = designConstants.ANSWER_EXPANDED_SIZE;
+
+function resolveResultSize(mode) {
+  const custom = store.getConfig().resultSize?.[mode];
+  if (Array.isArray(custom) && custom.length === 2) return custom;
+  return mode === 'expanded' ? RESULT_EXPANDED_SIZE : RESULT_COMPACT_SIZE;
+}
+
+function resultSizeMode() {
+  return store.getConfig().resultExpanded ? 'expanded' : 'compact';
+}
+
+function clampResultSize([width, height], display) {
+  const area = (display || screen.getPrimaryDisplay()).workArea;
+  return [Math.min(width, area.width - 24), Math.min(height, area.height - 24)];
+}
+
+// Distinguishes app-driven sizing from the user dragging the window edge,
+// so manual sizes are remembered without catching our own setBounds calls.
+// Size changes are polled: the 'resize' event is not reliable enough on
+// transparent Windows windows to build persistence on.
+let resultProgrammaticResize = 0;
+let resultSizePollTimer = null;
+let resultSizePollWindow = null;
+let lastResultSize = null;
+function runResultProgrammatic(action) {
+  resultProgrammaticResize++;
+  try {
+    action();
+  } finally {
+    setTimeout(() => { resultProgrammaticResize = Math.max(0, resultProgrammaticResize - 1); }, 60);
+  }
+}
+function watchUserResultResize() {
+  if (!resultWin || resultWin.isDestroyed()) return;
+  if (resultSizePollWindow === resultWin) return;
+  resultSizePollWindow = resultWin;
+  clearInterval(resultSizePollTimer);
+  lastResultSize = resultWin.getSize().join('x');
+  resultSizePollTimer = setInterval(() => {
+    if (isQuitting || !resultWin || resultWin.isDestroyed()) return;
+    const currentSize = resultWin.getSize();
+    if (resultProgrammaticResize > 0 || !resultWin.isVisible()) {
+      lastResultSize = currentSize.join('x');
+      return;
+    }
+    const current = currentSize.join('x');
+    if (current === lastResultSize) return;
+    lastResultSize = current;
+    const previous = store.getConfig().resultSize || {};
+    store.save({ resultSize: { ...previous, [resultSizeMode()]: [widthOf(currentSize), heightOf(currentSize)] } });
+  }, 700);
+}
+function widthOf(size) { return size[0]; }
+function heightOf(size) { return size[1]; }
+
 async function ensureResultWindow() {
   if (resultWin && !resultWin.isDestroyed()) return resultWin;
 
+  const [width, height] = resolveResultSize(store.getConfig().resultExpanded ? 'expanded' : 'compact');
   resultWin = new BrowserWindow({
-    width: 460,
-    height: 650,
-    minWidth: 380,
-    minHeight: 440,
+    width,
+    height,
+    minWidth: 400,
+    minHeight: 320,
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     movable: true,
     minimizable: false,
@@ -980,16 +1184,24 @@ async function ensureResultWindow() {
     event.preventDefault();
     hideResult();
   });
-  resultWin.on('closed', () => { resultWin = null; });
+  resultWin.on('closed', () => {
+    resultWin = null;
+    resultSizePollWindow = null;
+    clearInterval(resultSizePollTimer);
+    resultSizePollTimer = null;
+  });
+  watchUserResultResize();
 
   await resultWin.loadFile(path.join(RENDERER, 'result.html'));
+  broadcastTheme();
   return resultWin;
 }
 
 function positionResult(screenRect, display) {
   const area = display.workArea;
-  const width = Math.min(460, area.width - 24);
-  const height = Math.min(650, area.height - 24);
+  const [modeWidth, modeHeight] = clampResultSize(resolveResultSize(store.getConfig().resultExpanded ? 'expanded' : 'compact'), display);
+  const width = Math.min(modeWidth, area.width - 24);
+  const height = Math.min(modeHeight, area.height - 24);
   let x = screenRect.x + screenRect.width + 14;
   if (x + width > area.x + area.width - 8) x = screenRect.x - width - 14;
   if (x < area.x + 8) x = area.x + Math.round((area.width - width) / 2);
@@ -1009,7 +1221,7 @@ async function showResult(payload, screenRect, display, sessionId = session?.id)
   const win = await ensureResultWindow();
   if (!win || win.isDestroyed() || !session || session.id !== sessionId) return;
   const bounds = positionResult(screenRect, display);
-  win.setBounds(bounds, false);
+  runResultProgrammatic(() => win.setBounds(bounds, false));
   resultState = payload;
   win.show();
   win.focus();
@@ -1401,13 +1613,18 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
 }
 
 async function askClipboard() {
+  // Electron 45 returns a thenable from clipboard methods; await tolerates
+  // both the legacy sync string and the async variant.
   let text = '';
-  try { text = clipboard.readText().trim(); } catch { /* ignore */ }
+  try { text = String(await Promise.resolve(clipboard.readText()) || '').trim(); } catch { /* ignore */ }
   if (!text) {
     notify(t('notify.clipboardEmpty.title'), t('notify.clipboardEmpty.body'));
     return;
   }
   if (text.length > 6000) text = text.slice(0, 6000);
+  // Explaining the clipboard replaces the result session, so a pending OCR
+  // correction must be confirmed before it is discarded (review fix 2).
+  if (!(await selectionGuard.confirm())) return;
   if (resultWin && !resultWin.isDestroyed() && resultWin.isVisible()) hideResult();
   if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
 
@@ -1425,6 +1642,8 @@ async function askClipboard() {
   session = {
     id,
     selectionText: text,
+    ocrRawText: text,
+    ocrCorrectedText: null,
     windowInfo: { title: t('main.clipboardTitle'), process: 'clipboard' },
     imageDataUrl: null,
     previewDataUrl: '',
@@ -1563,17 +1782,30 @@ function cleanupCustomFonts() {
 
 function broadcastFont() {
   const payload = fontPayload();
-  if (resultWin && !resultWin.isDestroyed()) resultWin.webContents.send('font:update', payload);
-  if (settingsWin && !settingsWin.isDestroyed()) settingsWin.webContents.send('font:update', payload);
-  if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.webContents.send('font:update', payload);
-  if (historyWin && !historyWin.isDestroyed()) historyWin.webContents.send('font:update', payload);
+  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, translateWin]) {
+    if (win && !win.isDestroyed()) win.webContents.send('font:update', payload);
+  }
+}
+
+function resolvedTheme() {
+  return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
+}
+
+/** Sync nativeTheme with the saved preference and push the resolved theme to every live renderer. */
+function broadcastTheme() {
+  const preference = store.getConfig().theme;
+  const source = ['light', 'dark'].includes(preference) ? preference : 'system';
+  if (nativeTheme.themeSource !== source) nativeTheme.themeSource = source;
+  const payload = { theme: resolvedTheme(), preference };
+  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin, translateWin]) {
+    if (win && !win.isDestroyed()) win.webContents.send('theme:update', payload);
+  }
 }
 
 /** Push the current locale to every live renderer and refresh native chrome. */
-function broadcastLanguage() {
-  const langCode = store.getConfig().language;
+function broadcastLanguage() {  const langCode = store.getConfig().language;
   const payload = { language: langCode };
-  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin]) {
+  for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin, translateWin]) {
     if (win && !win.isDestroyed()) win.webContents.send('language:update', payload);
   }
   refreshTray();
@@ -1609,6 +1841,9 @@ async function openFontWindow() {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     minimizable: false,
     maximizable: false,
@@ -1648,6 +1883,7 @@ async function openHistory(recordId = '') {
       }
     }
     historyWin.show();
+    broadcastTheme();
     historyWin.focus();
     if (recordId) historyWin.webContents.send('history:show-record', { id: recordId });
     return;
@@ -1667,6 +1903,9 @@ async function openHistory(recordId = '') {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     minimizable: true,
     maximizable: true,
@@ -1732,6 +1971,9 @@ async function openSettings(firstRun = false) {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
+    // Windows 11 DWM would otherwise composite a translucent white material
+    // underlay beneath the transparent surface (the "whitish band").
+    backgroundMaterial: 'none',
     resizable: true,
     minimizable: false,
     maximizable: false,
@@ -1820,6 +2062,8 @@ function applySettings() {
   const config = store.getConfig();
   registerHotkey(config.hotkey);
   applyLoginItem(config);
+  // Retention only ever drops non-favorite records past the window.
+  try { history.purge(config.historyRetentionDays); } catch { /* retention is best-effort */ }
   if (config.showBubble) refreshBubble();
   else if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
   refreshTray();
@@ -1868,6 +2112,30 @@ ipcMain.on('app:start-selection', () => startSelection());
 ipcMain.on('app:start-multi-selection', () => startMultiSelection());
 ipcMain.on('app:start-translation', () => startTranslationSelection());
 ipcMain.on('app:settings', () => openSettings(false));
+ipcMain.on('app:clipboard-explain', () => askClipboard());
+ipcMain.on('bubble:expand', () => { if (bubbleEdge) setBubbleMode('expanded', bubbleEdge); });
+ipcMain.on('bubble:collapse', () => { if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge); });
+ipcMain.on('bubble:hide', () => {
+  store.save({ showBubble: false });
+  restoreBubbleMenuBounds();
+  if (bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.hide();
+  refreshTray();
+});
+ipcMain.on('bubble:menu-open', (_event, { direction, height } = {}) => {
+  if (!bubbleWin || bubbleWin.isDestroyed()) return;
+  if (!preMenuBounds) preMenuBounds = bubbleWin.getBounds();
+  const grow = 12 + Math.max(100, Number(height) || 152);
+  const b = preMenuBounds;
+  const next = direction === 'down'
+    ? { ...b, height: b.height + grow }
+    : { ...b, y: b.y - grow, height: b.height + grow };
+  const display = screen.getDisplayNearestPoint({ x: next.x + next.width / 2, y: next.y + next.height / 2 });
+  bubbleWin.setBounds(clampToWorkArea(next, display.workArea));
+});
+ipcMain.on('bubble:menu-close', () => {
+  if (preMenuBounds && bubbleWin && !bubbleWin.isDestroyed()) bubbleWin.setBounds(preMenuBounds);
+  preMenuBounds = null;
+});
 ipcMain.on('app:bubble-menu', () => {
   if (!bubbleWin || bubbleWin.isDestroyed()) return;
   buildTrayMenu().popup({ window: bubbleWin });
@@ -1883,6 +2151,18 @@ ipcMain.handle('app:info', () => ({
   onboarded: store.getConfig().onboarded
 }));
 ipcMain.handle('app:open-external', (_event, url) => openExternal(url));
+ipcMain.handle('app:diagnostics', () => buildDiagnostics({
+  version: app.getVersion(),
+  platform: process.platform,
+  osRelease: os.release(),
+  displays: screen.getAllDisplays().map(d => ({
+    width: d.size.width,
+    height: d.size.height,
+    scaleFactor: d.scaleFactor,
+    workArea: { width: d.workArea.width, height: d.workArea.height }
+  })),
+  lastUpdateError: updater?.getState?.().error || ''
+}));
 ipcMain.handle('app:language', () => store.getConfig().language);
 ipcMain.handle('app:set-language', (_event, language) => {
   try {
@@ -1890,17 +2170,30 @@ ipcMain.handle('app:set-language', (_event, language) => {
     return { ok: true };
   } catch (err) { return { ok: false, message: err.message }; }
 });
-ipcMain.handle('app:copy', (_event, text) => {
-  try { clipboard.writeText(String(text || '').slice(0, 100000)); return true; } catch { return false; }
+ipcMain.handle('app:copy', async (_event, text) => {
+  try { await Promise.resolve(clipboard.writeText(String(text || '').slice(0, 100000))); return true; } catch { return false; }
 });
-ipcMain.handle('app:read-clipboard', () => {
-  try { return clipboard.readText().slice(0, 10000); } catch { return ''; }
+ipcMain.handle('app:read-clipboard', async () => {
+  try { return String(await Promise.resolve(clipboard.readText()) || '').slice(0, 10000); } catch { return ''; }
 });
 
 ipcMain.on('selection:finish', (_event, rect) => handleSelectionRect(rect));
 ipcMain.on('selection:cancel', () => cancelSelection());
 
 ipcMain.on('result:close', () => hideResult());
+ipcMain.on('result:toggle-expand', () => {
+  const expanded = !store.getConfig().resultExpanded;
+  store.save({ resultExpanded: expanded });
+  applyResultSize();
+});
+function applyResultSize() {
+  if (!resultWin || resultWin.isDestroyed()) return;
+  const expanded = store.getConfig().resultExpanded;
+  const bounds = resultWin.getBounds();
+  const [width, height] = clampResultSize(resolveResultSize(expanded ? 'expanded' : 'compact'), screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y }));
+  runResultProgrammatic(() => resultWin.setSize(width, height));
+  resultWin.webContents.send('result:mode', { expanded });
+}
 ipcMain.on('result:pin', (_event, value) => {
   pinned = Boolean(value);
   if (resultWin && !resultWin.isDestroyed()) resultWin.setAlwaysOnTop(pinned, 'screen-saver');
@@ -1909,8 +2202,26 @@ ipcMain.handle('session:state', () => ({
   init: resultState ? { ...resultState, selectionText: session?.selectionText || resultState.selectionText, messages: session?.history || [], sources: session?.pendingSources || [] } : null,
   busy: Boolean(session?.busy),
   pinned,
-  webEnabled: Boolean(session?.webEnabled)
+  webEnabled: Boolean(session?.webEnabled),
+  ocrRaw: session?.ocrRawText ?? null,
+  ocrCorrected: session?.ocrCorrectedText ?? null,
+  visionAttachment: session ? {
+    enabled: Boolean(session.vision),
+    width: session.rect?.width || 0,
+    height: session.rect?.height || 0,
+    bytes: session.imageDataUrl ? Math.round(session.imageDataUrl.length * 3 / 4) : 0
+  } : null
 }));
+
+ipcMain.on('session:correct-ocr', (_event, text) => {
+  if (!session) return;
+  const value = typeof text === 'string' ? text : '';
+  session.ocrCorrectedText = value || null;
+  session.selectionText = value || session.ocrRawText || session.selectionText;
+  if (session.shots?.[0]) session.shots[0].text = session.selectionText;
+  if (session.systemContext) session.systemContext = buildSystemContext({ selection: session.selectionText, windowInfo: session.windowInfo, sources: session.sources || [] });
+  sendResult({ type: 'ocr-corrected', raw: session.ocrRawText || '', corrected: session.ocrCorrectedText });
+});
 
 ipcMain.on('session:ask', (_event, question) => { handleAsk(question); });
 ipcMain.on('session:stop', () => {
@@ -1947,6 +2258,9 @@ ipcMain.on('session:manual', async (_event, text) => {
   session.abort = null;
   session.busy = false;
   session.selectionText = value;
+  session.ocrRawText = '';
+  session.ocrCorrectedText = null;
+  session.shots = [];
   session.manual = true;
   session.imageDataUrl = null;
   session.vision = false;
@@ -2079,11 +2393,15 @@ ipcMain.handle('settings:save', (_event, patch) => {
       if (error && !(deletingKey && config.baseUrl && config.model && !config.apiKey)) throw new Error(error.message);
     }
     const prevLanguage = store.getConfig().language;
+    const keepOnboarding = patch && patch.keepOnboarding === true;
     const saved = store.save(patch && typeof patch === 'object' ? patch : {});
-    store.markOnboarded();
-    settingsFirstRun = false;
+    if (!keepOnboarding) {
+      store.markOnboarded();
+      settingsFirstRun = false;
+    }
     applySettings();
     if (store.getConfig().language !== prevLanguage) broadcastLanguage();
+    if ('theme' in (patch || {})) broadcastTheme();
     return { ok: true, settings: { ...saved, hotkeyOk, actualHotkey: hotkey } };
   } catch (err) {
     return { ok: false, message: err.message };
@@ -2130,7 +2448,8 @@ ipcMain.handle('history:resume', async (_event, id) => {
     const screenRect = { x: area.x + Math.round(area.width / 2), y: area.y + 50, width: 0, height: 0 };
     session = {
       id: ++sessionCounter, historyId: record.id,
-      selectionText: record.selectionText || '', windowInfo: { title: record.windowTitle || '', process: record.process || '' },
+      selectionText: record.selectionText || '', ocrRawText: record.selectionText || '', ocrCorrectedText: null,
+      windowInfo: { title: record.windowTitle || '', process: record.process || '' },
       imageDataUrl: null, previewDataUrl: '', vision: false,
       webEnabled: Boolean(config.webEnabled), sources: record.sources || [], pendingSources: record.sources || [],
       history: record.messages, lastQuestion: '', lastAnswerComplete: true,
@@ -2170,8 +2489,8 @@ ipcMain.on('history:open', () => { openHistory(); });
 ipcMain.on('history:close', () => {
   if (historyWin && !historyWin.isDestroyed()) historyWin.hide();
 });
-ipcMain.on('history:copy', (_event, text) => {
-  try { clipboard.writeText(String(text || '').slice(0, 200000)); } catch { /* ignore */ }
+ipcMain.on('history:copy', async (_event, text) => {
+  try { await Promise.resolve(clipboard.writeText(String(text || '').slice(0, 200000))); } catch { /* ignore */ }
 });
 
 /* ------------------------------------------------------------------ */
@@ -2195,6 +2514,20 @@ if (!gotLock) {
   app.whenReady().then(() => {
     app.setAppUserModelId('com.floatask.app');
     store.load();
+    broadcastTheme();
+    nativeTheme.on('updated', broadcastTheme);
+    screen.on('display-removed', () => {
+      // External display gone: pull every floating window back into the
+      // primary work area instead of leaving them on a dead display.
+      const primaryArea = screen.getPrimaryDisplay().workArea;
+      if (bubbleWin && !bubbleWin.isDestroyed()) {
+        bubbleWin.setBounds(clampToWorkArea(bubbleWin.getBounds(), primaryArea));
+        if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge);
+      }
+      if (resultWin && !resultWin.isDestroyed()) {
+        resultWin.setBounds(clampToWorkArea(resultWin.getBounds(), primaryArea));
+      }
+    });
     protocol.handle('floatask-font', handleFontProtocol);
     history.load();
     updater = createUpdater({ app, onState: state => {

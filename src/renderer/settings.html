@@ -2,7 +2,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; font-src 'self' data: floatask-font:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="controls.css">
   <link rel="stylesheet" href="settings.css">
   <title data-i18n="settings.title">浮问设置</title>
 </head>
@@ -17,12 +17,23 @@
             <div class="brand-sub">FLOATASK · <span data-i18n="settings.subtitle">屏幕理解助手</span></div>
           </div>
         </div>
+        <button id="saveBtn" class="btn primary no-drag" type="button" data-i18n="settings.saveBtn">保存更改</button>
         <button id="closeBtn" class="icon-btn no-drag" data-i18n-title="common.close" title="关闭">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <path d="m6 6 12 12M18 6 6 18"></path>
           </svg>
         </button>
       </header>
+
+      <div class="body-row">
+      <nav class="settings-nav" aria-label="设置导航">
+        <button type="button" class="settings-nav-item active" data-panel="model" data-i18n="settings.navModel">模型服务</button>
+        <button type="button" class="settings-nav-item" data-panel="web" data-i18n="settings.navWeb">联网检索</button>
+        <button type="button" class="settings-nav-item" data-panel="general" data-i18n="settings.navGeneral">通用与快捷键</button>
+        <button type="button" class="settings-nav-item" data-panel="privacy" data-i18n="settings.navPrivacy">历史与隐私</button>
+        <button type="button" class="settings-nav-item" data-panel="appearance" data-i18n="settings.navAppearance">外观与阅读</button>
+        <button type="button" class="settings-nav-item" data-panel="updates" data-i18n="settings.navUpdates">更新与关于</button>
+      </nav>
 
       <div class="scroll-body">
         <section id="welcome" class="welcome" hidden="">
@@ -40,7 +51,7 @@
           </div>
         </section>
 
-        <section class="section">
+        <section class="section" data-panel-section="model">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.modelTitle">模型服务</h2>
@@ -94,9 +105,9 @@
             </button>
             <span id="testResult" class="test-result"></span>
           </div>
-        </section><section class="section" id="taskModelsSection"><div class="section-head"><div><h2 data-i18n="models.title"></h2><p data-i18n="models.desc"></p></div></div><div id="modelProfiles"></div></section><section class="section" id="updatesSection"><div class="section-head"><div><h2 data-i18n="update.title"></h2><p data-i18n="update.desc"></p></div></div><label class="switch-row"><span class="switch"><input id="autoCheckUpdates" type="checkbox"><i></i></span><span><b data-i18n="update.auto"></b><small data-i18n="update.autoNote"></small></span></label><div class="inline-actions"><button id="checkUpdatesBtn" class="btn" type="button" data-i18n="update.check"></button><button id="downloadUpdateBtn" class="btn" type="button" data-i18n="update.download" hidden=""></button><button id="installUpdateBtn" class="btn primary" type="button" data-i18n="update.install" hidden=""></button></div><p id="updateStatus" role="status" class="note"></p><p id="updateDevNote" class="note" data-i18n="update.devNote" hidden=""></p></section>
+        </section><section class="section" id="taskModelsSection" data-panel-section="model"><div class="section-head"><div><h2 data-i18n="models.title"></h2><p data-i18n="models.desc"></p></div></div><div id="modelProfiles"></div></section><section class="section" id="updatesSection" data-panel-section="updates"><div class="section-head"><div><h2 data-i18n="update.title"></h2><p data-i18n="update.desc"></p></div></div><label class="switch-row"><span class="switch"><input id="autoCheckUpdates" type="checkbox"><i></i></span><span><b data-i18n="update.auto"></b><small data-i18n="update.autoNote"></small></span></label><div class="inline-actions"><button id="checkUpdatesBtn" class="btn" type="button" data-i18n="update.check"></button><button id="downloadUpdateBtn" class="btn" type="button" data-i18n="update.download" hidden=""></button><button id="installUpdateBtn" class="btn primary" type="button" data-i18n="update.install" disabled=""></button></div><p id="updateStatus" role="status" class="note"></p><p id="updateDevNote" class="note" data-i18n="update.devNote" hidden=""></p></section>
 
-        <section class="section">
+        <section class="section" data-panel-section="web">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.webTitle">联网检索</h2>
@@ -136,7 +147,7 @@
           <p class="note" data-i18n="settings.webNote">联网时会把你框选的文字片段作为搜索词发送给搜索引擎。若内容涉密，请关闭联网。</p>
         </section>
 
-        <section class="section">
+        <section class="section" data-panel-section="general">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.usageTitle">使用方式</h2>
@@ -187,7 +198,7 @@
           </div>
         </section>
 
-        <section class="section">
+        <section class="section" data-panel-section="privacy">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.historyTitle">历史记录</h2>
@@ -208,10 +219,22 @@
             </label>
             <button id="openHistoryBtn" class="btn" type="button" data-i18n="settings.openHistoryBtn">打开历史记录…</button>
           </div>
+          <div class="form-grid compact">
+            <label class="field">
+              <span class="field-label" data-i18n="settings.retentionLabel">记录保留期限</span>
+              <select id="historyRetention">
+                <option value="30">30</option>
+                <option value="90">90</option>
+                <option value="180">180</option>
+                <option value="0" data-i18n="settings.retentionForever">永久保留</option>
+              </select>
+              <span class="field-help" data-i18n="settings.retentionNote">到期后自动清理未收藏记录；收藏始终保留。清除历史不影响 API Key 与模型配置。</span>
+            </label>
+          </div>
           <p class="note" data-i18n="settings.historyNote">关闭后新的会话不再记录，已有记录仍会保留。</p>
         </section>
 
-        <section class="section">
+        <section class="section" data-panel-section="appearance">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.fontTitle">字体与阅读</h2>
@@ -228,9 +251,43 @@
             <button id="openFontBtn" class="btn" type="button" data-i18n="settings.openFontBtn">打开字体设置…</button>
           </div>
           <p class="note" data-i18n="settings.fontNote">字体列表来自 Windows 已安装字体；安装新字体后重新打开字体窗口即可看到。</p>
+
+          <div class="appearance-grid">
+            <div class="field">
+              <span class="field-label" data-i18n="theme.label">主题</span>
+              <div class="segmented" id="themeControl" role="radiogroup" aria-label="主题">
+                <button type="button" class="segmented-option" id="themeOption-system" data-theme-value="system" data-i18n="theme.system">跟随系统</button>
+                <button type="button" class="segmented-option" id="themeOption-light" data-theme-value="light" data-i18n="theme.light">朝日 · 白天</button>
+                <button type="button" class="segmented-option" id="themeOption-dark" data-theme-value="dark" data-i18n="theme.dark">近月 · 深夜</button>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label" data-i18n="settings.sizeLabel">正文字号</span>
+              <div class="segmented" id="sizeControl" aria-label="正文字号">
+                <button type="button" class="segmented-option" data-size-value="12">12</button>
+                <button type="button" class="segmented-option" data-size-value="14">14</button>
+                <button type="button" class="segmented-option" data-size-value="16">16</button>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label" data-i18n="settings.densityLabel">阅读密度</span>
+              <div class="segmented" id="densityControl" aria-label="阅读密度">
+                <button type="button" class="segmented-option" id="densityOption-compact" data-density-value="compact" data-i18n="settings.densityCompact">紧凑</button>
+                <button type="button" class="segmented-option" id="densityOption-standard" data-density-value="standard" data-i18n="settings.densityStandard">标准</button>
+                <button type="button" class="segmented-option" id="densityOption-relaxed" data-density-value="relaxed" data-i18n="settings.densityRelaxed">宽松</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="reading-preview-wrap">
+            <span class="field-label" data-i18n="settings.previewTitle">阅读预览</span>
+            <div id="readingPreview" class="reading-preview" data-density="standard">
+              <span data-i18n-html="settings.previewSample"><b>Transformer</b> 是一种基于自注意力机制的神经网络架构，用来处理长上下文。</span>
+            </div>
+          </div>
         </section>
 
-        <section class="section privacy">
+        <section class="section privacy" data-panel-section="privacy">
           <div class="section-head">
             <div>
               <h2 data-i18n="settings.privacyTitle">隐私说明</h2>
@@ -245,25 +302,107 @@
           </ul>
         </section>
 
-        <div class="version-line">
-          <span>浮问 FloatAsk <span id="version">0.1.0</span></span>
+        <section class="section about-card" data-panel-section="updates">
+          <div class="section-head">
+            <div>
+              <h2 data-i18n="about.title">关于</h2>
+              <p data-i18n="about.desc">版本、开放许可与诊断信息。</p>
+            </div>
+          </div>
+          <div class="about-head"><span data-i18n="common.appName">浮问</span> · v<span id="aboutVersion">0.1.0</span></div>
+          <div class="about-links">
+            <button type="button" class="link-btn" data-external="https://github.com/BingKuai332/floatask" data-i18n="about.github">GitHub 仓库与问题反馈</button>
+            <button type="button" class="link-btn" data-external="https://github.com/BingKuai332/floatask/releases" data-i18n="about.releases">版本发布说明</button>
+            <button type="button" class="link-btn" data-external="https://github.com/BingKuai332/floatask/blob/main/LICENSE" data-i18n="about.license">MIT 许可与第三方组件许可</button>
+          </div>
+          <div class="about-diagnostics">
+            <button id="diagPreviewBtn" class="btn" type="button" data-i18n="about.diagnostics">诊断信息</button>
+            <pre id="diagPreview" class="diag-preview" hidden spellcheck="false"></pre>
+            <button id="diagCopyBtn" class="btn" type="button" hidden data-i18n="about.copyDiagnostics">复制诊断信息</button>
+          </div>
+          <p class="note" data-i18n="about.diagNote">仅包含版本、系统、DPI、显示配置与脱敏错误码；不包含密钥、识别文字、截图或对话内容。复制前可先预览。</p>
+        </section>
+        <div class="version-line" data-panel-section="updates">
+          <span><span data-i18n="common.appName">浮问</span> <span id="version">0.1.0</span></span>
           <span>Windows · Electron</span>
         </div>
       </div>
+      </div>
 
-      <footer class="footer">
-        <div id="saveHint" class="save-hint"></div>
-        <div class="footer-actions">
-          <button id="cancelBtn" class="btn ghost" type="button" data-i18n="common.cancel">取消</button>
-          <button id="saveBtn" class="btn primary" type="button">保存并开始使用</button>
+      <div id="onboarding" class="onboarding" data-step="1" hidden>
+        <div class="ob-header">
+          <b data-i18n="ob.title">浮问 FloatAsk</b>
+          <span data-i18n="ob.tagline">框一下，就懂了。</span>
         </div>
-      </footer>
+        <div class="ob-steps" id="obSteps">
+          <span class="ob-step" data-ob-step="1" data-i18n="ob.stepModel">模型服务</span>
+          <span class="ob-step" data-ob-step="2" data-i18n="ob.stepHotkey">快捷键与隐私</span>
+          <span class="ob-step" data-ob-step="3" data-i18n="ob.stepReady">开始使用</span>
+        </div>
+
+        <div class="ob-pane" data-ob-pane="1">
+          <h2 data-i18n="ob.modelHeadline">先连接一个模型服务</h2>
+          <p class="ob-desc" data-i18n="ob.modelDesc">使用任意 OpenAI 兼容接口。首次解释、追问和截图理解稍后可以在设置中分别配置。</p>
+          <div class="ob-providers" id="obProviders">
+            <button type="button" class="ob-provider" data-ob-provider="deepseek">
+              <b data-i18n="ob.presetDeepseek">DeepSeek</b>
+              <small data-i18n="ob.presetDeepseekNote">推荐 · 国内可直连</small>
+            </button>
+            <button type="button" class="ob-provider" data-ob-provider="openai">
+              <b data-i18n="ob.presetOpenai">OpenAI 兼容</b>
+              <small data-i18n="ob.presetOpenaiNote">自建或第三方服务</small>
+            </button>
+            <button type="button" class="ob-provider" data-ob-provider="ollama">
+              <b data-i18n="ob.presetOllama">本地 Ollama</b>
+              <small data-i18n="ob.presetOllamaNote">模型留在本机</small>
+            </button>
+          </div>
+          <label class="field ob-key-field">
+            <span class="field-label" data-i18n="ob.keyLabel">API Key · 使用 Windows DPAPI 加密</span>
+            <input id="obKey" type="password" spellcheck="false" autocomplete="off" data-i18n-ph="ob.keyPlaceholder" placeholder="sk-…">
+            <small class="field-help" data-i18n="ob.keyLocalNote">密钥不会写入明文配置；测试连接只向当前服务发送必要请求。</small>
+          </label>
+          <div class="inline-actions">
+            <button id="obTest" class="btn" type="button" data-i18n="ob.test">测试连接</button>
+            <span id="obTestResult" class="test-result" role="status"></span>
+          </div>
+          <p id="obError" class="ob-error" role="alert"></p>
+        </div>
+
+        <div class="ob-pane" data-ob-pane="2" hidden>
+          <h2 data-i18n="ob.hotkeyHeadline">试试你的框选快捷键</h2>
+          <p class="ob-desc" data-i18n="ob.hotkeyDesc">按下组合键即可录制；若系统占用，可修改后继续。</p>
+          <div class="ob-hotkey-row">
+            <kbd id="obHotkey" class="kbd">Alt+Q</kbd>
+            <button id="obRecord" class="btn" type="button" data-i18n="ob.record">录制快捷键</button>
+          </div>
+          <p class="note" id="obOcrNote" data-i18n="ob.ocrNote">本机 OCR · 始终启用。识别文字会随模型请求发送；原始截图默认只保留在本机，截图理解默认关闭、可在需要时开启。</p>
+        </div>
+
+        <div class="ob-pane" data-ob-pane="3" hidden>
+          <div class="ob-ready">
+            <div class="ob-ready-mark" aria-hidden="true">浮</div>
+            <h2 data-i18n="ob.readyTitle">准备就绪</h2>
+            <p class="ob-desc" data-i18n="ob.readyDesc">在任意页面按下快捷键，框选你想理解的内容。</p>
+            <div class="ob-ready-actions">
+              <button id="obStart" class="btn primary" type="button" data-i18n="ob.startCapture">开始第一次框选</button>
+              <button id="obFullSettings" class="btn ghost" type="button" data-i18n="ob.fullSettings">打开完整设置</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ob-footer">
+          <button id="obBack" class="btn ghost" type="button" data-i18n="ob.back">上一步</button>
+          <button id="obLater" class="btn ghost" type="button" data-i18n="ob.later">稍后配置</button>
+          <button id="obNext" class="btn primary" type="button" data-i18n="ob.next">下一步</button>
+        </div>
+      </div>
 
       <div id="toast" class="toast"></div>
     </div>
   </div>
 
-  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script>
+  <script src="../shared/i18n.js"></script><script src="i18n-client.js"></script><script src="font-utils.js"></script><script src="theme.js"></script><script src="focus.js"></script>
 
   <script src="../shared/hotkeys.js"></script><script src="settings-advanced.js"></script><script src="settings.js"></script>
 
