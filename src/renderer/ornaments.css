@@ -366,6 +366,14 @@
 [data-theme="industrial"] .ask svg { color: var(--fa-on-primary); }
 /* Secondary toolbar actions: neutral hover plate instead of the muddy dark-yellow tint. */
 [data-theme="industrial"] .bubble .mini:hover { background: var(--fa-surface-3); color: var(--fa-accent); }
+/* The beveled capsule narrows to a point at each end; the last action sits in
+   that wedge, so its outer side takes the capsule radius (same slope as the
+   brand plate) and its hover plate never pokes past the outline. The end moves
+   with the expansion axis and direction. */
+[data-theme="industrial"] .bubble #moreBtn { border-radius: var(--fa-radius-mini) var(--fa-toolbar-primary-radius) var(--fa-toolbar-primary-radius) var(--fa-radius-mini); }
+[data-theme="industrial"] body[data-direction='left'] .bubble #moreBtn { border-radius: var(--fa-toolbar-primary-radius) var(--fa-radius-mini) var(--fa-radius-mini) var(--fa-toolbar-primary-radius); }
+[data-theme="industrial"] body[data-axis='vertical'] .bubble #moreBtn { border-radius: var(--fa-radius-mini) var(--fa-radius-mini) var(--fa-toolbar-primary-radius) var(--fa-toolbar-primary-radius); }
+[data-theme="industrial"] body[data-axis='vertical'][data-direction='up'] .bubble #moreBtn { border-radius: var(--fa-toolbar-primary-radius) var(--fa-toolbar-primary-radius) var(--fa-radius-mini) var(--fa-radius-mini); }
 
 /* ---------- Windows high contrast ---------- */
 /* The system palette takes over: drop brackets, hazard, grid and the conveyor,
