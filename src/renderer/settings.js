@@ -467,7 +467,7 @@ function setSegmented(containerId, dataAttr, value) {
 }
 
 function resolvePreviewTheme(value) {
-  if (value === 'light' || value === 'dark' || value === 'industrial') return value;
+  if (window.FloatAskThemeIds.isExplicitTheme(value)) return value;
   try { return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
   catch { return 'light'; }
 }

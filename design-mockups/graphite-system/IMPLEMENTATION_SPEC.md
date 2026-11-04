@@ -193,6 +193,14 @@
 
 后续补齐对应元素时，按登记表实现并同步本节。
 
+### 16.2 新功能接入主题清单
+
+- 新界面只使用 `--fa-*` token：组件 CSS（`src/renderer/*.css`，`theme.css` 除外）不得写死颜色或圆角，由 `tests/css-tokens.test.js` 与 `tests/radius-tokens.test.js` 强制（`data:` URI 内的图形与只读 alpha 的 mask 渐变除外）。
+- 组件不得按主题 ID 分支：JS 中不判断 `data-theme`、不写 `=== 'industrial'`；需要知道“是否为显式主题”或原生明暗时，使用共享注册表 `src/shared/theme-ids.js`（渲染进程为 `window.FloatAskThemeIds`）。
+- 仅属于前哨的装饰一律写在 `src/renderer/ornaments.css`，以 `[data-theme="industrial"]` 为作用域，并先登记到设计规范 §3.4 装饰登记表；表外装饰不加。
+- 阅读区排版（正文、OCR 原文、输入内容的字体、字号与行高）与主题无关，新功能不得按主题改动。
+- 新增一整套主题 = `design-tokens.yaml` 的 `themeIds` 与 `themes` 块 + `src/shared/theme-ids.js` 条目（含原生 `scheme`）+ i18n 显示名键 + 设置“外观与阅读”中的主题卡片。前两项不同步时 `tests/theme-ids.test.js` 失败；生成器按 `themes` 逐块输出，运行 `npm run build:tokens` 后 `--check` 通过即可。
+
 ## 版本记录
 
 - 1.5.0（2026-11-03）：新增第三主题「前哨 · 工业」（ID industrial）与分主题 shape／ornaments token；胶囊工具栏改为锚点吸附，四边展开间距统一 8 DIP，吸附状态跨重启保存。同批修复流式自动跟随与「回到底部」（改为即时滚到末尾）、字体窗口标题的 i18n 键。

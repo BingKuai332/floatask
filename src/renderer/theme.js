@@ -4,8 +4,13 @@
 // Windows high contrast is handled by generated CSS (forced-colors); it never
 // changes the saved preference or the data-theme attribute.
 (function (global) {
+  // Explicit theme ids live in src/shared/theme-ids.js (loaded before this script).
+  const themeIds = typeof module === 'object' && module.exports
+    ? require('../shared/theme-ids')
+    : global.FloatAskThemeIds;
+
   function resolveTheme(preference, systemDark) {
-    if (preference === 'light' || preference === 'dark' || preference === 'industrial') return preference;
+    if (themeIds.isExplicitTheme(preference)) return preference;
     return systemDark ? 'dark' : 'light';
   }
 
