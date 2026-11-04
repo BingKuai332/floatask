@@ -52,13 +52,59 @@ const server = http.createServer((req,res) => {
  });
 });
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+// Errors from inside a polled condition name the step they interrupted.
 async function waitFor(fn, label) {
  const deadline=Date.now()+12000;
- while(Date.now()<deadline) { const value=await fn(); if(value) return value; await pause(80); }
+ while(Date.now()<deadline) {
+  let value;
+  try { value=await fn(); } catch(err) {
+   const note=`${err.message} (while waiting for: ${label})`;
+   if (typeof err.stack==='string') err.stack=err.stack.replace(err.message,note);
+   err.message=note;
+   throw err;
+  }
+  if(value) return value;
+  await pause(80);
+ }
  throw new Error('Timed out: '+label);
 }
-const page = name => BrowserWindow.getAllWindows().find(w=>w.webContents.getURL().endsWith('/'+name+'.html'));
-const js=(w,code)=>w.webContents.executeJavaScript(code);
+const page = name => BrowserWindow.getAllWindows().find(w=>!w.isDestroyed() && w.webContents.getURL().endsWith('/'+name+'.html'));
+const pageName = w => {
+ if (!w || w.isDestroyed()) return 'destroyed window';
+ return path.basename(w.webContents.getURL() || 'blank', '.html') || 'blank';
+};
+// executeJavaScript rejections ("Render frame was disposed...", script
+// errors) carry no stack; capture the caller's stack and name the page and
+// expression so a failure points at its line in this file.
+const js=(w,code)=>{
+ const caller=new Error();
+ const name=pageName(w);
+ const run=w && !w.isDestroyed() ? w.webContents.executeJavaScript(code) : Promise.reject(new Error('window is destroyed'));
+ return run.catch(err=>{
+  const wrapped=new Error(`${err && err.message || err} [page: ${name}; expression: ${String(code).replace(/\s+/g,' ').slice(0,160)}]`);
+  wrapped.stack=wrapped.message+'\n'+caller.stack.split('\n').slice(1).join('\n');
+  throw wrapped;
+ });
+};
+// The theme stylesheet animates colours for 120 ms (--fa-motion-theme-color).
+// Sampling computed colours mid-transition reads an interpolated value, and a
+// fixed sleep is not enough when the renderer is slow to produce frames.
+// getAnimations() flushes styles, so a transition that the theme change
+// starts is visible here immediately; wait until the page wears the theme
+// and no colour transition is still running.
+async function settleTheme(w, theme, label) {
+ await waitFor(()=>js(w,`document.documentElement.dataset.theme===${JSON.stringify(theme)} && document.getAnimations().every(a=>!(a instanceof CSSTransition) || a.playState!=='running')`),label||`${pageName(w)} settles on the ${theme} theme`);
+}
+// Some calls make the page close its own window (finishing or cancelling a
+// selection). Run them on the next task so the executeJavaScript reply leaves
+// the frame before the window is destroyed; otherwise the call can reject
+// with "Render frame was disposed before the request completed".
+const jsThenClose=(w,code)=>js(w,`setTimeout(()=>{${code}},0);true`);
+// A navigation disposes the current frame: arm the load listener before
+// triggering it and wait for the new document before talking to the page.
+function nextLoad(w) {
+ return new Promise(resolve=>w.webContents.once('did-finish-load',resolve));
+}
 async function screenshot(win,name) {
  if (!process.env.FLOATASK_TEST_SHOTS) return;
  await pause(300); // Wait for transitions and the compositor to paint.
@@ -114,10 +160,12 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'1','autosave fixture returns to step 1');
    await js(settings,"document.querySelector('[data-ob-provider=deepseek]').click();true");
    await js(settings,"const k=document.getElementById('obKey');k.value='autosave-fixture-key';k.dispatchEvent(new Event('input'));k.dispatchEvent(new Event('change'));true");
-   await pause(900);
-   assert.equal(require('../src/main/store').getConfig().apiKey,'autosave-fixture-key','typing a key autosaves it without clicking next');
+   // The autosave is debounced: poll the store for the saved key.
+   await waitFor(()=>require('../src/main/store').getConfig().apiKey==='autosave-fixture-key','typing a key autosaves it without clicking next');
    assert.equal(await js(settings,"(async()=>(await window.floatask.getSettings()).onboardingStep)()"),1,'the unfinished step is persisted while typing');
+   const autosaveReload=nextLoad(settings);
    settings.webContents.reload();
+   await autosaveReload;
    await waitFor(()=>js(settings,"document.getElementById('providerGrid') && document.getElementById('providerGrid').children.length === 6"),'settings ready after autosave reload');
    await waitFor(()=>js(settings,"document.getElementById('onboarding') && !document.getElementById('onboarding').hidden"),'wizard shows after autosave reload');
    assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'1','wizard resumes at the autosaved step');
@@ -127,8 +175,7 @@ server.listen(0,'127.0.0.1',()=>{
    // Close path: typing without blur, then the titlebar X must still flush.
    await js(settings,"const k=document.getElementById('obKey');k.value='autosave-second-key';k.dispatchEvent(new Event('input'));true");
    await js(settings,"document.getElementById('closeBtn').click();true");
-   await pause(800);
-   assert.equal(require('../src/main/store').getConfig().apiKey,'autosave-second-key','typing then closing the window flushes the draft');
+   await waitFor(()=>require('../src/main/store').getConfig().apiKey==='autosave-second-key','typing then closing the window flushes the draft');
    settings.show();
    await js(settings,"document.getElementById('obKey').value='';true");
    await js(settings,"document.getElementById('obNext').click();true");
@@ -139,7 +186,9 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,"document.getElementById('obBack').click();true");
    await js(settings,"document.getElementById('obLater').click();true");
    assert.equal(await js(settings,"document.getElementById('onboarding').hidden"),true,'later hides the wizard');
+   const laterReload=nextLoad(settings);
    settings.webContents.reload();
+   await laterReload;
    await waitFor(()=>js(settings,"document.getElementById('providerGrid') && document.getElementById('providerGrid').children.length === 6"),'settings ready after reload');
    await waitFor(()=>js(settings,"document.getElementById('onboarding') && !document.getElementById('onboarding').hidden && document.getElementById('onboarding').dataset.step==='2'"),'wizard resumes at the unfinished step');
    await js(settings,"document.getElementById('obLater').click();true");
@@ -169,7 +218,7 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,"document.getElementById('fixtureNav').click();true");
    assert.equal(await js(settings,"document.getElementById('fixtureSection').hidden"),false,'new settings entry reaches an ordered panel');
    await js(settings,"window.floatask.saveSettings({theme:'light'})");
-   await pause(250);
+   await settleTheme(settings,'light','settings settles on the light theme for the fixture colours');
    const fixtureThemed=await js(settings,`(() => {
     const card=getComputedStyle(document.getElementById('fixtureProvider'));
     const nav=getComputedStyle(document.getElementById('fixtureNav'));
@@ -178,7 +227,7 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(fixtureThemed.cardBg,'rgb(250, 249, 244)','fixture card follows the light surface token');
    assert.equal(fixtureThemed.navColor,'rgb(80, 107, 146)','the active fixture nav item uses the light accent selection color');
    await js(settings,"window.floatask.saveSettings({theme:'dark'})");
-   await pause(250);
+   await settleTheme(settings,'dark','settings settles on the dark theme for the fixture colours');
    assert.equal(await js(settings,"getComputedStyle(document.getElementById('fixtureNav')).color"),'rgb(143, 166, 201)','the active fixture nav item follows the dark accent');
    await js(settings,"document.getElementById('fixtureProvider').remove();document.getElementById('fixtureNav').remove();document.getElementById('fixtureSection').remove();document.querySelector('.settings-nav-item[data-panel=model]').click();true");
    assert.equal(await js(settings,"document.getElementById('providerGrid').children.length"),6,'fixture data removed');
@@ -215,7 +264,7 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,"document.getElementById('themeOption-light').click();true");
    assert.equal(await js(settings,"document.documentElement.dataset.theme"),'light','theme preview applies before saving');
    assert.equal(await js(settings,"document.getElementById('themeOption-light').getAttribute('aria-checked')"),'true','selected theme card exposes its radio state');
-   await pause(250); // theme color transition (120 ms) must settle before sampling colors
+   await settleTheme(settings,'light','the light preview settles before sampling the miniatures');
    const miniatureThemes=await js(settings,`(() => {
     const dark=document.querySelector('.theme-preview[data-theme="dark"]');
     const halves=[...document.querySelectorAll('.theme-system-half')].map(el=>getComputedStyle(el).backgroundColor);
@@ -324,7 +373,10 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'closing settings keeps the selected history theme');
    await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'closing settings keeps the selected capsule theme');
    assert.equal(require('../src/main/store').getConfig().theme,'light','close does not roll back the remembered theme');
+   // Reopening a hidden settings window reloads its page (openSettings).
+   const settingsReopened=nextLoad(settings);
    await js(settings,"window.floatask.openSettings();true");
+   await settingsReopened;
    await waitFor(()=>js(settings,"document.getElementById('themeOption-light')?.getAttribute('aria-checked')==='true'"),'reopened settings shows the remembered selection');
    await js(settings,"window.floatask.saveSettings({showBubble:false})");
    await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'other setting saves preserve the selected theme');
@@ -491,39 +543,54 @@ server.listen(0,'127.0.0.1',()=>{
    await Promise.resolve(clipboard.writeText(clipBackup));
    await js(result,"(() => { const w=document.getElementById('codeCopyFixture'); if (w) w.remove(); return true; })()");
    await js(result,"document.getElementById('expandBtn').click()");
-   await pause(400);
-   console.log('EXPAND-PROBE', JSON.stringify(await js(result,"(async()=>({mode:document.body.dataset.mode,expanded:(await window.floatask.getResultState())&&true}))()")), 'size', JSON.stringify(result.getSize()));
+   await waitFor(async()=>await js(result,"document.body.dataset.mode==='expanded'") && result.getSize().join()===expandedExpect.join(),'expand switches the window mode and size');
    assert.equal(await js(result,"document.body.dataset.mode"),'expanded','expand switches the window mode');
    assert.deepEqual(result.getSize(),expandedExpect,'expanded state resizes the window');
    assert.equal(require('../src/main/store').getConfig().resultExpanded,true,'expanded state persists');
    await screenshot(result,'task4-expanded-dark');
    await js(result,"document.getElementById('expandBtn').click()");
+   await waitFor(async()=>await js(result,"document.body.dataset.mode==='compact'") && result.getSize().join()===compactExpect.join(),'collapse returns to the compact mode and size');
    assert.deepEqual(result.getSize(),compactExpect,'collapse restores the compact size');
    assert.equal(require('../src/main/store').getConfig().resultExpanded,false,'compact state persists');
    // Review round 3: manual sizes are remembered per mode and survive reopen.
-   result.setSize(720, 900);
+   // The manual height stays below the work-area clamp on any usual screen,
+   // so the streaming checks below run in the same viewport everywhere.
+   const manualSize = [720, Math.min(600, resultWorkArea.height - 24)];
+   // main treats size changes within 60 ms of its own resize (the collapse
+   // above, runResultProgrammatic) as programmatic and never saves them;
+   // outlast that grace so this resize reads as the user's.
+   await pause(100);
+   result.setSize(...manualSize);
    await waitFor(() => {
     const saved = require('../src/main/store').getConfig().resultSize;
-    return Boolean(saved && Array.isArray(saved.compact) && saved.compact[0] === 720 && saved.compact[1] === 900);
+    return Boolean(saved && Array.isArray(saved.compact) && saved.compact.join() === manualSize.join());
    },'manual size saved');
    await js(result,"window.floatask.closeResult();true");
-   await pause(400);
+   await waitFor(() => !result.isVisible(),'result window hides before reopening');
    const resizeRecord = history.list()[0];
    await js(result,`window.floatask.resumeHistory(${JSON.stringify(resizeRecord.id)});true`);
-   await waitFor(() => { const s = result.getSize(); return s[0] === 720 && s[1] === Math.min(900, resultWorkArea.height - 24); },'reopened result keeps the manual size');
+   await waitFor(() => result.isVisible() && result.getSize().join() === manualSize.join(),'reopened result keeps the manual size');
    require('../src/main/store').save({ resultSize: null });
    // Streaming follow: pinned at the bottom, pauses when reading up, resumes via the follow button.
    await js(result,"document.getElementById('liveRegion').textContent=''");
    await js(result,"document.getElementById('questionInput').value='Long stream test';document.getElementById('sendBtn').click()");
-   await waitFor(()=>js(result,"document.getElementById('messages').scrollHeight>document.getElementById('messages').clientHeight*1.5"),'long stream overflows the viewport');
+   // The answer itself must overflow and the viewport must chase its tail;
+   // overflow alone can come from the restored conversation before the
+   // stream starts.
+   await waitFor(()=>js(result,"(()=>{const m=document.getElementById('messages');return Boolean(document.querySelector('.message.assistant .md-body.streaming')) && m.scrollHeight>m.clientHeight*1.5 && m.scrollTop>0 && m.scrollHeight-m.scrollTop-m.clientHeight<24})()"),'the streaming answer overflows and the viewport follows its tail');
    const midLive=await js(result,"document.getElementById('liveRegion').textContent");
    assert.equal(midLive,'','streaming tokens are not announced');
    // Programmatic scrollTop assignments fire the real scroll event on their
    // own; dispatching a synthetic one doubles the handler run and races the
-   // live stream.
-   await js(result,"document.getElementById('messages').scrollTop=0");
+   // live stream. The jump is instant: under the stylesheet's smooth
+   // scrolling the first animation frames stay within the at-bottom
+   // tolerance, so the next streamed render would legitimately re-pin.
+   await js(result,"document.getElementById('messages').scrollTo({top:0,behavior:'instant'});true");
    await waitFor(()=>js(result,"!document.getElementById('followBtn').hidden"),'follow button appears while reading up');
-   await pause(300);
+   // Let the stream render more while the reader stays up, then check that
+   // nothing pulled the viewport back down.
+   const heightWhileReading=await js(result,"document.getElementById('messages').scrollHeight");
+   await waitFor(()=>js(result,`document.getElementById('messages').scrollHeight>${heightWhileReading} || document.getElementById('statusText').textContent==='Done'`),'the stream keeps rendering while reading up');
    assert.ok(await js(result,"document.getElementById('messages').scrollTop")<60,'streaming pauses follow while reading up');
    assert.equal(await js(result,"document.getElementById('followBtn').hidden"),false,'follow stays offered while reading up');
    await js(result,"document.getElementById('followBtn').click()");
@@ -534,8 +601,7 @@ server.listen(0,'127.0.0.1',()=>{
    const announcement=await js(result,"document.getElementById('liveRegion').textContent");
    assert.equal(announcement,await js(result,"window.FloatAskI18n.t('result.announceDone')"),'live region announces completion, not tokens');
    await js(settings,"window.floatask.saveSettings({theme:'light'})");
-   await waitFor(()=>js(result,"document.documentElement.dataset.theme==='light'"),'result follows light theme');
-   await pause(300); // theme color transition (120 ms) must settle before sampling colors
+   await settleTheme(result,'light','result follows light theme');
    const titlebarProbe=await js(result,`(() => {
      const bar=getComputedStyle(document.querySelector('.titlebar'));
      const active=getComputedStyle(document.getElementById('pinBtn'));
@@ -558,6 +624,7 @@ server.listen(0,'127.0.0.1',()=>{
    await screenshot(settings,'settings-light');
    // Review round 3: every floating surface must follow the light theme, not
    // just the answer window.
+   await settleTheme(win,'light','history settles on the light theme');
    const historyLightProbe=await js(win,`(() => {
      const shell=getComputedStyle(document.querySelector('.history-shell'));
      const probe=document.createElement('span');
@@ -572,7 +639,8 @@ server.listen(0,'127.0.0.1',()=>{
    await js(result,"window.floatask.closeResult();true");
    await js(settings,"window.floatask.saveSettings({showBubble:true})");
    const bubbleLight=await waitFor(()=>page('bubble'),'bubble in light theme');
-   await pause(600);
+   await waitFor(()=>bubbleLight.isVisible(),'capsule shows in the light theme');
+   await settleTheme(bubbleLight,'light','capsule settles on the light theme');
    const bubbleLightProbe=await js(bubbleLight,`(() => {
      const body=getComputedStyle(document.querySelector('.bubble'));
      const probe=document.createElement('span');
@@ -586,7 +654,7 @@ server.listen(0,'127.0.0.1',()=>{
    await js(bubbleLight,"document.getElementById('moreBtn').click();true");
    await waitFor(() => page('settings') && page('settings').isVisible(),'the rightmost capsule action opens settings directly');
    await js(settings,"window.floatask.saveSettings({showBubble:false})");
-   await pause(300);
+   await waitFor(()=>!bubbleLight.isVisible(),'capsule hides again');
    const restoredRecord = require('../src/main/history').list()[0];
    await js(result,`window.floatask.resumeHistory(${JSON.stringify(restoredRecord.id)});true`);
    await waitFor(()=>js(result,"document.querySelectorAll('.message.assistant').length>0"),'result window restored');
@@ -595,8 +663,7 @@ server.listen(0,'127.0.0.1',()=>{
    await screenshot(win,'history-light');
    await screenshot(result,'task4-compact-light');
    await js(settings,"window.floatask.saveSettings({theme:'dark'})");
-   await waitFor(()=>js(result,"document.documentElement.dataset.theme==='dark'"),'result returns to dark theme');
-   await pause(300); // let the theme color transition settle before sampling
+   await settleTheme(result,'dark','result returns to dark theme');
    const darkTitlebar=await waitFor(async () => {
     const probe=await js(result,`(() => {
      const bar=getComputedStyle(document.querySelector('.titlebar'));
@@ -736,13 +803,13 @@ server.listen(0,'127.0.0.1',()=>{
    await js(result,"window.confirm=()=>true;true");
    await js(result,"window.floatask.startSelection();true");
    await waitFor(()=>page('selection'),'accepted guard opens the selection overlay');
-   await js(page('selection'),"window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
+   await jsThenClose(page('selection'),"window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))");
    await waitFor(()=>!page('selection'),'Escape closes the accepted overlay');
    await js(result,"delete window.confirm");
    await js(settings,"window.floatask.saveSettings({vision:true})");
    await js(result,'window.floatask.startSelection()');
    const screenshotSelection=await waitFor(()=>page('selection'),'mock screenshot selection');
-   await js(screenshotSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
+   await jsThenClose(screenshotSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='vision-model','vision task model');
    assert(Array.isArray(calls.at(-1).messages.at(-1).content),'screenshot attached to vision model');
    assert.equal(requestPaths.at(-1),'/v1/chat/completions','vision inheritance uses default endpoint, not the initial override');
@@ -760,7 +827,7 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(typeof calls.at(-1).messages.at(-1).content,'string');
    await js(result,'window.floatask.startSelection()');
    const fallbackSelection=await waitFor(()=>page('selection'),'initial fallback selection');
-   await js(fallbackSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
+   await jsThenClose(fallbackSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='initial-fast','initial image fallback');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'initial fallback completed');
    await js(settings,"window.floatask.saveSettings({vision:false})");
@@ -768,12 +835,12 @@ server.listen(0,'127.0.0.1',()=>{
    const beforeCaptureRace = calls.length;
    await js(result,'window.floatask.startSelection()');
    const oldSelection = await waitFor(()=>page('selection'),'old race selection');
-   await js(oldSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
+   await jsThenClose(oldSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await pause(250);
    captureDelay = 0; captureTag = 'new-capture';
    await js(settings,'window.floatask.startSelection()');
    const newSelection = await waitFor(()=>page('selection'),'new race selection');
-   await js(newSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
+   await jsThenClose(newSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.length>beforeCaptureRace && calls.at(-1).messages[0].content.includes('new-capture'),'new capture answer');
    await pause(1100);
    const racedState = await js(result,'window.floatask.getResultState()');
@@ -820,7 +887,7 @@ server.listen(0,'127.0.0.1',()=>{
     return document.getElementById('size').textContent;
    })()`);
    assert.equal(dragSize,'200 × 100','size hint follows the drag');
-   await js(selection,"window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
+   await jsThenClose(selection,"window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))");
    await waitFor(()=>!page('selection'),'Escape closes the overlay');
    assert.deepEqual(errors,[],'no renderer errors');
    console.log('PASS: real Electron pages, bilingual UI, shortcut recording/conflict, per-task routing, profile testing, screenshot routing/fallback, update UI, history/privacy');

@@ -157,12 +157,16 @@ function jumpToTail() {
   els.messages.scrollTo({ top: els.messages.scrollHeight, behavior: 'instant' });
 }
 
-function scrollToBottom(force = false) {
+// wasAtBottom must be measured before the caller grows the content: one
+// streamed render can add more than the 24 px tolerance, and measuring after
+// it would read the reader as "scrolled up" although they never moved, so
+// following stopped for good with no scroll event to recover.
+function scrollToBottom(force = false, wasAtBottom = atBottom()) {
   if (force) follow.pinned = true;
   // The pinned flag can be stale for one event-loop turn after the user
   // scrolls up (the scroll event has not been delivered yet); only follow
-  // when the viewport is genuinely at the bottom.
-  if (force || (follow.pinned && atBottom())) jumpToTail();
+  // when the viewport was genuinely at the bottom.
+  if (force || (follow.pinned && wasAtBottom)) jumpToTail();
   updateFollowButton();
 }
 
@@ -300,6 +304,7 @@ function hidePhase() {
 }
 
 function showPhase(text) {
+  const wasAtBottom = atBottom();
   if (!state.phaseEl) {
     state.phaseEl = document.createElement('div');
     state.phaseEl.className = 'phase-line';
@@ -307,7 +312,7 @@ function showPhase(text) {
     els.messages.appendChild(state.phaseEl);
   }
   state.phaseEl.querySelector('.phase-text').textContent = text;
-  scrollToBottom();
+  scrollToBottom(false, wasAtBottom);
 }
 
 function clearError() {
@@ -357,12 +362,13 @@ function createAssistant() {
 
 function renderCurrent(force = false) {
   if (!state.current) return;
+  const wasAtBottom = atBottom();
   state.current.content.innerHTML = md.render(state.currentAnswer || '');
   if (!state.currentHasSources) {
     for (const cite of state.current.content.querySelectorAll('.cite')) cite.remove();
   }
   if (force) scrollToBottom(true);
-  else scrollToBottom();
+  else scrollToBottom(false, wasAtBottom);
 }
 
 function scheduleRender() {
