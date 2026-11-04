@@ -17,10 +17,16 @@
           <div>
             <div class="brand-title">截图翻译 <span>OCR TRANSLATE</span></div>
             <div class="brand-sub">原图 / 译文 · 对照查看</div>
+            <div id="translateCollapsedLabel" class="collapsed-label">已收起</div>
           </div>
         </div>
         <div class="actions no-drag">
           <button id="compareBtn" class="mode-btn active" type="button" title="原图与译文对照">对照</button>
+          <button id="translateCollapseBtn" class="icon-btn" type="button" title="收起翻译窗口">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m7 14 5-5 5 5"></path><path d="M5 20h14" opacity=".55"></path>
+            </svg>
+          </button>
           <button id="closeBtn" class="icon-btn" type="button" title="关闭">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
               <path d="m6 6 12 12M18 6 6 18"/>

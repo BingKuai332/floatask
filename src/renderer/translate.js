@@ -240,3 +240,14 @@ document.addEventListener('keydown', (event) => {
 
 api.onTranslateInit((payload) => resetView(payload));
 api.onTranslateEvent(handleEvent);
+(() => {
+  const btn = document.getElementById('translateCollapseBtn');
+  if (!btn) return;
+  const apply = (collapsed) => {
+    document.body.classList.toggle('collapsed', Boolean(collapsed));
+    btn.title = collapsed ? 'Expand dialog' : 'Collapse dialog';
+  };
+  btn.addEventListener('click', () => window.floatask.collapseTranslate(!document.body.classList.contains('collapsed')));
+  window.floatask.onTranslateCollapsed(apply);
+  apply(false);
+})();

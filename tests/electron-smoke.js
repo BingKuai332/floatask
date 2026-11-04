@@ -7,9 +7,11 @@ const path = require('path');
 const http = require('http');
 const assert = require('assert/strict');
 const root = path.join(__dirname, '..');
+const unhandled = [];
+process.on('unhandledRejection', error => unhandled.push(String(error?.stack || error)));
 const data = process.env.FLOATASK_USER_DATA || fs.mkdtempSync(path.join(os.tmpdir(), 'floatask-smoke-'));
 process.env.FLOATASK_USER_DATA = data;
-let calls = [], requestPaths = [], errors = [], slowSearch = false, rejectImages = false, captureDelay = 0, captureTag = "fixture";
+let calls = [], requestPaths = [], errors = [], slowSearch = false, rejectImages = false, captureDelay = 0, captureTag = "fixture", streamDelay = 120;
 const updaterModule = require('../src/main/updater');
 const realCreateUpdater = updaterModule.createUpdater;
 updaterModule.createUpdater = options => realCreateUpdater({ ...options, request: async () => Response.json({
@@ -48,7 +50,7 @@ const server = http.createServer((req,res) => {
   if (!payload.stream) { res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify({model:payload.model,choices:[{message:{content:'OK'}}]})); return; }
   res.writeHead(200, {'Content-Type':'text/event-stream'});
   res.write('data: '+JSON.stringify({choices:[{delta:{content:'A useful explanation with enough text to save.'}}]})+'\n\n');
-  setTimeout(()=>res.end('data: [DONE]\n\n'),120);
+  setTimeout(()=>res.end('data: [DONE]\n\n'),streamDelay);
  });
 });
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -130,7 +132,7 @@ server.listen(0,'127.0.0.1',()=>{
  require('../src/main/main');
  app.whenReady().then(async()=> {
   try {
-   const settings=await waitFor(()=>page('settings'),'settings');
+   let settings=await waitFor(()=>page('settings'),'settings');
    await waitFor(()=>js(settings,"document.getElementById('providerGrid').children.length === 6"),'settings ready');
    // Onboarding wizard (task 9): three steps, back/forward, failure keeps inputs, resume.
    const preWizard=await js(settings,'(async()=>{const s=await window.floatask.getSettings();return {provider:s.provider,baseUrl:s.baseUrl,model:s.model}})()');
@@ -176,7 +178,10 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,"const k=document.getElementById('obKey');k.value='autosave-second-key';k.dispatchEvent(new Event('input'));true");
    await js(settings,"document.getElementById('closeBtn').click();true");
    await waitFor(()=>require('../src/main/store').getConfig().apiKey==='autosave-second-key','typing then closing the window flushes the draft');
-   settings.show();
+   await waitFor(()=>settings.isDestroyed(),'settings closes its renderer');
+   ipcMain.emit('app:settings');
+   settings=await waitFor(()=>page('settings'),'settings reopens after closing');
+   await waitFor(()=>js(settings,"document.getElementById('obKey') && !document.getElementById('onboarding').hidden"),'reopened onboarding is ready');
    await js(settings,"document.getElementById('obKey').value='';true");
    await js(settings,"document.getElementById('obNext').click();true");
    assert.equal(await js(settings,"document.getElementById('onboarding').dataset.step"),'2','a saved key satisfies the step-1 validation');
@@ -334,9 +339,12 @@ server.listen(0,'127.0.0.1',()=>{
    await screenshot(settings,'updates-en');
    const history=require('../src/main/history');
    const record=history.record({selectionText:'Term about databases',windowInfo:{title:'Test window'},history:[{role:'user',content:'Explain'},{role:'assistant',content:'A rare searchable needle in a useful explanation.'}]},{model:'mock'});
+   const originalGetHistory = history.get; let detailReads = 0;
+   history.get = (...args) => { detailReads++; return originalGetHistory(...args); };
    await js(settings,'window.floatask.openHistory()');
-   const win=await waitFor(()=>page('history'),'history');
+   let win=await waitFor(()=>page('history'),'history');
    await waitFor(()=>js(win,"document.querySelectorAll('.record').length===1"),'history list');
+   assert.equal(detailReads,0,'history list must not load full conversations');
    await js(win,"document.querySelector('.record').click()");
    await waitFor(()=>js(win,"document.querySelectorAll('.history-message').length===2"),'detail');
    assert.equal(await js(win,"document.querySelector('#detail h2').textContent"),'Term about databases');
@@ -370,14 +378,19 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'history returns to light after the industrial check');
    await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'capsule returns to light after the industrial check');
    await js(settings,"document.getElementById('closeBtn').click();true");
-   await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'closing settings keeps the selected history theme');
+   await waitFor(()=>settings.isDestroyed() && win.isDestroyed(),'closing settings closes its child history window');
    await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'closing settings keeps the selected capsule theme');
    assert.equal(require('../src/main/store').getConfig().theme,'light','close does not roll back the remembered theme');
-   // Reopening a hidden settings window reloads its page (openSettings).
-   const settingsReopened=nextLoad(settings);
-   await js(settings,"window.floatask.openSettings();true");
-   await settingsReopened;
+   // Closing settings destroys the renderer; reopening creates fresh pages.
+   ipcMain.emit('app:settings');
+   settings=await waitFor(()=>page('settings'),'settings reopens with a fresh renderer');
    await waitFor(()=>js(settings,"document.getElementById('themeOption-light')?.getAttribute('aria-checked')==='true'"),'reopened settings shows the remembered selection');
+   ipcMain.emit('history:open');
+   win=await waitFor(()=>page('history'),'history reopens with a fresh renderer');
+   await waitFor(()=>js(win,"document.documentElement.dataset.theme==='light'"),'reopened history uses the remembered theme');
+   await waitFor(()=>js(win,"document.querySelectorAll('.record').length===1"),'reopened history reloads its records');
+   await js(win,"document.querySelector('.record').click();true");
+   await waitFor(()=>js(win,"document.querySelectorAll('.history-message').length===2"),'reopened history restores the selected detail');
    await js(settings,"window.floatask.saveSettings({showBubble:false})");
    await waitFor(()=>js(previewBubble,"document.documentElement.dataset.theme==='light'"),'other setting saves preserve the selected theme');
    // Saving a theme broadcasts it to every open window without restart.
@@ -396,9 +409,10 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>js(settings,"document.documentElement.dataset.theme==='dark' && getComputedStyle(document.documentElement).getPropertyValue('--fa-surface').trim()==='#171A20'"),'dark theme restores near-moon surface');
    await js(settings,"window.floatask.saveSettings({theme:'system'})");
    await js(win,"document.getElementById('searchInput').value='rare searchable needle';document.getElementById('searchInput').dispatchEvent(new Event('input'))");
-   assert.equal(await js(win,"document.querySelectorAll('.record').length"),1);
+   await waitFor(()=>js(win,"document.querySelectorAll('.record').length===1"),'main-process history search renders its result');
    // History privacy operations (task 11): star sync, type filter, clear scope.
    await js(win,"document.getElementById('searchInput').value='';document.getElementById('searchInput').dispatchEvent(new Event('input'))");
+   await waitFor(()=>js(win,"document.querySelectorAll('.record').length===1"),'clearing history search restores the record');
    const typeFilters=await js(win,"[...document.querySelectorAll('[data-type-filter]')].map(b=>b.dataset.typeFilter)");
    assert.deepEqual(typeFilters,['all','capture','text','web'],'type filters offered');
    await js(win,"document.querySelector('[data-type-filter=web]').click();true");
@@ -419,7 +433,7 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(await js(win,"document.getElementById('clearScope').hidden"),true,'cancel dismisses the confirm');
    assert.equal(history.list().length,1,'cancel keeps every record');
    await js(win,`window.floatask.resumeHistory(${JSON.stringify(record.id)})`);
-   const result=await waitFor(()=>page('result'),'result');
+   let result=await waitFor(()=>page('result'),'result');
    await waitFor(()=>js(result,"document.querySelectorAll('.message.assistant').length===1"),'restored messages');
    assert.equal(await js(result,"document.getElementById('statusText').textContent"),'Done');
    await screenshot(result,'result-en');
@@ -566,9 +580,10 @@ server.listen(0,'127.0.0.1',()=>{
     return Boolean(saved && Array.isArray(saved.compact) && saved.compact.join() === manualSize.join());
    },'manual size saved');
    await js(result,"window.floatask.closeResult();true");
-   await waitFor(() => !result.isVisible(),'result window hides before reopening');
+   await waitFor(() => result.isDestroyed(),'result window closes before reopening');
    const resizeRecord = history.list()[0];
-   await js(result,`window.floatask.resumeHistory(${JSON.stringify(resizeRecord.id)});true`);
+   await js(settings,`window.floatask.resumeHistory(${JSON.stringify(resizeRecord.id)});true`);
+   result = await waitFor(()=>page('result'),'result reopens with a fresh renderer');
    await waitFor(() => result.isVisible() && result.getSize().join() === manualSize.join(),'reopened result keeps the manual size');
    require('../src/main/store').save({ resultSize: null });
    // Streaming follow: pinned at the bottom, pauses when reading up, resumes via the follow button.
@@ -623,7 +638,9 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(titlebarProbe.activeColor,titlebarProbe.accent,'the pinned button follows the accent token in the light theme');
    await screenshot(settings,'settings-light');
    // Review round 3: every floating surface must follow the light theme, not
-   // just the answer window.
+   // just the answer window. Resume closes history, so reopen it first.
+   ipcMain.emit('history:open');
+   win=await waitFor(()=>page('history'),'history reopens for the light-theme check');
    await settleTheme(win,'light','history settles on the light theme');
    const historyLightProbe=await js(win,`(() => {
      const shell=getComputedStyle(document.querySelector('.history-shell'));
@@ -637,6 +654,7 @@ server.listen(0,'127.0.0.1',()=>{
    assert.equal(historyLightProbe.shellBg,historyLightProbe.surface,'the history window face follows the light theme');
    assert.equal(historyLightProbe.radius,'16px','the history window card uses the window radius token');
    await js(result,"window.floatask.closeResult();true");
+   await waitFor(()=>result.isDestroyed(),'result closes before the capsule returns');
    await js(settings,"window.floatask.saveSettings({showBubble:true})");
    const bubbleLight=await waitFor(()=>page('bubble'),'bubble in light theme');
    await waitFor(()=>bubbleLight.isVisible(),'capsule shows in the light theme');
@@ -656,10 +674,12 @@ server.listen(0,'127.0.0.1',()=>{
    await js(settings,"window.floatask.saveSettings({showBubble:false})");
    await waitFor(()=>!bubbleLight.isVisible(),'capsule hides again');
    const restoredRecord = require('../src/main/history').list()[0];
-   await js(result,`window.floatask.resumeHistory(${JSON.stringify(restoredRecord.id)});true`);
+   await js(settings,`window.floatask.resumeHistory(${JSON.stringify(restoredRecord.id)});true`);
+   result = await waitFor(()=>page('result'),'result restores with a fresh renderer');
    await waitFor(()=>js(result,"document.querySelectorAll('.message.assistant').length>0"),'result window restored');
-   win.show();
-   win.focus();
+   ipcMain.emit('history:open');
+   win=await waitFor(()=>page('history'),'history reopens for the final capture');
+   await waitFor(()=>win.isVisible(),'history is visible for the final capture');
    await screenshot(win,'history-light');
    await screenshot(result,'task4-compact-light');
    await js(settings,"window.floatask.saveSettings({theme:'dark'})");
@@ -805,12 +825,12 @@ server.listen(0,'127.0.0.1',()=>{
    await waitFor(()=>page('selection'),'accepted guard opens the selection overlay');
    await jsThenClose(page('selection'),"window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))");
    await waitFor(()=>!page('selection'),'Escape closes the accepted overlay');
-   await js(result,"delete window.confirm");
    await js(settings,"window.floatask.saveSettings({vision:true})");
-   await js(result,'window.floatask.startSelection()');
+   await js(settings,'window.floatask.startSelection()');
    const screenshotSelection=await waitFor(()=>page('selection'),'mock screenshot selection');
    await jsThenClose(screenshotSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='vision-model','vision task model');
+   result = await waitFor(()=>page('result'),'recreated result');
    assert(Array.isArray(calls.at(-1).messages.at(-1).content),'screenshot attached to vision model');
    assert.equal(requestPaths.at(-1),'/v1/chat/completions','vision inheritance uses default endpoint, not the initial override');
    const visionProbe=await js(result,`(async()=>{const s=await window.floatask.getResultState();return s.visionAttachment})()`);
@@ -829,6 +849,7 @@ server.listen(0,'127.0.0.1',()=>{
    const fallbackSelection=await waitFor(()=>page('selection'),'initial fallback selection');
    await jsThenClose(fallbackSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.at(-1)?.model==='initial-fast','initial image fallback');
+   result = await waitFor(()=>page('result'),'recreated result');
    await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'initial fallback completed');
    await js(settings,"window.floatask.saveSettings({vision:false})");
    captureDelay = 1000; captureTag = 'old-capture';
@@ -842,6 +863,7 @@ server.listen(0,'127.0.0.1',()=>{
    const newSelection = await waitFor(()=>page('selection'),'new race selection');
    await jsThenClose(newSelection,'window.floatask.finishSelection({x:20,y:20,width:200,height:100})');
    await waitFor(()=>calls.length>beforeCaptureRace && calls.at(-1).messages[0].content.includes('new-capture'),'new capture answer');
+   result = await waitFor(()=>page('result'),'recreated result');
    await pause(1100);
    const racedState = await js(result,'window.floatask.getResultState()');
    assert(racedState.init.selectionText.includes('new-capture'),'slow earlier capture must not replace the newer session');
@@ -851,10 +873,24 @@ server.listen(0,'127.0.0.1',()=>{
    assert.ok(termMeta.includes('ocr ')&&termMeta.includes('lat '),'the term readout shows OCR length and first-token latency');
    const ocrChars=racedState.init.selectionText.replace(/\s+/g,'').length;
    assert.ok(/\s/.test(racedState.init.selectionText)&&termMeta.includes(`ocr ${ocrChars} ch`),`the OCR count is the whitespace-stripped selection length (${ocrChars}): ${termMeta}`);
+   const assistantCount = await js(result,"document.querySelectorAll('.message.assistant').length");
+   streamDelay = 600;
+   await js(result,"document.getElementById('questionInput').value='Reload fixture';document.getElementById('sendBtn').click()");
+   await waitFor(()=>calls.at(-1)?.messages.at(-1).content==='Reload fixture','reload fixture started');
+   await pause(50);
+   const liveSnapshot = await js(result,'window.floatask.getResultState()');
+   assert(Number.isSafeInteger(liveSnapshot.revision),'snapshot must identify its event boundary');
+   assert.equal(liveSnapshot.activeResponse.text,'A useful explanation with enough text to save.');
+   const loaded = new Promise(resolve => result.webContents.once('did-finish-load',resolve));
+   result.webContents.reload(); await loaded;
+   await waitFor(()=>js(result,"document.getElementById('statusText').textContent==='已完成'"),'answer completed after reload');
+   assert.equal(await js(result,"document.querySelectorAll('.message.assistant').length"),assistantCount+1,'reloading a partial answer must not duplicate or drop it');
+   assert.equal(await js(result,"Array.from(document.querySelectorAll('.message.assistant .md-body')).at(-1).textContent.trim()"),'A useful explanation with enough text to save.');
+   streamDelay = 120;
    await js(settings,"window.floatask.setLanguage('en')");
    await waitFor(()=>js(font,"document.getElementById('importBtn').textContent==='＋ Import font file…'"),'font translated');
    await js(result,"document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true");
-   assert.equal(result.isVisible(),false,'Escape closes the answer window at the top of its Esc hierarchy');
+   await waitFor(()=>result.isDestroyed(),'Escape closes the answer window at the top of its Esc hierarchy');
    await js(settings,'window.floatask.saveSettings({showBubble:true})');
    const bubble=await waitFor(()=>page('bubble'),'bubble');
    await waitFor(()=>js(bubble,"document.getElementById('askBtn').title.includes('Capture')"),'bubble translated');
