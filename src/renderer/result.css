@@ -917,3 +917,4 @@ html, body {
   .card * { transition: none; animation: none; }
 }
 .term-label, .session-hash, .term-meta { display: none; }
+.contour-field { display: none; }

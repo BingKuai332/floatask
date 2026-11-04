@@ -109,6 +109,69 @@
     linear-gradient(90deg, var(--fa-grid-line) 1px, transparent 1px);
   background-size: var(--fa-grid-size) var(--fa-grid-size);
   background-attachment: local;
+  anchor-name: --fa-messages;
+}
+
+/* Contour field: procedurally generated survey lines (scripts/generate-contours.js)
+   in the empty bottom-right of the answer viewport, fading out toward the text.
+   Sits under #messages (z-index 1) and follows its box via anchor positioning. */
+[data-theme="industrial"] .contour-field {
+  --fa-contour-base-dur: 60s;
+  --fa-contour-index-dur: 90s;
+  display: block;
+  position: absolute;
+  inset: 0;
+  position-anchor: --fa-messages;
+  top: anchor(top);
+  right: anchor(right);
+  bottom: anchor(bottom);
+  left: anchor(left);
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+  -webkit-mask-image: radial-gradient(circle farthest-corner at 100% 100%, black 0%, rgb(0 0 0 / 0.5) 24%, transparent 52%);
+  mask-image: radial-gradient(circle farthest-corner at 100% 100%, black 0%, rgb(0 0 0 / 0.5) 24%, transparent 52%);
+}
+[data-theme="industrial"] .contour-base,
+[data-theme="industrial"] .contour-index {
+  position: absolute;
+  inset: -20%;
+  will-change: transform;
+  transition: opacity 1.2s ease;
+  animation: fa-contour-drift-a var(--fa-contour-base-dur) ease-in-out infinite alternate;
+}
+[data-theme="industrial"] .contour-base {
+  background-color: var(--fa-muted);
+  opacity: 0.22;
+  -webkit-mask: url("assets/contours.svg") center / cover no-repeat;
+  mask: url("assets/contours.svg") center / cover no-repeat;
+}
+[data-theme="industrial"] .contour-index {
+  background-color: var(--fa-accent);
+  opacity: 0.28;
+  -webkit-mask: url("assets/contours-index.svg") center / cover no-repeat;
+  mask: url("assets/contours-index.svg") center / cover no-repeat;
+  animation-name: fa-contour-drift-b;
+  animation-duration: var(--fa-contour-index-dur);
+}
+[data-theme="industrial"] .card:has(.status-pill.working) .contour-field {
+  --fa-contour-base-dur: 24s;
+  --fa-contour-index-dur: 36s;
+}
+[data-theme="industrial"] .card:has(.status-pill.working) .contour-base { opacity: 0.3; }
+[data-theme="industrial"] .card:has(.status-pill.working) .contour-index { opacity: 0.38; }
+@keyframes fa-contour-drift-a {
+  from { transform: translate(-3%, -2%) rotate(-1.2deg); }
+  to { transform: translate(3%, 2.5%) rotate(1.2deg); }
+}
+@keyframes fa-contour-drift-b {
+  from { transform: translate(2.5%, -3%) rotate(0.8deg); }
+  to { transform: translate(-2.5%, 2%) rotate(-1deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="industrial"] .contour-base,
+  [data-theme="industrial"] .contour-index { animation: none; transition: none; }
 }
 [data-theme="industrial"] .md-body { counter-reset: fa-heading; }
 [data-theme="industrial"] .md-body h1,
@@ -323,4 +386,5 @@
   [data-theme="industrial"].theme-preview { background-image: none; }
   [data-theme="industrial"] .titlebar .brand-logo,
   [data-theme="industrial"] .brand .brand-logo { object-position: initial; background: none; }
+  [data-theme="industrial"] .contour-field { display: none; }
 }

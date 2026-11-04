@@ -26,3 +26,16 @@ test('every page loads ornaments.css right after theme.css', () => {
     assert.match(html, /href="theme\.css"><link rel="stylesheet" href="ornaments\.css">/, page);
   }
 });
+
+test('contour field assets exist, stay small, and are wired into the answer window', () => {
+  for (const name of ['contours.svg', 'contours-index.svg']) {
+    const file = path.join(dir, 'assets', name);
+    assert.ok(fs.existsSync(file), `${name} exists`);
+    const size = fs.statSync(file).size;
+    assert.ok(size < 150 * 1024, `${name} is ${size} bytes`);
+    assert.match(fs.readFileSync(file, 'utf8'), /generate-contours\.js/, `${name} names its generator`);
+  }
+  const html = fs.readFileSync(path.join(dir, 'result.html'), 'utf8');
+  assert.match(html, /<div class="contour-field" aria-hidden="true"><i class="contour-base"><\/i><i class="contour-index"><\/i><\/div>/);
+  assert.match(fs.readFileSync(path.join(dir, 'result.css'), 'utf8'), /\.contour-field \{ display: none; \}/);
+});
