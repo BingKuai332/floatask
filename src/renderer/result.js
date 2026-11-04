@@ -170,6 +170,16 @@ function scrollToBottom(force = false, wasAtBottom = atBottom()) {
   updateFollowButton();
 }
 
+// An upward wheel turn is an explicit 'reading up' intent: unpin before the
+// smooth scroll's first frames (still within the bottom tolerance) let the next
+// streamed render pull the reader back down.
+els.messages.addEventListener('wheel', (event) => {
+  if (event.deltaY < 0 && follow.pinned) {
+    follow.pinned = false;
+    updateFollowButton();
+  }
+}, { passive: true });
+
 els.messages.addEventListener('scroll', () => {
   if (atBottom() && !follow.pinned) {
     follow.pinned = true;

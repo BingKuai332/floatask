@@ -93,6 +93,7 @@ body {
   cursor: pointer;
   transition: background var(--fa-motion-theme-color) var(--fa-easing), color var(--fa-motion-theme-color) var(--fa-easing);
 }
+.mini svg { width: 16px; height: 16px; flex: 0 0 auto; }
 .mini:hover { background: var(--fa-accent-soft); color: var(--fa-accent); }
 .mini:active { transform: translateY(1px); }
 

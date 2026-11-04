@@ -364,6 +364,8 @@
   border-color: var(--fa-primary-button);
 }
 [data-theme="industrial"] .ask svg { color: var(--fa-on-primary); }
+/* Secondary toolbar actions: neutral hover plate instead of the muddy dark-yellow tint. */
+[data-theme="industrial"] .bubble .mini:hover { background: var(--fa-surface-3); color: var(--fa-accent); }
 
 /* ---------- Windows high contrast ---------- */
 /* The system palette takes over: drop brackets, hazard, grid and the conveyor,
