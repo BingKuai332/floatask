@@ -181,7 +181,7 @@
 - 跟随系统仍只在朝日／近月之间切换；前哨只能手动选择，选中后原生主题按深色处理。
 - Windows 高对比度照旧由系统色板接管；斜纹、网格、角标在 forced-colors 下隐藏。减少动态时传送带静止、过渡即时。
 - 正文、OCR 原文与输入内容的字体、字号（12／14／16）与行高与近月一致；不新增字体，微标签、计数、时间、哈希与快捷键使用代码字体栈。
-- 等高线：答案视口右下的 `.contour-field`（muted 细线 + 黄色计曲线，径向遮罩向左上淡出），线条由 `scripts/generate-contours.js`（`npm run build:contours`）以种子噪声 + marching squares 程序化生成、原创，输出 `src/renderer/assets/contours.svg` 与 `contours-index.svg`；只做 transform 漂移，生成中加速，减少动态时静止，forced-colors 下隐藏。
+- 等高线：线条由 `scripts/generate-contours.js`（`npm run build:contours`）以种子噪声 + marching squares 程序化生成、原创（muted 细线 + 每 4 级黄色计曲线）；只做 transform 漂移，减少动态时静止，forced-colors 下隐藏。答案窗：视口右下的 `.contour-field`（survey 预设，`src/renderer/assets/contours.svg` / `contours-index.svg`，径向遮罩向左上淡出，生成中加速）。设置窗：`.card` 首个子元素 `.contour-field.contour-field--page`（ranges 预设，`contours-ranges.svg` / `contours-ranges-index.svg`，低频拉长 ridged 噪声成连绵山脉），铺满整窗、位于全部内容之下（card `isolation: isolate`，field `z-index: -1`），标题栏去网格只留警示条、侧栏去面板底色与切角只留右侧 1px 分隔线、内容区透明；不透明度 0.13 / 0.18，径向遮罩中央淡四周密，漂移 120s / 160s，无加速态。
 
 ### 16.1 未实现的登记项（后续工作）
 

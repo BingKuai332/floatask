@@ -18,6 +18,8 @@ html, body {
   box-shadow: var(--fa-shadow-floating);
 }
 
+.contour-field { display: none; }
+
 .titlebar {
   display: flex;
   align-items: center;

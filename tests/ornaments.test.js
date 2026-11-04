@@ -39,3 +39,19 @@ test('contour field assets exist, stay small, and are wired into the answer wind
   assert.match(html, /<div class="contour-field" aria-hidden="true"><i class="contour-base"><\/i><i class="contour-index"><\/i><\/div>/);
   assert.match(fs.readFileSync(path.join(dir, 'result.css'), 'utf8'), /\.contour-field \{ display: none; \}/);
 });
+
+test('ranges contour assets exist, stay small, and fill the settings window', () => {
+  for (const name of ['contours-ranges.svg', 'contours-ranges-index.svg']) {
+    const file = path.join(dir, 'assets', name);
+    assert.ok(fs.existsSync(file), `${name} exists`);
+    const size = fs.statSync(file).size;
+    assert.ok(size < 150 * 1024, `${name} is ${size} bytes`);
+    assert.match(fs.readFileSync(file, 'utf8'), /generate-contours\.js/, `${name} names its generator`);
+  }
+  const html = fs.readFileSync(path.join(dir, 'settings.html'), 'utf8');
+  assert.match(html, /<div class="card">\s*<div class="contour-field contour-field--page" aria-hidden="true"><i class="contour-base"><\/i><i class="contour-index"><\/i><\/div>/);
+  assert.match(fs.readFileSync(path.join(dir, 'settings.css'), 'utf8'), /\.contour-field \{ display: none; \}/);
+  const css = fs.readFileSync(cssPath, 'utf8');
+  assert.match(css, /\.contour-field--page \.contour-base \{[^}]*contours-ranges\.svg/);
+  assert.match(css, /\.contour-field--page \.contour-index \{[^}]*contours-ranges-index\.svg/);
+});

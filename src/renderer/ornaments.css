@@ -236,13 +236,52 @@
 }
 
 /* ---------- settings ---------- */
+/* One continuous contour range (ridged preset of scripts/generate-contours.js)
+   behind the whole window: title bar, sidebar and content share it, so none of
+   them carries its own panel surface or grid. The card isolates a stacking
+   context and the field sits at z-index -1, above the card fill and below
+   every child, without repositioning them. */
+[data-theme="industrial"] .card:has(> .contour-field--page) { isolation: isolate; }
+[data-theme="industrial"] .contour-field.contour-field--page {
+  --fa-contour-base-dur: 120s;
+  --fa-contour-index-dur: 160s;
+  position-anchor: auto;
+  inset: 0;
+  z-index: -1;
+  /* Thin in the middle of the content column, denser toward the edges and the
+     bottom, so labels and help text stay clean. */
+  -webkit-mask-image: radial-gradient(ellipse 58% 62% at 60% 40%, rgb(0 0 0 / 0.28) 0%, rgb(0 0 0 / 0.5) 55%, black 100%);
+  mask-image: radial-gradient(ellipse 58% 62% at 60% 40%, rgb(0 0 0 / 0.28) 0%, rgb(0 0 0 / 0.5) 55%, black 100%);
+}
+[data-theme="industrial"] .contour-field--page .contour-base {
+  opacity: 0.13;
+  -webkit-mask-image: url("assets/contours-ranges.svg");
+  mask-image: url("assets/contours-ranges.svg");
+}
+[data-theme="industrial"] .contour-field--page .contour-index {
+  opacity: 0.18;
+  -webkit-mask-image: url("assets/contours-ranges-index.svg");
+  mask-image: url("assets/contours-ranges-index.svg");
+}
+/* Title bar: keep only the hazard edge; the field replaces the grid. */
+[data-theme="industrial"] .card:has(> .contour-field--page) > .titlebar {
+  background-color: transparent;
+  background-image: var(--fa-hazard);
+  background-size: 7px 100%;
+  background-repeat: no-repeat;
+}
+/* Sidebar: no panel, no bevel frame, just a hairline toward the content. */
 [data-theme="industrial"] .settings-nav {
   counter-reset: fa-nav;
-  background-image:
-    linear-gradient(var(--fa-grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--fa-grid-line) 1px, transparent 1px);
-  background-size: var(--fa-grid-size) var(--fa-grid-size);
+  margin: 0;
+  padding: 17px 6px 9px 15px;
+  border-radius: 0;
+  border-right: 1px solid var(--fa-divider);
+  background: transparent;
 }
+[data-theme="industrial"] .body-row,
+[data-theme="industrial"] .scroll-body,
+[data-theme="industrial"] .scroll-body > .section { background: transparent; }
 [data-theme="industrial"] .settings-nav-item { position: relative; counter-increment: fa-nav; }
 [data-theme="industrial"] .settings-nav-item::before {
   content: counter(fa-nav, decimal-leading-zero);
@@ -389,7 +428,6 @@
   [data-theme="industrial"] .titlebar,
   [data-theme="industrial"] .history-header,
   [data-theme="industrial"] .messages,
-  [data-theme="industrial"] .settings-nav,
   [data-theme="industrial"] #stage,
   [data-theme="industrial"] .error-card,
   [data-theme="industrial"] .clear-scope,
