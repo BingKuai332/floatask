@@ -100,6 +100,10 @@ function sourceOf(session) {
   return 'selection';
 }
 
+function newHistoryId() {
+  return `h-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
 /**
  * Upsert the in-flight session into history. Called after each completed
  * (or partially completed) answer.
@@ -110,7 +114,7 @@ function record(session, meta = {}) {
   const lastAssistant = messages.some((m) => m.role === 'assistant');
   if (!lastAssistant) return null;
 
-  if (!session.historyId) session.historyId = `h-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  if (!session.historyId) session.historyId = newHistoryId();
   const existing = records.find((r) => r.id === session.historyId);
   const now = Date.now();
 
@@ -234,4 +238,4 @@ function purge(retentionDays) {
   return removed;
 }
 
-module.exports = { load, record, list, get, release, setFavorite, remove, clear, purge, historyPath };
+module.exports = { load, record, newHistoryId, list, get, release, setFavorite, remove, clear, purge, historyPath };

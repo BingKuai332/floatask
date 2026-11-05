@@ -7,12 +7,13 @@ const vm = require('node:vm');
 const { EventEmitter } = require('node:events');
 
 function runtime() {
-  const windows = [], handlers = new Map(), timers = [], registered = new Set(), streams = [];
+  const windows = [], handlers = new Map(), timers = [], registered = new Set(), streams = [], saved = [];
   const config = {showBubble:false, hotkey:'Alt+Q', fontFamily:'system', fontScope:'all'};
   let releases = 0;
   class Window extends EventEmitter {
     constructor(options) {
       super(); this.options=options; this.visible=false; this.destroyed=false;
+      this.bounds={x:options.x??100,y:options.y??100,width:options.width,height:options.height};
       this.children=[]; options.parent?.children.push(this); windows.push(this);
       this.webContents = new EventEmitter();
       this.webContents.setWindowOpenHandler=()=>{};
@@ -22,6 +23,8 @@ function runtime() {
       this.webContents.executeJavaScript=()=>Promise.resolve();
     }
     loadFile(filename) { this.filename=filename; return new Promise((resolve,reject)=>{this.finish=resolve;this.fail=reject;}); }
+    getBounds() {return {...this.bounds};}
+    getSize() {return [this.bounds.width,this.bounds.height];}
     isDestroyed() {return this.destroyed;}
     isVisible() {if(this.destroyed)throw Error('Object has been destroyed');return this.visible;}
     show() {if(this.destroyed)throw Error('Object has been destroyed');this.visible=true;}
@@ -30,30 +33,39 @@ function runtime() {
     hide() {this.visible=false;this.emit('hide');}
     destroy() {if(this.destroyed)return;this.destroyed=true;this.children.forEach(child=>child.destroy());this.emit('closed');}
     close() {const event={prevented:false,preventDefault(){this.prevented=true;}};this.emit('close',event);if(!event.prevented)this.destroy();}
-    setMenuBarVisibility() {} setAlwaysOnTop() {} setVisibleOnAllWorkspaces() {} setPosition() {} setBounds() {}
-    getPosition() {return [100,100];}
+    setMenuBarVisibility() {} setAlwaysOnTop() {} setVisibleOnAllWorkspaces() {} setResizable() {} setMinimumSize() {}
+    setPosition(x,y) {this.bounds.x=x;this.bounds.y=y;}
+    setBounds(bounds) {this.bounds={...this.bounds,...bounds};}
+    getPosition() {return [this.bounds.x,this.bounds.y];}
   }
+  Window.getAllWindows=()=>windows.filter(win=>!win.isDestroyed());
   const display = {workArea:{x:0,y:0,width:1280,height:900},bounds:{x:0,y:0,width:1280,height:900}};
   const app = {setName(){},setPath(){},getPath:()=>path.join(__dirname,'mock-user-data'),requestSingleInstanceLock:()=>false,quit(){}};
   const ipcMain = {on:(key,fn)=>handlers.set(key,fn),handle:(key,fn)=>handlers.set(key,fn)};
   const electron = {app,BrowserWindow:Window,ipcMain,protocol:{registerSchemesAsPrivileged(){}},
     globalShortcut:{unregisterAll:()=>registered.clear(),register:key=>{registered.add(key);return true;}},
-    screen:{getCursorScreenPoint:()=>({x:100,y:100}),getDisplayNearestPoint:()=>display,getPrimaryDisplay:()=>display,getAllDisplays:()=>[display]},
-    Notification:{isSupported:()=>false},nativeImage:{createFromBuffer:()=>({}),createEmpty:()=>({})},Menu:{buildFromTemplate:()=>({})}};
-  const modules = {'electron':electron,'./store':{getConfig:()=>config,setBubblePosition(){}},'../shared/presets':{PRESETS:{}},
+    screen:{getCursorScreenPoint:()=>({x:100,y:100}),getDisplayNearestPoint:()=>display,getDisplayMatching:()=>display,getPrimaryDisplay:()=>display,getAllDisplays:()=>[display]},
+    Notification:{isSupported:()=>false},nativeImage:{createFromBuffer:()=>({}),createEmpty:()=>({})},Menu:{buildFromTemplate:()=>({})},
+    nativeTheme:{themeSource:'system',shouldUseDarkColors:false},systemPreferences:{getAnimationSettings:()=>({prefersReducedMotion:true})}};
+  const modules = {'electron':electron,'./store':{getConfig:()=>config,setBubblePosition(){},save(patch){saved.push(patch);Object.assign(config,patch);}},'../shared/presets':{PRESETS:{}},
     './i18n':{t:key=>key},'../shared/i18n':{normalizeLocale:value=>value},'./history':{release:()=>releases++,list:()=>[],get:()=>null},
     './model-config':{TASKS:['initial','followup','vision']},'../shared/hotkeys':{},'./updater':{},'./capture':{},'./powershell':{},'./search':{},
     './ai':{streamChat:args=>new Promise((resolve,reject)=>streams.push({...args,resolve,reject}))},'./prompt':{}};
   const mockFs = {...fs,mkdirSync(){},accessSync(){},readFileSync:()=>Buffer.alloc(0)};
-  const context = {require:name=>name==='fs'?mockFs:modules[name] || require(name),console,
+  const context = {require:name=>{
+    if(name==='fs')return mockFs;
+    if(modules[name])return modules[name];
+    return name.startsWith('.')?require(path.resolve(__dirname,'../src/main',name)):require(name);
+  },console,
     __dirname:path.resolve(__dirname,'../src/main'),process:{...process,on(){}},AbortController,
     setTimeout(fn,ms){const timer={fn,ms,active:true,unref(){}};timers.push(timer);return timer;},
-    clearTimeout(timer){if(timer)timer.active=false;}};
+    clearTimeout(timer){if(timer)timer.active=false;},
+    setInterval(fn,ms){const timer={fn,ms,active:true,unref(){}};timers.push(timer);return timer;},clearInterval(timer){if(timer)timer.active=false;}};
   const source=fs.readFileSync(path.resolve(__dirname,'../src/main/main.js'),'utf8');
-  vm.runInNewContext(source+`\nglobalThis.control={openSettings,openFontWindow,openHistory,ensureResultWindow,refreshBubble,runStream,sendResult,
+  vm.runInNewContext(source+`\nglobalThis.control={openSettings,openFontWindow,openHistory,ensureResultWindow,refreshBubble,runStream,sendResult,setResultCollapsed,
     setSession:value=>{session=value;resultState={model:'default',selectionText:'selection'};},
     state:()=>({settingsWin,fontWin,historyWin,resultWin,bubbleWin}),recording:()=>Boolean(recordingTimer)};`,context);
-  return {control:context.control,handlers,windows,config,timers,registered,streams,releases:()=>releases};
+  return {control:context.control,handlers,windows,config,timers,registered,streams,saved,releases:()=>releases};
 }
 
 for (const [open,key] of [['openSettings','settingsWin'],['openFontWindow','fontWin'],['openHistory','historyWin'],['ensureResultWindow','resultWin']]) {
@@ -119,4 +131,12 @@ test('stream snapshots cover all deltas at their revision and clear live state a
   assert.equal(done.init.messages.length,2);assert.equal(done.init.messages[1].content,'First second.');
   env.control.sendResult({type:'error',message:'Test error'});
   const failed=env.handlers.get('session:state')();assert.equal(failed.terminalEvent.type,'error');assert.equal(failed.terminalEvent.revision,failed.revision);
+});
+
+test('collapsed result dimensions are never saved as a user resize', async () => {
+  const env=runtime();const opening=env.control.ensureResultWindow();const win=env.control.state().resultWin;
+  win.finish();await opening;win.show();env.control.setResultCollapsed(true);
+  assert.deepEqual(win.getSize(),[300,74]);
+  const poll=env.timers.find(timer=>timer.active && timer.ms===700);assert(poll);poll.fn();
+  assert.equal(env.saved.length,0,'the collapse must not overwrite the remembered user size');
 });

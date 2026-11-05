@@ -17,6 +17,7 @@ function fixture(filename, overrides = {}) {
     }
     append(...nodes) { for(const node of nodes) this.appendChild(node); }
     appendChild(node) { node.remove(); this.children.push(node); node.parentNode=this; return node; }
+    insertBefore(node,reference) { node.remove(); const index=this.children.indexOf(reference); if(index<0)this.children.push(node);else this.children.splice(index,0,node); node.parentNode=this; return node; }
     replaceChildren(...nodes) { for(const child of this.children) child.parentNode=null; this.children=[]; this.append(...nodes); }
     remove() { if(this.parentNode) { const parent=this.parentNode; parent.children=parent.children.filter(child=>child!==this); this.parentNode=null; } }
     set innerHTML(html) { this.html=html; this.replaceChildren(); this.selectors.clear(); }
@@ -25,6 +26,7 @@ function fixture(filename, overrides = {}) {
     fire(type, event={}) { return this.listeners.get(type)?.(event); }
     querySelector(selector) { if(!this.selectors.has(selector)) this.selectors.set(selector,new Element()); return this.selectors.get(selector); }
     querySelectorAll() { return []; }
+    scrollTo(options) { this.scrollTop=Number(options?.top)||0; }
     setAttribute(name,value) { this.attributes.set(name,value); }
     removeAttribute(name) { this.attributes.delete(name); if(name==='src') delete this.src; }
     focus() {}
@@ -32,18 +34,19 @@ function fixture(filename, overrides = {}) {
   function element(id) { if(!elements.has(id)) elements.set(id,new Element()); return elements.get(id); }
   const restore = deferred();
   const api = {
-    getResultState:()=>restore.promise, getFont:async()=>({}),
+    getResultState:()=>restore.promise, getFont:async()=>({}), getSettings:async()=>({}),
     listHistory:async()=>({ok:true,records:[]}), getHistoryRecord:async()=>({ok:true,record:null}),
     setHistoryFavorite:async()=>({ok:true}), deleteHistoryRecord:async()=>({ok:true}), clearHistory:async()=>({ok:true}),
     ...overrides
   };
-  for(const name of ['onHistoryUpdated','onHistoryShowRecord','onFontUpdated','onResultInit','onResultEvent']) api[name]=callback=>{subscriptions[name]=callback;};
+  for(const name of ['onHistoryUpdated','onHistoryShowRecord','onFontUpdated','onResultInit','onResultEvent','onResultMode','onResultCollapsed','onOcrGuard']) api[name]=callback=>{subscriptions[name]=callback;};
   const window = {
     floatask:api, FloatAskI18n:{language:'en',t:key=>key}, FloatAskI18N:{LOCALES:{en:{}}},
-    FloatAskMarkdown:{render:s=>s,escapeHtml:s=>String(s)}, FloatAskFont:{apply(){}}, FloatAskI18nReady:new Promise(()=>{})
+    FloatAskMarkdown:{render:s=>s,escapeHtml:s=>String(s)}, FloatAskFont:{apply(){}}, FloatAskI18nReady:new Promise(()=>{}),
+    FloatAskShortHash:require('../src/shared/short-hash')
   };
-  const context = vm.createContext({window, document:{getElementById:element,createElement:()=>new Element(),querySelector:selector=>element(selector),addEventListener(){},documentElement:{style:{setProperty(){}}}},
-    setTimeout(callback,delay) {const id=++timerId; timers.set(id,{callback,delay});return id;},clearTimeout:id=>timers.delete(id),URL,console});
+  const context = vm.createContext({window, document:{getElementById:element,createElement:()=>new Element(),querySelector:selector=>element(selector),querySelectorAll:()=>[],addEventListener(){},body:new Element(),documentElement:{style:{setProperty(){}},dataset:{}}},
+    setTimeout(callback,delay) {const id=++timerId; timers.set(id,{callback,delay});return id;},clearTimeout:id=>timers.delete(id),requestAnimationFrame:callback=>callback(),URL,console});
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../src/renderer',filename),'utf8'),context);
   return {api,context,element,subscriptions,timers,restore,read:expression=>vm.runInContext(expression,context)};
 }
@@ -64,7 +67,7 @@ test('history refresh never switches back over a newer pending user selection', 
 test('clearing history invalidates an already requested record response', async()=>{
   const pending=deferred();const app=fixture('history.js',{getHistoryRecord:()=>pending.promise});
   const selection=app.read('select("removed")');
-  await app.element('clearBtn').onclick();await app.element('clearBtn').onclick();
+  await app.element('clearBtn').onclick();await app.element('historyClearConfirm').onclick();
   pending.resolve({ok:true,record:record('removed')});await selection;
   assert.equal(app.read('selected'),null);
 });
@@ -173,4 +176,17 @@ test('a pending throttled render uses only the current session after reset',()=>
   app.subscriptions.onResultEvent({type:'start',mode:'initial'});app.subscriptions.onResultEvent({type:'delta',text:'new answer'});
   for(const timer of app.timers.values()) if(timer.delay===80) timer.callback();
   assert.equal(app.read('state.current.content.innerHTML'),'new answer');
+});
+
+test('history renders main-process search results without a stale renderer index',async()=>{
+  const app=fixture('history.js',{listHistory:async({query})=>({ok:true,records:query==='needle'?[{...record('match'),snippet:'needle'}]:[]})});
+  app.element('searchInput').fire('input',{target:{value:'needle'}});const refresh=app.read('refresh()');await refresh;
+  assert.equal(app.element('recordList').children[0].className,'record');
+});
+
+test('a restored result keeps its session hash visible',async()=>{
+  const app=fixture('result.js');
+  app.restore.resolve({init:{selectionText:'saved',status:'ready'},historyId:'h-restored',busy:false});await flush();
+  assert.equal(app.read('state.historyId'),'h-restored');
+  assert.match(app.element('sessionHash').textContent,/^0x[0-9A-F]{4}$/);
 });

@@ -22,6 +22,9 @@ contextBridge.exposeInMainWorld('floatask', {
   bubbleMenu: () => ipcRenderer.send('app:bubble-menu'),
   expandBubble: () => ipcRenderer.send('bubble:expand'),
   collapseBubble: () => ipcRenderer.send('bubble:collapse'),
+  beginBubbleDrag: () => ipcRenderer.send('bubble:drag-start'),
+  moveBubbleDrag: (delta) => ipcRenderer.send('bubble:drag-move', delta),
+  endBubbleDrag: () => ipcRenderer.send('bubble:drag-end'),
   hideBubble: () => ipcRenderer.send('bubble:hide'),
   bubbleMenuOpen: (direction, height) => ipcRenderer.send('bubble:menu-open', { direction, height }),
   bubbleMenuClose: () => ipcRenderer.send('bubble:menu-close'),
@@ -69,6 +72,7 @@ contextBridge.exposeInMainWorld('floatask', {
   // Settings
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (patch) => ipcRenderer.invoke('settings:save', patch),
+  previewTheme: (preference) => ipcRenderer.send('settings:preview-theme', preference),
   testConnection: (draft) => ipcRenderer.invoke('settings:test', draft),
   closeSettings: () => ipcRenderer.send('settings:close'),
   openSettings: () => ipcRenderer.send('app:settings'),

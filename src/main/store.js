@@ -8,6 +8,8 @@ const { PRESETS } = require('../shared/presets');
 const { normalizeLocale } = require('../shared/i18n');
 const { normalizeHotkey } = require('../shared/hotkeys');
 const { TASKS } = require('./model-config');
+const { sanitizeDock } = require('./window-geometry');
+const { normalizeThemePreference } = require('./theme-preference');
 
 function defaultLanguage() {
   try {
@@ -41,6 +43,7 @@ const DEFAULTS = {
   hotkey: 'Alt+Q',
   showBubble: true,
   bubblePosition: null,
+  bubbleDock: null,
   autoLaunch: false,
   onboarded: false,
   theme: 'system',
@@ -110,7 +113,7 @@ function sanitize(patch, current) {
   if (patch.fontScope === 'all' || patch.fontScope === 'reading') next.fontScope = patch.fontScope;
   if (!['all', 'reading'].includes(next.fontScope)) next.fontScope = 'all';
   if (typeof patch.theme === 'string') next.theme = patch.theme;
-  if (!['system', 'light', 'dark'].includes(next.theme)) next.theme = 'system';
+  next.theme = normalizeThemePreference(next.theme);
   if (patch.onboardingStep === 1 || patch.onboardingStep === 2 || patch.onboardingStep === 3) next.onboardingStep = patch.onboardingStep;
   if (typeof patch.historyRetentionDays !== 'undefined') {
     next.historyRetentionDays = Math.round(clampNumber(patch.historyRetentionDays, current.historyRetentionDays, 0, 365));
@@ -136,6 +139,7 @@ function sanitize(patch, current) {
       y: Math.round(patch.bubblePosition.y)
     };
   }
+  if (Object.prototype.hasOwnProperty.call(patch, 'bubbleDock')) next.bubbleDock = sanitizeDock(patch.bubbleDock);
   if (patch.resultSize === null) {
     next.resultSize = null;
   } else if (patch.resultSize && typeof patch.resultSize === 'object') {
@@ -294,6 +298,10 @@ function setBubblePosition(x, y) {
   save({ bubblePosition: { x: Math.round(x), y: Math.round(y) } });
 }
 
+function setBubbleDock(dock) {
+  save({ bubbleDock: dock || null });
+}
+
 function markOnboarded() {
   const c = load();
   if (!c.onboarded) {
@@ -308,6 +316,7 @@ module.exports = {
   publicSettings,
   save,
   setBubblePosition,
+  setBubbleDock,
   markOnboarded,
   getConfigPath
 };

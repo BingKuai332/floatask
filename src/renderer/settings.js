@@ -405,6 +405,7 @@ els.language.addEventListener('change', async () => {
   if (!result.ok) { els.language.value = previous; showToast(result.message, true); return; }
   settings.language = els.language.value;
   window.FloatAskI18n.setLanguage(settings.language);
+  applyAppearancePreview();
   const keyDraft = els.apiKey.value;
   renderProviders(); updateProviderUi(false); updateKeyUi(); updateHotkeyHelp();
   els.apiKey.value = keyDraft;
@@ -436,39 +437,65 @@ function selectPanel(name) {
 }
 for (const item of navItems) item.addEventListener('click', () => selectPanel(item.dataset.panel));
 
-/* Theme / answer size / density: live preview now, persisted on save.
-   The underlying model stays compatible: untouched values pass through. */
+const settingsNav = typeof document.querySelector === 'function' ? document.querySelector('.settings-nav') : null;
+let navWheelDelta = 0;
+if (settingsNav) settingsNav.addEventListener('wheel', event => {
+  event.preventDefault();
+  navWheelDelta += event.deltaY;
+  if (Math.abs(navWheelDelta) < 40) return;
+  const direction = navWheelDelta > 0 ? 1 : -1;
+  navWheelDelta = 0;
+  const current = navItems.findIndex(item => item.dataset.panel === currentPanel);
+  const next = Math.min(navItems.length - 1, Math.max(0, current + direction));
+  if (next !== current && next >= 0) selectPanel(navItems[next].dataset.panel);
+}, { passive: false });
+
+/* Theme persists immediately; answer size, font size and density preview live
+   and persist on save. Untouched values pass through unchanged. */
 const DENSITY_LINE_HEIGHT = { compact: 1.5, standard: 1.72, relaxed: 2.0 };
-const SIZE_CHOICES = [12, 14, 16];
 const appearance = { theme: 'system', fontSize: 14, lineHeight: 1.72 };
 let savedAppearance = { ...appearance };
-
-function nearestChoice(values, actual) {
-  return values.reduce((best, v) => Math.abs(v - actual) < Math.abs(best - actual) ? v : best, values[0]);
-}
+let themeSaveSequence = 0;
 
 function setSegmented(containerId, dataAttr, value) {
   if (typeof document.querySelectorAll !== 'function') return;
   for (const btn of document.querySelectorAll(`#${containerId} .segmented-option`)) {
-    btn.classList.toggle('active', btn.dataset[dataAttr] === String(value));
+    const active = btn.dataset[dataAttr] === String(value);
+    btn.classList.toggle('active', active);
+    if (btn.getAttribute('role') === 'radio') btn.setAttribute('aria-checked', String(active));
   }
 }
 
 function resolvePreviewTheme(value) {
-  if (value === 'light' || value === 'dark') return value;
+  if (window.FloatAskThemeIds.isExplicitTheme(value)) return value;
   try { return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
-  catch { return 'dark'; }
+  catch { return 'light'; }
 }
 
 function applyAppearancePreview() {
   document.documentElement.dataset.theme = resolvePreviewTheme(appearance.theme);
+  if (typeof api.previewTheme === 'function') api.previewTheme(appearance.theme);
   if (typeof document.getElementById !== 'function') return;
+  const line = appearance.lineHeight;
+  const density = line < 1.6 ? 'compact' : (line > 1.95 ? 'relaxed' : 'standard');
   const preview = document.getElementById('readingPreview');
   if (preview) {
-    const line = appearance.lineHeight;
-    preview.dataset.density = line < 1.6 ? 'compact' : (line > 1.95 ? 'relaxed' : 'standard');
+    preview.dataset.density = density;
     preview.style.setProperty('--preview-size', `${appearance.fontSize}px`);
   }
+  const slider = document.getElementById('fontSizeControl');
+  if (slider) {
+    const displayedSize = Math.min(16, Math.max(12, appearance.fontSize));
+    slider.value = String(displayedSize);
+    slider.style.setProperty('--slider-progress', `${(displayedSize - 12) * 25}%`);
+    slider.setAttribute('aria-valuetext', `${appearance.fontSize} px`);
+  }
+  const value = document.getElementById('fontSizeValue');
+  if (value) value.textContent = `${appearance.fontSize} px`;
+  const previewTheme = document.getElementById('readingPreviewTheme');
+  if (previewTheme) previewTheme.textContent = `${tt(`theme.${appearance.theme}`)} · ${tt(`settings.density${density[0].toUpperCase()}${density.slice(1)}`)}`;
+  const previewMeta = document.getElementById('readingPreviewMeta');
+  if (previewMeta) previewMeta.textContent = `${appearance.fontSize} px / ${line.toFixed(2)}`;
 }
 
 function populateAppearance() {
@@ -477,7 +504,6 @@ function populateAppearance() {
   appearance.lineHeight = Number(settings.lineHeight) || 1.72;
   savedAppearance = { ...appearance };
   setSegmented('themeControl', 'themeValue', appearance.theme);
-  setSegmented('sizeControl', 'sizeValue', nearestChoice(SIZE_CHOICES, appearance.fontSize));
   const line = appearance.lineHeight;
   setSegmented('densityControl', 'densityValue', line < 1.6 ? 'compact' : (line > 1.95 ? 'relaxed' : 'standard'));
   applyAppearancePreview();
@@ -494,13 +520,26 @@ function bindSegmented(id, attr, apply) {
 }
 
 bindSegmented('themeControl', 'theme-value', (btn) => {
+  const previousTheme = savedAppearance.theme;
+  const sequence = ++themeSaveSequence;
   appearance.theme = btn.dataset.themeValue;
+  savedAppearance.theme = appearance.theme;
   setSegmented('themeControl', 'themeValue', appearance.theme);
   applyAppearancePreview();
+  api.saveSettings({ theme: appearance.theme }).then(result => {
+    if (!result?.ok) throw new Error(result?.message || tt('settings.saveFailed'));
+  }).catch(err => {
+    if (sequence !== themeSaveSequence) return;
+    appearance.theme = previousTheme;
+    savedAppearance.theme = previousTheme;
+    setSegmented('themeControl', 'themeValue', previousTheme);
+    applyAppearancePreview();
+    showToast(err.message || tt('settings.saveFailed'), true);
+  });
 });
-bindSegmented('sizeControl', 'size-value', (btn) => {
-  appearance.fontSize = Number(btn.dataset.sizeValue);
-  setSegmented('sizeControl', 'sizeValue', appearance.fontSize);
+const fontSizeControl = document.getElementById('fontSizeControl');
+if (fontSizeControl) fontSizeControl.addEventListener('input', (event) => {
+  appearance.fontSize = Number(event.currentTarget.value);
   applyAppearancePreview();
 });
 bindSegmented('densityControl', 'density-value', (btn) => {

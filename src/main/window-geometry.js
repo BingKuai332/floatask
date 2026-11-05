@@ -6,8 +6,9 @@ const SNAP_DISTANCE = 24;
 const EXPANDED_EDGE_GAP = 8;
 
 const CAPSULE_EXPANDED = [328, 52];
-const HALF_CAPSULE_VERTICAL = [44, 64];
+const HALF_CAPSULE_VERTICAL = [44, 52];
 const HALF_CAPSULE_HORIZONTAL = [64, 44];
+const SHADOW_PADDING = 10;
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
@@ -26,8 +27,10 @@ function clampToWorkArea(bounds, workArea) {
  * Snap a top-left position to the nearest work-area edge when it lands within
  * SNAP_DISTANCE of that edge. Returns the snapped position and the edge name
  * ('left' | 'right' | 'top' | 'bottom'), or edge null when floating.
+ * On a distance tie `preferredEdge` (the dock's previous edge) wins; without
+ * one, ties resolve in left, right, top, bottom order.
  */
-function snapToolbar(position, size, workArea) {
+function snapDock(position, size, workArea, preferredEdge = null) {
   const clamped = clampToWorkArea({ x: position.x, y: position.y, width: size.width, height: size.height }, workArea);
   const distances = [
     { edge: 'left', distance: clamped.x - workArea.x },
@@ -35,7 +38,8 @@ function snapToolbar(position, size, workArea) {
     { edge: 'top', distance: clamped.y - workArea.y },
     { edge: 'bottom', distance: workArea.y + workArea.height - (clamped.y + clamped.height) }
   ];
-  distances.sort((a, b) => a.distance - b.distance);
+  distances.sort((a, b) => (a.distance - b.distance) ||
+    ((b.edge === preferredEdge) - (a.edge === preferredEdge)));
   const nearest = distances[0];
   if (nearest.distance > SNAP_DISTANCE) return { position: { x: clamped.x, y: clamped.y }, edge: null };
   const snapped = { x: clamped.x, y: clamped.y };
@@ -44,6 +48,10 @@ function snapToolbar(position, size, workArea) {
   if (nearest.edge === 'top') snapped.y = workArea.y;
   if (nearest.edge === 'bottom') snapped.y = workArea.y + workArea.height - clamped.height;
   return { position: snapped, edge: nearest.edge };
+}
+
+function snapToolbar(position, size, workArea) {
+  return snapDock(position, size, workArea);
 }
 
 /** Where the expanded capsule floats when it belongs to a snapped edge: EXPANDED_EDGE_GAP DIP off the edge. */
@@ -56,6 +64,124 @@ function edgeGapPosition(edge, size, position, workArea) {
   return clampToWorkArea({ ...next, width: size.width, height: size.height }, workArea);
 }
 
+const DOCK_EDGES = ['left', 'right', 'top', 'bottom'];
+
+function halfCapsuleSize(edge) {
+  return edge === 'left' || edge === 'right'
+    ? { width: HALF_CAPSULE_VERTICAL[0], height: HALF_CAPSULE_VERTICAL[1] }
+    : { width: HALF_CAPSULE_HORIZONTAL[0], height: HALF_CAPSULE_HORIZONTAL[1] };
+}
+
+/** Half-capsule bounds (visible, no padding) flush on `edge`, keeping the along-edge coordinate of `capsule`. */
+function dockAnchor(edge, capsule, workArea) {
+  const size = halfCapsuleSize(edge);
+  const anchors = {
+    left: { x: workArea.x, y: capsule.y },
+    right: { x: workArea.x + workArea.width - size.width, y: capsule.y },
+    top: { x: capsule.x, y: workArea.y },
+    bottom: { x: capsule.x, y: workArea.y + workArea.height - size.height }
+  };
+  return clampToWorkArea({ ...anchors[edge], ...size }, workArea);
+}
+
+/** Window bounds for a docked half-capsule: the anchor plus the transparent shadow padding. */
+function dockedWindowBounds(anchor, padding = SHADOW_PADDING) {
+  return { x: anchor.x - padding, y: anchor.y - padding, width: anchor.width + padding * 2, height: anchor.height + padding * 2 };
+}
+
+/**
+ * Expanded window bounds for a docked capsule. The capsule grows from the
+ * anchor (down/right when there is room, otherwise up/left from the anchor's
+ * far end) and sits EXPANDED_EDGE_GAP DIP off its edge on all four sides.
+ */
+function expansionPlacement(edge, anchor, workArea, padding = SHADOW_PADDING) {
+  const [length, thickness] = CAPSULE_EXPANDED;
+  const vertical = edge === 'left' || edge === 'right';
+  const axis = vertical ? 'vertical' : 'horizontal';
+  const areaRight = workArea.x + workArea.width;
+  const areaBottom = workArea.y + workArea.height;
+  const direction = vertical
+    ? (anchor.y + length + EXPANDED_EDGE_GAP > areaBottom ? 'up' : 'down')
+    : (anchor.x + length + EXPANDED_EDGE_GAP > areaRight ? 'left' : 'right');
+  const width = (vertical ? thickness : length) + padding * 2;
+  const height = (vertical ? length : thickness) + padding * 2;
+  let capsuleX;
+  let capsuleY;
+  if (vertical) {
+    capsuleX = edge === 'left' ? workArea.x + EXPANDED_EDGE_GAP : areaRight - EXPANDED_EDGE_GAP - thickness;
+    capsuleY = direction === 'down' ? anchor.y : anchor.y + anchor.height - length;
+  } else {
+    capsuleY = edge === 'top' ? workArea.y + EXPANDED_EDGE_GAP : areaBottom - EXPANDED_EDGE_GAP - thickness;
+    capsuleX = direction === 'right' ? anchor.x : anchor.x + anchor.width - length;
+  }
+  const paddedArea = padArea(workArea, padding);
+  return {
+    axis,
+    direction,
+    bounds: clampToWorkArea({ x: capsuleX - padding, y: capsuleY - padding, width, height }, paddedArea)
+  };
+}
+
+/** Validate a persisted dock ({ edge, anchor }); returns null when unusable. */
+function sanitizeDock(dock) {
+  if (!dock || !DOCK_EDGES.includes(dock.edge)) return null;
+  const a = dock.anchor || {};
+  if (![a.x, a.y, a.width, a.height].every(Number.isFinite)) return null;
+  if (!(a.width > 0) || !(a.height > 0)) return null;
+  return { edge: dock.edge, anchor: { x: Math.round(a.x), y: Math.round(a.y), width: Math.round(a.width), height: Math.round(a.height) } };
+}
+
+/**
+ * The visible capsule to snap when a floating drag ends: the expanded capsule
+ * inside the window's shadow padding, with no preferred edge.
+ */
+function dragSnapCapsule(windowBounds, padding) {
+  return {
+    capsule: { x: windowBounds.x + padding, y: windowBounds.y + padding, width: CAPSULE_EXPANDED[0], height: CAPSULE_EXPANDED[1] },
+    preferredEdge: null
+  };
+}
+
+/**
+ * Result of a drag that started from a dock (collapsed or hover-expanded):
+ * the original anchor moved by the window's drag delta, snapped with its own
+ * size and the previous edge preferred. Using the anchor rather than the
+ * expanded capsule keeps a corner dock that expanded up/left on its edge.
+ * Returns { edge, anchor }, or { edge: null } when the drag undocks it.
+ */
+function dockDragResult(startDock, delta, workArea) {
+  const anchor = startDock.anchor;
+  const candidate = {
+    ...anchor,
+    x: anchor.x + Math.round(Number(delta?.x) || 0),
+    y: anchor.y + Math.round(Number(delta?.y) || 0)
+  };
+  const size = { width: candidate.width, height: candidate.height };
+  const { edge } = snapDock(candidate, size, workArea, startDock.edge);
+  if (!edge) return { edge: null };
+  return { edge, anchor: dockAnchor(edge, candidate, workArea) };
+}
+
+/** A work area grown by the transparent shadow padding, so only padding may overhang. */
+function padArea(workArea, padding) {
+  return {
+    x: workArea.x - padding,
+    y: workArea.y - padding,
+    width: workArea.width + padding * 2,
+    height: workArea.height + padding * 2
+  };
+}
+
+function translateDragBounds(start, delta, workArea, shadowPadding = 0) {
+  const paddedArea = padArea(workArea, shadowPadding);
+  return clampToWorkArea({
+    x: start.x + Math.round(Number(delta?.x) || 0),
+    y: start.y + Math.round(Number(delta?.y) || 0),
+    width: start.width,
+    height: start.height
+  }, paddedArea);
+}
+
 /** DIP size to physical pixels for a display scale factor (100/125/150% → 1/1.25/1.5). */
 function physicalSize(dipSize, scaleFactor) {
   const scale = Number(scaleFactor) > 0 ? Number(scaleFactor) : 1;
@@ -65,11 +191,21 @@ function physicalSize(dipSize, scaleFactor) {
 module.exports = {
   SNAP_DISTANCE,
   EXPANDED_EDGE_GAP,
+  SHADOW_PADDING,
   CAPSULE_EXPANDED,
   HALF_CAPSULE_VERTICAL,
   HALF_CAPSULE_HORIZONTAL,
   clampToWorkArea,
   snapToolbar,
+  snapDock,
+  dragSnapCapsule,
+  dockDragResult,
+  padArea,
   edgeGapPosition,
+  dockAnchor,
+  dockedWindowBounds,
+  expansionPlacement,
+  sanitizeDock,
+  translateDragBounds,
   physicalSize
 };

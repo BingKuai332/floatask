@@ -5,6 +5,9 @@ const tt = (key, params) => window.FloatAskI18n.t(key, params);
 
 const els = {
   messages: document.getElementById('messages'),
+  termLabel: document.getElementById('termLabel'),
+  sessionHash: document.getElementById('sessionHash'),
+  termMeta: document.getElementById('termMeta'),
   loadingCard: document.getElementById('loadingCard'),
   loadingText: document.getElementById('loadingText'),
   statusPill: document.getElementById('statusPill'),
@@ -59,6 +62,8 @@ function applyReadingFont(font) {
 }
 
 const state = {
+  historyId: null,
+  latencyMs: null,
   selectionText: '',
   ocrRaw: '',
   ocrCorrected: null,
@@ -149,16 +154,35 @@ function scrollToBottomIfPinned() {
   else updateFollowButton();
 }
 
-function scrollToBottom(force = false) {
+// Programmatic tail jumps are instant: the stylesheet's smooth scrolling would
+// emit intermediate scroll events that read as "the user scrolled up" and
+// silently unpin the follow mid-stream.
+function jumpToTail() {
+  els.messages.scrollTo({ top: els.messages.scrollHeight, behavior: 'instant' });
+}
+
+// wasAtBottom must be measured before the caller grows the content: one
+// streamed render can add more than the 24 px tolerance, and measuring after
+// it would read the reader as "scrolled up" although they never moved, so
+// following stopped for good with no scroll event to recover.
+function scrollToBottom(force = false, wasAtBottom = atBottom()) {
   if (force) follow.pinned = true;
   // The pinned flag can be stale for one event-loop turn after the user
   // scrolls up (the scroll event has not been delivered yet); only follow
-  // when the viewport is genuinely at the bottom.
-  if (force || (follow.pinned && atBottom())) {
-    els.messages.scrollTop = els.messages.scrollHeight;
-  }
+  // when the viewport was genuinely at the bottom.
+  if (force || (follow.pinned && wasAtBottom)) jumpToTail();
   updateFollowButton();
 }
+
+// An upward wheel turn is an explicit 'reading up' intent: unpin before the
+// smooth scroll's first frames (still within the bottom tolerance) let the next
+// streamed render pull the reader back down.
+els.messages.addEventListener('wheel', (event) => {
+  if (event.deltaY < 0 && follow.pinned) {
+    follow.pinned = false;
+    updateFollowButton();
+  }
+}, { passive: true });
 
 els.messages.addEventListener('scroll', () => {
   if (atBottom() && !follow.pinned) {
@@ -172,7 +196,7 @@ els.messages.addEventListener('scroll', () => {
 
 els.followBtn.addEventListener('click', () => {
   follow.pinned = true;
-  els.messages.scrollTop = els.messages.scrollHeight;
+  jumpToTail();
   updateFollowButton();
 });
 
@@ -231,6 +255,17 @@ function updateContext() {
   } else {
     els.windowInfo.textContent = tt('result.sourceScreen');
   }
+  updateTermLabels();
+}
+
+function updateTermLabels() {
+  const turns = els.messages.querySelectorAll('.message:not(.user)').length;
+  els.termLabel.textContent = `fa.term // node-${String(Math.max(1, turns)).padStart(2, '0')}`;
+  els.sessionHash.textContent = window.FloatAskShortHash.shortHash(state.historyId);
+  const process = state.windowInfo?.process || '';
+  const chars = state.selectionText ? state.selectionText.replace(/\s+/g, '').length : 0;
+  const latency = Number.isFinite(state.latencyMs) ? `${(state.latencyMs / 1000).toFixed(2)}s` : '--';
+  els.termMeta.textContent = [process && `src: ${process}`, `ocr ${chars} ch`, `lat ${latency}`].filter(Boolean).join(' | ');
 }
 
 function setPreview(dataUrl) {
@@ -283,6 +318,7 @@ function hidePhase() {
 }
 
 function showPhase(text) {
+  const wasAtBottom = atBottom();
   if (!state.phaseEl) {
     state.phaseEl = document.createElement('div');
     state.phaseEl.className = 'phase-line';
@@ -290,7 +326,7 @@ function showPhase(text) {
     els.messages.appendChild(state.phaseEl);
   }
   state.phaseEl.querySelector('.phase-text').textContent = text;
-  scrollToBottom();
+  scrollToBottom(false, wasAtBottom);
 }
 
 function clearError() {
@@ -340,12 +376,13 @@ function createAssistant() {
 
 function renderCurrent(force = false) {
   if (!state.current) return;
+  const wasAtBottom = atBottom();
   state.current.content.innerHTML = md.render(state.currentAnswer || '');
   if (!state.currentHasSources) {
     for (const cite of state.current.content.querySelectorAll('.cite')) cite.remove();
   }
   if (force) scrollToBottom(true);
-  else scrollToBottom();
+  else scrollToBottom(false, wasAtBottom);
 }
 
 function scheduleRender() {
@@ -487,6 +524,8 @@ function showManual(message) {
 }
 
 function reset(payload) {
+  state.historyId = null;
+  state.latencyMs = null;
   els.lightbox.classList.remove('open');
   els.lightboxImg.removeAttribute('src');
   state.selectionText = payload?.selectionText || '';
@@ -586,6 +625,7 @@ function reset(payload) {
 }
 
 function handleStart(mode) {
+  state.latencyMs = null;
   hideLoading();
   hidePhase();
   clearError();
@@ -598,6 +638,7 @@ function handleStart(mode) {
     state.current.content.innerHTML = '';
     state.current.content.classList.add('streaming');
     state.current.message.classList.add('streaming');
+    updateTermLabels();
     return;
   }
 
@@ -609,6 +650,7 @@ function handleStart(mode) {
   current.time.textContent = tt('result.answering');
   state.streaming = true;
   scrollToBottomIfPinned();
+  updateTermLabels();
 }
 
 function handleDelta(text) {
@@ -827,6 +869,8 @@ async function refreshSessionMeta() {
   try {
     const meta = await api.getResultState();
     if (!meta) return;
+    state.historyId = meta.historyId || null;
+    updateTermLabels();
     state.ocrRaw = meta.ocrRaw || state.ocrRaw || '';
     state.ocrCorrected = meta.ocrCorrected || null;
     els.ocrCorrectedBadge.hidden = !state.ocrCorrected;
@@ -1000,6 +1044,10 @@ function handleResultEvent(payload) {
     case 'start':
       handleStart(payload.mode);
       break;
+    case 'latency':
+      state.latencyMs = Number(payload.ms);
+      updateTermLabels();
+      break;
     case 'delta':
       handleDelta(payload.text || '');
       break;
@@ -1037,6 +1085,7 @@ function handleResultEvent(payload) {
       state.windowInfo = { title: tt('result.manualInputTitle'), process: '' };
       updateContext();
       showLoading(tt('result.organizing'));
+      refreshSessionMeta();
       break;
     default:
       break;
@@ -1071,6 +1120,8 @@ restoreTimer = setTimeout(finishRestoring, 2000);
     snapshotRevision = saved?.revision;
     if (saved?.init) {
       reset(saved.init);
+      state.historyId = saved.historyId || null;
+      updateTermLabels();
       if (saved.activeResponse) {
         const response = saved.activeResponse;
         if (response.question) addUserMessage(response.question);

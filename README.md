@@ -8,7 +8,7 @@
     <img alt="Electron" src="https://img.shields.io/badge/Electron-45-47848F?logo=electron&logoColor=white">
     <img alt="Node.js" src="https://img.shields.io/badge/Node.js-22.12%2B-339933?logo=node.js&logoColor=white">
     <img alt="License" src="https://img.shields.io/badge/License-MIT-green">
-    <img alt="Status" src="https://img.shields.io/badge/Status-v0.3.3-orange">
+    <img alt="Status" src="https://img.shields.io/badge/Status-v0.3.6-orange">
   </p>
 </div>
 
@@ -87,7 +87,7 @@
 
 ### 界面风格
 
-采用自研的 **工业终端 / 战术面板** 视觉：直角与切角、琥珀色标记、暗色网格、编号分区、等宽标签和细硬边框。整体气质参考战术 HUD，但不使用任何现有作品的角色、标志或素材。
+提供三套自研主题：**朝日 · 白天** 与 **近月 · 深夜** 是安静克制的石墨风格，适合长时间阅读；**前哨 · 工业** 是切角、讯号黄、警示斜纹、网格与等宽读数的工业终端风格。在「设置 → 外观与阅读」中切换，无需重启；选择「跟随系统」时在朝日／近月之间随 Windows 深浅色自动切换。所有主题均不使用任何现有作品的角色、标志或素材。
 
 ## 它是怎么工作的
 
@@ -421,7 +421,7 @@ npm run pack
 运行 `npm run release:assets` 生成带固定目录结构的 ZIP 和 SHA-256 文件，再一起上传 GitHub Releases。仓库已提供 `.github/workflows/release.yml`：推送与 package.json 版本一致的 `vX.Y.Z` 标签后，Windows runner 会测试、打包并发布这两个文件。示例：
 
 ```text
-FloatAsk-v0.3.3-win32-x64.zip
+FloatAsk-v0.3.6-win32-x64.zip
 ```
 
 

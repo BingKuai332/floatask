@@ -2,7 +2,7 @@
 
 const {
   app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, nativeImage,
-  screen, shell, clipboard, Notification, protocol, dialog, nativeTheme
+  screen, shell, clipboard, Notification, protocol, dialog, nativeTheme, systemPreferences
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -14,18 +14,39 @@ const { createSelectionGuard } = require('./selection-guard');
 const designConstants = require('./design-constants');
 const {
   CAPSULE_EXPANDED,
-  HALF_CAPSULE_VERTICAL,
-  HALF_CAPSULE_HORIZONTAL,
   clampToWorkArea,
-  snapToolbar,
-  edgeGapPosition
+  snapDock,
+  dragSnapCapsule,
+  dockDragResult,
+  padArea,
+  dockAnchor,
+  dockedWindowBounds,
+  expansionPlacement,
+  sanitizeDock,
+  translateDragBounds
 } = require('./window-geometry');
+const { updateHover, suppressHover } = require('./hover-state');
+const { shouldDeferBounds } = require('./mode-presentation');
 
 const BUBBLE_PADDING = 10;
 const CAPSULE = { width: CAPSULE_EXPANDED[0], height: CAPSULE_EXPANDED[1] };
 const BUBBLE_WINDOW_EXPANDED = [CAPSULE.width + BUBBLE_PADDING * 2, CAPSULE.height + BUBBLE_PADDING * 2];
 let bubbleMode = 'expanded';
 let bubbleEdge = null;
+// Docked half-capsule: { edge, anchor } in DIP, anchor = visible half-capsule bounds.
+let bubbleDock = null;
+let bubbleAxis = 'horizontal';
+let bubbleDirection = 'right';
+let bubbleDragBounds = null;
+// Dock state captured at bubble:drag-start: { dock, expanded } or null.
+let bubbleDragOrigin = null;
+let bubbleModeTimer = null;
+let bubblePendingBounds = null;
+let bubbleHoverPoll = null;
+let bubbleHoverInside = null;
+let bubbleHoverState = { suppressed: false };
+let bubbleExpandTimer = null;
+let bubbleCollapseTimer = null;
 let preMenuBounds = null;
 const { PRESETS } = require('../shared/presets');
 const { t } = require('./i18n');
@@ -33,6 +54,7 @@ const { normalizeLocale } = require('../shared/i18n');
 const history = require('./history');
 const { resolveModel, TASKS } = require('./model-config');
 const { normalizeHotkey } = require('../shared/hotkeys');
+const { THEME_PREFERENCES, normalizeThemePreference, nativeThemeSource, resolveThemeId } = require('./theme-preference');
 const { createUpdater } = require('./updater');
 let updater = null;
 let recordingTimer = null;
@@ -300,8 +322,93 @@ function capsuleBounds(winX, winY) {
 
 function sendBubbleMode() {
   if (bubbleWin && !bubbleWin.isDestroyed()) {
-    bubbleWin.webContents.send('bubble:mode', { mode: bubbleMode, edge: bubbleEdge });
+    bubbleWin.webContents.send('bubble:mode', {
+      mode: bubbleMode,
+      edge: bubbleEdge,
+      axis: bubbleAxis,
+      direction: bubbleDirection,
+      // True while a deferred collapse keeps the expanded bounds: the renderer
+      // shifts the shrinking capsule EXPANDED_EDGE_GAP onto the edge.
+      collapsing: Boolean(bubblePendingBounds)
+    });
   }
+}
+
+function clearBubbleHoverTimers() {
+  clearTimeout(bubbleExpandTimer);
+  clearTimeout(bubbleCollapseTimer);
+}
+
+function setBubbleHover(inside) {
+  if (inside === bubbleHoverInside) return;
+  bubbleHoverInside = inside;
+  clearBubbleHoverTimers();
+  if (bubbleDragBounds) {
+    if (!inside) bubbleHoverState = { suppressed: false };
+    return;
+  }
+  bubbleHoverState = updateHover(bubbleHoverState, inside, bubbleMode === 'expanded');
+  const reduced = systemPreferences.getAnimationSettings?.().prefersReducedMotion;
+  if (bubbleHoverState.action === 'expand' && bubbleEdge) {
+    bubbleExpandTimer = setTimeout(() => {
+      if (bubbleHoverInside && !bubbleHoverState.suppressed && bubbleEdge && bubbleMode !== 'expanded') {
+        setBubbleMode('expanded', bubbleEdge);
+      }
+    }, reduced ? 0 : 120);
+  } else if (bubbleHoverState.action === 'collapse' && bubbleEdge) {
+    bubbleCollapseTimer = setTimeout(() => {
+      if (!bubbleHoverInside && bubbleEdge && bubbleMode === 'expanded') setBubbleMode(bubbleEdge, bubbleEdge);
+    }, reduced ? 0 : 300);
+  }
+}
+
+function startBubbleHover() {
+  clearInterval(bubbleHoverPoll);
+  bubbleHoverInside = null;
+  bubbleHoverState = { suppressed: false };
+  const poll = () => {
+    if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleWin.isVisible()) return;
+    const point = screen.getCursorScreenPoint();
+    const bounds = bubbleWin.getBounds();
+    setBubbleHover(
+      point.x >= bounds.x && point.x < bounds.x + bounds.width &&
+      point.y >= bounds.y && point.y < bounds.y + bounds.height
+    );
+  };
+  poll();
+  bubbleHoverPoll = setInterval(poll, 50);
+  bubbleHoverPoll.unref();
+}
+
+function bubbleWorkArea(rect) {
+  return screen.getDisplayNearestPoint({
+    x: Math.round(rect.x + rect.width / 2),
+    y: Math.round(rect.y + rect.height / 2)
+  }).workArea;
+}
+
+function presentBubbleBounds(target, mode) {
+  clearTimeout(bubbleModeTimer);
+  bubbleModeTimer = null;
+  bubblePendingBounds = null;
+  const reduced = systemPreferences.getAnimationSettings?.().prefersReducedMotion;
+  if (!shouldDeferBounds(mode, reduced)) {
+    bubbleWin.setBounds(target);
+    sendBubbleMode();
+    return;
+  }
+  // Collapse: keep the current bounds while the CSS transition shrinks the
+  // capsule toward its anchor, then resize the window onto the dock.
+  bubblePendingBounds = target;
+  sendBubbleMode();
+  bubbleModeTimer = setTimeout(() => {
+    if (!bubbleWin || bubbleWin.isDestroyed() || !bubblePendingBounds) return;
+    const bounds = bubblePendingBounds;
+    bubblePendingBounds = null;
+    bubbleModeTimer = null;
+    bubbleWin.setBounds(bounds);
+    sendBubbleMode();
+  }, 180);
 }
 
 /** Resize/position the bubble window for the given capsule mode. */
@@ -309,45 +416,54 @@ function setBubbleMode(mode, edge) {
   bubbleMode = mode;
   bubbleEdge = edge || null;
   if (!bubbleWin || bubbleWin.isDestroyed()) return;
-  const bounds = bubbleWin.getBounds();
-  const cap = capsuleBounds(bounds.x, bounds.y);
-  const display = screen.getDisplayNearestPoint({ x: cap.x + cap.width / 2, y: cap.y + cap.height / 2 });
-  const area = display.workArea;
-  if (mode === 'expanded') {
-    const next = bubbleEdge ? edgeGapPosition(bubbleEdge, CAPSULE, cap, area) : cap;
-    bubbleWin.setBounds({
-      x: next.x - BUBBLE_PADDING,
-      y: next.y - BUBBLE_PADDING,
-      width: BUBBLE_WINDOW_EXPANDED[0],
-      height: BUBBLE_WINDOW_EXPANDED[1]
-    });
+  const current = bubbleWin.getBounds();
+  let target;
+  if (mode === 'expanded' && bubbleEdge && bubbleDock) {
+    const placement = expansionPlacement(bubbleDock.edge, bubbleDock.anchor, bubbleWorkArea(bubbleDock.anchor), BUBBLE_PADDING);
+    bubbleAxis = placement.axis;
+    bubbleDirection = placement.direction;
+    target = placement.bounds;
+  } else if (mode === 'expanded') {
+    bubbleDock = null;
+    bubbleAxis = 'horizontal';
+    bubbleDirection = 'right';
+    // Opening from a half-capsule window grows right/down; keep the capsule
+    // on screen (only the transparent padding may overhang the work area).
+    const cap = capsuleBounds(current.x, current.y);
+    target = clampToWorkArea(
+      { x: current.x, y: current.y, width: BUBBLE_WINDOW_EXPANDED[0], height: BUBBLE_WINDOW_EXPANDED[1] },
+      padArea(bubbleWorkArea(cap), BUBBLE_PADDING)
+    );
   } else {
-    const vertical = mode === 'left' || mode === 'right';
-    const size = vertical ? { width: HALF_CAPSULE_VERTICAL[0], height: HALF_CAPSULE_VERTICAL[1] }
-      : { width: HALF_CAPSULE_HORIZONTAL[0], height: HALF_CAPSULE_HORIZONTAL[1] };
-    const anchors = {
-      left: { x: area.x, y: cap.y },
-      right: { x: area.x + area.width - size.width, y: cap.y },
-      top: { x: cap.x, y: area.y },
-      bottom: { x: cap.x, y: area.y + area.height - size.height }
-    };
-    const docked = clampToWorkArea({ ...anchors[mode], ...size }, area);
-    bubbleWin.setBounds({
-      x: docked.x - BUBBLE_PADDING,
-      y: docked.y - BUBBLE_PADDING,
-      width: docked.width + BUBBLE_PADDING * 2,
-      height: docked.height + BUBBLE_PADDING * 2
-    });
+    if (!bubbleDock || bubbleDock.edge !== mode) {
+      const cap = capsuleBounds(current.x, current.y);
+      bubbleDock = { edge: mode, anchor: dockAnchor(mode, cap, bubbleWorkArea(cap)) };
+    }
+    target = dockedWindowBounds(bubbleDock.anchor, BUBBLE_PADDING);
   }
-  sendBubbleMode();
+  presentBubbleBounds(target, mode);
 }
 
 /** After a drag ends, snap to an edge half-capsule or stay floating expanded. */
-function finalizeBubbleDock(winX, winY) {
+function finalizeBubbleDock(winX, winY, origin = null) {
   if (!bubbleWin || bubbleWin.isDestroyed()) return;
-  const cap = capsuleBounds(winX, winY);
-  const display = screen.getDisplayNearestPoint({ x: cap.x + cap.width / 2, y: cap.y + cap.height / 2 });
-  const { edge } = snapToolbar(cap, CAPSULE, display.workArea);
+  if (origin?.dock) {
+    // Started docked (collapsed or hover-expanded): move the original anchor by the drag delta.
+    const delta = { x: winX - origin.start.x, y: winY - origin.start.y };
+    const moved = { ...origin.dock.anchor, x: origin.dock.anchor.x + delta.x, y: origin.dock.anchor.y + delta.y };
+    const result = dockDragResult(origin.dock, delta, bubbleWorkArea(moved));
+    if (result.edge) {
+      bubbleDock = { edge: result.edge, anchor: result.anchor };
+      store.setBubbleDock(bubbleDock);
+      setBubbleMode(result.edge, result.edge);
+      return;
+    }
+  }
+  const { capsule: cap, preferredEdge } = dragSnapCapsule({ x: winX, y: winY }, BUBBLE_PADDING);
+  const area = bubbleWorkArea(cap);
+  const { edge } = snapDock(cap, cap, area, preferredEdge);
+  bubbleDock = edge ? { edge, anchor: dockAnchor(edge, cap, area) } : null;
+  store.setBubbleDock(bubbleDock);
   if (edge) setBubbleMode(edge, edge);
   else setBubbleMode('expanded', null);
 }
@@ -396,26 +512,48 @@ async function ensureBubble() {
     ? clampBubblePosition(saved.x, saved.y)
     : defaultBubblePosition();
   bubbleWin.setPosition(pos.x, pos.y, false);
+  const savedDock = sanitizeDock(config.bubbleDock);
+  if (savedDock) {
+    // Restore the dock before anything can observe a 'moved' from the
+    // setPosition above; re-snap to the current display so resolution or
+    // layout changes stay flush.
+    bubbleDock = { edge: savedDock.edge, anchor: dockAnchor(savedDock.edge, savedDock.anchor, bubbleWorkArea(savedDock.anchor)) };
+    bubbleMode = savedDock.edge;
+    bubbleEdge = savedDock.edge;
+    bubbleWin.setBounds(dockedWindowBounds(bubbleDock.anchor, BUBBLE_PADDING));
+    store.setBubbleDock(bubbleDock);
+  }
 
   bubbleWin.on('moved', () => {
-    if (!bubbleWin || bubbleWin.isDestroyed()) return;
+    if (!bubbleWin || bubbleWin.isDestroyed() || bubbleModeTimer) return;
     clearTimeout(bubbleMoveTimer);
     bubbleMoveTimer = setTimeout(() => {
       if (!bubbleWin || bubbleWin.isDestroyed()) return;
       const [x, y] = bubbleWin.getPosition();
       store.setBubblePosition(x, y);
-      finalizeBubbleDock(x, y);
+      // While docked (collapsed or expanded from the dock) every move is
+      // programmatic; user drags re-dock through bubble:drag-end. Re-snapping
+      // here would test the full capsule width and could flip a bottom dock
+      // near the right end onto the right edge.
+      if (!bubbleDragBounds && !bubbleDock) finalizeBubbleDock(x, y);
     }, 400);
   });
 
   const win = bubbleWin;
   win.on('closed', () => {
-    if (bubbleWin === win) { clearTimeout(bubbleMoveTimer); bubbleWin = null; }
+    if (bubbleWin === win) {
+      clearInterval(bubbleHoverPoll);
+      clearBubbleHoverTimers();
+      clearTimeout(bubbleModeTimer);
+      clearTimeout(bubbleMoveTimer);
+      bubblePendingBounds = null;
+      bubbleWin = null;
+    }
   });
 
   if (!await loadRendererWindow(win, 'bubble.html')) return null;
   sendBubbleMode();
-  win.showInactive();
+  startBubbleHover();
   // A fresh renderer resolves its own theme via getSettings + matchMedia;
   // push the authoritative theme too so it never sits on the wrong default.
   broadcastTheme();
@@ -692,6 +830,7 @@ async function handleSelection(display, rect) {
   const config = store.getConfig();
   session = {
     id,
+    historyId: history.newHistoryId(),
     selectionText: '',
     ocrRawText: '',
     ocrCorrectedText: null,
@@ -1161,7 +1300,7 @@ function watchUserResultResize() {
   resultSizePollTimer = setInterval(() => {
     if (isQuitting || !resultWin || resultWin.isDestroyed()) return;
     const currentSize = resultWin.getSize();
-    if (resultProgrammaticResize > 0 || !resultWin.isVisible()) {
+    if (resultProgrammaticResize > 0 || resultCollapsed || !resultWin.isVisible()) {
       lastResultSize = currentSize.join('x');
       return;
     }
@@ -1634,6 +1773,8 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
 
   let full = '';
   sendResult({ type: 'start', mode });
+  const startedAt = Date.now();
+  let latencySent = false;
   try {
     const result = await streamChat({
       config,
@@ -1642,6 +1783,10 @@ async function runStream({ messages, mode, question, webNote, retriedWithoutImag
       onDelta: (delta) => {
         full += delta;
         activeResponse.text = full;
+        if (!latencySent && session && session.id === id && session.abort === controller) {
+          latencySent = true;
+          sendResult({ type: 'latency', ms: Date.now() - startedAt });
+        }
         if (session && session.id === id && session.abort === controller) sendResult({ type: 'delta', text: delta });
       }
     });
@@ -1762,6 +1907,7 @@ async function askClipboard() {
   const id = ++sessionCounter;
   session = {
     id,
+    historyId: history.newHistoryId(),
     selectionText: text,
     ocrRawText: text,
     ocrCorrectedText: null,
@@ -1908,16 +2054,14 @@ function broadcastFont() {
   }
 }
 
-function resolvedTheme() {
-  return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
-}
+let themePreviewPreference = null;
 
-/** Sync nativeTheme with the saved preference and push the resolved theme to every live renderer. */
+/** Sync nativeTheme with the active preference and push the resolved theme to every live renderer. */
 function broadcastTheme() {
-  const preference = store.getConfig().theme;
-  const source = ['light', 'dark'].includes(preference) ? preference : 'system';
+  const preference = normalizeThemePreference(themePreviewPreference ?? store.getConfig().theme);
+  const source = nativeThemeSource(preference);
   if (nativeTheme.themeSource !== source) nativeTheme.themeSource = source;
-  const payload = { theme: resolvedTheme(), preference };
+  const payload = { theme: resolveThemeId(preference, nativeTheme.shouldUseDarkColors), preference };
   for (const win of [resultWin, settingsWin, bubbleWin, fontWin, historyWin, overlayWin, translateWin]) {
     if (win && !win.isDestroyed()) win.webContents.send('theme:update', payload);
   }
@@ -2041,6 +2185,7 @@ async function openHistory(recordId = '') {
   });
 
   if (!await loadRendererWindow(win, 'history.html')) return;
+  broadcastTheme();
   win.show();
   win.focus();
   if (recordId) {
@@ -2218,6 +2363,44 @@ ipcMain.on('app:settings', () => openSettings(false));
 ipcMain.on('app:clipboard-explain', () => askClipboard());
 ipcMain.on('bubble:expand', () => { if (bubbleEdge) setBubbleMode('expanded', bubbleEdge); });
 ipcMain.on('bubble:collapse', () => { if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge); });
+ipcMain.on('bubble:drag-start', () => {
+  if (!bubbleWin || bubbleWin.isDestroyed()) return;
+  clearTimeout(bubbleMoveTimer);
+  clearBubbleHoverTimers();
+  bubbleHoverState = suppressHover(bubbleHoverState);
+  clearTimeout(bubbleModeTimer);
+  bubbleModeTimer = null;
+  // A drag during a pending collapse finishes it first, so the window and the
+  // renderer's collapsing flag never stay half-way.
+  const pending = bubblePendingBounds;
+  bubblePendingBounds = null;
+  if (pending) {
+    bubbleWin.setBounds(pending);
+    sendBubbleMode();
+  }
+  bubbleDragBounds = bubbleWin.getBounds();
+  bubbleDragOrigin = bubbleDock
+    ? { dock: bubbleDock, start: { x: bubbleDragBounds.x, y: bubbleDragBounds.y } }
+    : null;
+});
+ipcMain.on('bubble:drag-move', (_event, delta) => {
+  if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleDragBounds) return;
+  const x = bubbleDragBounds.x + Math.round(Number(delta?.x) || 0);
+  const y = bubbleDragBounds.y + Math.round(Number(delta?.y) || 0);
+  const display = screen.getDisplayNearestPoint({ x, y });
+  const position = translateDragBounds(bubbleDragBounds, delta, display.workArea, BUBBLE_PADDING);
+  bubbleWin.setPosition(position.x, position.y, false);
+});
+ipcMain.on('bubble:drag-end', () => {
+  if (!bubbleWin || bubbleWin.isDestroyed() || !bubbleDragBounds) return;
+  bubbleDragBounds = null;
+  clearTimeout(bubbleMoveTimer);
+  const origin = bubbleDragOrigin;
+  bubbleDragOrigin = null;
+  const [x, y] = bubbleWin.getPosition();
+  store.setBubblePosition(x, y);
+  finalizeBubbleDock(x, y, origin);
+});
 ipcMain.on('bubble:hide', () => {
   store.save({ showBubble: false });
   restoreBubbleMenuBounds();
@@ -2314,6 +2497,7 @@ ipcMain.handle('session:state', () => ({
   busy: Boolean(session?.busy),
   pinned,
   webEnabled: Boolean(session?.webEnabled),
+  historyId: session?.historyId ?? null,
   ocrRaw: session?.ocrRawText ?? null,
   ocrCorrected: session?.ocrCorrectedText ?? null,
   visionAttachment: session ? {
@@ -2371,7 +2555,7 @@ ipcMain.on('session:manual', async (_event, text) => {
   // old OCR, search or stream callback before changing the shared session.
   const id = ++sessionCounter;
   session.id = id;
-  session.historyId = null;
+  session.historyId = history.newHistoryId();
   session.historyDeleted = false;
   session.abort = null;
   session.busy = false;
@@ -2493,6 +2677,10 @@ ipcMain.handle('settings:test-profile', async (_event, { task, patch } = {}) => 
   catch (error) { return { ok: false, message: error.message, hint: error.hint }; }
 });
 ipcMain.handle('settings:get', () => settingsPayload());
+ipcMain.on('settings:preview-theme', (_event, preference) => {
+  themePreviewPreference = THEME_PREFERENCES.includes(preference) ? preference : null;
+  broadcastTheme();
+});
 ipcMain.handle('settings:save', (_event, patch) => {
   try {
     stopHotkeyRecording();
@@ -2521,13 +2709,14 @@ ipcMain.handle('settings:save', (_event, patch) => {
     const prevLanguage = store.getConfig().language;
     const keepOnboarding = patch && patch.keepOnboarding === true;
     const saved = store.save(patch && typeof patch === 'object' ? patch : {});
+    themePreviewPreference = null;
     if (!keepOnboarding) {
       store.markOnboarded();
       settingsFirstRun = false;
     }
     applySettings();
     if (store.getConfig().language !== prevLanguage) broadcastLanguage();
-    if ('theme' in (patch || {})) broadcastTheme();
+    broadcastTheme();
     return { ok: true, settings: { ...saved, hotkeyOk, actualHotkey: hotkey } };
   } catch (err) {
     return { ok: false, message: err.message };
@@ -2555,6 +2744,8 @@ ipcMain.handle('settings:test', async (_event, patch) => {
   }
 });
 ipcMain.on('settings:close', () => {
+  themePreviewPreference = null;
+  broadcastTheme();
   if (settingsWin && !settingsWin.isDestroyed()) settingsWin.close();
   refreshBubble();
 });
@@ -2612,7 +2803,9 @@ ipcMain.handle('history:delete', (_event, id) => {
   catch (err) { return { ok: false, message: err.message }; }
 });
 ipcMain.handle('history:clear', (_event, keepFavorites) => {
-  try { const removed = history.clear(keepFavorites !== false); if (session?.historyId && !history.get(session.historyId)) session.historyDeleted = true; broadcastHistory(); return { ok: true, removed }; }
+  // historyId is assigned when a session starts, before its first save, so only
+  // a record that existed before clearing counts as deleted.
+  try { const wasSaved = Boolean(session?.historyId && history.get(session.historyId)); const removed = history.clear(keepFavorites !== false); if (wasSaved && !history.get(session.historyId)) session.historyDeleted = true; broadcastHistory(); return { ok: true, removed }; }
   catch (err) { return { ok: false, message: err.message }; }
 });
 ipcMain.on('history:open', () => { openHistory(); });
@@ -2653,7 +2846,16 @@ if (!gotLock) {
       const primaryArea = screen.getPrimaryDisplay().workArea;
       if (bubbleWin && !bubbleWin.isDestroyed()) {
         bubbleWin.setBounds(clampToWorkArea(bubbleWin.getBounds(), primaryArea));
-        if (bubbleEdge) setBubbleMode(bubbleEdge, bubbleEdge);
+        if (bubbleDock) {
+          // The anchor may sit on the removed display: re-snap it onto the
+          // work area that now contains it, keeping its edge and position.
+          bubbleDock = {
+            edge: bubbleDock.edge,
+            anchor: dockAnchor(bubbleDock.edge, bubbleDock.anchor, bubbleWorkArea(bubbleDock.anchor))
+          };
+          setBubbleMode(bubbleDock.edge, bubbleDock.edge);
+          store.setBubbleDock(bubbleDock);
+        }
       }
       if (resultWin && !resultWin.isDestroyed()) {
         resultWin.setBounds(clampToWorkArea(resultWin.getBounds(), primaryArea));

@@ -89,3 +89,22 @@
 8. 朝日主题下的设置/历史窗无截图证据、更新下载进行中态无截图：设置/历史已补（settings-light、history-light）；更新下载进行中需打包版，仍待做。
 9. 真实桌面窗口白边根因已修：Electron 45 在 Windows 11 上 `transparent: true` 窗口会被 DWM 合成一层透明白色 material 垫底（桌面级"大一圈白边"，非截图伪影）；全部 7 个窗口加 `backgroundMaterial: 'none'` 后消除（桌面实拍前后对照见 shots/debug-desktop*.png，gitignored）。
 10. 第三轮实机走查（2026-10-31 晚，用户实拍驱动）：阅读预览原样显示 `<b>` 标签（data-i18n 的 textContent 毁标签，改 data-i18n-html）；胶囊/历史窗建窗瞬间反色闪烁（theme.js 加 localStorage 同步预涂）；设置底部栏移除、保存更改移至右上角（对齐 page-30/33，X 为取消并还原未保存预览）；smoke 新增亮主题下历史/胶囊/更多菜单计算色探针。用户截图中设置窗底部白色角块实为底部栏矩形与卡片圆角重叠所致，底栏移除后消失；窗口边缘像素经 alpha 通道验证为全透明（A≤8/255，仅卡片投影尾部）。
+
+## 前哨 · 工业（1.5.0，2026-11-03）
+
+离线渲染（`src/renderer/*.html` 直接加载，无 preload，`data-theme` 手动设置），截图位于 `docs/verification/industrial/`；视觉基准为 `design-mockups/industrial/qianshao-mockup.html`。
+
+| 截图 | 对应设计板 | 结论 |
+| --- | --- | --- |
+| `result-industrial.png` | 01 答案窗 · 生成中 | 通过：切角 + 黄色角标、标题栏斜纹与网格、传送带、`01 //` 标题、方形黄色项目符号、黄色描边与发送键、键帽提示 |
+| `settings-industrial.png` | 05 设置 | 通过：侧栏编号 01–06、分区序号、`fa.term // settings`、黄色主按钮。离线渲染时所有面板同时可见，因此分区序号连续计数；实际应用一次只显示一个面板 |
+| `history-industrial.png` | 06 历史 | 通过：斜纹标题栏、筛选 chips 切角。离线无记录，记录数标签与会话哈希未显示 |
+| `selection-industrial.png` | 04 框选层 | 通过：24 DIP 网格遮罩、3px 黄色取景框角、黄底尺寸读数、键帽提示 |
+| `bubble-industrial.png`、`translate-industrial.png`、`font-industrial.png` | 03 / — / — | 通过：切角与 token 生效 |
+| `result-dark.png`、`result-light.png`、`settings-dark.png` | 回归 | 通过：近月 / 朝日保持圆角，无工业装饰 |
+
+自动化：`npm test`（全部单元测试 + Electron 冒烟，含前哨切换、会话哈希与 `ocr N ch` 数值断言）通过；`node scripts/build-theme.js --check` 通过。
+
+待实机确认（需要人工操作 GUI）：工具栏四边吸附的展开 / 收起无跳动与 8 DIP 间距、重启后保持吸附、拖动吸附胶囊不换边；Windows 高对比度下装饰隐藏；关闭动画效果时传送带静止；125% / 150% 缩放。
+
+后续项：更新失败卡斜纹、下载进度传送带、工具栏 tooltip 键帽（均需新增元素）。

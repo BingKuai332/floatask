@@ -6,7 +6,6 @@ const list = document.getElementById('recordList');
 const detail = document.getElementById('detail');
 let records = [], selected = null, requestedRecordId = null, favorites = false, query = '', generation = 0;
 let typeFilter = 'all', deleteArmed = false, toastTimer;
-const texts = new Map();
 let refreshGeneration = 0, searchTimer;
 function toast(text) {
  const el=document.getElementById('toast'); el.textContent=text; el.className='show';
@@ -25,7 +24,8 @@ function typeOf(row) {
 }
 function renderList() {
  list.replaceChildren();
- const rows=records.filter(r=>(!favorites || r.favorite) && (typeFilter==='all' || typeOf(r)===typeFilter) && (!query || texts.get(r.id)?.includes(query)));
+ document.querySelector('.history-header small')?.setAttribute('data-term-count',tt('history.termCount',{count:records.length}));
+ const rows=records.filter(r=>(!favorites || r.favorite) && (typeFilter==='all' || typeOf(r)===typeFilter));
  if(!rows.length) { const el=document.createElement('p'); el.className='empty'; el.textContent=tt(query?'history.emptySearch':favorites?'history.emptyFav':'history.empty'); list.append(el); }
  for(const row of rows) {
   const el=document.createElement('button'); el.className='record'+(selected?.id===row.id?' selected':''); el.dataset.id=row.id;
@@ -33,9 +33,10 @@ function renderList() {
   star.addEventListener('click',(event)=>{event.stopPropagation();toggleFavorite(row);});
   star.addEventListener('keydown',(event)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();toggleFavorite(row);}});
   const title=document.createElement('strong'); title.textContent=row.title || tt('history.untitled');
+  const hash=document.createElement('span'); hash.className='record-hash'; hash.textContent=window.FloatAskShortHash.shortHash(row.id);
   const snippet=document.createElement('p'); snippet.textContent=row.snippet;
   const meta=document.createElement('small'); meta.textContent=date(row.updatedAt)+' · '+tt('history.msgCount',{n:row.messageCount});
-  el.append(star,title,snippet,meta); el.addEventListener('click',()=>select(row.id)); list.append(el);
+  meta.append(hash); el.append(star,title,snippet,meta); el.addEventListener('click',()=>select(row.id)); list.append(el);
  }
 }
 async function toggleFavorite(row) {

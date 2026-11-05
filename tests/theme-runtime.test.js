@@ -25,3 +25,8 @@ test('resolveTheme follows the system preference for system and invalid values',
   assert.equal(theme.resolveTheme(undefined, false), 'light');
   assert.equal(theme.resolveTheme(null, true), 'dark');
 });
+
+test('resolveTheme keeps an explicit industrial preference', () => {
+  assert.equal(theme.resolveTheme('industrial', false), 'industrial');
+  assert.equal(theme.resolveTheme('industrial', true), 'industrial');
+});

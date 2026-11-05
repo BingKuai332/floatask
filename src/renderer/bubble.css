@@ -11,7 +11,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Capsule toolbar: expanded 328x52, edge half-capsules 44x64 (vertical) and
+/* Capsule toolbar: expanded 328x52, edge half-capsules 44x52 (vertical) and
    64x44 (horizontal). Geometry is DIP-constant; colors come from tokens only. */
 .bubble {
   width: 100%;
@@ -28,7 +28,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bubble { transition: none; }
+  .bubble { transition: none; animation: none; }
+  .brand, .ask, .bubble-secondary { animation: none; transition: none; }
 }
 
 .brand {
@@ -45,6 +46,8 @@ body {
   user-select: none;
 }
 .brand:active { cursor: grabbing; }
+.drag-handle { cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; }
+.drag-handle:active { cursor: grabbing; }
 .brand-mark {
   font-size: 15px;
   font-weight: 600;
@@ -90,21 +93,105 @@ body {
   cursor: pointer;
   transition: background var(--fa-motion-theme-color) var(--fa-easing), color var(--fa-motion-theme-color) var(--fa-easing);
 }
+.mini svg { width: 16px; height: 16px; flex: 0 0 auto; }
 .mini:hover { background: var(--fa-accent-soft); color: var(--fa-accent); }
 .mini:active { transform: translateY(1px); }
 
-/* Secondary actions fade while collapsing and reappear shortly after expanding. */
-.bubble-secondary { transition: opacity var(--fa-motion-toolbar-fade) var(--fa-easing); }
+.bubble { position: relative; }
+.brand { z-index: 6; }
+.ask { z-index: 5; }
+#multiBtn { z-index: 4; }
+#transBtn { z-index: 3; }
+#clipBtn { z-index: 2; }
+#historyBtn { z-index: 1; }
+#moreBtn { z-index: 0; }
+
+body[data-mode='left'] .ask,
+body[data-mode='right'] .ask,
+body[data-mode='top'] .ask,
+body[data-mode='bottom'] .ask,
 body[data-mode='left'] .bubble-secondary,
 body[data-mode='right'] .bubble-secondary,
 body[data-mode='top'] .bubble-secondary,
-body[data-mode='bottom'] .bubble-secondary { opacity: 0; pointer-events: none; }
+body[data-mode='bottom'] .bubble-secondary {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity var(--fa-motion-toolbar-fade) var(--fa-easing), transform var(--fa-motion-toolbar) var(--fa-easing);
+}
+
+body[data-mode='expanded'] .ask,
+body[data-mode='expanded'] .bubble-secondary {
+  position: static;
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--fa-motion-toolbar-fade) var(--fa-easing), transform var(--fa-motion-toolbar) var(--fa-easing);
+}
+body[data-mode='expanded'] #moreBtn { transition-delay: 0ms; }
+body[data-mode='expanded'] #historyBtn { transition-delay: 30ms; }
+body[data-mode='expanded'] #clipBtn { transition-delay: 60ms; }
+body[data-mode='expanded'] #transBtn { transition-delay: 90ms; }
+body[data-mode='expanded'] #multiBtn { transition-delay: 120ms; }
+body[data-mode='expanded'] .ask { transition-delay: 150ms; }
+body[data-mode='left'] .ask,
+body[data-mode='right'] .ask,
+body[data-mode='top'] .ask,
+body[data-mode='bottom'] .ask { transition-delay: 0ms; }
+body[data-mode='left'] #multiBtn,
+body[data-mode='right'] #multiBtn,
+body[data-mode='top'] #multiBtn,
+body[data-mode='bottom'] #multiBtn { transition-delay: 30ms; }
+body[data-mode='left'] #transBtn,
+body[data-mode='right'] #transBtn,
+body[data-mode='top'] #transBtn,
+body[data-mode='bottom'] #transBtn { transition-delay: 60ms; }
+body[data-mode='left'] #clipBtn,
+body[data-mode='right'] #clipBtn,
+body[data-mode='top'] #clipBtn,
+body[data-mode='bottom'] #clipBtn { transition-delay: 90ms; }
+body[data-mode='left'] #historyBtn,
+body[data-mode='right'] #historyBtn,
+body[data-mode='top'] #historyBtn,
+body[data-mode='bottom'] #historyBtn { transition-delay: 120ms; }
+body[data-mode='left'] #moreBtn,
+body[data-mode='right'] #moreBtn,
+body[data-mode='top'] #moreBtn,
+body[data-mode='bottom'] #moreBtn { transition-delay: 150ms; }
+
+body[data-mode='expanded'] .bubble { width: 328px; height: 52px; }
+body[data-mode='expanded'][data-axis='vertical'] .bubble { width: 52px; height: 328px; flex-direction: column; }
+body[data-mode='expanded'][data-axis='vertical'][data-direction='up'] .bubble { flex-direction: column-reverse; }
+body[data-mode='expanded'][data-axis='horizontal'][data-direction='left'] .bubble { flex-direction: row-reverse; }
+body[data-mode='expanded'][data-axis='vertical'] .brand { flex: 0 0 40px; }
+body[data-mode='expanded'][data-axis='vertical'] .ask { flex: 1; width: 42px; min-height: 42px; }
+body[data-mode='expanded'][data-axis='vertical'] .mini { flex: 0 0 34px; }
+body[data-mode][data-direction='up'] .bubble { margin-top: auto; }
+body[data-mode][data-direction='down'] .bubble { margin-top: 0; }
+body[data-mode][data-direction='left'] .bubble { margin-left: auto; }
+body[data-mode][data-direction='right'] .bubble { margin-left: 0; }
+/* While collapsing, shrink toward the docked edge so the end frame matches the dock. */
+body[data-edge='right']:not([data-mode='expanded']) .bubble { margin-left: auto; }
+body[data-edge='bottom']:not([data-mode='expanded']) .bubble { margin-top: auto; }
+/* Deferred collapse: the window keeps its expanded bounds, whose capsule sits
+   8 DIP (EXPANDED_EDGE_GAP in src/main/window-geometry.js) off the edge. Slide
+   the shrinking capsule that far into the 10 DIP shadow padding so its last
+   frame lands flush where the dock window will be. Only during the collapse
+   does margin transition, so removing the attribute (as the window is resized
+   onto the dock) snaps the margin back to 0 in the same frame. */
+body[data-collapsing] .bubble {
+  transition: width var(--fa-motion-toolbar) var(--fa-easing), height var(--fa-motion-toolbar) var(--fa-easing), border-radius var(--fa-motion-toolbar) var(--fa-easing), background var(--fa-motion-theme-color) var(--fa-easing), margin var(--fa-motion-toolbar) var(--fa-easing);
+}
+body[data-collapsing][data-edge='left'] .bubble { margin-left: -8px; }
+body[data-collapsing][data-edge='right'] .bubble { margin-right: -8px; }
+body[data-collapsing][data-edge='top'] .bubble { margin-top: -8px; }
+body[data-collapsing][data-edge='bottom'] .bubble { margin-bottom: -8px; }
 
 /* Edge half-capsules: collapsed outer radius is 22 px (design constant). */
 body[data-mode='left'] .bubble,
-body[data-mode='right'] .bubble { flex-direction: column; justify-content: center; border-radius: var(--fa-toolbar-collapsed-radius); }
+body[data-mode='right'] .bubble { width: 44px; height: 52px; flex-direction: column; justify-content: center; border-radius: var(--fa-toolbar-collapsed-radius); }
 body[data-mode='top'] .bubble,
-body[data-mode='bottom'] .bubble { justify-content: center; border-radius: var(--fa-toolbar-collapsed-radius); }
+body[data-mode='bottom'] .bubble { width: 64px; height: 44px; justify-content: center; border-radius: var(--fa-toolbar-collapsed-radius); }
 body[data-mode='left'] .bubble .brand,
 body[data-mode='right'] .bubble .brand,
 body[data-mode='top'] .bubble .brand,
@@ -112,7 +199,7 @@ body[data-mode='bottom'] .bubble .brand {
   flex: 0 0 32px;
   width: 32px;
   height: 32px;
-  border-radius: 16px;
+  border-radius: var(--fa-toolbar-logo-radius);
 }
 body[data-mode='left'] .bubble .brand-mark,
 body[data-mode='right'] .bubble .brand-mark,
